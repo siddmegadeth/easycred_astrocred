@@ -4,34 +4,68 @@
         this.creditReport = cibilData.credit_report[0];
     }
 
-    GradingEngine.prototype.parsePaymentHistory = function(paymentHistoryStr) {
-        var paymentStatus = {
+    // Parse payment history from either string or monthlyPayStatus array
+    GradingEngine.prototype.parsePaymentHistory = function(account) {
+        var paymentStatusMap = {
             '0': 'Paid',
-            '1': 'Partial',
-            '2': 'Missed',
-            '3': 'Settlement',
-            '4': 'Written Off',
-            '5': 'Restructured'
+            '1': 'Partial-30',
+            '2': 'Partial-60',
+            '3': 'Partial-90',
+            '4': 'Partial-120',
+            '5': 'Partial-150',
+            '6': 'Partial-180',
+            '7': 'Default',
+            'STD': 'Paid',
+            'SUB': 'Substandard',
+            'DBT': 'Doubtful',
+            'LSS': 'Loss',
+            'XXX': 'Not Reported',
+            '': 'No Payment Due'
         };
 
         var payments = [];
         var onTime = 0,
             delayed = 0,
-            missed = 0;
+            missed = 0,
+            notReported = 0;
 
-        for (var i = 0; i < Math.min(paymentHistoryStr.length, 36); i++) {
-            var char = paymentHistoryStr[i];
-            var statusCode = char.charCodeAt(0) % 6;
-            var status = paymentStatus[statusCode] || 'Unknown';
+        // Prefer monthlyPayStatus array if available
+        if (account.monthlyPayStatus && Array.isArray(account.monthlyPayStatus)) {
+            account.monthlyPayStatus.forEach(function(payment, index) {
+                var status = paymentStatusMap[payment.status] || 'Unknown';
 
-            if (status === 'Paid') onTime++;
-            else if (status === 'Partial') delayed++;
-            else if (status === 'Missed') missed++;
+                if (status === 'Paid') onTime++;
+                else if (status.startsWith('Partial')) delayed++;
+                else if (status === 'Default' || status === 'Substandard' || status === 'Doubtful' || status === 'Loss') missed++;
+                else if (status === 'Not Reported') notReported++;
 
-            payments.push({
-                period: i + 1,
-                status: status
+                payments.push({
+                    date: payment.date,
+                    status: status,
+                    rawStatus: payment.status
+                });
             });
+        }
+        // Fall back to paymentHistory string
+        else if (account.paymentHistory && typeof account.paymentHistory === 'string') {
+            for (var i = 0; i < Math.min(account.paymentHistory.length, 36); i++) {
+                var statusCode = account.paymentHistory[i];
+                var status = paymentStatusMap[statusCode] || 'Unknown';
+
+                if (status === 'Paid') onTime++;
+                else if (status.startsWith('Partial')) delayed++;
+                else if (status === 'Default') missed++;
+                else if (status === 'Not Reported') notReported++;
+
+                var date = new Date();
+                date.setMonth(date.getMonth() - (account.paymentHistory.length - i - 1));
+
+                payments.push({
+                    date: date.toISOString().split('T')[0],
+                    status: status,
+                    rawStatus: statusCode
+                });
+            }
         }
 
         return {
@@ -39,10 +73,12 @@
             onTime: onTime,
             delayed: delayed,
             missed: missed,
+            notReported: notReported,
             total: payments.length
         };
     };
 
+    // Calculate overall credit score grade
     GradingEngine.prototype.calculateOverallGrade = function() {
         var paymentHistoryScore = this.calculatePaymentHistoryScore();
         var creditUtilizationScore = this.calculateCreditUtilizationScore();
@@ -63,6 +99,7 @@
         return this.convertScoreToGrade(totalScore);
     };
 
+    // Convert numerical score to letter grade
     GradingEngine.prototype.convertScoreToGrade = function(score) {
         if (score >= 90) return 'A+';
         if (score >= 80) return 'A';
@@ -82,7 +119,7 @@
 
         var self = this;
         this.creditReport.accounts.forEach(function(account) {
-            var paymentAnalysis = self.parsePaymentHistory(account.paymentHistory);
+            var paymentAnalysis = self.parsePaymentHistory(account);
             totalOnTime += paymentAnalysis.onTime;
             totalDelayed += paymentAnalysis.delayed;
             totalMissed += paymentAnalysis.missed;
@@ -107,8 +144,12 @@
         var totalLimit = 0;
 
         this.creditReport.accounts.forEach(function(account) {
-            totalBalance += account.currentBalance || 0;
-            totalLimit += account.highCreditAmount || 0;
+            if (account.currentBalance !== undefined && account.currentBalance !== null) {
+                totalBalance += account.currentBalance;
+            }
+            if (account.highCreditAmount !== undefined && account.highCreditAmount !== null) {
+                totalLimit += account.highCreditAmount;
+            }
         });
 
         if (totalLimit === 0) return 50;
@@ -125,15 +166,19 @@
     GradingEngine.prototype.calculateCreditAgeScore = function() {
         var oldestDate = new Date();
         var self = this;
+        var hasValidDate = false;
 
         this.creditReport.accounts.forEach(function(account) {
-            if (account.dateOpened && account.dateOpened !== '11111111') {
+            if (account.dateOpened && account.dateOpened !== 'NA' && account.dateOpened !== '11111111') {
                 var accountDate = self.parseDate(account.dateOpened);
                 if (accountDate && accountDate < oldestDate) {
                     oldestDate = accountDate;
+                    hasValidDate = true;
                 }
             }
         });
+
+        if (!hasValidDate) return 50;
 
         var creditAgeMonths = Math.floor((new Date() - oldestDate) / (1000 * 60 * 60 * 24 * 30));
 
@@ -149,12 +194,16 @@
         var totalDebt = 0;
 
         this.creditReport.accounts.forEach(function(account) {
-            totalDebt += account.currentBalance || 0;
+            if (account.currentBalance !== undefined && account.currentBalance !== null) {
+                totalDebt += account.currentBalance;
+            }
         });
 
         var totalAssets = 0;
         this.creditReport.accounts.forEach(function(account) {
-            totalAssets += account.highCreditAmount || 0;
+            if (account.highCreditAmount !== undefined && account.highCreditAmount !== null) {
+                totalAssets += account.highCreditAmount;
+            }
         });
 
         if (totalAssets === 0) return 50;
@@ -172,7 +221,9 @@
         var accountTypes = new Set();
 
         this.creditReport.accounts.forEach(function(account) {
-            accountTypes.add(account.accountType);
+            if (account.accountType) {
+                accountTypes.add(account.accountType);
+            }
         });
 
         if (accountTypes.size >= 4) return 100;
@@ -196,26 +247,37 @@
         return 40;
     };
 
+    // Helper function to parse dates in YYYY-MM-DD or DDMMYYYY format
     GradingEngine.prototype.parseDate = function(dateStr) {
-        if (!dateStr || dateStr === '11111111') return new Date();
+        if (!dateStr || dateStr === '11111111' || dateStr === 'NA') return new Date();
 
         try {
-            var day = parseInt(dateStr.substring(0, 2));
-            var month = parseInt(dateStr.substring(2, 4)) - 1;
-            var year = parseInt(dateStr.substring(4, 8));
+            // Try YYYY-MM-DD format first
+            if (dateStr.length === 10 && dateStr[4] === '-') {
+                return new Date(dateStr);
+            }
 
-            return new Date(year, month, day);
+            // Try DDMMYYYY format
+            if (dateStr.length === 8) {
+                var day = parseInt(dateStr.substring(0, 2));
+                var month = parseInt(dateStr.substring(2, 4)) - 1;
+                var year = parseInt(dateStr.substring(4, 8));
+                return new Date(year, month, day);
+            }
+
+            return new Date(dateStr);
         } catch (e) {
             return new Date();
         }
     };
 
+    // Identify potential defaulters
     GradingEngine.prototype.identifyDefaulters = function() {
         var self = this;
         return this.creditReport.accounts
             .filter(function(account) {
-                var paymentAnalysis = self.parsePaymentHistory(account.paymentHistory);
-                var missedPayments = paymentAnalysis.missed + paymentAnalysis.delayed;
+                var paymentAnalysis = self.parsePaymentHistory(account);
+                var missedPayments = paymentAnalysis.missed;
 
                 var overduePercentage = account.currentBalance && account.highCreditAmount ?
                     (account.currentBalance / account.highCreditAmount) * 100 :
@@ -229,6 +291,7 @@
                     lender: account.memberShortName,
                     currentBalance: account.currentBalance,
                     creditLimit: account.highCreditAmount,
+                    overdueAmount: account.amountOverdue,
                     overduePercentage: account.highCreditAmount ?
                         (account.currentBalance / account.highCreditAmount) * 100 :
                         0
@@ -236,6 +299,7 @@
             });
     };
 
+    // Generate improvement recommendations
     GradingEngine.prototype.generateRecommendations = function() {
         var recommendations = [];
         var grade = this.calculateOverallGrade();
@@ -299,6 +363,7 @@
         });
     };
 
+    // Helper methods for recommendations
     GradingEngine.prototype.getOverallPaymentAnalysis = function() {
         var onTime = 0,
             delayed = 0,
@@ -307,7 +372,7 @@
         var self = this;
 
         this.creditReport.accounts.forEach(function(account) {
-            var analysis = self.parsePaymentHistory(account.paymentHistory);
+            var analysis = self.parsePaymentHistory(account);
             onTime += analysis.onTime;
             delayed += analysis.delayed;
             missed += analysis.missed;
@@ -329,8 +394,12 @@
         var totalLimit = 0;
 
         this.creditReport.accounts.forEach(function(account) {
-            totalBalance += account.currentBalance || 0;
-            totalLimit += account.highCreditAmount || 0;
+            if (account.currentBalance !== undefined && account.currentBalance !== null) {
+                totalBalance += account.currentBalance;
+            }
+            if (account.highCreditAmount !== undefined && account.highCreditAmount !== null) {
+                totalLimit += account.highCreditAmount;
+            }
         });
 
         return totalLimit > 0 ? (totalBalance / totalLimit) * 100 : 0;
@@ -339,15 +408,19 @@
     GradingEngine.prototype.getCreditAge = function() {
         var oldestDate = new Date();
         var self = this;
+        var hasValidDate = false;
 
         this.creditReport.accounts.forEach(function(account) {
-            if (account.dateOpened && account.dateOpened !== '11111111') {
+            if (account.dateOpened && account.dateOpened !== 'NA' && account.dateOpened !== '11111111') {
                 var accountDate = self.parseDate(account.dateOpened);
                 if (accountDate < oldestDate) {
                     oldestDate = accountDate;
+                    hasValidDate = true;
                 }
             }
         });
+
+        if (!hasValidDate) return 0;
 
         return Math.floor((new Date() - oldestDate) / (1000 * 60 * 60 * 24 * 30));
     };

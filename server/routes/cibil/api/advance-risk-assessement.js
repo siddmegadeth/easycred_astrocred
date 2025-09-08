@@ -2,6 +2,7 @@
 
     var EconomicDataService = require('./economic-data-services.js');
 
+
     function AdvancedRiskAssessment(cibilData, gradingEngine, riskAssessment) {
         this.cibilData = cibilData;
         this.gradingEngine = gradingEngine;
@@ -36,57 +37,51 @@
 
     // Apply economic factors to risk assessment
     AdvancedRiskAssessment.prototype.applyEconomicFactors = function(baseRisk, economicData) {
-        var self = this;
-
         var adjustedProbability = baseRisk.probability;
 
         // Adjust based on GDP growth
         if (economicData.gdpGrowth < 5) {
-            adjustedProbability += 10; // Higher risk in low growth environments
+            adjustedProbability += 10;
         } else if (economicData.gdpGrowth > 7) {
-            adjustedProbability -= 5; // Lower risk in high growth environments
+            adjustedProbability -= 5;
         }
 
         // Adjust based on inflation
         if (economicData.inflationRate > 6) {
-            adjustedProbability += 8; // High inflation increases risk
+            adjustedProbability += 8;
         } else if (economicData.inflationRate < 2) {
-            adjustedProbability -= 3; // Low inflation decreases risk slightly
+            adjustedProbability -= 3;
         }
 
         // Adjust based on repo rate (monetary policy)
         if (economicData.repoRate > 7) {
-            adjustedProbability += 7; // High interest rates increase risk
+            adjustedProbability += 7;
         } else if (economicData.repoRate < 5) {
-            adjustedProbability -= 4; // Low interest rates decrease risk
+            adjustedProbability -= 4;
         }
 
         // Adjust based on unemployment
         if (economicData.unemploymentRate > 8) {
-            adjustedProbability += 6; // High unemployment increases risk
+            adjustedProbability += 6;
         } else if (economicData.unemploymentRate < 5) {
-            adjustedProbability -= 3; // Low unemployment decreases risk
+            adjustedProbability -= 3;
         }
 
         return {
             probability: Math.min(95, Math.max(5, adjustedProbability)),
-            riskLevel: self.getRiskLevel(adjustedProbability),
+            riskLevel: this.getRiskLevel(adjustedProbability),
             factors: baseRisk.factors,
             economicAdjustments: {
-                gdpImpact: economicData.gdpGrowth < 5 ? '+' + (10) : economicData.gdpGrowth > 7 ? '-' + (5) : '0',
-                inflationImpact: economicData.inflationRate > 6 ? '+' + (8) : economicData.inflationRate < 2 ? '-' + (3) : '0',
-                repoRateImpact: economicData.repoRate > 7 ? '+' + (7) : economicData.repoRate < 5 ? '-' + (4) : '0',
-                unemploymentImpact: economicData.unemploymentRate > 8 ? '+' + (6) : economicData.unemploymentRate < 5 ? '-' + (3) : '0'
+                gdpImpact: economicData.gdpGrowth < 5 ? '+10' : economicData.gdpGrowth > 7 ? '-5' : '0',
+                inflationImpact: economicData.inflationRate > 6 ? '+8' : economicData.inflationRate < 2 ? '-3' : '0',
+                repoRateImpact: economicData.repoRate > 7 ? '+7' : economicData.repoRate < 5 ? '-4' : '0',
+                unemploymentImpact: economicData.unemploymentRate > 8 ? '+6' : economicData.unemploymentRate < 5 ? '-3' : '0'
             }
         };
     };
 
     // Apply income factors to risk assessment
     AdvancedRiskAssessment.prototype.applyIncomeFactors = function(riskAssessment) {
-        // This would normally use actual income data from the user
-        // For now, we'll use a simulated approach based on available data
-                var self = this;
-
         var incomeStabilityScore = this.calculateIncomeStability();
         var incomeGrowthScore = this.calculateIncomeGrowth();
 
@@ -108,13 +103,13 @@
 
         return {
             probability: Math.min(95, Math.max(5, adjustedProbability)),
-            riskLevel: self.getRiskLevel(adjustedProbability),
+            riskLevel: this.getRiskLevel(adjustedProbability),
             factors: riskAssessment.factors,
             incomeFactors: {
                 stabilityScore: incomeStabilityScore,
                 growthScore: incomeGrowthScore,
-                stabilityImpact: incomeStabilityScore < 50 ? '+' + (8) : incomeStabilityScore > 80 ? '-' + (5) : '0',
-                growthImpact: incomeGrowthScore < 0 ? '+' + (5) : incomeGrowthScore > 5 ? '-' + (3) : '0'
+                stabilityImpact: incomeStabilityScore < 50 ? '+8' : incomeStabilityScore > 80 ? '-5' : '0',
+                growthImpact: incomeGrowthScore < 0 ? '+5' : incomeGrowthScore > 5 ? '-3' : '0'
             }
         };
     };
@@ -122,40 +117,36 @@
     // Apply market sentiment to risk assessment
     AdvancedRiskAssessment.prototype.applyMarketSentiment = function(riskAssessment, economicData) {
         var adjustedProbability = riskAssessment.probability;
-                var self = this;
 
         // Adjust based on market sentiment
         if (economicData.marketSentiment < 40) {
-            adjustedProbability += 10; // Very negative sentiment
+            adjustedProbability += 10;
         } else if (economicData.marketSentiment < 60) {
-            adjustedProbability += 5; // Somewhat negative sentiment
+            adjustedProbability += 5;
         } else if (economicData.marketSentiment > 80) {
-            adjustedProbability -= 5; // Very positive sentiment
+            adjustedProbability -= 5;
         }
 
         return {
             probability: Math.min(95, Math.max(5, adjustedProbability)),
-            riskLevel: self.getRiskLevel(adjustedProbability),
+            riskLevel: this.getRiskLevel(adjustedProbability),
             factors: riskAssessment.factors,
-            sentimentImpact: economicData.marketSentiment < 40 ? '+' + (10) : economicData.marketSentiment < 60 ? '+' + (5) : economicData.marketSentiment > 80 ? '-' + (5) : '0'
+            sentimentImpact: economicData.marketSentiment < 40 ? '+10' : economicData.marketSentiment < 60 ? '+5' : economicData.marketSentiment > 80 ? '-5' : '0'
         };
     };
 
     // Calculate income stability (simulated)
     AdvancedRiskAssessment.prototype.calculateIncomeStability = function() {
-        // In a real implementation, this would analyze income history
-        // For now, we'll simulate based on employment data and credit history
-
         var employmentData = this.cibilData.credit_report[0].employment;
         var paymentHistory = this.gradingEngine.getOverallPaymentAnalysis();
 
-        var stabilityScore = 70; // Base score
+        var stabilityScore = 70;
 
         // Adjust based on employment history
         if (employmentData && employmentData.length > 0) {
-            if (employmentData[0].occupationCode === '01') { // Government job
+            if (employmentData[0].occupationCode === '01') {
                 stabilityScore += 20;
-            } else if (employmentData[0].occupationCode === '02') { // Private sector
+            } else if (employmentData[0].occupationCode === '02') {
                 stabilityScore += 10;
             }
         }
@@ -174,9 +165,6 @@
 
     // Calculate income growth (simulated)
     AdvancedRiskAssessment.prototype.calculateIncomeGrowth = function() {
-        // In a real implementation, this would analyze income trends over time
-        // For now, we'll simulate based on credit limit increases and other factors
-
         var accounts = this.cibilData.credit_report[0].accounts;
         var creditLimitIncreases = 0;
 
@@ -188,7 +176,7 @@
         });
 
         // Simulate growth based on credit behavior
-        var growthScore = 2; // Base growth of 2%
+        var growthScore = 2;
 
         if (creditLimitIncreases > 2) {
             growthScore += 3;
@@ -198,16 +186,12 @@
 
         // Adjust based on recent inquiries (new credit applications)
         var recentInquiries = this.cibilData.credit_report[0].enquiries.filter(function(inquiry) {
-            var inquiryDate = new Date(
-                parseInt(inquiry.enquiryDate.substring(4, 8)),
-                parseInt(inquiry.enquiryDate.substring(2, 4)) - 1,
-                parseInt(inquiry.enquiryDate.substring(0, 2))
-            );
+            var inquiryDate = new Date(inquiry.enquiryDate);
             return new Date() - inquiryDate < 6 * 30 * 24 * 60 * 60 * 1000;
         }).length;
 
         if (recentInquiries > 3) {
-            growthScore -= 2; // Too many inquiries might indicate financial stress
+            growthScore -= 2;
         }
 
         return growthScore;
@@ -306,6 +290,72 @@
         if (probability < 60) return 'Medium';
         if (probability < 80) return 'High';
         return 'Very High';
+    };
+
+    // Get financial institutions that might still consider this client
+    AdvancedRiskAssessment.prototype.getEligibleInstitutions = function() {
+        var creditWorthiness = this.riskAssessment.calculateCreditWorthiness();
+        var defaultProbability = this.riskAssessment.calculateDefaultProbability();
+        var grade = this.gradingEngine.calculateOverallGrade();
+
+        // Define institution risk profiles
+        var institutions = [{
+                name: 'Prime Lenders (HDFC, ICICI, SBI)',
+                minGrade: 'B+',
+                maxDefaultProbability: 30,
+                requiresCreditWorthy: true,
+                description: 'Top-tier banks with strict lending criteria'
+            },
+            {
+                name: 'Tier 2 Banks (Axis, Kotak, Yes Bank)',
+                minGrade: 'C+',
+                maxDefaultProbability: 50,
+                requiresCreditWorthy: false,
+                description: 'Banks with moderate risk appetite'
+            },
+            {
+                name: 'NBFCs (Bajaj Finance, HDB Financial)',
+                minGrade: 'C',
+                maxDefaultProbability: 65,
+                requiresCreditWorthy: false,
+                description: 'Non-banking financial companies with higher risk tolerance'
+            },
+            {
+                name: 'FinTech Lenders (EarlySalary, MoneyTap)',
+                minGrade: 'D+',
+                maxDefaultProbability: 80,
+                requiresCreditWorthy: false,
+                description: 'Digital lenders specializing in subprime credit'
+            },
+            {
+                name: 'Secured Loan Providers',
+                minGrade: 'D',
+                maxDefaultProbability: 95,
+                requiresCreditWorthy: false,
+                description: 'Lenders offering loans against collateral'
+            }
+        ];
+
+        var gradeOrder = ['D', 'D+', 'C', 'C+', 'B', 'B+', 'A', 'A+'];
+        var clientGradeIndex = gradeOrder.indexOf(grade);
+
+        // Filter eligible institutions
+        var eligibleInstitutions = institutions.filter(function(institution) {
+            var minGradeIndex = gradeOrder.indexOf(institution.minGrade);
+
+            // Check grade requirement
+            if (clientGradeIndex < minGradeIndex) return false;
+
+            // Check default probability requirement
+            if (defaultProbability.probability > institution.maxDefaultProbability) return false;
+
+            // Check credit worthiness requirement
+            if (institution.requiresCreditWorthy && !creditWorthiness.isCreditWorthy) return false;
+
+            return true;
+        });
+
+        return eligibleInstitutions;
     };
 
     module.exports = AdvancedRiskAssessment;

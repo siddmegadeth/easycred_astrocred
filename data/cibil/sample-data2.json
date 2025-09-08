@@ -1,0 +1,4221 @@
+{
+    "data":
+    {
+        "client_id": "credit_report_cibil_vRvISYNDfhYbmRNbiWRg",
+        "mobile": "8877882988",
+        "pan": "BJHPS2369R",
+        "name": "RAVI SHANKAR",
+        "gender": "male",
+        "user_email": null,
+        "credit_score": "714",
+        "credit_report": [
+        {
+            "names": [
+            {
+                "birthDate": "1982-11-24",
+                "gender": "male",
+                "index": "N01",
+                "name": "RAVI SHANKAR"
+            }],
+            "ids": [
+            {
+                "idNumber": "375855503",
+                "idType": "SocialId",
+                "index": "1"
+            },
+            {
+                "idNumber": "BJHPS2369R",
+                "idType": "TaxId",
+                "index": "2"
+            },
+            {
+                "idNumber": "RAB0468769",
+                "idType": "VoterId",
+                "index": "3"
+            },
+            {
+                "idNumber": "60087645938517",
+                "idType": "CkycId",
+                "index": "4"
+            }],
+            "telephones": [
+            {
+                "enquiryEnriched": "Y",
+                "index": "1",
+                "telephoneNumber": "8877882988",
+                "telephoneType": "00"
+            },
+            {
+                "enquiryEnriched": "Y",
+                "index": "2",
+                "telephoneNumber": "8877882988",
+                "telephoneType": "03"
+            },
+            {
+                "enquiryEnriched": "Y",
+                "index": "3",
+                "telephoneNumber": "8877882988",
+                "telephoneType": "01"
+            },
+            {
+                "enquiryEnriched": "Y",
+                "index": "4",
+                "telephoneNumber": "9065555848",
+                "telephoneType": "01"
+            }],
+            "emails": [
+            {
+                "emailID": "INFRABUILDWELLS@GMAIL.COM",
+                "index": "1"
+            },
+            {
+                "emailID": "RAVI_65SG@YAHOO.COM",
+                "index": "2"
+            }],
+            "employment": [
+            {
+                "accountType": "01",
+                "dateReported": "2025-04-22",
+                "index": "E01",
+                "occupationCode": "01"
+            }],
+            "scores": [
+            {
+                "score": "714",
+                "scoreCardName": "CIBILTUSC3",
+                "scoreCardVersion": "",
+                "scoreDate": "2025-09-08",
+                "scoreName": "CIBILTransUnionScore3",
+                "reasonCodes": [
+                {
+                    "reasonCodeName": "reasonCode 32",
+                    "reasonCodeValue": "32"
+                },
+                {
+                    "reasonCodeName": "reasonCode 03",
+                    "reasonCodeValue": "03"
+                },
+                {
+                    "reasonCodeName": "reasonCode 30",
+                    "reasonCodeValue": "30"
+                },
+                {
+                    "reasonCodeName": "reasonCode 25",
+                    "reasonCodeValue": "25"
+                },
+                {
+                    "reasonCodeName": "reasonCode 31",
+                    "reasonCodeValue": "31"
+                }]
+            }],
+            "addresses": [
+            {
+                "addressCategory": "04",
+                "dateReported": "2025-06-07",
+                "index": "1",
+                "line1": "SO GANESH PRASAD SINGH FLAT NO    BLOCK B ARADHYA APARTMENT ROAD NO  MAHESH NAGAR ARADHYA APARTMENT ROAD NO  MAHESH NAGAR",
+                "line2": "",
+                "pinCode": "800024",
+                "stateCode": "10"
+            },
+            {
+                "addressCategory": "04",
+                "dateReported": "2025-04-15",
+                "index": "2",
+                "line1": "SO GANESH PRASAD SINGH FLAT NO    BLOCK B ARADHYA APARTMENT ROAD NO  MAHESH NAGAR PATNA-BR",
+                "line2": "",
+                "pinCode": "800024",
+                "stateCode": "10"
+            },
+            {
+                "addressCategory": "02",
+                "dateReported": "2025-02-28",
+                "index": "3",
+                "line1": "FLAT NUMBE,,R 202 B BLOCK ARADHYA APARTM EMT ROAD NUMBER 4 MAHESH NAGAR, JALSA MA RRAIGE HALL PAT  EL NAGAR KESHARI NAGAR",
+                "line2": "",
+                "pinCode": "800024",
+                "stateCode": "10"
+            },
+            {
+                "addressCategory": "04",
+                "dateReported": "2024-04-30",
+                "index": "4",
+                "line1": "FLAT NO 204 PRAKASH REGENCY ROAD NO 10 EAST PATEL NAGAR NEAR DAV SCHOOL PATNA PATNA",
+                "line2": "",
+                "pinCode": "800008",
+                "stateCode": "10"
+            }],
+            "accounts": [
+            {
+                "accountType": "Loan Against Shares/Securities",
+                "accountNumber": "VGUWLAS00015055",
+                "actualPaymentAmount": "672129",
+                "creditFacilityStatus": "",
+                "amountOverdue": "7293",
+                "currentBalance": "837803",
+                "dateOpened": "2024-09-14",
+                "dateReported": "2025-08-31",
+                "highCreditAmount": "1195754",
+                "index": "0",
+                "lastPaymentDate": "2025-08-05",
+                "memberShortName": "PIRAENLIM",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2024-09-01",
+                "paymentFrequency": "05",
+                "paymentHistory": "030000000000000000000062031000000000",
+                "paymentStartDate": "2025-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-08-01",
+                    "status": "30"
+                },
+                {
+                    "date": "2025-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-01-01",
+                    "status": "62"
+                },
+                {
+                    "date": "2024-12-01",
+                    "status": "31"
+                },
+                {
+                    "date": "2024-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-09-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Auto Loan (Personal)",
+                "accountNumber": "442860510000856",
+                "actualPaymentAmount": "18219",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "189552",
+                "dateOpened": "2025-04-11",
+                "dateReported": "2025-08-31",
+                "highCreditAmount": "200000",
+                "index": "1",
+                "lastPaymentDate": "2025-08-15",
+                "memberShortName": "BOI",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2025-04-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000",
+                "paymentStartDate": "2025-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "60",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-04-01",
+                    "status": "0"
+                }],
+                "emiAmount": "4319",
+                "repaymentTenure": "60"
+            },
+            {
+                "accountType": "Business Loan – Priority Sector – Others",
+                "accountNumber": "442830150000004",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "41065468",
+                "dateOpened": "2023-09-07",
+                "dateReported": "2025-08-31",
+                "highCreditAmount": "41500000",
+                "index": "2",
+                "lastPaymentDate": "2025-08-30",
+                "memberShortName": "BOI",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2025-06-01",
+                "paymentFrequency": "",
+                "paymentHistory": "STDSTDSTD",
+                "paymentStartDate": "2025-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-08-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2025-07-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2025-06-01",
+                    "status": "STD"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "other",
+                "accountNumber": "38193244",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "10033468",
+                "dateOpened": "2022-12-31",
+                "dateReported": "2025-07-31",
+                "highCreditAmount": "10000000",
+                "index": "3",
+                "lastPaymentDate": "",
+                "memberShortName": "HERO FINCORP",
+                "ownershipIndicator": "Guarantor",
+                "paymentEndDate": "2023-01-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000000005000000000000000014000000000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2025-07-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-01-01",
+                    "status": "5"
+                },
+                {
+                    "date": "2024-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-07-01",
+                    "status": "14"
+                },
+                {
+                    "date": "2024-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-01-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "1"
+            },
+            {
+                "accountType": "Two wheeler Loan",
+                "accountNumber": "96996071",
+                "actualPaymentAmount": "122678",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "13607",
+                "dateOpened": "2022-11-21",
+                "dateReported": "2025-08-31",
+                "highCreditAmount": "100000",
+                "index": "4",
+                "lastPaymentDate": "2025-08-02",
+                "memberShortName": "IDFC FIRST BANK",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2022-11-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2025-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "36",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-11-01",
+                    "status": "0"
+                }],
+                "emiAmount": "3528",
+                "repaymentTenure": "36"
+            },
+            {
+                "accountType": "other",
+                "accountNumber": "245003510000007",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2021-11-17",
+                "dateReported": "2023-09-30",
+                "highCreditAmount": "950000",
+                "index": "5",
+                "lastPaymentDate": "2023-09-11",
+                "memberShortName": "IOB",
+                "ownershipIndicator": "Guarantor",
+                "paymentEndDate": "2022-05-01",
+                "paymentFrequency": "",
+                "paymentHistory": "STDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTD",
+                "paymentStartDate": "2023-09-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2023-09-11",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2023-09-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-08-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-07-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-06-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-05-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-04-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-03-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-02-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-01-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-12-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-11-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-10-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-09-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-08-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-07-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-06-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-05-01",
+                    "status": "STD"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Business Loan – General",
+                "accountNumber": "245003707000009",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2021-01-28",
+                "dateReported": "2021-11-30",
+                "highCreditAmount": "650000",
+                "index": "6",
+                "lastPaymentDate": "2021-11-25",
+                "memberShortName": "IOB",
+                "ownershipIndicator": "Guarantor",
+                "paymentEndDate": "2021-01-01",
+                "paymentFrequency": "",
+                "paymentHistory": "STDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTD",
+                "paymentStartDate": "2021-11-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2021-11-25",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2021-11-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2021-10-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2021-09-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2021-08-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2021-07-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2021-06-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2021-05-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2021-04-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2021-03-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2021-02-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2021-01-01",
+                    "status": "STD"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Auto Loan (Personal)",
+                "accountNumber": "00030600004813",
+                "actualPaymentAmount": "19328",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "543283",
+                "dateOpened": "2021-01-05",
+                "dateReported": "2025-08-31",
+                "highCreditAmount": "1250000",
+                "index": "7",
+                "lastPaymentDate": "2025-08-16",
+                "memberShortName": "BOB",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2022-09-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000016015000000000000000000000000000000000000000000000STDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTD",
+                "paymentStartDate": "2025-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "80",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-05-01",
+                    "status": "16"
+                },
+                {
+                    "date": "2025-04-01",
+                    "status": "15"
+                },
+                {
+                    "date": "2025-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-12-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-11-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-10-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-09-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-08-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-07-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-06-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-05-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-04-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-03-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-02-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-01-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-12-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-11-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-10-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-09-01",
+                    "status": "STD"
+                }],
+                "emiAmount": "19328",
+                "repaymentTenure": "80"
+            },
+            {
+                "accountType": "Business Loan – General",
+                "accountNumber": "245033000000021",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2020-12-29",
+                "dateReported": "2024-07-31",
+                "highCreditAmount": "0",
+                "index": "8",
+                "lastPaymentDate": "2024-06-21",
+                "memberShortName": "IOB",
+                "ownershipIndicator": "Guarantor",
+                "paymentEndDate": "2021-08-01",
+                "paymentFrequency": "09",
+                "paymentHistory": "000000000000000000000000STDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTDSTD",
+                "paymentStartDate": "2024-07-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2024-07-08",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2024-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-11-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-10-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-09-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-08-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-07-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-06-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-05-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-04-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-03-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-02-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2023-01-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-12-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-11-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-10-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-09-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-08-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-07-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-06-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-05-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-04-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-03-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-02-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2022-01-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2021-12-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2021-11-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2021-10-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2021-09-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2021-08-01",
+                    "status": "STD"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Credit Card",
+                "accountNumber": "0000000017813696",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "118594",
+                "dateOpened": "2020-10-25",
+                "dateReported": "2025-08-31",
+                "highCreditAmount": "123909",
+                "index": "9",
+                "lastPaymentDate": "2025-08-26",
+                "memberShortName": "ICICI BANK",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2022-09-01",
+                "paymentFrequency": "",
+                "paymentHistory": "000000000000000000000XXXXXX000000000000000000000000000XXXXXXXXXXXX000XXXXXXXXXXXXXXXXXXXXXXXX000000000000000",
+                "paymentStartDate": "2025-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-01-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2024-12-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2024-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-02-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2024-01-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-12-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-11-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-09-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-08-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-07-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-06-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-05-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-04-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-03-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-02-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-09-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Personal Loan",
+                "accountNumber": "FLIPKART-34874163",
+                "actualPaymentAmount": "385",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2020-10-05",
+                "dateReported": "2024-04-30",
+                "highCreditAmount": "4000",
+                "index": "10",
+                "lastPaymentDate": "2020-12-03",
+                "memberShortName": "IDFC FIRST BANK",
+                "ownershipIndicator": "Joint",
+                "paymentEndDate": "2021-05-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2024-04-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2024-04-25",
+                "termMonths": "36",
+                "monthlyPayStatus": [
+                {
+                    "date": "2024-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-05-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "36"
+            },
+            {
+                "accountType": "Commercial Vehicle Loan",
+                "accountNumber": "5003267110",
+                "actualPaymentAmount": "457147",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2019-11-26",
+                "dateReported": "2024-10-31",
+                "highCreditAmount": "399288",
+                "index": "11",
+                "lastPaymentDate": "2022-11-02",
+                "memberShortName": "TCL",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2021-11-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2024-10-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2024-10-10",
+                "termMonths": "35",
+                "monthlyPayStatus": [
+                {
+                    "date": "2024-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-11-01",
+                    "status": "0"
+                }],
+                "emiAmount": "13061",
+                "repaymentTenure": "35"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "4L60CDFJ779784",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2019-10-31",
+                "dateReported": "2021-04-30",
+                "highCreditAmount": "96000",
+                "index": "12",
+                "lastPaymentDate": "2021-03-02",
+                "memberShortName": "BAJAJ FIN LTD",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2019-10-01",
+                "paymentFrequency": "",
+                "paymentHistory": "000000000000000000000000000028000000000000000000000000000",
+                "paymentStartDate": "2021-04-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2021-03-14",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2021-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-07-01",
+                    "status": "28"
+                },
+                {
+                    "date": "2020-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-10-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Two wheeler Loan",
+                "accountNumber": "67186536",
+                "actualPaymentAmount": "2726",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2019-04-20",
+                "dateReported": "2021-07-31",
+                "highCreditAmount": "151524",
+                "index": "13",
+                "lastPaymentDate": "2021-07-04",
+                "memberShortName": "HDFC BANK",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2019-04-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2021-07-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2021-07-04",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2021-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-04-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Credit Card",
+                "accountNumber": "0000000012192115",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "-163",
+                "dateOpened": "2018-09-25",
+                "dateReported": "2025-04-30",
+                "highCreditAmount": "110286",
+                "index": "14",
+                "lastPaymentDate": "2023-05-11",
+                "memberShortName": "ICICI BANK",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2022-05-01",
+                "paymentFrequency": "",
+                "paymentHistory": "000XXXXXXXXXXXX000XXXXXXXXXXXX000XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX000000007000000009000000000000000000000",
+                "paymentStartDate": "2025-04-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-03-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2025-02-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2025-01-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2024-12-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2024-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-10-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2024-09-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2024-08-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2024-07-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2024-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-05-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2024-04-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2024-03-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2024-02-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2024-01-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-12-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-11-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-10-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-09-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-08-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-07-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-06-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2023-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-03-01",
+                    "status": "7"
+                },
+                {
+                    "date": "2023-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-12-01",
+                    "status": "9"
+                },
+                {
+                    "date": "2022-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-05-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "4L6ECF63162229",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2018-01-22",
+                "dateReported": "2021-03-31",
+                "highCreditAmount": "11900",
+                "index": "15",
+                "lastPaymentDate": "2018-08-02",
+                "memberShortName": "BAJAJ FIN LTD",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2018-04-01",
+                "paymentFrequency": "",
+                "paymentHistory": "000XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2021-03-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2018-09-08",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2021-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-02-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2021-01-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-12-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-11-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-10-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-09-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-08-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-07-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-06-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-05-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-04-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-03-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-02-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-01-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-12-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-11-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-10-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-09-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-08-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-04-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "4L6DPF63112603",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2018-01-21",
+                "dateReported": "2021-03-31",
+                "highCreditAmount": "26900",
+                "index": "16",
+                "lastPaymentDate": "2018-10-02",
+                "memberShortName": "BAJAJ FIN LTD",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2018-04-01",
+                "paymentFrequency": "",
+                "paymentHistory": "000XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2021-03-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2018-12-17",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2021-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-02-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2021-01-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-12-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-11-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-10-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-09-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-08-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-07-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-06-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-05-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-04-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-03-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-02-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-01-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-12-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-11-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-10-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-09-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-08-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-04-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Two wheeler Loan",
+                "accountNumber": "52454627",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2017-11-10",
+                "dateReported": "2020-09-30",
+                "highCreditAmount": "201524",
+                "index": "17",
+                "lastPaymentDate": "2020-09-26",
+                "memberShortName": "HDFC BANK",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2017-11-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2020-09-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2020-09-26",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2020-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-11-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "4L6DPF41155928",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2017-05-31",
+                "dateReported": "2021-03-31",
+                "highCreditAmount": "40000",
+                "index": "18",
+                "lastPaymentDate": "2018-04-02",
+                "memberShortName": "BAJAJ FIN LTD",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2018-04-01",
+                "paymentFrequency": "",
+                "paymentHistory": "000XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2021-03-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2018-07-08",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2021-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-02-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2021-01-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-12-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-11-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-10-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-09-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-08-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-07-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-06-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-05-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-04-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-03-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-02-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-01-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-12-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-11-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-10-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-09-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-08-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-04-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "4L60CD33735851",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2017-01-21",
+                "dateReported": "2021-03-31",
+                "highCreditAmount": "75000",
+                "index": "19",
+                "lastPaymentDate": "2017-10-02",
+                "memberShortName": "BAJAJ FIN LTD",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2018-04-01",
+                "paymentFrequency": "",
+                "paymentHistory": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000XXX000000000000",
+                "paymentStartDate": "2021-03-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2018-02-11",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2021-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-08-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2018-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-04-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Credit Card",
+                "accountNumber": "0001011720001274883",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "-1",
+                "currentBalance": "0",
+                "dateOpened": "2016-06-24",
+                "dateReported": "2023-05-31",
+                "highCreditAmount": "119616",
+                "index": "20",
+                "lastPaymentDate": "2019-08-03",
+                "memberShortName": "HDFC BANK",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2020-06-01",
+                "paymentFrequency": "",
+                "paymentHistory": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2023-05-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2023-02-24",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2023-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-06-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "4L6DPF23502111",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2016-05-29",
+                "dateReported": "2021-03-31",
+                "highCreditAmount": "40000",
+                "index": "21",
+                "lastPaymentDate": "2017-06-02",
+                "memberShortName": "BAJAJ FIN LTD",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2018-04-01",
+                "paymentFrequency": "",
+                "paymentHistory": "000XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2021-03-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2017-08-17",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2021-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-02-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2021-01-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-12-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-11-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-10-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-09-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-08-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-07-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-06-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-05-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-04-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-03-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-02-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-01-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-12-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-11-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-10-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-09-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-08-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-04-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Two wheeler Loan",
+                "accountNumber": "39091783",
+                "actualPaymentAmount": "5044",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2016-04-07",
+                "dateReported": "2018-04-30",
+                "highCreditAmount": "100000",
+                "index": "22",
+                "lastPaymentDate": "2018-04-05",
+                "memberShortName": "HDFC BANK",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2016-04-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000000000000000000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2018-04-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2018-04-05",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2018-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-04-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Auto Loan (Personal)",
+                "accountNumber": "LAPTN00033817816",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "-1",
+                "currentBalance": "0",
+                "dateOpened": "2015-11-30",
+                "dateReported": "2020-12-31",
+                "highCreditAmount": "600000",
+                "index": "23",
+                "lastPaymentDate": "2020-12-01",
+                "memberShortName": "ICICI BANK",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2018-01-01",
+                "paymentFrequency": "",
+                "paymentHistory": "000000000000000000STD000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2020-12-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2020-12-07",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2020-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-06-01",
+                    "status": "STD"
+                },
+                {
+                    "date": "2020-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-01-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "4L60CD17396824",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2015-11-23",
+                "dateReported": "2021-03-31",
+                "highCreditAmount": "13800",
+                "index": "24",
+                "lastPaymentDate": "2016-07-02",
+                "memberShortName": "BAJAJ FIN LTD",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2018-04-01",
+                "paymentFrequency": "",
+                "paymentHistory": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2021-03-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2016-09-29",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2021-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2020-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2019-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2018-04-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "4L60CD08794103",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2015-04-11",
+                "dateReported": "2021-03-31",
+                "highCreditAmount": "50000",
+                "index": "25",
+                "lastPaymentDate": "2015-12-02",
+                "memberShortName": "BAJAJ FIN LTD",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2018-04-01",
+                "paymentFrequency": "",
+                "paymentHistory": "000XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+                "paymentStartDate": "2021-03-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2016-03-31",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2021-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-02-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2021-01-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-12-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-11-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-10-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-09-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-08-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-07-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-06-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-05-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-04-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-03-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-02-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2020-01-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-12-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-11-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-10-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-09-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-08-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-07-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-06-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-05-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-04-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-03-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-02-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2019-01-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2018-12-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2018-11-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2018-10-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2018-09-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2018-08-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2018-07-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2018-06-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2018-05-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2018-04-01",
+                    "status": "XXX"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Auto Loan (Personal)",
+                "accountNumber": "AUR014200959313",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2014-03-14",
+                "dateReported": "2018-01-31",
+                "highCreditAmount": "550000",
+                "index": "26",
+                "lastPaymentDate": "2015-10-01",
+                "memberShortName": "AXIS BANK",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2015-02-01",
+                "paymentFrequency": "",
+                "paymentHistory": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000XXX000000000000",
+                "paymentStartDate": "2018-01-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2015-11-13",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2018-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2017-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2016-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2015-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2015-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2015-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2015-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2015-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2015-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2015-06-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2015-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2015-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2015-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2015-02-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            }],
+            "enquiries": [
+            {
+                "enquiryAmount": "1000",
+                "enquiryDate": "2025-07-19",
+                "enquiryPurpose": "10",
+                "index": "1",
+                "memberShortName": "ICICI BANK"
+            },
+            {
+                "enquiryAmount": "1000",
+                "enquiryDate": "2025-06-20",
+                "enquiryPurpose": "10",
+                "index": "2",
+                "memberShortName": "HDFC BANK"
+            },
+            {
+                "enquiryAmount": "1",
+                "enquiryDate": "2025-04-10",
+                "enquiryPurpose": "01",
+                "index": "3",
+                "memberShortName": "BOI"
+            },
+            {
+                "enquiryAmount": "1",
+                "enquiryDate": "2025-04-03",
+                "enquiryPurpose": "01",
+                "index": "4",
+                "memberShortName": "BOI"
+            },
+            {
+                "enquiryAmount": "1000",
+                "enquiryDate": "2025-03-07",
+                "enquiryPurpose": "10",
+                "index": "5",
+                "memberShortName": "HDFC BANK"
+            },
+            {
+                "enquiryAmount": "1000",
+                "enquiryDate": "2025-03-06",
+                "enquiryPurpose": "00",
+                "index": "6",
+                "memberShortName": "HERO FINCORP"
+            },
+            {
+                "enquiryAmount": "1000000",
+                "enquiryDate": "2025-01-29",
+                "enquiryPurpose": "50",
+                "index": "7",
+                "memberShortName": "BOB"
+            },
+            {
+                "enquiryAmount": "1",
+                "enquiryDate": "2024-12-13",
+                "enquiryPurpose": "00",
+                "index": "8",
+                "memberShortName": "BOI"
+            },
+            {
+                "enquiryAmount": "100000",
+                "enquiryDate": "2024-09-13",
+                "enquiryPurpose": "04",
+                "index": "9",
+                "memberShortName": "PIRAENLIM"
+            },
+            {
+                "enquiryAmount": "4000000",
+                "enquiryDate": "2024-09-04",
+                "enquiryPurpose": "52",
+                "index": "10",
+                "memberShortName": "BOI"
+            },
+            {
+                "enquiryAmount": "690000",
+                "enquiryDate": "2024-09-03",
+                "enquiryPurpose": "01",
+                "index": "11",
+                "memberShortName": "BOB"
+            },
+            {
+                "enquiryAmount": "150000",
+                "enquiryDate": "2024-08-02",
+                "enquiryPurpose": "00",
+                "index": "12",
+                "memberShortName": "BAJAJ FIN LTD"
+            },
+            {
+                "enquiryAmount": "1000",
+                "enquiryDate": "2024-07-23",
+                "enquiryPurpose": "00",
+                "index": "13",
+                "memberShortName": "HERO FINCORP"
+            },
+            {
+                "enquiryAmount": "29000000",
+                "enquiryDate": "2024-07-18",
+                "enquiryPurpose": "52",
+                "index": "14",
+                "memberShortName": "BOI"
+            },
+            {
+                "enquiryAmount": "50000",
+                "enquiryDate": "2024-07-13",
+                "enquiryPurpose": "10",
+                "index": "15",
+                "memberShortName": "INDUSIND BANK"
+            },
+            {
+                "enquiryAmount": "1",
+                "enquiryDate": "2024-06-14",
+                "enquiryPurpose": "51",
+                "index": "16",
+                "memberShortName": "BOI"
+            },
+            {
+                "enquiryAmount": "4000000",
+                "enquiryDate": "2024-05-03",
+                "enquiryPurpose": "05",
+                "index": "17",
+                "memberShortName": "ICICI BANK"
+            },
+            {
+                "enquiryAmount": "1000",
+                "enquiryDate": "2023-12-14",
+                "enquiryPurpose": "00",
+                "index": "18",
+                "memberShortName": "HERO FINCORP"
+            },
+            {
+                "enquiryAmount": "1",
+                "enquiryDate": "2023-08-21",
+                "enquiryPurpose": "54",
+                "index": "19",
+                "memberShortName": "BOI"
+            },
+            {
+                "enquiryAmount": "500000",
+                "enquiryDate": "2023-07-27",
+                "enquiryPurpose": "43",
+                "index": "20",
+                "memberShortName": "IOB"
+            },
+            {
+                "enquiryAmount": "100",
+                "enquiryDate": "2022-12-13",
+                "enquiryPurpose": "00",
+                "index": "21",
+                "memberShortName": "HERO FINCORP"
+            },
+            {
+                "enquiryAmount": "10000",
+                "enquiryDate": "2022-11-15",
+                "enquiryPurpose": "13",
+                "index": "22",
+                "memberShortName": "IDFC FIRST BANK"
+            }],
+            "response":
+            {
+                "consumerSummaryresp":
+                {
+                    "accountSummary":
+                    {
+                        "totalAccounts": 27,
+                        "highCreditAmount": 58559501,
+                        "currentBalance": 52801612,
+                        "overdueAccounts": 1,
+                        "overdueBalance": 7291,
+                        "zeroBalanceAccounts": 19,
+                        "recentDateOpened": "2025-04-11",
+                        "oldestDateOpened": "2014-03-14"
+                    },
+                    "inquirySummary":
+                    {
+                        "totalInquiry": 22,
+                        "inquiryPast30Days": "",
+                        "inquiryPast12Months": "",
+                        "inquiryPast24Months": "",
+                        "recentInquiryDate": ""
+                    }
+                }
+            }
+        }]
+    },
+    "status_code": 200,
+    "success": true,
+    "message": "Success",
+    "message_code": "success"
+}

@@ -8,6 +8,6 @@
     require("./cibil-grades");
     require("./enhanced-risk-assessment");
     require("./risk-assessment");
-
+    require("./calculate-cibil");
 
 })();

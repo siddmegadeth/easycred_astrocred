@@ -29,5 +29,17 @@
         "methods": [
             "GET"
         ]
+    },
+    {
+        "path": "/get/check/credit/report/cibil",
+        "methods": [
+            "GET"
+        ]
+    },
+    {
+        "path": "/get/api/cibil/data/calculate",
+        "methods": [
+            "GET"
+        ]
     }]
 }

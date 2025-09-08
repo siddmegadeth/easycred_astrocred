@@ -17,13 +17,12 @@
             return;
         }
 
-        // In a real implementation, you would fetch from actual APIs
-        // For now, we'll use simulated data based on the search results
+        // Simulated API response based on current Indian economic data
         var economicData = {
-            gdpGrowth: 6.5, // RBI maintains FY26 forecast at 6.5% :cite[3]:cite[10]
-            inflationRate: 1.55, // Fell to 1.55% in July 2025 :cite[4]
-            repoRate: 5.5, // Current repo rate is 5.5% :cite[6]
-            reverseRepoRate: 3.35, // Reverse repo rate :cite[6]
+            gdpGrowth: 6.5, // RBI maintains FY26 forecast at 6.5%
+            inflationRate: 1.55, // Fell to 1.55% in July 2025
+            repoRate: 5.5, // Current repo rate is 5.5%
+            reverseRepoRate: 3.35, // Reverse repo rate
             unemploymentRate: 7.3, // Estimated based on historical data
             marketSentiment: this.calculateMarketSentiment(),
             lastUpdated: new Date().toISOString(),
@@ -40,7 +39,6 @@
     // Calculate market sentiment score (0-100)
     EconomicDataService.prototype.calculateMarketSentiment = function() {
         // Simulate market sentiment based on various factors
-        // In a real implementation, this would analyze stock market trends, news, etc.
         var baseSentiment = 75; // Generally positive sentiment
 
         // Adjust based on economic conditions (simplified)
