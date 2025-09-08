@@ -3,6 +3,25 @@
         this.data = cibilData;
         this.creditReport = cibilData.credit_report[0];
     }
+
+
+    // Add a helper method to safely convert values to numbers
+    GradingEngine.prototype.safeToNumber = function(value) {
+        if (value === undefined || value === null) return 0;
+
+        // Handle string values that might be formatted with commas or other characters
+        if (typeof value === 'string') {
+            // Remove commas and any non-numeric characters except decimal point and minus sign
+            var cleaned = value.replace(/[^\d.-]/g, '');
+            var num = parseFloat(cleaned);
+            return isNaN(num) ? 0 : num;
+        }
+
+        // For numbers, just return them
+        return typeof value === 'number' ? value : 0;
+    };
+
+
     // Enhanced payment history parsing for CIBIL data
     // Enhanced payment history parsing
     GradingEngine.prototype.parsePaymentHistory = function(account) {
@@ -96,71 +115,64 @@
     };
 
     // Enhanced payment status categorization
+    // Enhanced payment status categorization for CIBIL specific codes
     GradingEngine.prototype.categorizePaymentStatus = function(status) {
         if (!status) return 'Not Reported';
 
         // Convert to string and normalize
         var statusStr = String(status).toUpperCase().trim();
 
-        // Handle numeric status codes
+        // Handle CIBIL-specific status codes first
+        switch (statusStr) {
+            case '000':
+            case '00':
+            case '0':
+            case 'STD': // Standard
+            case 'CUR': // Current
+            case 'OK':
+                return 'Paid';
+
+            case 'SMA': // Special Mention Account
+                return 'Delayed';
+
+            case 'DBT': // Doubtful
+            case 'DEF': // Default
+            case 'LSS': // Loss
+            case 'SUB': // Substandard
+            case 'WO': // Write-off
+                return 'Missed';
+
+            case 'XXX': // Not reported
+            case 'NA': // Not available
+            case 'NR': // Not Reported
+            case '': // Empty
+                return 'Not Reported';
+        }
+
+        // Handle numeric status codes (common in CIBIL)
         if (!isNaN(statusStr)) {
             var statusNum = parseInt(statusStr);
 
+            // CIBIL numeric codes represent days past due
             if (statusNum === 0) return 'Paid';
             if (statusNum >= 1 && statusNum <= 30) return 'Delayed';
             if (statusNum >= 31 && statusNum <= 90) return 'Missed';
             if (statusNum > 90) return 'Missed'; // Severe delinquency
         }
 
-        // Handle text status codes
-        switch (statusStr) {
-            case 'STD': // Standard
-            case '000':
-            case '0':
-            case 'CUR': // Current
-            case 'OK':
-                return 'Paid';
-
-            case 'SMA': // Special Mention Account
-            case 'DPD': // Days Past Due
-            case 'LSS': // Loss
-                return 'Missed';
-
-            case 'SUB': // Substandard
-            case 'DBT': // Doubtful
-            case 'DEF': // Default
-            case 'WO': // Write-off
-                return 'Missed';
-
-            case 'XXX': // Not reported
-            case 'NA': // Not available
-            case '': // Empty
-            case 'NR': // Not Reported
-                return 'Not Reported';
-
-            default:
-                // Handle non-standard codes by checking if they contain numbers
-                if (/\d/.test(statusStr)) {
-                    var numMatch = statusStr.match(/\d+/);
-                    if (numMatch) {
-                        var num = parseInt(numMatch[0]);
-                        if (num === 0) return 'Paid';
-                        if (num > 0 && num <= 30) return 'Delayed';
-                        if (num > 30) return 'Missed';
-                    }
-                }
-
-                // If it's a string without numbers, try to interpret
-                if (statusStr.includes('CUR') || statusStr.includes('STD') || statusStr.includes('OK')) {
-                    return 'Paid';
-                } else if (statusStr.includes('SMA') || statusStr.includes('DPD')) {
-                    return 'Delayed';
-                } else if (statusStr.includes('SUB') || statusStr.includes('DBT') || statusStr.includes('DEF')) {
-                    return 'Missed';
-                }
-
-                return 'Not Reported';
+        // Handle string codes that might contain numbers
+        if (/\d/.test(statusStr)) {
+            var numMatch = statusStr.match(/\d+/);
+            if (numMatch) {
+                var num = parseInt(numMatch[0]);
+                if (num === 0) return 'Paid';
+                if (num > 0 && num <= 30) return 'Delayed';
+                if (num > 30) return 'Missed';
+            }
         }
+
+        // Default to Not Reported for unknown codes
+        return 'Not Reported';
     };
 
     // Update the payment history score calculation
@@ -241,18 +253,20 @@
         return 'D';
     };
 
+    // Update the credit utilization calculation methods
     GradingEngine.prototype.calculateCreditUtilizationScore = function() {
         var totalBalance = 0;
         var totalLimit = 0;
 
         this.creditReport.accounts.forEach(function(account) {
-            if (account.currentBalance !== undefined && account.currentBalance !== null) {
-                totalBalance += account.currentBalance;
-            }
-            if (account.highCreditAmount !== undefined && account.highCreditAmount !== null) {
-                totalLimit += account.highCreditAmount;
-            }
-        });
+            // Use safe conversion for both balance and limit
+            var balance = this.safeToNumber(account.currentBalance);
+            var limit = this.safeToNumber(account.highCreditAmount);
+
+            // Only add positive values
+            if (balance > 0) totalBalance += balance;
+            if (limit > 0) totalLimit += limit;
+        }, this);
 
         if (totalLimit === 0) return 50;
 
@@ -292,21 +306,20 @@
         return 50;
     };
 
+    // Also update the debt burden calculation to use safe conversion
     GradingEngine.prototype.calculateDebtBurdenScore = function() {
         var totalDebt = 0;
-
-        this.creditReport.accounts.forEach(function(account) {
-            if (account.currentBalance !== undefined && account.currentBalance !== null) {
-                totalDebt += account.currentBalance;
-            }
-        });
-
         var totalAssets = 0;
+
         this.creditReport.accounts.forEach(function(account) {
-            if (account.highCreditAmount !== undefined && account.highCreditAmount !== null) {
-                totalAssets += account.highCreditAmount;
-            }
-        });
+            // Use safe conversion for both balance and limit
+            var balance = this.safeToNumber(account.currentBalance);
+            var limit = this.safeToNumber(account.highCreditAmount);
+
+            // Only add positive values
+            if (balance > 0) totalDebt += balance;
+            if (limit > 0) totalAssets += limit;
+        }, this);
 
         if (totalAssets === 0) return 50;
 
@@ -498,16 +511,18 @@
         var totalLimit = 0;
 
         this.creditReport.accounts.forEach(function(account) {
-            if (account.currentBalance !== undefined && account.currentBalance !== null) {
-                totalBalance += account.currentBalance;
-            }
-            if (account.highCreditAmount !== undefined && account.highCreditAmount !== null) {
-                totalLimit += account.highCreditAmount;
-            }
-        });
+            // Use safe conversion for both balance and limit
+            var balance = this.safeToNumber(account.currentBalance);
+            var limit = this.safeToNumber(account.highCreditAmount);
+
+            // Only add positive values
+            if (balance > 0) totalBalance += balance;
+            if (limit > 0) totalLimit += limit;
+        }, this);
 
         return totalLimit > 0 ? (totalBalance / totalLimit) * 100 : 0;
     };
+
 
     GradingEngine.prototype.getCreditAge = function() {
         var oldestDate = new Date();
