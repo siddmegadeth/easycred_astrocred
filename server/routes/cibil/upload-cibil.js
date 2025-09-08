@@ -3,6 +3,97 @@
     var AdvancedAnalytics = require("./api/analytics-engine-advance.js");
     var RiskAssessment = require("./api/risk-assessment.js");
 
+    async function getMobileToPAN(fullname, mobile) {
+
+        return new Promise(function(approve, reject) {
+
+            try {
+                log("getMobileToPAN");
+                if (mobile && fullname) {
+                    var URL = process.env.SUREPASS_URL + "/api/v1/pan/mobile-to-pan";
+                    log('URL :' + URL);
+
+                    const options = {
+                        method: 'POST',
+                        url: URL,
+                        headers: {
+                            "accept": 'application/json',
+                            "Authorization": 'Bearer ' + process.env.SUREPASS_TOKEN,
+                            "content-type": 'application/json'
+                        },
+                        data: {
+                            "name": fullname,
+                            "mobile_no": mobile
+                        }
+                    };
+                    axios(options)
+                        .then(function(response) {
+                            log('response Success getMobileToPAN : ');
+                            log(response);
+                            approve(response.data); //send original and new fresh link while updating the same to DB
+                        })
+                        .catch(function(errorResp) {
+                            log('Response Error getMobileToPAN :');
+                            log(errorResp.status);
+                            reject(errorResp);
+                        });
+
+                } else {
+                    reject({ status: false });
+                }
+            } catch (catchError) {
+                reject(catchError);
+            }
+
+        });
+    };
+
+
+    async function fetchCIBILReport(params) {
+        return new Promise(function(approve, reject) {
+            try {
+
+                log("fetchCIBIL : ");
+                var URL = process.env.SUREPASS_URL + "/api/v1/credit-report-cibil/fetch-report";
+                log('URL :' + URL);
+
+                log('Params For CIBIL Report :');
+                log(params);
+
+                const options = {
+                    method: 'POST',
+                    url: URL,
+                    headers: {
+                        "accept": 'application/json',
+                        "Authorization": 'Bearer ' + process.env.SUREPASS_TOKEN,
+                        "content-type": 'application/json'
+                    },
+                    data: {
+                        "mobile": params.mobile,
+                        "pan": params.pan,
+                        "name": params.name,
+                        "gender": params.gender,
+                        "consent": "Y"
+                    }
+                };
+                axios(options)
+                    .then(function(response) {
+                        log('response Success fetchCIBIL : ');
+                        approve(response.data); //send original and new fresh link while updating the same to DB
+                    })
+                    .catch(function(errorResp) {
+                        log('Response Error fetchCIBIL :');
+                        log(errorResp.status);
+                        reject(errorResp);
+                    })
+
+            } catch (catchError) {
+                reject(catchError);
+            }
+        });
+
+    }
+
     // Upload and analyze CIBIL data
     app.get('/get/api/cibil/upload', function(req, res) {
         try {
