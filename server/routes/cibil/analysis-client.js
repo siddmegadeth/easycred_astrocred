@@ -5,7 +5,7 @@
         try {
             var client_id = req.params.client_id;
 
-            CibilData.findOne({ client_id: client_id }, function(err, cibilData) {
+            CibilDataModel.findOne({ client_id: client_id }, function(err, cibilData) {
                 if (err) {
                     console.error('Error finding CIBIL data:', err);
                     return res.status(500).json({ error: 'Internal server error' });

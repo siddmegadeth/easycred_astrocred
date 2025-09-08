@@ -4,7 +4,7 @@
     // Get all clients with their grades (for admin/analytics)
     app.get('/get/api/cibil/clients/grades', function(req, res) {
         try {
-            CibilData.find({}, function(err, allClients) {
+            CibilDataModel.find({}, function(err, allClients) {
                 if (err) {
                     console.error('Error finding CIBIL data:', err);
                     return res.status(500).json({ error: 'Internal server error' });
