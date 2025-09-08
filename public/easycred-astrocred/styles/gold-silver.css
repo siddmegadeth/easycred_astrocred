@@ -1,0 +1,453 @@
+/* Dialog Container */
+.gold-dialog {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    overflow: hidden;
+    background: transparent;
+}
+
+
+
+/* Header */
+.dialog-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.dialog-header h3 {
+    color: #d4af37;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.dialog-header p {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Tabs */
+.dialog-tabs {
+    margin-bottom: 20px;
+}
+
+.dialog-tabs .nav-link {
+    color: #666;
+    border-radius: 20px;
+    padding: 8px 0;
+    transition: all 0.3s;
+}
+
+.dialog-tabs .nav-link.active {
+    background: linear-gradient(135deg, #d4af37, #f9d423);
+    color: white;
+    font-weight: 500;
+}
+
+/* Input Groups */
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+    color: #555;
+}
+
+.convert-result {
+    min-width: 100px;
+    background-color: #f8f9fa;
+    color: #d4af37;
+    font-weight: bold;
+}
+
+.form-control {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+}
+
+.form-control:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+}
+
+/* Balance Info */
+.balance-info {
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 20px 0;
+}
+
+.balance-info h4 {
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.balance-details {
+    display: flex;
+    justify-content: space-around;
+}
+
+.balance-label {
+    display: block;
+    color: #666;
+    font-size: 14px;
+}
+
+.balance-value {
+    color: #d4af37;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* Buttons */
+.dialog-actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.btn-buy {
+    background: linear-gradient(135deg, #d4af37, #f9d423);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 30px;
+    font-weight: 600;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.btn-buy:active {
+    transform: scale(0.98);
+}
+
+.btn-sell {
+    background: linear-gradient(135deg, #4CAF50, #8BC34A);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 30px;
+    font-weight: 600;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.btn-sell:active {
+    transform: scale(0.98);
+}
+
+.btn-close {
+    color: white !important;
+    border: 1px solid #ddd;
+    /* border-radius: 8px; */
+    /* padding: 10px 20px; */
+    width: 97%;
+    margin-top: 10px;
+    background: #ffca00;
+    margin-left: 6px;
+    margin-right: 6px;
+    margin-bottom: 6px;
+}
+
+
+.tab-content {
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+    width: 97% !important;
+}
+
+/* Sell Dialog Specific */
+.sell-dialog .dialog-header h3 {
+    color: #4CAF50;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+    .gold-dialog {
+        width: 100%;
+        background: transparent;
+    }
+
+    .balance-details {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/*Wallet.csss*/
+
+.wallet-page {
+    background-color: #f5f7fa;
+    color: #333;
+}
+
+
+.toolbar-title {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.back-button {
+    color: #333 !important;
+}
+
+.refresh-control {
+    color: #666;
+    font-size: 14px;
+    padding: 10px 0;
+}
+
+.loading-bar {
+    background-color: #e8b74a;
+}
+
+.loading-dialog {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.dialog-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loader-circular {
+    color: #e8b74a;
+    width: 40px;
+    height: 40px;
+}
+
+.dialog-text {
+    margin-top: 10px;
+    color: #333;
+    font-size: 14px;
+}
+
+.content-padding {
+    padding: 16px;
+    overflow: scroll !important;
+    height: 92%;
+}
+
+.balance-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    color: #333;
+}
+
+.kyc-badge {
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.kyc-badge.verified {
+    background-color: #e3f7e8;
+    color: #28a745;
+}
+
+.kyc-badge.pending {
+    background-color: #fff3cd;
+    color: #d39e00;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #555;
+}
+
+.info-icon {
+    margin-right: 8px;
+    color: #666;
+}
+
+.balance-display {
+    display: flex;
+    gap: 12px;
+}
+
+.balance-item {
+    flex: 1;
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.balance-item.gold {
+    border-left: 3px solid #e8b74a;
+}
+
+.balance-item.value {
+    border-left: 3px solid #28a745;
+}
+
+.balance-icon {
+    font-size: 24px;
+    margin-right: 10px;
+    color: #e8b74a;
+}
+
+.balance-item.value .balance-icon {
+    color: #28a745;
+}
+
+.balance-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.balance-label {
+    font-size: 12px;
+    color: #666;
+}
+
+.balance-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.empty-icon {
+    font-size: 48px;
+    color: #ccc;
+    margin-bottom: 15px;
+}
+
+.empty-title {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.empty-text {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 20px;
+}
+
+.retry-button {
+    background-color: #e8b74a;
+    color: white;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.history-section {
+    margin-top: 20px;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 15px;
+    padding-left: 8px;
+}
+
+.order-card {
+    background: white;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.order-id {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.order-status {
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.order-status.confirmed {
+    background-color: #e3f7e8;
+    color: #28a745;
+}
+
+.order-status.pending {
+    background-color: #fff3cd;
+    color: #d39e00;
+}
+
+.order-details {
+    margin-bottom: 12px;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: #666;
+}
+
+.detail-icon {
+    margin-right: 8px;
+    font-size: 16px;
+    color: #888;
+}
+
+.order-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.amount {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+/*Custome*/
+.dialog-container-mmtc {
+    width: 320px !important;
+}

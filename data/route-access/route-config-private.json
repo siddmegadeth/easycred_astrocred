@@ -1,0 +1,10 @@
+{
+
+    "private": [
+    {
+        "path": "/get/auth/user/onboarding/social/login",
+        "methods": [
+            "GET"
+        ]
+    }]
+}

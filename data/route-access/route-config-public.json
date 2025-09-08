@@ -1,0 +1,33 @@
+{
+    "public": [
+    {
+        "path": "/",
+        "methods": [
+            "GET"
+        ]
+    },
+    {
+        "path": "/get/api/cibil/upload",
+        "methods": [
+            "GET"
+        ]
+    },
+    {
+        "path": "/get/api/cibil/analysis/",
+        "methods": [
+            "GET"
+        ]
+    },
+    {
+        "path": "/get/api/cibil/clients/grades",
+        "methods": [
+            "GET"
+        ]
+    },
+    {
+        "path": "/get/api/cibil/health",
+        "methods": [
+            "GET"
+        ]
+    }]
+}

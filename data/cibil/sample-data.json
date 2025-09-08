@@ -1,0 +1,150 @@
+{
+    "data":
+    {
+        "client_id": "credit_report_cibil_uaLfgOihlOpkdTdsssxA",
+        "mobile": "9708016996",
+        "pan": "IVZPK2103N",
+        "name": "SHIV KUMAR",
+        "gender": "male",
+        "credit_score": "663",
+        "credit_report": [
+        {
+            "names": [
+            {
+                "index": "N01",
+                "name": "DUMMY NAME",
+                "birthDate": "2010-10-10",
+                "gender": "2"
+            }],
+            "ids": [
+            {
+                "index": "I01",
+                "idType": "01",
+                "idNumber": "XXXXX1010X"
+            },
+            {
+                "index": "I02",
+                "idType": "04",
+                "idNumber": "12345678909876"
+            },
+            {
+                "index": "I03",
+                "idType": "06",
+                "idNumber": "XXXXXXXXXXXX"
+            },
+            {
+                "index": "I04",
+                "idType": "09",
+                "idNumber": "12345678564323"
+            }],
+            "telephones": [
+            {
+                "index": "T01",
+                "telephoneNumber": "1234567890",
+                "telephoneType": "03"
+            },
+            {
+                "index": "T02",
+                "telephoneNumber": "1234567890",
+                "telephoneType": "01"
+            },
+            {
+                "index": "T03",
+                "telephoneNumber": " 912345678909",
+                "telephoneType": "00"
+            }],
+            "emails": [
+            {
+                "index": "C01",
+                "emailID": "NA@NA.NA"
+            }],
+            "employment": [
+            {
+                "index": "E01",
+                "accountType": "08",
+                "dateReported": "08032024",
+                "occupationCode": "04"
+            }],
+            "scores": [
+            {
+                "scoreName": "CIBILTUSC3",
+                "scoreCardName": "08",
+                "scoreCardVersion": "10",
+                "scoreDate": "01012010",
+                "score": "00663",
+                "reasonCodes": [
+                {
+                    "reasonCodeName": "reasonCode1",
+                    "reasonCodeValue": "07"
+                },
+                {
+                    "reasonCodeName": "reasonCode2",
+                    "reasonCodeValue": "03"
+                },
+                {
+                    "reasonCodeName": "reasonCode3",
+                    "reasonCodeValue": "04"
+                },
+                {
+                    "reasonCodeName": "reasonCode4",
+                    "reasonCodeValue": "01"
+                }]
+            }],
+            "addresses": [
+            {
+                "index": "A01",
+                "line1": "DELHI",
+                "stateCode": "07",
+                "pinCode": "110011",
+                "addressCategory": "02",
+                "dateReported": "10101011",
+                "enquiryEnriched": "Y"
+            },
+            {
+                "index": "A02",
+                "line1": "SO DUMMY NAME VILL XXXXXXX",
+                "line3": "POST XXXXXXX XXXXXXX XXXXXXX",
+                "line5": "XXXXXXX-XXXXXXX",
+                "stateCode": "10",
+                "pinCode": "111111",
+                "addressCategory": "02",
+                "residenceCode": "01",
+                "dateReported": "111111"
+            }],
+            "accounts": [
+            {
+                "index": "T001",
+                "memberShortName": "NOT DISCLOSED",
+                "accountType": "08",
+                "ownershipIndicator": 1,
+                "dateOpened": "11111111",
+                "lastPaymentDate": "11111111",
+                "dateReported": "11111111",
+                "highCreditAmount": 11111111,
+                "currentBalance": 79926,
+                "paymentHistory": "DSFSDFSDFSDFNSDKFHSJKDBNFJSHIDUFBSDIBFIUSDBFUIBCSDBCSUIHZDFIOESBF",
+                "paymentStartDate": "11111111",
+                "paymentEndDate": "01042021",
+                "creditFacilityStatus": "00",
+                "collateralType": "00",
+                "interestRate": 13.5,
+                "paymentTenure": 147,
+                "emiAmount": 3182,
+                "paymentFrequency": "03",
+                "actualPaymentAmount": 73557
+            }],
+            "enquiries": [
+            {
+                "index": "I001",
+                "enquiryDate": "11111111",
+                "memberShortName": "FINTELLIGENCE",
+                "enquiryPurpose": "05",
+                "enquiryAmount": 49500
+            }]
+        }]
+    },
+    "status_code": 200,
+    "success": true,
+    "message": "Success",
+    "message_code": "success"
+}

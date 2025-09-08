@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html data-bs-theme="light">
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!-- mapbox -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.8.0/mapbox-gl.css" rel="stylesheet" />
+    <!-- Mapbox Direction -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.css" rel="stylesheet" type="text/css" />
+    <!-- Mapbox geocoder -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css" rel="stylesheet" type="text/css" />
+    <!--  -->
+    <!-- Add Mapbox Gl/Decoder/geocoder support with Map rendering -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.8.0/mapbox-gl.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+    <!-- toast -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <!-- Tags -->
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
+    <!-- Clouidanry -->
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+    <!-- Filepond -->
+    <!--  -->
+    <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
+    <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
+    <!--  -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.bubble.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+    <!-- filepond -->
+    <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
+    <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js" integrity="sha512-KZmyTq3PLx9EZl0RHShHQuXtrvdJ+m35tuOiwlcZfs/rE7NZv29ygNA8SFCkMXTnYZQK2OX0Gm2qKGfvWEtRXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <%  if (locals.isArticleRendered) { %>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org/",
+        "@type": "Article",
+        "headline": "",
+        "image": {
+            "@type": "ImageObject",
+            "url": "<%= locals.image %>",
+            "width": "400",
+            "height": "400"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "<%= locals.heading %>"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "easycred",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "<%= locals.image %>",
+                "width": "400",
+                "height": "400"
+            }
+        },
+        "datePublished": ""
+    }
+    </script>
+    <%  } %>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org/",
+        "@type": "WebSite",
+        "name": "easycred",
+        "url": "https://easycred.co.in/",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "{search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+    <!-- OTPLESS SDK -->
+    <script id="otpless-sdk" type="text/javascript" data-appid="O0DR12VV0RZ492PGF7HK" src="https://otpless.com/v2/auth.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js" integrity="sha512-hUhvpC5f8cgc04OZb55j0KNGh4eh7dLxd/dPSJ5VyzqDWxsayYbojWyl5Tkcgrmb/RVKCRJI1jNlRbVP4WWC4w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.9/dist/css/autoComplete.01.min.css">
+    <!--  -->
+    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
+    <meta name="msvalidate.01" content="B3617B0174EE3A9FCDA186D424C42B89" />
+    <meta name="robots" content="index, follow">
+    <!--  -->
+    <!--  -->
+    <link rel="shortcut icon" type="image/png" href="easycred.png" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <meta name="google-site-verification" content="b9eiVnigwhM9MoXV0L8SPv5ePCsxuuSnyAIY4m4mHMs" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/css/lightbox.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="fluxcapsoftware">
+    <meta name="generator" content="Hugo 0.84.0">
+    <meta name="theme-color" content="#1a1a1a">
+    <!-- Favicons -->
+    <link href="img/favicon.png" rel="icon">
+    <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
+    <script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.2/sharer.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <!-- OPENGRAPH TAGS -->
+    <meta property="og:site_name" content='easycred'>
+    <meta property="og:url" content=https://www.easycred.co.in />
+    <meta property="og:type" content="">
+    <%  if (locals.heading || locals.tags) { %>
+    <!--  -->
+    <title>easycred.
+        <%= locals.heading %>
+    </title>
+    <meta name="description" content="easycred. <%= locals.heading %>" />
+    <meta property="og:description" content="<%= locals.heading %> <%= locals.tags %>  " />
+    <meta property="og:title" content='easycred  <%= locals.heading %>'>
+    <meta property="og:description" content=' easycred. <%= locals.heading %>'>
+    <meta name="title" content="easycred  <%= locals.heading %>">
+    <meta name="keywords" content=" <%= locals.heading %>  <%= locals.tags %>,carwale,bikewale,gears.Motorcycles,youtube,instagram,channel,learning,best blogs,google,trending news,trending blogs,trending,virtual games,motorcycles,virtual,realism,physics,blogs,carwle,bikedekho,cardekho,hero honda,zmr,karizma,upcoming motorcycles in 2024,upcoming motorcycles in 2025,2025,trend,reels,emi,bajaj,aditya birla group,cibil,sibil score,paisabazaar,banks,sbi,sbi india,researve bank,bak of india">
+    <meta name="og:image" property="og:image" content="<%= locals.image %>" />
+    <%  } else{ %>
+    <title>Easycred.PL/CL In 30 Seconds</title>
+    <meta name="description" content="easycred. PL/CL in 30 Seconds " />
+    <meta property="og:description" content=" easycred. PL/CL in 30 Seconds " />
+    <meta property="og:title" content='easycred  <%= locals.heading %>'>
+    <meta name="title" content="easycred">
+    <meta name="keywords" content="carwale,bikewale,gears.Motorcycles,youtube,instagram,channel,learning,best blogs,google,trending news,trending blogs,trending,virtual games,motorcycles,virtual,realism,physics,blogs,carwle,bikedekho,cardekho,hero honda,zmr,karizma,upcoming motorcycles in 2024,upcoming motorcycles in 2025,2025,trend,reels">
+    <meta name="og:image" property="og:image" content="/img/favicon/web-app-manifest-512x512.png" />
+    <%  } %>
+    <link rel="icon" type="image/png" href="/img/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/img/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Easycred" />
+    <link rel="manifest" href="/img/favicon/site.webmanifest" / <!-- META -->
+    <meta name="googlebot-news" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://pl.easycred.co.in" />
+    <!--  -->
+    <meta name="author" content="easycred">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/css/cover.css">
+    <link rel="stylesheet" href="/css/lux-bootstrap.min.css">
+    <link rel="icon" type="image/x-icon" href="/img/favicon/apple-touch-icon.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.21.16/dist/css/uikit.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.16/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.16/dist/js/uikit-icons.min.js"></script>
+    <script id="dsq-count-scr" src="//https-www-easycred-co-in.disqus.com/count.js" async></script>
+    <!--  HTMX -->
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <div id="loader" class="center"></div>
+    <%- include('navbar') %>
+    <section>
+        <%- body %>
+    </section>
+    <%- include('footer') %>
+</body>
+
+</html>
+<style>
+html,
+body {
+    font-family: sans-serif;
+    color: #333;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    max-width: 100%;
+    overflow-x: hidden;
+    background-image: repeating-linear-gradient(36deg, rgba(255,255,255, 0.1), rgba(255,255,255, 0.1) 1px, transparent 0px, transparent 2px);
+    background-size: 1px 1px;
+
+}
+
+
+img {
+    height: 220px;
+    width: 100%;
+    object-fit: contain;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background: black;
+    border: 1px solid #dcdcdc;
+    border-radius: 11px;
+    text-align: center;
+}
+
+img.bd-placeholder-img.card-img-top {
+    width: 100% !important;
+    height: 396px;
+    object-fit: cover;
+    padding-top: 0;
+    margin-top: 0;
+}
+
+.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card.shadow.mb-5.bg-white.rounded {
+    border: none !important;
+}
+
+.card {
+    border: none !important;
+}
+
+// .active {
+//     background: #333;
+//     color: white !important;
+//     height: 40px;
+//     border-radius: 10px;
+//     font-weight: bold;
+// }
+.breadcrumb-item .active {}
+</style>
+<style>
+nav.navbar.navbar-expand-lg.bg-primary {
+    background: #191ca9 !important;
+}
+
+button.btn.btn-primary {
+    background: #191ca9 !important;
+}
+
+#loader {
+    border: 12px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 12px solid #444444;
+    width: 70px;
+    height: 70px;
+    animation: spin 1s linear infinite;
+}
+
+.center {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+
+
+[data-bs-theme="light"] {
+
+
+    .list-group {
+        --bs-list-group-bg: #ffffff;
+        --bs-list-group-color: #333;
+    }
+
+    .list-group-item {
+        background-color: #ffffff;
+        color: #333;
+
+    }
+}
+
+
+[data-bs-theme="dark"] {
+
+    h1.fw-bolder.mb-3{
+        color: #ededed;
+    }
+    .list-group {
+        --bs-list-group-bg: inherit !important;
+        --bs-list-group-color:  !important;
+        ;
+    }
+
+    .list-group-item {
+        background: inherit !important;
+        color: #ededed;
+
+    }
+
+    .form-label {
+        color: #ededed;
+
+    }
+
+    h4.mb-3 {
+        color: #ededed;
+    }
+
+    label.form-check-label {
+        color: #ededed;
+
+    }
+
+    td {
+        color: #ededed;
+    }
+
+    h2.mb-3 {
+        color: #ededed;
+    }
+
+    span.h4.me-2 {
+        color: #ededed;
+    }
+
+    p.mb-4 {
+        color: #ededed;
+    }
+
+    h5 {
+        color: #ededed;
+    }
+
+    label.btn.btn-outline-dark {
+        color: #ededed;
+        color: #ededed;
+        border: 1px solid #ededed !important;
+        border-radius: 5px;
+    }
+
+    h1.header {
+        color: #ededed;
+    }
+    .card.p-2{
+
+    }
+    span.text-primary{
+       color: #ededed; 
+    }
+    strong{
+      color: #ededed;  
+    }
+}
+
+.fa-check-circle:before, .fa-circle-check:before{
+        color: green;
+}
+
+
+.no-pad{
+    padding:0;
+}
+
+.no-margin{
+    margin:0;
+} 
+
+</style>
+<script>
+var config = {};
+if (window.location.hostname == 'localhost') {
+    console.log(window.location.origin);
+    config = {
+        type: 'development',
+        servername: window.location.origin // only if in production
+    }
+} else {
+    console.log(window.location.origin);
+    config = {
+        type: 'production',
+        servername: 'https://www.easycred.co.in' // only if in production
+    }
+}
+console.log(config);
+window.socket = io(config.servername, {
+    withCredentials: true,
+    transports: ['websocket', 'polling']
+});
+//window.socket = io.connect(config.servername);
+window.log = console.log.bind(console);
+window.error = console.error.bind(console);
+window.warn = console.warn.bind(console);
+
+console.log('Socket :');
+console.log(window.socket);
+
+socket = io();
+
+
+
+document.onreadystatechange = function() {
+    if (document.readyState !== "complete") {
+        document.querySelector("body").style.visibility = "hidden";
+        document.querySelector("#loader").style.visibility = "visible";
+    } else {
+        document.querySelector("#loader").style.display = "none";
+        document.querySelector("body").style.visibility = "visible";
+    }
+
+    if (window.localStorage.easycred_view_mode) {
+        document.documentElement.setAttribute('data-bs-theme', window.localStorage.easycred_view_mode);
+    }
+
+
+};
+</script>

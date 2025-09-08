@@ -1,0 +1,310 @@
+/* Base Styles */
+.easycred-kyc-dashboard {
+    --primary-color: #3498db;
+    --primary-dark: #2980b9;
+    --success-color: #27ae60;
+    --warning-color: #f39c12;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --border-color: #e0e6ed;
+    --background-light: #f8fafc;
+    --white: #ffffff;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--background-light);
+}
+
+/* Toolbar Styling */
+.kyc-toolbar {
+    color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.easycred-logo {
+    font-weight: 700;
+    font-size: 18px;
+    display: block;
+}
+
+.kyc-subtitle {
+    font-size: 14px;
+    opacity: 0.9;
+    display: block;
+    margin-top: 2px;
+}
+
+.menu-button {
+    color: white !important;
+}
+
+/* Loading Indicators */
+.kyc-loader {
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+    height: 3px;
+}
+
+/* Pull to Refresh */
+.kyc-refresh {
+    color: var(--text-secondary);
+    font-size: 14px;
+    padding: 12px 0;
+    background-color: var(--background-light);
+}
+
+/* Main Content */
+.kyc-content {
+    padding: 16px;
+}
+
+/* Verification Header */
+.verification-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.verification-icon {
+    width: 60px;
+    height: 60px;
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+}
+
+.verification-icon i {
+    font-size: 28px;
+    color: white;
+}
+
+.verification-header h2 {
+    font-size: 20px;
+    color: var(--text-primary);
+    margin: 0 0 8px;
+}
+
+.verification-header p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0 0 20px;
+}
+
+/* Progress Tracker */
+.progress-tracker {
+    display: flex;
+    justify-content: center;
+    margin: 21px 0px 40px;
+}
+
+.progress-step {
+    flex: 1;
+    max-width: 160px;
+    text-align: center;
+    position: relative;
+}
+
+.progress-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    right: -50%;
+    height: 2px;
+    background-color: var(--border-color);
+    z-index: 1;
+}
+
+.progress-step.active::after {
+    background-color: var(--success-color);
+}
+
+.step-number {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--border-color);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 8px;
+    position: relative;
+    z-index: 2;
+    font-weight: 500;
+}
+
+.progress-step.active .step-number {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.step-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.progress-step.active .step-label {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* Verification Cards */
+.verification-items {
+    margin-bottom: 24px;
+}
+
+.verification-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.verification-card.completed {
+    border-left: 4px solid var(--success-color);
+}
+
+.verification-card.disabled {
+    opacity: 0.7;
+}
+
+.verification-info {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.verification-icon-container {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(52, 152, 219, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+}
+
+.verification-icon-container i {
+    color: var(--primary-color);
+    font-size: 18px;
+}
+
+.verification-details h3 {
+    font-size: 15px;
+    color: var(--text-primary);
+    margin: 0 0 4px;
+}
+
+.verification-details p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.verified-text {
+    color: var(--success-color) !important;
+    font-weight: 500;
+}
+
+.verification-action {
+    margin-left: 12px;
+}
+
+.verify-button {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.verify-button.disabled {
+    background: var(--border-color);
+    cursor: not-allowed;
+}
+
+.verified-badge {
+    background-color: rgba(39, 174, 96, 0.1);
+    color: var(--success-color);
+    border-radius: 12px;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.verified-badge i {
+    margin-right: 5px;
+}
+
+/* Help Section */
+.help-section {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+.help-section h3 {
+    font-size: 16px;
+    color: var(--text-primary);
+    margin: 0 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.help-section h3 i {
+    margin-right: 8px;
+    color: var(--primary-color);
+}
+
+.help-section p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0 0 12px;
+}
+
+.help-button {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.help-button i {
+    margin-right: 8px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+    .verification-header h2 {
+        font-size: 18px;
+    }
+    
+    .verification-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .verification-action {
+        margin: 12px 0 0;
+        width: 100%;
+    }
+    
+    .verify-button {
+        width: 100%;
+    }
+    
+    .step-label {
+        font-size: 11px;
+    }
+}

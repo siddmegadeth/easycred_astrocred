@@ -1,0 +1,380 @@
+.gold-silver-page {
+    background-color: #f8f5f0;
+    color: #333;
+}
+
+/* Toolbar styling */
+.precious-metals-toolbar {
+    background: linear-gradient(135deg, #f5e6b6 0%, #d4af37 100%);
+    color: #333;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.precious-metals-toolbar .center {
+    font-weight: 600;
+    font-size: 18px;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.easycred-logo {
+    font-weight: 700;
+}
+
+.easycred-gold {
+    color: #8a6d3b;
+    font-weight: 700;
+}
+
+.back-button {
+    color: #333 !important;
+}
+
+/* Loading indicators */
+.gold-loading-bar {
+    background: linear-gradient(90deg, #d4af37, #f5e6b6);
+    height: 3px;
+}
+
+.precious-loader-dialog {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.metals-loader {
+    color: #d4af37;
+    width: 50px;
+    height: 50px;
+}
+
+.precious-loader-dialog p {
+    margin-top: 15px;
+    color: #555;
+    font-size: 14px;
+}
+
+/* Pull to refresh */
+.metals-refresh {
+    color: #8a6d3b;
+    font-size: 14px;
+    padding: 12px 0;
+    background-color: rgba(248, 245, 240, 0.9);
+}
+
+/* Main content */
+.precious-metals-content {
+    padding: 16px;
+}
+
+/* Rates card */
+.rates-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eee8d9;
+}
+
+.rates-title {
+    font-size: 16px;
+    color: #8a6d3b;
+    margin: 0 0 15px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0e9d8;
+}
+
+.rate-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.rate-item:last-child {
+    border-bottom: none;
+}
+
+.rate-info {
+    display: flex;
+    align-items: center;
+}
+
+.rate-icon {
+    font-size: 20px;
+    margin-right: 12px;
+    color: #d4af37;
+}
+
+.rate-label {
+    font-weight: 500;
+    font-size: 14px;
+    color: #333;
+}
+
+.rate-time {
+    font-size: 11px;
+    color: #888;
+    margin-top: 2px;
+}
+
+.rate-value {
+    font-weight: 600;
+    font-size: 18px;
+    color: #d4af37;
+}
+
+.rate-value.loading {
+    font-size: 16px;
+}
+
+.per-unit {
+    font-size: 12px;
+    color: #888;
+    margin-left: 2px;
+}
+
+.gold-rate .rate-icon {
+    color: #d4af37;
+}
+
+.silver-rate .rate-icon {
+    color: #c0c0c0;
+}
+
+.rate-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    font-size: 12px;
+    color: #888;
+}
+
+.gst-notice,
+.refresh-notice {
+    display: flex;
+    align-items: center;
+}
+
+.gst-notice i,
+.refresh-notice i {
+    margin-right: 5px;
+}
+
+.partner-logo {
+    text-align: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #f0e9d8;
+}
+
+.partner-logo img {
+    height: 80px;
+    width: 200px;
+    object-fit: contain;
+}
+
+
+/* Loading state */
+.loading-state {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loading-spinner {
+    font-size: 30px;
+    color: #d4af37;
+    margin-bottom: 15px;
+}
+
+.loading-state h3 {
+    font-size: 16px;
+    color: #333;
+    margin: 0 0 5px 0;
+}
+
+.loading-state p {
+    font-size: 13px;
+    color: #888;
+    margin: 0;
+}
+
+/* Portfolio card */
+.portfolio-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eee8d9;
+}
+
+.empty-portfolio {
+    background-color: #fffdf9;
+}
+
+.portfolio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0e9d8;
+}
+
+.portfolio-header h3 {
+    font-size: 16px;
+    color: #8a6d3b;
+    margin: 0;
+}
+
+.wallet-link {
+    font-size: 13px;
+    color: #d4af37;
+    display: flex align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.wallet-link i {
+    margin-right: 5px;
+}
+
+/* Empty portfolio */
+.empty-portfolio-content {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.portfolio-icon {
+    font-size: 40px;
+    color: #e0d6bd;
+    margin-bottom: 15px;
+}
+
+.empty-portfolio-content h4 {
+    font-size: 15px;
+    color: #333;
+    margin: 0 0 5px 0;
+}
+
+.empty-portfolio-content p {
+    font-size: 13px;
+    color: #888;
+    margin: 0;
+}
+
+/* Active portfolio */
+.active-portfolio-content {
+    padding: 10px 0;
+}
+
+.greeting {
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.metal-holding {
+    display: flex;
+    justify-content: space-between;
+}
+
+.metal-quantity,
+.metal-value {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.metal-quantity i,
+.metal-value i {
+    margin-right: 8px;
+    color: #d4af37;
+}
+
+.metal-quantity span {
+    font-weight: 500;
+    color: #333;
+}
+
+.metal-value span {
+    font-weight: 600;
+    color: #333;
+}
+
+/* Action buttons */
+.portfolio-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.buy-button,
+.sell-button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.buy-button {
+    background: linear-gradient(135deg, #f5e6b6 0%, #d4af37 100%);
+    color: white;
+}
+
+.buy-button:disabled {
+    background: #e0e0e0;
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+.sell-button {
+    background: white;
+    color: #d4af37;
+    border: 1px solid #d4af37;
+}
+
+.sell-button:disabled {
+    border-color: #e0e0e0;
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+.buy-button i,
+.sell-button i {
+    margin-right: 8px;
+}
+
+.easycred-logo-gold {
+    color: #fffffe !important;
+    font-weight: bold;
+    font-size: 1.3rem;
+    letter-spacing: 0.5px;
+    border-color: #f4e6b9 !important;
+}

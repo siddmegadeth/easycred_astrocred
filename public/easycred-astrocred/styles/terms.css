@@ -1,0 +1,187 @@
+/* Base Styles */
+.easycred-terms {
+    --primary-color: #3498db;
+    --primary-dark: #2980b9;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --border-color: #e0e6ed;
+    --background-light: #f8fafc;
+    --white: #ffffff;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--background-light);
+}
+
+/* Toolbar Styling */
+.terms-toolbar {
+    color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.terms-toolbar h1 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.back-button {
+    color: white !important;
+}
+
+/* Loading Indicators */
+.terms-loader {
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+    height: 3px;
+}
+
+
+
+.circular-loader {
+    color: var(--primary-color);
+    width: 50px;
+    height: 50px;
+}
+
+.terms-dialog p {
+    color: var(--text-primary);
+    font-size: 15px;
+    margin: 15px 0 0;
+}
+
+/* Main Content */
+.terms-content {
+    padding: 16px;
+    height: calc(100vh - 44px);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.terms-card {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.terms-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Terms Header */
+.terms-header {
+    padding: 20px 20px 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.terms-header h2 {
+    font-size: 18px;
+    color: var(--text-primary);
+    margin: 0 0 5px;
+    font-weight: 600;
+}
+
+.effective-date {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Terms Text Container */
+.terms-text-container {
+    flex: 1;
+    padding: 16px 20px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.terms-text {
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+.terms-text h3 {
+    font-size: 16px;
+    color: var(--primary-dark);
+    margin: 20px 0 10px;
+}
+
+.terms-text p {
+    margin: 0 0 15px;
+}
+
+.terms-text ul,
+.terms-text ol {
+    padding-left: 20px;
+    margin: 0 0 15px;
+}
+
+.terms-text li {
+    margin-bottom: 8px;
+}
+
+/* Acceptance Section */
+.acceptance-section {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border-color);
+    background-color: rgba(52, 152, 219, 0.05);
+}
+
+.consent-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.consent-checkbox {
+    margin-right: 12px;
+}
+
+.consent-label {
+    font-size: 15px;
+    color: var(--text-primary);
+    font-weight: 500;
+    flex: 1;
+}
+
+.accept-button {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 3px;
+    font-size: 16px;
+    font-weight: 500;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.accept-button:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+    .terms-header {
+        padding: 16px 16px 8px;
+    }
+
+    .terms-text-container {
+        padding: 12px 16px;
+    }
+
+    .acceptance-section {
+        padding: 12px 16px;
+    }
+
+    .terms-toolbar h1 {
+        font-size: 16px;
+    }
+}

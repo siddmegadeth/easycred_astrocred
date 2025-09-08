@@ -1,0 +1,33 @@
+.floating-label label {
+    transform: translateY(-22px) scale(0.85) !important;
+    color: var(--primary-color) !important;
+}
+
+.form-row {
+    margin-top: 10px !important;
+    margin-bottom: 10px !important
+}
+
+ons-input#addressLine1 {
+    width: 100% !important;
+}
+
+ons-input#addressLine2 {
+    width: 100% !important;
+}
+
+ons-input.ng-pristine.ng-untouched.ng-valid.ng-not-empty {
+    width: 100% !important;
+}
+
+ons-input.ng-pristine.ng-untouched.ng-valid.ng-empty {
+    width: 100% !important;
+}
+
+ons-input.ng-pristine.ng-valid.ng-not-empty.ng-touched {
+    width: 100% !important;
+}
+
+ons-input.ng-pristine.ng-untouched.ng-valid {
+    width: 100% !important;
+}

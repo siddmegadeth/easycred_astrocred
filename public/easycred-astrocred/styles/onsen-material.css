@@ -1,0 +1,101 @@
+ons-list-header.list-header.list-header--material {
+    font-weight: 300;
+    font-size: medium;
+}
+
+.action-sheet-title.action-sheet-title--material {
+    font-weight: bold;
+}
+
+ons-fab.fab.fab--material.fab--bottom__right {
+    background: #191ca9;
+    color: white;
+}
+
+ons-toolbar.toolbar.toolbar--material {
+    background: #191ca9;
+    color: white;
+}
+
+
+
+.center.toolbar__center.toolbar__title.toolbar--material__center {
+    color: white;
+    font-weight: bold;
+}
+
+ons-toolbar-button.toolbar-button.toolbar-button--material {
+    color: white;
+}
+
+span.back-button__icon.back-button--material__icon {
+    fill: white;
+}
+
+.left.list-item__left.list-item--material__left.list-item--divider__left {
+    color: #5a5d65;
+    text-transform: capitalize;
+    font-family: system-ui;
+}
+
+.right.list-item__right.list-item--material__right.list-item--divider__right.ng-binding {
+    font-weight: 100;
+    color: #5c5d5f;
+}
+
+span.list-item__title.mobile-header-truncate.list-item--material__title.list-item--divider__title.list-item--chevron__title.ng-binding {
+    color: #2e333d;
+}
+
+label.left.list-item__left.list-item--material__left {
+    color: #2e333d;
+}
+
+.left.list-item__left.list-item--material__left.list-item--chevron__left {
+    color: #5a5d65;
+    text-transform: capitalize;
+    font-family: system-ui;
+}
+
+
+/* p.mb-0 {
+    color: #2e333d;
+}
+ */
+.p-warning {
+    text-align: center;
+    margin-bottom: 11px;
+    color: #979797;
+    font-weight: bold;
+}
+
+/* 
+ons-button.button.button--large--quiet.ng-binding {
+    color: inherit !important;
+}
+
+ons-button.button.button--large--quiet.ng-scope {
+    color: inherit !important;
+
+} */
+
+.textarea {
+    width: 100%;
+}
+
+.list-item--material__thumbnail {
+    width: 83px;
+    height: 79px;
+    border-radius: 3%;
+}
+
+ons-carousel[fullscreen] {
+    height: 100%;
+    width: 92px;
+}
+
+.speed-dial.fab--bottom__right,
+button.fab--bottom__right,
+ons-fab.fab--bottom__right {
+    bottom: 66px !important;
+}

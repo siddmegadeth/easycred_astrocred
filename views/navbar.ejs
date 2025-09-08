@@ -1,0 +1,155 @@
+<div id="modal-example" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <h2 class="uk-modal-title">Merchant Not Found</h2>
+        <p>No Estore Found. Merchant Cannot Be Fetched</p>
+        <p class="uk-text-right">
+            <button class="uk-button uk-button-primary uk-modal-close" type="button">Cancel</button>
+        </p>
+    </div>
+</div>
+<nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+    <div class="container-fluid">
+        <a class="navbar-brand heading text-uppercase" href style="text-decoration:none;" href>EASYCRED</a>
+    </div>
+</nav>
+<script>
+getCookie = function(name) {
+    var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    if (match) return match[2];
+}
+
+
+function gotoMerchant() {
+    ///estore/:store_id/:estore
+    // /estore/9DbTsDwRUCIEOMsB7flxf/easycred
+    log(getCookie("store_id"));
+
+    if (getCookie("store_id") && getCookie("store_id")) {
+        log('Seems Merchant Found');
+        log(getCookie("store_name"));
+        log("/estore/merchant/" + getCookie("store_id") + "/" + getCookie("store_name"));
+        window.location.href = "/estore/merchant/" + getCookie("store_id") + "/" + getCookie("store_name");
+    } else {
+        log('Seems Merchant Not Found');
+        var modal = UIkit.modal("#modal-example", {});
+        modal.show();
+    }
+}
+
+function writeReviewApp() {
+
+    if (window.location.hostname == 'localhost') {
+        window.open('http://localhost:8001', '_blank');
+    } else {
+        window.open('http://app.easycred.co.in', '_blank');
+    }
+}
+
+
+changeMode = function() {
+    if (document.documentElement.getAttribute('data-bs-theme') == 'dark') {
+        document.documentElement.setAttribute('data-bs-theme', 'light')
+        window.localStorage.setItem('easycred_view_mode', 'light');
+    } else {
+        document.documentElement.setAttribute('data-bs-theme', 'dark');
+        window.localStorage.setItem('easycred_view_mode', 'dark');
+    }
+}
+
+darkMode = function() {
+    if (document.documentElement.getAttribute('data-bs-theme') == 'dark') {} else {
+        document.documentElement.setAttribute('data-bs-theme', 'dark');
+        window.localStorage.setItem('easycred_view_mode', 'dark');
+    }
+}
+lightMode = function() {
+    if (document.documentElement.getAttribute('data-bs-theme') == 'light') {
+
+
+    } else {
+        document.documentElement.setAttribute('data-bs-theme', 'light');
+        window.localStorage.setItem('easycred_view_mode', 'light');
+    }
+}
+</script>
+<style>
+.install-app {
+    background: blue;
+    color: white;
+    border-radius: 10px;
+}
+
+.active {
+    background: white !important;
+    color: #191ca9 !important;
+    border-radius: 10px;
+}
+
+li.nav-item {
+
+    text-align: center;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+
+.heading {
+    font-weight: bold !important;
+    word-spacing: 5px !important;
+    font-size: 25px !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+    overflow: hidden !important;
+}
+
+nav.navbar.is-link {
+    padding-top: 0px;
+    height: 62px;
+}
+
+.navbar-toggler {
+    border: none !important;
+}
+
+li.dropdown:last-child .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.margin-none {
+    margin-left: 12px;
+}
+
+nav.navbar.navbar-expand-lg.bg-primary{
+    padding: 0;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+
+
+@media screen and (max-width: 480px) {
+
+    .navbar-brand {
+        text-align: center;
+        margin: auto;
+    }
+
+    .nav-link.active {
+        padding-left: 2% !important;
+    }
+
+    .nav-link {
+        padding-left: 2% !important;
+    }
+
+    .margin-none {
+        margin-left: 0px;
+    }
+
+    .shrink {
+        width: 100%;
+        text-align: center;
+    }
+}
+</style>

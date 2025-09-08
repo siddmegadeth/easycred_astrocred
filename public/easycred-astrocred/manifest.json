@@ -1,0 +1,41 @@
+{
+    "background_color": "#191ca9",
+    "theme_color": "#191ca9",
+    "icons": [
+        {
+            "purpose": "maskable",
+            "sizes": "512x512",
+            "src": "assets/icon512_maskable.png",
+            "type": "image/png"
+        },
+        {
+            "purpose": "any",
+            "sizes": "512x512",
+            "src": "assets/icon512_rounded.png",
+            "type": "image/png"
+        }
+    ],
+    "orientation": "any",
+    "display": "standalone",
+    "dir": "auto",
+    "lang": "en-US",
+    "name": "Easycred",
+    "short_name": "Easycred",
+    "start_url": "https://retail.easycred.co.in",
+    "scope": "https://retail.easycred.co.in",
+    "description": "Easycred Retail PL/CL",
+    "id": "EASYCRED",
+    "screenshots": [
+        {
+            "src": "assets/pwa/screenshot/screenshot1.png",
+            "type": "image/png",
+            "sizes": "540x720",
+            "form_factor": "narrow"
+        }
+    ],
+    "display_override": [
+        "window-controls-overlay",
+        "standalone",
+        "browser"
+    ]
+}

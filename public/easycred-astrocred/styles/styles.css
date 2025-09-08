@@ -1,0 +1,315 @@
+/* ==================== */
+/* ==== Base Styles ==== */
+/* ==================== */
+:root {
+    /* EasyCred Brand Colors */
+    --primary-blue: #191ca9;
+    --primary-blue-light: #0076ff;
+    --accent-gold: gold;
+    --success-green: #00d1b2;
+    --error-red: #fe3824;
+    --warning-orange: #f8961e;
+
+    /* Neutral Colors */
+    --dark-text: #353535;
+    --medium-text: #8e8888;
+    --light-text: #f8f9fa;
+    --border-color: #e0e0e0;
+    --background-light: #ffffff;
+    --background-dark: #060505;
+
+    /* Spacing & Sizing */
+    --border-radius-sm: 2px;
+    --border-radius-md: 2px;
+    --border-radius-lg: 3px;
+    --box-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --box-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --transition-base: all 0.25s ease;
+}
+
+/* ==================== */
+/* ==== Typography ==== */
+/* ==================== */
+html,
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--dark-text);
+    line-height: 1.5;
+}
+
+.easycred-logo {
+    color: var(--primary-blue);
+    font-weight: bold;
+    font-size: 1.5rem;
+    letter-spacing: 0.5px;
+}
+
+.dash-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--dark-text);
+    letter-spacing: 0.05rem;
+}
+
+.heading {
+    font-weight: bold;
+    color: var(--medium-text);
+}
+
+.letterpress {
+    color: #000000;
+    letter-spacing: 0.2rem;
+    text-shadow: 0 0 8px rgba(213, 213, 213, 0.3);
+}
+
+/* ==================== */
+/* ==== Components ==== */
+/* ==================== */
+
+/* Buttons & Badges */
+.active-loan {
+    background: var(--primary-blue-light);
+    border-color: var(--primary-blue-light);
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    height: 70px;
+    border-radius: var(--border-radius-md);
+    transition: var(--transition-base);
+}
+
+.active-loan:active {
+    background: var(--primary-blue);
+    border-color: var(--primary-blue);
+}
+
+.expired-loan {
+    background: var(--primary-blue);
+    border-color: var(--primary-blue);
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    height: 70px;
+    border-radius: var(--border-radius-md);
+    transition: var(--transition-base);
+}
+
+.expired-loan:active {
+    background: #3b96ff;
+    border-color: #3b96ff;
+}
+
+.badge {
+    padding: 0.25rem 0.5rem;
+    text-align: center;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.badge-background {
+    background-color: var(--primary-blue-light) !important;
+    color: white !important;
+}
+
+.badge-verified {
+    background-color: var(--success-green) !important;
+    color: white !important;
+}
+
+.badge-not-verified {
+    background-color: var(--error-red) !important;
+    color: white !important;
+}
+
+.highlight-green {
+    background: #4CAF50;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius-sm);
+    margin-top: 1px;
+    margin-bottom: 1px;
+}
+
+.highlight-red {
+    background: #ff1100;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius-sm);
+}
+
+/* Forms & Inputs */
+ons-input[disabled],
+ons-radio[disabled],
+ons-checkbox[disabled],
+ons-segment[disabled],
+ons-search-input[disabled] {
+    opacity: 0.9;
+    pointer-events: none;
+    color: var(--dark-text) !important;
+    background: #f5f5f5 !important;
+}
+
+.textarea:disabled {
+    opacity: 0.9 !important;
+    color: var(--dark-text) !important;
+    background: #f5f5f5 !important;
+}
+
+.otp-ui,
+ons-input#otp input.text-input {
+    width: 100%;
+    text-align: center;
+    letter-spacing: 1rem;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Images & Media */
+.verify-splashscreen {
+    background: var(--primary-blue) url("assets/easycred.png") no-repeat center;
+    background-size: contain;
+    width: 100%;
+    height: 100%;
+}
+
+.profile-display,
+.display-profile {
+    width: 100%;
+    height: 354px;
+    object-fit: cover;
+    background: var(--background-dark);
+}
+
+.display-profile-white {
+    background: var(--background-light);
+}
+
+.qrcode {
+    width: 100%;
+    height: 300px;
+    border-radius: var(--border-radius-lg);
+    padding: 0.5rem;
+    object-fit: contain;
+    background: white;
+}
+
+/* Layout Components */
+.personal_loan_holder {
+    width: 42%;
+    text-align: center;
+    margin: 0.75rem;
+    padding: 0.5rem;
+    float: left;
+    height: 80px;
+    margin-left: 5px;
+    border-radius: 3px;
+}
+
+
+
+/* Lists & Items */
+.list-item-dimension {
+    height: 45px;
+}
+
+.text-truncate {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* Links */
+a {
+    text-decoration: none;
+    color: var(--primary-blue-light);
+    font-weight: 400;
+    transition: var(--transition-base);
+}
+
+a:hover {
+    text-decoration: underline;
+    opacity: 0.9;
+}
+
+.url-left,
+.url-right {
+    color: var(--primary-blue-light);
+    padding: 0.1rem;
+}
+
+.url-right {
+    text-decoration: underline !important;
+}
+
+/* Gold Elements */
+.easycred-gold {
+    color: var(--accent-gold);
+    font-size: 1.25rem;
+}
+
+.goldbox {
+    font-size: 1.25rem;
+    margin: 0.5rem 0;
+}
+
+.metal {
+    color: var(--accent-gold) !important;
+}
+
+.metal-amount {
+    font-weight: bold;
+    font-size: 0.875rem;
+    color: var(--medium-text);
+}
+
+/* ==================== */
+/* ==== Utilities ==== */
+/* ==================== */
+.capitalize {
+    text-transform: capitalize;
+}
+
+.center-header {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.margin-top-bottom {
+    padding-top: 0.125rem;
+    margin-bottom: 0.125rem;
+}
+
+/* ==================== */
+/* ==== Third Party ==== */
+/* ==================== */
+.mapboxgl-ctrl-geocoder.mapboxgl-ctrl,
+.mapboxgl-ctrl-geocoder.mapboxgl-ctrl-geocoder--input {
+    padding-left: 0;
+    margin-left: 0;
+}
+
+.filepond--credits {
+    display: none !important;
+}
+
+/* ==================== */
+/* ==== Responsive ==== */
+/* ==================== */
+@media only screen and (max-width: 600px) {
+    .personal_loan_holder {
+        height: 77px;
+        width: 48%;
+        float: left;
+        margin: 0.75rem auto;
+        margin-left: 5px;
+        border-radius: 3px;
+    }
+
+   /* .otp-ui,
+    ons-input#otp input.text-input {
+        letter-spacing: 0.5rem;
+        font-size: 1.25rem;
+    }*/
+}
