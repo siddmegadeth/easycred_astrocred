@@ -5,23 +5,23 @@ app.provider('productionMode', [function() {
     return {
         config: function(mode) {
 
-            if (window.localStorage.easycred_retail_last_mode_app) {
+            if (window.localStorage.easycred_astrocred_last_mode_app) {
                 // check if mode has changed or not
-                if (window.localStorage.easycred_retail_last_mode_app == mode.type) {
+                if (window.localStorage.easycred_astrocred_last_mode_app == mode.type) {
                     warn('Production Mode Has Not Changed')
-                    log(window.localStorage.easycred_retail_last_mode_app);
+                    log(window.localStorage.easycred_astrocred_last_mode_app);
                 } else {
                     warn('Production Mode Has Changed.Adding New Mode And Resetting Browser With New Mode :');
-                    //window.localStorage.removeItem("easycred_retail_profile");
+                    //window.localStorage.removeItem("easycred_astrocred_profile");
                     warn('Production Mode Has Changed.Adding New Mode And Resetting Browser With New Mode :');
-                    window.localStorage.removeItem("easycred_retail_profile");
-                    window.localStorage.removeItem("easycred_retail_website_last_mode");
-                    window.localStorage.setItem("easycred_retail_website_last_mode", mode.type);
-                    window.localStorage.setItem("easycred_retail_last_mode_app", mode.type);
+                    window.localStorage.removeItem("easycred_astrocred_profile");
+                    window.localStorage.removeItem("easycred_astrocred_website_last_mode");
+                    window.localStorage.setItem("easycred_astrocred_website_last_mode", mode.type);
+                    window.localStorage.setItem("easycred_astrocred_last_mode_app", mode.type);
                 }
             } else {
                 warn('Setting New Mode :');
-                window.localStorage.setItem("easycred_retail_last_mode_app", mode.type);
+                window.localStorage.setItem("easycred_astrocred_last_mode_app", mode.type);
             }
 
 

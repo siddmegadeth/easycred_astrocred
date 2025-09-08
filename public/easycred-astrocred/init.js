@@ -1,5 +1,4 @@
 var DI = [
-    'onsen',
     'fcsa-number',
     'ngSanitize',
     'ngMessages',
@@ -7,7 +6,7 @@ var DI = [
     'ghiscoding.validation',
     'pascalprecht.translate',
     'ngFileUpload',
-    'fcsa-number'
+    'ngRoute'
 ];
 
 var app = angular.module('myApp', DI);
@@ -16,45 +15,40 @@ error = console.error.bind(console);
 warn = console.warn.bind(console);
 window.socket;
 
-ons.ready(function() {
-
-    console.log('is Android ' + ons.platform.isAndroidPhone());
-    console.log('Is iOS ' + ons.platform.isIOS());
-
-    if (ons.platform.isAndroidPhone()) {
-        ons.platform.select('ios');
-    } else if (ons.platform.isIOS()) {
-        ons.platform.select('ios');
-    } else {
-        ons.platform.select('ios');
-    }
-    if (ons.isWebView()) {
-        warn('Running On A Android/iOS Device  ');
-    } else {
-        warn('Running On A Browser ');
-    }
-
-    ons.setDefaultDeviceBackButtonListener(function() {
-        if (ons.notification.confirm("Are you sure to close the app?",
-                function(index) {
-                    console.log(index);
-                    if (index === 1) { // OK button
-                        navigator.app.exitApp(); // Close the app
-                    }
-                }
-            ));
-    });
-
-    history.pushState(null, null, location.href);
-    window.onpopstate = function() {
-        history.go(1);
-    };
-
-    window.onbeforeunload = function() { alert("Your work will be lost.") };
+Offline.options = {
+    checkOnLoad: true,
+    interceptRequests: true,
+    reconnect: {
+        // How many seconds should we wait before rechecking.
+        initialDelay: 3,
+        delay: 10
+        // How long should we wait between retries.
+    },
+    requests: true,
+    game: false
+};
+Offline.on('down', function() {
+    log("Down");
+});
+Offline.on('confirmed-down', function() {
+    log(" confirmedDown");
 
 });
 
-app.config(['productionModeProvider', 'utilityProvider', 'profileEventProvider', 'geoIPServicesProvider', '$httpProvider', '$translateProvider', 'sandboxProvider', 'kycProvider', 'juspayProvider', 'mmtcProvider', 'surePassProvider', 'authenticationProvider', function(productionModeProvider, utilityProvider, profileEventProvider, geoIPServicesProvider, $httpProvider, $translateProvider, sandboxProvider, kycProvider, juspayProvider, mmtcProvider, surePassProvider, authenticationProvider) {
+Offline.on('confirmed-up', function() {
+    log("confirmed Up");
+
+});
+
+
+app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider', '$httpProvider', '$translateProvider', 'surePassProvider', 'authenticationProvider', '$routeProvider', '$locationProvider', function(productionModeProvider, utilityProvider, geoIPServicesProvider, $httpProvider, $translateProvider, surePassProvider, authenticationProvider, $routeProvider, $locationProvider) {
+
+    $locationProvider.html5Mode({
+        enabled: false,
+        requireBase: true
+    });
+
+    $locationProvider.hashPrefix('');
 
     $translateProvider.useStaticFilesLoader({
         prefix: 'locales/',
@@ -65,11 +59,78 @@ app.config(['productionModeProvider', 'utilityProvider', 'profileEventProvider',
 
     var productionLink = productionModeProvider.config({
         type: 'development',
-        servername: 'https://retail.easycred.co.in'
+        servername: 'https://astrocred.easycred.co.in'
     });
 
     $httpProvider.interceptors.push('httpInterceptors');
     $httpProvider.interceptors.push('httpTimeoutInterceptors');
+
+    $routeProvider
+        .when('/', {
+            templateUrl: 'templates/home.html',
+            controller: 'homeCtrl',
+            config: {
+                requireLogin: true
+            },
+            resolve: {
+                authenticated: function($q, stateManager, $location) {
+
+                    if (stateManager.isLoggedIn()) {
+                        log('Logged In');
+                        return $q.when(true);
+                    } else {
+                        log('Not Logged In');
+                        //$location.path("/login");
+                        //show popup
+                    }
+                }
+            }
+        })
+        .when('/login', {
+            templateUrl: 'templates/login.html',
+            controller: 'loginCtrl',
+            config: {
+                requireLogin: false
+            },
+            resolve: {
+                authenticated: function($q, stateManager, $location) {
+
+                    if (stateManager.isLoggedIn()) {
+                        log('Logged In');
+                        return $q.when(true);
+                    } else {
+                        log('Not Logged In');
+                        //$location.path("/login");
+                        //show popup
+                    }
+                }
+            }
+        })
+        .when('/access-denied', {
+            templateUrl: 'templates/access-denied.html',
+            config: {
+                requireLogin: false
+            },
+            resolve: {
+                authenticated: function($q, stateManager, $location) {
+
+                    if (stateManager.isLoggedIn()) {
+                        log('Logged In');
+                        return $q.when(true);
+                    } else {
+                        log('Not Logged In');
+                        //$location.path("/login");
+                        //show popup
+                    }
+                }
+            }
+        })
+        .otherwise({
+            redirectTo: '/'
+        });
+
+
+
 
     var prod = {
         ip_url: {
@@ -81,18 +142,6 @@ app.config(['productionModeProvider', 'utilityProvider', 'profileEventProvider',
             generateOTP: productionLink + "/get/auth/otp/send/fast2sms",
             validateOTP: productionLink + "/get/auth/otp/validate/fast2sms",
         },
-        profile_event: {
-            userOnboardingSocialLogin: productionLink + '/get/auth/user/onboarding/social/login',
-            completeProfile: productionLink + '/post/user/onboarding/complete/profile',
-            editProfile: productionLink + '/post/user/onboarding/edit/update/profile',
-            otpLessAuth: productionLink + "/auth/otp/less",
-            editSocialMediaProfile: productionLink + '/get/user/onboarding/edit/social/media',
-            updateBackgroundImage: productionLink + "/post/profile/update/background/image",
-            fetchProfile: productionLink + "/get/auth/fetch/updated/profile",
-            createPaySprintProfile: productionLink + "/post/paysprint/create/profile",
-            fetchPaySprintProfile: productionLink + "/get/paysprint/fetch/profile",
-            confirmPaySprintProfile: productionLink + "/post/paysprint/confirm/profile"
-        },
         utility: {
             validateToken: productionLink + '/post/validate/token',
             getSupportedCountries: productionLink + '/get/supported/countries',
@@ -103,61 +152,6 @@ app.config(['productionModeProvider', 'utilityProvider', 'profileEventProvider',
             acceptTerms: productionLink + '/get/terms/conditions/accept',
             fetchConcentForm: productionLink + "/get/kyc/concent/form",
             giveKYCConcent: productionLink + "/get/consent/kyc/accept"
-        },
-        mmtc: {
-            customers: {
-                createProfile: productionLink + "/get/mmtc/customer/create/profile",
-                getProfile: productionLink + "",
-                getPortfolio: productionLink + "/get/mmtc/customer/get/portfolio",
-                activation: productionLink + "",
-                deactivation: productionLink + "",
-                updateProfile: productionLink + "",
-                syncProfile: productionLink + "/post/mmtc/customer/sync/profile",
-                checkIfMMTCProfileExist: productionLink + "/get/mmtc/customer/check/profile"
-            },
-            prices: {
-                goldPriceHistory: productionLink + '/get/mmtc/prices/historical/gold/prices',
-                silverPriceHistory: productionLink + '/get/mmtc/prices/historical/silver/prices'
-            },
-            pvt: {
-                getNonExecutableQuote: productionLink + "/get/mmtc/pvt/non/executable/quote",
-                getAddresses: productionLink + "/get/mmtc/pvt/get/address",
-            },
-            trade: {
-                validateQuote: productionLink + '/post/paysprint/api/v1/service/digitalgold/trade/validate_quote',
-                getQuoteBuy: productionLink + '/post/mmtc/trade/getquote/buy',
-                getQuoteSell: productionLink + '/post/mmtc/trade/getquote/sell',
-                validateOrderAndExecute: productionLink + '/post/mmtc/trade/validate/order/and/execute',
-                validateOrderAndExecuteQuantity: productionLink + '/post/mmtc/trade/validate/order/and/execute/quantity',
-                executeOrderWithPayIn: productionLink + '/post/mmtc/trade/execute/order/with/mmtc/payment/gateway',
-                executeOrderWithPayOut: productionLink + '/post/mmtc/trade/execute/order/with/mmtc/payment/gateway/pay/out',
-                getOrderHistory: productionLink + '/post/mmtc/trade/get/order/history'
-            },
-            payments: {
-                paymentOptionsUPI: productionLink + '/get/mmtc/payments/get/payment/options/upi',
-                paymentOptionsBank: productionLink + '/get/mmtc/payments/get/payment/options/bank'
-
-            }
-        },
-        sandbox: {
-            verifyKYC: productionLink + '/post/sandbox/verify/kyc',
-            initAadharVerification: productionLink + '/get/sandbox/generate/aadhar/card/otp/kyc',
-            validateAadharOTP: productionLink + '/get/sandbox/validate/aadhar/card/kyc/otp',
-        },
-        kyc_endpoint: {
-            completeKYC: productionLink + '/post/kyc/complete/kyc/onboarding',
-            validateKYC: productionLink + '/post/kyc/validate/kyc/status',
-            updateVerifiedAadhar: productionLink + '/post/kyc/aadhar/update/verified/aadhar'
-        },
-        juspay_endpoint: {
-            generateLoanLink: productionLink + "/get/juspay/api/loan/link/generate",
-            customerStatus: productionLink + "/get/juspay/api/customer/status",
-            fetchAllLoans: productionLink + '/get/juspay/api/retail/fetch/all/personal/loans/journey',
-            loanStatistics: productionLink + '/get/juspay/api/retail/fetch/all/personal/loans/statistics/data',
-            generateMagicLoanLink: productionLink + "/get/juspay/api/loan/link/generate/magic/link",
-            updateLoanStatus: productionLink + '/get/juspay/api/customer/update/loan/status',
-            completeProfile: productionLink + '/get/juspay/api/customer/profile/complete',
-            applyOnBehalf : productionLink + '/get/juspay/api/loan/link/generate/apply/on/behalf'
         },
         surepass: {
             cibil: productionLink + "/get/check/credit/report/cibil",
@@ -172,12 +166,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'profileEventProvider',
     };
 
     utilityProvider.config(prod.utility);
-    profileEventProvider.config(prod.profile_event);
     geoIPServicesProvider.config(prod.ip_url);
-    sandboxProvider.config(prod.sandbox);
-    kycProvider.config(prod.kyc_endpoint);
-    juspayProvider.config(prod.juspay_endpoint);
-    mmtcProvider.config(prod.mmtc);
     surePassProvider.config(prod.surepass);
     authenticationProvider.config(prod.authentication);
 }]);
@@ -222,8 +211,35 @@ app.directive('currencyInput', function($filter) {
     };
 });
 
-app.run(['$rootScope', 'stateManager', function($rootScope, stateManager) {
-    mapboxgl.accessToken = 'pk.eyJ1IjoiZ2V0aGlrZWFwcCIsImEiOiJja2J0Z2l4cnkwOTN3MnJsaXRwdGMxcnVyIn0.MBRU5vDIM-DdcuHTsNuK7Q';
+
+app.run(['$rootScope', '$location', 'stateManager', function($rootScope, $location, stateManager) {
+
+    $rootScope.$on('$routeChangeStart', function(event, current, next) {
+
+
+        // stateManager.checkAccessToken()
+        //     .then(function(resp) {
+        //         warn('Access Token Status :');
+        //         log(resp);
+        //         if (resp.data.isLoggedIn) {
+        //             $rootScope.isLoggedIn = true;
+        //         } else {
+        //             $rootScope.isLoggedIn = false;
+        //             stateManager.clearLocalStorage();
+        //             $location.url("/login");
+        //         }
+        //     });
+
+        var config = current.config;
+        log(config);
+
+    });
+
+    $rootScope.$on('$routeChangeSuccess', function() {
+
+    });
+
+
 }]);
 
 app.filter('statusDisplay', function() {

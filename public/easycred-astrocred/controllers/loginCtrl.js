@@ -1,4 +1,4 @@
-app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'profileEvent', 'stateManager', 'authentication', function($scope, $rootScope, $timeout, profileEvent, stateManager, authentication) {
+app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 'authentication', function($scope, $rootScope, $timeout, stateManager, authentication) {
 
 
     $timeout(function() {
@@ -22,17 +22,17 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'profileEvent',
 
                     if (userProfile.consent.isTermsAccepted) {
                         if (stateManager.isKYCCompleted()) {
-                            $scope.myNavigator.resetToPage('dashboard.html');
+
                         } else {
-                            $scope.myNavigator.resetToPage('dashboard-kyc.html');
                         }
+
                     } else {
-                        $scope.myNavigator.resetToPage('terms.html', {});
+                        //$scope.myNavigator.resetToPage('terms.html', {});
                     }
                 } else {
                     log('Profile Not Completed :');
                     // $location.path("/profile-complete");
-                    $scope.myNavigator.resetToPage('profile-complete.html', {});
+                    //$scope.myNavigator.resetToPage('profile-complete.html', {});
                 }
             } else {
                 $timeout(function() {

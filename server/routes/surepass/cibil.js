@@ -150,8 +150,6 @@
     app.get("/get/check/credit/report/cibil", async function(req, resp) {
         log("/get/check/credit/report/cibil");
 
-
-        profile = req.params.profile || req.query.profile;
         mobile = req.params.mobile || req.query.mobile;
         fullname = req.params.fullname || req.query.fullname;
 
