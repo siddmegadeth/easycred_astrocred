@@ -1,7 +1,7 @@
 {
     "data":
     {
-        "client_id": "credit_report_cibil_vRvISYNDfhYbmRNbiWRg",
+        "client_id": "credit_report_cibil_yuckRttgEkJxmLmIpldx",
         "mobile": "8877882988",
         "pan": "BJHPS2369R",
         "name": "RAVI SHANKAR",
@@ -4214,8 +4214,47 @@
             }
         }]
     },
-    "status_code": 200,
-    "success": true,
-    "message": "Success",
-    "message_code": "success"
+    "pan_comprehensive":
+    {
+        "data":
+        {
+            "client_id": "pan_comprehensive_plus_rhooynTchPLnUaWrtPvk",
+            "pan_number": "BJHPS2369R",
+            "pan_details":
+            {
+                "full_name": "RAVI SHANKAR",
+                "full_name_split": ["RAVI", "", "SHANKAR"],
+                "masked_aadhaar": "XXXXXXXX4409",
+                "address":
+                {
+                    "line_1": "",
+                    "line_2": "",
+                    "street_name": "",
+                    "zip": "",
+                    "city": "",
+                    "state": "",
+                    "country": "",
+                    "full": ""
+                },
+                "email": null,
+                "phone_number": null,
+                "gender": "M",
+                "dob": "1982-11-24",
+                "input_dob": null,
+                "aadhaar_linked": true,
+                "dob_verified": false,
+                "dob_check": false,
+                "category": "person",
+                "status": "valid",
+                "less_info": false,
+                "father_name": "GANESH PARSAD SINGH"
+            },
+            "less_info": false
+        },
+        "status_code": 200,
+        "success": true,
+        "message": "Success",
+        "message_code": "success"
+    },
+    "status": true
 }

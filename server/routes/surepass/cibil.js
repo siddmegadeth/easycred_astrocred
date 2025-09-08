@@ -194,7 +194,7 @@
                     log(cibilResp);
                     if (cibilResp.success && cibilResp.status_code == 200 || cibilResp.status == 422) {
 
-                        resp.send({ cibil: cibilResp.data, pan_comprehensive: panComp, params: cibilParams, status: true })
+                        resp.send({ data: cibilResp.data, pan_comprehensive: panComp, status: true })
 
                     } else {
                         resp.send({ status: false, message: 'Not Able To Fetch API Data For fetchCIBIL :', pan_comprehensive: panComp, params: cibilParams, });

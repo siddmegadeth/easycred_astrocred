@@ -4,6 +4,7 @@
         this.creditReport = cibilData.credit_report[0];
     }
     // Enhanced payment history parsing for CIBIL data
+    // Enhanced payment history parsing
     GradingEngine.prototype.parsePaymentHistory = function(account) {
         var paymentHistoryStr = account.paymentHistory || '';
         var monthlyPayStatus = account.monthlyPayStatus || [];
@@ -14,31 +15,34 @@
             notReported = 0;
 
         // Priority 1: Use monthlyPayStatus array if available and valid
-        if (monthlyPayStatus.length > 0) {
+        if (Array.isArray(monthlyPayStatus) && monthlyPayStatus.length > 0) {
             monthlyPayStatus.forEach(function(payment, index) {
-                var status = payment.status;
-                var statusCategory = this.categorizePaymentStatus(status);
+                if (payment && payment.status) {
+                    var status = payment.status;
+                    var statusCategory = this.categorizePaymentStatus(status);
 
-                if (statusCategory === 'Paid') onTime++;
-                else if (statusCategory === 'Delayed') delayed++;
-                else if (statusCategory === 'Missed') missed++;
-                else if (statusCategory === 'Not Reported') notReported++;
+                    if (statusCategory === 'Paid') onTime++;
+                    else if (statusCategory === 'Delayed') delayed++;
+                    else if (statusCategory === 'Missed') missed++;
+                    else if (statusCategory === 'Not Reported') notReported++;
 
-                payments.push({
-                    date: payment.date,
-                    status: status,
-                    category: statusCategory,
-                    period: index + 1
-                });
+                    payments.push({
+                        date: payment.date || '',
+                        status: status,
+                        category: statusCategory,
+                        period: index + 1
+                    });
+                }
             }, this);
         }
-        // Priority 2: Parse paymentHistory string if monthlyPayStatus is not available
+        // Priority 2: Parse paymentHistory string if monthlyPayStatus is not available or empty
         else if (paymentHistoryStr && paymentHistoryStr.length > 0) {
-            // CIBIL payment history typically uses 3-character codes for each month
-            var months = Math.min(36, Math.floor(paymentHistoryStr.length / 3));
+            // Handle both 3-character codes and other formats
+            var chunkSize = 3;
+            var months = Math.min(36, Math.floor(paymentHistoryStr.length / chunkSize));
 
             for (var i = 0; i < months; i++) {
-                var statusCode = paymentHistoryStr.substring(i * 3, (i * 3) + 3);
+                var statusCode = paymentHistoryStr.substring(i * chunkSize, (i * chunkSize) + chunkSize);
                 var statusCategory = this.categorizePaymentStatus(statusCode);
 
                 if (statusCategory === 'Paid') onTime++;
@@ -58,6 +62,29 @@
             }
         }
 
+        // If no payment history data is available, check if we can infer from other fields
+        if (payments.length === 0) {
+            // Check if account has any overdue amount
+            if (account.amountOverdue && account.amountOverdue > 0) {
+                missed = 1; // Assume at least one missed payment if there's overdue amount
+                payments.push({
+                    date: new Date().toISOString().split('T')[0],
+                    status: 'Overdue',
+                    category: 'Missed',
+                    period: 1
+                });
+            } else if (account.currentBalance > 0) {
+                // If there's a balance but no overdue, assume payments are being made
+                onTime = 1;
+                payments.push({
+                    date: new Date().toISOString().split('T')[0],
+                    status: 'CUR',
+                    category: 'Paid',
+                    period: 1
+                });
+            }
+        }
+
         return {
             payments: payments,
             onTime: onTime,
@@ -68,9 +95,7 @@
         };
     };
 
-
-
-    // Categorize payment status based on CIBIL standards
+    // Enhanced payment status categorization
     GradingEngine.prototype.categorizePaymentStatus = function(status) {
         if (!status) return 'Not Reported';
 
@@ -83,12 +108,8 @@
 
             if (statusNum === 0) return 'Paid';
             if (statusNum >= 1 && statusNum <= 30) return 'Delayed';
-            if (statusNum >= 31 && statusNum <= 60) return 'Delayed';
-            if (statusNum >= 61 && statusNum <= 90) return 'Missed';
-            if (statusNum >= 91 && statusNum <= 120) return 'Missed';
-            if (statusNum >= 121 && statusNum <= 150) return 'Missed';
-            if (statusNum >= 151 && statusNum <= 180) return 'Missed';
-            if (statusNum > 180) return 'Missed';
+            if (statusNum >= 31 && statusNum <= 90) return 'Missed';
+            if (statusNum > 90) return 'Missed'; // Severe delinquency
         }
 
         // Handle text status codes
@@ -96,26 +117,17 @@
             case 'STD': // Standard
             case '000':
             case '0':
+            case 'CUR': // Current
+            case 'OK':
                 return 'Paid';
 
             case 'SMA': // Special Mention Account
-            case '01':
-            case '02':
-            case '03':
-            case '04':
-            case '05':
-            case '06':
-            case '07':
-            case '08':
-            case '09':
-            case '10':
-            case '11':
-            case '12':
-                return 'Delayed';
+            case 'DPD': // Days Past Due
+            case 'LSS': // Loss
+                return 'Missed';
 
             case 'SUB': // Substandard
             case 'DBT': // Doubtful
-            case 'LSS': // Loss
             case 'DEF': // Default
             case 'WO': // Write-off
                 return 'Missed';
@@ -123,22 +135,33 @@
             case 'XXX': // Not reported
             case 'NA': // Not available
             case '': // Empty
+            case 'NR': // Not Reported
                 return 'Not Reported';
 
             default:
-                // Check if it's a numeric string that wasn't caught above
-                if (!isNaN(statusStr)) {
-                    var num = parseInt(statusStr);
-                    if (num === 0) return 'Paid';
-                    if (num > 0 && num <= 30) return 'Delayed';
-                    if (num > 30) return 'Missed';
+                // Handle non-standard codes by checking if they contain numbers
+                if (/\d/.test(statusStr)) {
+                    var numMatch = statusStr.match(/\d+/);
+                    if (numMatch) {
+                        var num = parseInt(numMatch[0]);
+                        if (num === 0) return 'Paid';
+                        if (num > 0 && num <= 30) return 'Delayed';
+                        if (num > 30) return 'Missed';
+                    }
+                }
+
+                // If it's a string without numbers, try to interpret
+                if (statusStr.includes('CUR') || statusStr.includes('STD') || statusStr.includes('OK')) {
+                    return 'Paid';
+                } else if (statusStr.includes('SMA') || statusStr.includes('DPD')) {
+                    return 'Delayed';
+                } else if (statusStr.includes('SUB') || statusStr.includes('DBT') || statusStr.includes('DEF')) {
+                    return 'Missed';
                 }
 
                 return 'Not Reported';
         }
     };
-
-
 
     // Update the payment history score calculation
     GradingEngine.prototype.calculatePaymentHistoryScore = function() {
@@ -156,7 +179,16 @@
             totalPayments += paymentAnalysis.total;
         });
 
-        if (totalPayments === 0) return 75;
+        // Add minimum payment threshold check
+        if (totalPayments === 0) {
+            // Check if accounts have valid statuses
+            var hasActiveAccounts = this.creditReport.accounts.some(function(acc) {
+                return acc.creditFacilityStatus === '00' ||
+                    acc.creditFacilityStatus === '02';
+            });
+            return hasActiveAccounts ? 75 : 50;
+        }
+
 
         // Calculate weighted score giving more importance to recent payments
         var onTimePercentage = (totalOnTime / totalPayments) * 100;
@@ -340,6 +372,9 @@
             return new Date();
         }
     };
+
+
+
 
     // Identify potential defaulters
     GradingEngine.prototype.identifyDefaulters = function() {

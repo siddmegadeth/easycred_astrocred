@@ -101,7 +101,7 @@
     app.get('/get/api/cibil/data/calculate', function(req, res) {
         try {
             log('/get/api/cibil/data/calculate');
-            var cibilData = require("./../../../data/cibil/sample-data2.json");
+            var cibilData = require("./../../../data/cibil/sample-data.json");
             cibilData = cibilData.data;
             log('-------------CIBIL DATA SAMPLE-------------------');
             log(cibilData);

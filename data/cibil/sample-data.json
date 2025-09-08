@@ -1,150 +1,2169 @@
 {
     "data":
     {
-        "client_id": "credit_report_cibil_uaLfgOihlOpkdTdsssxA",
+        "client_id": "credit_report_cibil_jIifktiYhrHTbZcMdlsU",
         "mobile": "9708016996",
         "pan": "IVZPK2103N",
         "name": "SHIV KUMAR",
         "gender": "male",
-        "credit_score": "663",
+        "user_email": null,
+        "credit_score": "670",
         "credit_report": [
         {
             "names": [
             {
+                "birthDate": "1987-05-17",
+                "gender": "male",
                 "index": "N01",
-                "name": "DUMMY NAME",
-                "birthDate": "2010-10-10",
-                "gender": "2"
+                "name": "SHIV KUMAR"
             }],
             "ids": [
             {
-                "index": "I01",
-                "idType": "01",
-                "idNumber": "XXXXX1010X"
+                "idNumber": "3782909861",
+                "idType": "SocialId",
+                "index": "1"
             },
             {
-                "index": "I02",
-                "idType": "04",
-                "idNumber": "12345678909876"
+                "idNumber": "IVZPK2103N",
+                "idType": "TaxId",
+                "index": "2"
             },
             {
-                "index": "I03",
-                "idType": "06",
-                "idNumber": "XXXXXXXXXXXX"
-            },
-            {
-                "index": "I04",
-                "idType": "09",
-                "idNumber": "12345678564323"
+                "idNumber": "40037243101542",
+                "idType": "CkycId",
+                "index": "3"
             }],
             "telephones": [
             {
-                "index": "T01",
-                "telephoneNumber": "1234567890",
+                "enquiryEnriched": "Y",
+                "index": "1",
+                "telephoneNumber": "919708016996",
+                "telephoneType": "00"
+            },
+            {
+                "enquiryEnriched": "Y",
+                "index": "2",
+                "telephoneNumber": "9708016996",
                 "telephoneType": "03"
             },
             {
-                "index": "T02",
-                "telephoneNumber": "1234567890",
+                "enquiryEnriched": "Y",
+                "index": "3",
+                "telephoneNumber": "919708016996",
                 "telephoneType": "01"
             },
             {
-                "index": "T03",
-                "telephoneNumber": " 912345678909",
-                "telephoneType": "00"
+                "enquiryEnriched": "Y",
+                "index": "4",
+                "telephoneNumber": "7739193177",
+                "telephoneType": "03"
             }],
             "emails": [
             {
-                "index": "C01",
-                "emailID": "NA@NA.NA"
+                "emailID": "MANGALDHAWANI@GMAIL.COM",
+                "index": "1"
+            },
+            {
+                "emailID": "SHIVKUMAR.FILMMAKER@GMAIL.COM",
+                "index": "2"
             }],
             "employment": [
             {
+                "accountType": "06",
+                "dateReported": "2025-02-28",
                 "index": "E01",
-                "accountType": "08",
-                "dateReported": "08032024",
                 "occupationCode": "04"
             }],
             "scores": [
             {
-                "scoreName": "CIBILTUSC3",
-                "scoreCardName": "08",
-                "scoreCardVersion": "10",
-                "scoreDate": "01012010",
-                "score": "00663",
+                "score": "670",
+                "scoreCardName": "CIBILTUSC3",
+                "scoreCardVersion": "",
+                "scoreDate": "2025-08-26",
+                "scoreName": "CIBILTransUnionScore3",
                 "reasonCodes": [
                 {
-                    "reasonCodeName": "reasonCode1",
-                    "reasonCodeValue": "07"
-                },
-                {
-                    "reasonCodeName": "reasonCode2",
+                    "reasonCodeName": "reasonCode 03",
                     "reasonCodeValue": "03"
                 },
                 {
-                    "reasonCodeName": "reasonCode3",
-                    "reasonCodeValue": "04"
+                    "reasonCodeName": "reasonCode 08",
+                    "reasonCodeValue": "08"
                 },
                 {
-                    "reasonCodeName": "reasonCode4",
-                    "reasonCodeValue": "01"
+                    "reasonCodeName": "reasonCode 02",
+                    "reasonCodeValue": "02"
+                },
+                {
+                    "reasonCodeName": "reasonCode 07",
+                    "reasonCodeValue": "07"
+                },
+                {
+                    "reasonCodeName": "reasonCode 00",
+                    "reasonCodeValue": "00"
                 }]
             }],
             "addresses": [
             {
-                "index": "A01",
-                "line1": "DELHI",
-                "stateCode": "07",
-                "pinCode": "110011",
                 "addressCategory": "02",
-                "dateReported": "10101011",
-                "enquiryEnriched": "Y"
+                "dateReported": "2024-08-24",
+                "index": "1",
+                "line1": "20 C/O-SATYA NARAYAN PRASAD DELWAN BAGIHICHA RMA KRISHNA NAGAR PATNA",
+                "line2": "",
+                "pinCode": "800027",
+                "stateCode": "10"
             },
             {
-                "index": "A02",
-                "line1": "SO DUMMY NAME VILL XXXXXXX",
-                "line3": "POST XXXXXXX XXXXXXX XXXXXXX",
-                "line5": "XXXXXXX-XXXXXXX",
-                "stateCode": "10",
-                "pinCode": "111111",
+                "addressCategory": "01",
+                "dateReported": "2024-08-24",
+                "index": "2",
+                "line1": "C/O SATYA NARAYAN PRASAD 20 DELWAN PATNA",
+                "line2": "",
+                "pinCode": "800027",
+                "stateCode": "10"
+            },
+            {
+                "addressCategory": "03",
+                "dateReported": "2024-05-31",
+                "index": "3",
+                "line1": "MANGAL DHWANI PC COLONY  KANKARBAGH",
+                "line2": "",
+                "pinCode": "800020",
+                "stateCode": "10"
+            },
+            {
                 "addressCategory": "02",
-                "residenceCode": "01",
-                "dateReported": "111111"
+                "dateReported": "2024-05-31",
+                "index": "4",
+                "line1": "C/O: SATYA NARAYAN PRASAD 20 DELWAN BAGI KRISHNA",
+                "line2": "",
+                "pinCode": "800027",
+                "stateCode": "10"
             }],
             "accounts": [
             {
-                "index": "T001",
-                "memberShortName": "NOT DISCLOSED",
-                "accountType": "08",
-                "ownershipIndicator": 1,
-                "dateOpened": "11111111",
-                "lastPaymentDate": "11111111",
-                "dateReported": "11111111",
-                "highCreditAmount": 11111111,
-                "currentBalance": 79926,
-                "paymentHistory": "DSFSDFSDFSDFNSDKFHSJKDBNFJSHIDUFBSDIBFIUSDBFUIBCSDBCSUIHZDFIOESBF",
-                "paymentStartDate": "11111111",
-                "paymentEndDate": "01042021",
-                "creditFacilityStatus": "00",
-                "collateralType": "00",
-                "interestRate": 13.5,
-                "paymentTenure": 147,
-                "emiAmount": 3182,
+                "accountType": "Credit Card",
+                "accountNumber": "0000000028669955",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "27760",
+                "currentBalance": "64522",
+                "dateOpened": "2023-10-18",
+                "dateReported": "2025-08-15",
+                "highCreditAmount": "64522",
+                "index": "0",
+                "lastPaymentDate": "2025-04-06",
+                "memberShortName": "ICICI BANK",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2023-11-01",
+                "paymentFrequency": "",
+                "paymentHistory": "107092061031000000000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2025-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-08-01",
+                    "status": "107"
+                },
+                {
+                    "date": "2025-07-01",
+                    "status": "92"
+                },
+                {
+                    "date": "2025-06-01",
+                    "status": "61"
+                },
+                {
+                    "date": "2025-05-01",
+                    "status": "31"
+                },
+                {
+                    "date": "2025-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-11-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Credit Card",
+                "accountNumber": "0007478830007967886",
+                "actualPaymentAmount": "5063",
+                "creditFacilityStatus": "",
+                "amountOverdue": "15029",
+                "currentBalance": "73959",
+                "dateOpened": "2024-02-26",
+                "dateReported": "2025-08-15",
+                "highCreditAmount": "74299",
+                "index": "1",
+                "lastPaymentDate": "2025-08-02",
+                "memberShortName": "RBL BANK",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2024-03-01",
                 "paymentFrequency": "03",
-                "actualPaymentAmount": 73557
+                "paymentHistory": "072088056028000000000000000000000000000000000000000000",
+                "paymentStartDate": "2025-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-08-01",
+                    "status": "72"
+                },
+                {
+                    "date": "2025-07-01",
+                    "status": "88"
+                },
+                {
+                    "date": "2025-06-01",
+                    "status": "56"
+                },
+                {
+                    "date": "2025-05-01",
+                    "status": "28"
+                },
+                {
+                    "date": "2025-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-03-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Credit Card",
+                "accountNumber": "9406188002698052",
+                "actualPaymentAmount": "3200",
+                "creditFacilityStatus": "",
+                "amountOverdue": "3131",
+                "currentBalance": "39846",
+                "dateOpened": "2024-02-05",
+                "dateReported": "2025-08-15",
+                "highCreditAmount": "40282",
+                "index": "2",
+                "lastPaymentDate": "2025-07-20",
+                "memberShortName": "KOTAK BANK",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2024-02-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "026011010000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2025-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-08-01",
+                    "status": "26"
+                },
+                {
+                    "date": "2025-07-01",
+                    "status": "11"
+                },
+                {
+                    "date": "2025-06-01",
+                    "status": "10"
+                },
+                {
+                    "date": "2025-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-02-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Credit Card",
+                "accountNumber": "152000005020843",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "2099",
+                "currentBalance": "35418",
+                "dateOpened": "2023-10-07",
+                "dateReported": "2025-08-15",
+                "highCreditAmount": "35418",
+                "index": "3",
+                "lastPaymentDate": "2025-07-24",
+                "memberShortName": "AXIS BANK",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2023-10-01",
+                "paymentFrequency": "",
+                "paymentHistory": "012000000000000025000000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2025-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "12",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-08-01",
+                    "status": "12"
+                },
+                {
+                    "date": "2025-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-03-01",
+                    "status": "25"
+                },
+                {
+                    "date": "2025-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-10-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "12"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "4L6ECFMP548107",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "6377",
+                "dateOpened": "2025-02-09",
+                "dateReported": "2025-08-15",
+                "highCreditAmount": "19127",
+                "index": "4",
+                "lastPaymentDate": "2025-08-02",
+                "memberShortName": "BAJAJ FIN LTD",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2025-02-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000000000",
+                "paymentStartDate": "2025-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "9",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-02-01",
+                    "status": "0"
+                }],
+                "emiAmount": "2125",
+                "repaymentTenure": "9"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "4L6ECFLV017284",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "3013",
+                "dateOpened": "2024-09-14",
+                "dateReported": "2025-08-15",
+                "highCreditAmount": "36189",
+                "index": "5",
+                "lastPaymentDate": "2025-08-02",
+                "memberShortName": "BAJAJ FIN LTD",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2024-09-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000000000000000000000000",
+                "paymentStartDate": "2025-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "12",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-09-01",
+                    "status": "0"
+                }],
+                "emiAmount": "3016",
+                "repaymentTenure": "12"
+            },
+            {
+                "accountType": "Credit Card",
+                "accountNumber": "9052894455544746114",
+                "actualPaymentAmount": "17499",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "100837",
+                "dateOpened": "2024-07-10",
+                "dateReported": "2025-08-15",
+                "highCreditAmount": "106889",
+                "index": "6",
+                "lastPaymentDate": "2025-07-25",
+                "memberShortName": "SBI CARD",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2024-08-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000009000000009000000000000000000000",
+                "paymentStartDate": "2025-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-06-01",
+                    "status": "9"
+                },
+                {
+                    "date": "2025-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-03-01",
+                    "status": "9"
+                },
+                {
+                    "date": "2025-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-08-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Credit Card",
+                "accountNumber": "0001011710016162413",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "-1",
+                "currentBalance": "10441",
+                "dateOpened": "2024-06-12",
+                "dateReported": "2025-08-15",
+                "highCreditAmount": "11304",
+                "index": "7",
+                "lastPaymentDate": "2025-07-23",
+                "memberShortName": "HDFC BANK",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2024-06-01",
+                "paymentFrequency": "",
+                "paymentHistory": "000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2025-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-06-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "462988161",
+                "actualPaymentAmount": "7501",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2024-05-23",
+                "dateReported": "2025-02-28",
+                "highCreditAmount": "55800",
+                "index": "8",
+                "lastPaymentDate": "2025-02-06",
+                "memberShortName": "HDFC BANK",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2024-05-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000000000000000000",
+                "paymentStartDate": "2025-02-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2025-02-06",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-05-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "459335543",
+                "actualPaymentAmount": "7000",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2023-08-10",
+                "dateReported": "2024-08-31",
+                "highCreditAmount": "102424",
+                "index": "9",
+                "lastPaymentDate": "2024-08-06",
+                "memberShortName": "HDFC BANK",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2023-08-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000XXX000000000000000000000000000000000",
+                "paymentStartDate": "2024-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2024-08-06",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2024-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-07-01",
+                    "status": "XXX"
+                },
+                {
+                    "date": "2024-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-08-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "4L6ECFJZ437085",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2023-08-07",
+                "dateReported": "2024-03-31",
+                "highCreditAmount": "12107",
+                "index": "10",
+                "lastPaymentDate": "2024-01-02",
+                "memberShortName": "BAJAJ FIN LTD",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2023-08-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000000000000",
+                "paymentStartDate": "2024-03-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2024-02-04",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2024-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-08-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Personal Loan",
+                "accountNumber": "P4L6PPT8546837",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "126298",
+                "dateOpened": "2023-07-21",
+                "dateReported": "2025-08-15",
+                "highCreditAmount": "250354",
+                "index": "11",
+                "lastPaymentDate": "2025-08-02",
+                "memberShortName": "BAJAJ FIN LTD",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2023-07-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2025-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "39",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-07-01",
+                    "status": "0"
+                }],
+                "emiAmount": "10263",
+                "repaymentTenure": "39"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "4L6SCEIB439973",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2022-03-30",
+                "dateReported": "2023-01-31",
+                "highCreditAmount": "28000",
+                "index": "12",
+                "lastPaymentDate": "2022-11-02",
+                "memberShortName": "BAJAJ FIN LTD",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2022-03-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000000000000000000000",
+                "paymentStartDate": "2023-01-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2022-12-06",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2023-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-03-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "4L6DPFHV548721",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2022-01-21",
+                "dateReported": "2022-11-30",
+                "highCreditAmount": "26200",
+                "index": "13",
+                "lastPaymentDate": "2022-09-02",
+                "memberShortName": "BAJAJ FIN LTD",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2022-01-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000000000000000000000",
+                "paymentStartDate": "2022-11-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2022-10-08",
+                "termMonths": "10",
+                "monthlyPayStatus": [
+                {
+                    "date": "2022-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-01-01",
+                    "status": "0"
+                }],
+                "emiAmount": "2620",
+                "repaymentTenure": "10"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "4L6SCEHN903135",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2021-11-05",
+                "dateReported": "2022-08-31",
+                "highCreditAmount": "49000",
+                "index": "14",
+                "lastPaymentDate": "2022-06-02",
+                "memberShortName": "BAJAJ FIN LTD",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2021-11-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000000000000000000",
+                "paymentStartDate": "2022-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2022-07-10",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2022-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-11-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "PAT21E002365210",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "19884",
+                "dateOpened": "2021-10-12",
+                "dateReported": "2025-08-15",
+                "highCreditAmount": "20000",
+                "index": "15",
+                "lastPaymentDate": "2025-08-05",
+                "memberShortName": "KARUR VYSYA",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2022-09-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2025-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-09-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "PAT21E002365210",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "4971",
+                "dateOpened": "2021-10-12",
+                "dateReported": "2025-08-15",
+                "highCreditAmount": "5000",
+                "index": "16",
+                "lastPaymentDate": "2025-08-05",
+                "memberShortName": "AXIO",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2022-09-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                "paymentStartDate": "2025-08-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "NA",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2025-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2025-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2024-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2023-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-09-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "4L6SCEHF203227",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2021-08-04",
+                "dateReported": "2022-04-30",
+                "highCreditAmount": "30000",
+                "index": "17",
+                "lastPaymentDate": "2022-02-02",
+                "memberShortName": "BAJAJ FIN LTD",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2021-08-01",
+                "paymentFrequency": "03",
+                "paymentHistory": "000000000000000000000000000",
+                "paymentStartDate": "2022-04-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2022-03-11",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2022-04-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-03-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-02-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2022-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-08-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
+            },
+            {
+                "accountType": "Consumer Loan",
+                "accountNumber": "4L6SCEGX072283",
+                "actualPaymentAmount": "-1",
+                "creditFacilityStatus": "",
+                "amountOverdue": "0",
+                "currentBalance": "0",
+                "dateOpened": "2021-04-08",
+                "dateReported": "2022-01-31",
+                "highCreditAmount": "43000",
+                "index": "18",
+                "lastPaymentDate": "2021-12-01",
+                "memberShortName": "BAJAJ FIN LTD",
+                "ownershipIndicator": "Individual",
+                "paymentEndDate": "2021-04-01",
+                "paymentFrequency": "",
+                "paymentHistory": "000000000000000000000000000000",
+                "paymentStartDate": "2022-01-01",
+                "woAmountPrincipal": "-1",
+                "woAmountTotal": "-1",
+                "dateClosed": "2021-12-09",
+                "termMonths": "-1",
+                "monthlyPayStatus": [
+                {
+                    "date": "2022-01-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-12-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-11-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-10-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-09-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-08-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-07-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-06-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-05-01",
+                    "status": "0"
+                },
+                {
+                    "date": "2021-04-01",
+                    "status": "0"
+                }],
+                "emiAmount": "-1",
+                "repaymentTenure": "-1"
             }],
             "enquiries": [
             {
-                "index": "I001",
-                "enquiryDate": "11111111",
-                "memberShortName": "FINTELLIGENCE",
+                "enquiryAmount": "40000",
+                "enquiryDate": "2025-07-24",
+                "enquiryPurpose": "06",
+                "index": "1",
+                "memberShortName": "TVS CREDIT"
+            },
+            {
+                "enquiryAmount": "38000",
+                "enquiryDate": "2025-07-24",
+                "enquiryPurpose": "06",
+                "index": "2",
+                "memberShortName": "IDFC FIRST BANK"
+            },
+            {
+                "enquiryAmount": "100",
+                "enquiryDate": "2025-07-20",
+                "enquiryPurpose": "10",
+                "index": "3",
+                "memberShortName": "AU SFB"
+            },
+            {
+                "enquiryAmount": "100",
+                "enquiryDate": "2025-06-19",
+                "enquiryPurpose": "10",
+                "index": "4",
+                "memberShortName": "AU SFB"
+            },
+            {
+                "enquiryAmount": "100000",
+                "enquiryDate": "2025-06-13",
                 "enquiryPurpose": "05",
-                "enquiryAmount": 49500
-            }]
+                "index": "5",
+                "memberShortName": "BAJAJ FIN LTD"
+            },
+            {
+                "enquiryAmount": "200000",
+                "enquiryDate": "2025-05-22",
+                "enquiryPurpose": "05",
+                "index": "6",
+                "memberShortName": "ICICI BANK"
+            },
+            {
+                "enquiryAmount": "200000",
+                "enquiryDate": "2025-05-18",
+                "enquiryPurpose": "05",
+                "index": "7",
+                "memberShortName": "BAJAJ FIN LTD"
+            },
+            {
+                "enquiryAmount": "150000",
+                "enquiryDate": "2025-04-30",
+                "enquiryPurpose": "05",
+                "index": "8",
+                "memberShortName": "BAJAJ FIN LTD"
+            },
+            {
+                "enquiryAmount": "50000",
+                "enquiryDate": "2025-03-31",
+                "enquiryPurpose": "05",
+                "index": "9",
+                "memberShortName": "INDUSIND BANK"
+            },
+            {
+                "enquiryAmount": "10000",
+                "enquiryDate": "2024-07-06",
+                "enquiryPurpose": "10",
+                "index": "10",
+                "memberShortName": "SBI CARD"
+            },
+            {
+                "enquiryAmount": "10000",
+                "enquiryDate": "2024-06-13",
+                "enquiryPurpose": "10",
+                "index": "11",
+                "memberShortName": "AXIS BANK"
+            },
+            {
+                "enquiryAmount": "10000",
+                "enquiryDate": "2024-06-04",
+                "enquiryPurpose": "10",
+                "index": "12",
+                "memberShortName": "SBI CARD"
+            },
+            {
+                "enquiryAmount": "1000",
+                "enquiryDate": "2024-05-23",
+                "enquiryPurpose": "10",
+                "index": "13",
+                "memberShortName": "HDFC BANK"
+            },
+            {
+                "enquiryAmount": "50000",
+                "enquiryDate": "2024-05-23",
+                "enquiryPurpose": "06",
+                "index": "14",
+                "memberShortName": "HDFC BANK"
+            },
+            {
+                "enquiryAmount": "10000",
+                "enquiryDate": "2024-04-30",
+                "enquiryPurpose": "10",
+                "index": "15",
+                "memberShortName": "SBI CARD"
+            },
+            {
+                "enquiryAmount": "1000",
+                "enquiryDate": "2024-02-23",
+                "enquiryPurpose": "10",
+                "index": "16",
+                "memberShortName": "RBL BANK LTD"
+            },
+            {
+                "enquiryAmount": "1000",
+                "enquiryDate": "2024-02-22",
+                "enquiryPurpose": "10",
+                "index": "17",
+                "memberShortName": "RBL BANK LTD"
+            },
+            {
+                "enquiryAmount": "50000",
+                "enquiryDate": "2024-01-28",
+                "enquiryPurpose": "10",
+                "index": "18",
+                "memberShortName": "KOTAK BANK"
+            },
+            {
+                "enquiryAmount": "50000",
+                "enquiryDate": "2024-01-27",
+                "enquiryPurpose": "10",
+                "index": "19",
+                "memberShortName": "KOTAK BANK"
+            },
+            {
+                "enquiryAmount": "100000",
+                "enquiryDate": "2023-10-17",
+                "enquiryPurpose": "10",
+                "index": "20",
+                "memberShortName": "ICICI BANK"
+            },
+            {
+                "enquiryAmount": "10000",
+                "enquiryDate": "2023-10-16",
+                "enquiryPurpose": "10",
+                "index": "21",
+                "memberShortName": "SBI CARD"
+            },
+            {
+                "enquiryAmount": "10000",
+                "enquiryDate": "2023-10-06",
+                "enquiryPurpose": "10",
+                "index": "22",
+                "memberShortName": "AXIS BANK"
+            },
+            {
+                "enquiryAmount": "150000",
+                "enquiryDate": "2023-10-05",
+                "enquiryPurpose": "00",
+                "index": "23",
+                "memberShortName": "BAJAJ FIN LTD"
+            },
+            {
+                "enquiryAmount": "1000",
+                "enquiryDate": "2023-08-07",
+                "enquiryPurpose": "10",
+                "index": "24",
+                "memberShortName": "HDFC BANK"
+            },
+            {
+                "enquiryAmount": "56000",
+                "enquiryDate": "2023-07-27",
+                "enquiryPurpose": "06",
+                "index": "25",
+                "memberShortName": "HDFC BANK"
+            },
+            {
+                "enquiryAmount": "150000",
+                "enquiryDate": "2023-07-20",
+                "enquiryPurpose": "00",
+                "index": "26",
+                "memberShortName": "BAJAJ FIN LTD"
+            },
+            {
+                "enquiryAmount": "150000",
+                "enquiryDate": "2023-07-20",
+                "enquiryPurpose": "00",
+                "index": "27",
+                "memberShortName": "BAJAJ FIN LTD"
+            },
+            {
+                "enquiryAmount": "10000",
+                "enquiryDate": "2023-07-11",
+                "enquiryPurpose": "10",
+                "index": "28",
+                "memberShortName": "SBI CARD"
+            },
+            {
+                "enquiryAmount": "10000",
+                "enquiryDate": "2023-05-16",
+                "enquiryPurpose": "10",
+                "index": "29",
+                "memberShortName": "SBI CARD"
+            },
+            {
+                "enquiryAmount": "10000",
+                "enquiryDate": "2023-05-05",
+                "enquiryPurpose": "10",
+                "index": "30",
+                "memberShortName": "SBI CARD"
+            },
+            {
+                "enquiryAmount": "150000",
+                "enquiryDate": "2023-03-29",
+                "enquiryPurpose": "00",
+                "index": "31",
+                "memberShortName": "BAJAJ FIN LTD"
+            },
+            {
+                "enquiryAmount": "10000",
+                "enquiryDate": "2023-03-01",
+                "enquiryPurpose": "10",
+                "index": "32",
+                "memberShortName": "SBI CARD"
+            }],
+            "response":
+            {
+                "consumerSummaryresp":
+                {
+                    "accountSummary":
+                    {
+                        "totalAccounts": 19,
+                        "highCreditAmount": 1009915,
+                        "currentBalance": 485566,
+                        "overdueAccounts": 4,
+                        "overdueBalance": 48018,
+                        "zeroBalanceAccounts": 8,
+                        "recentDateOpened": "2025-02-09",
+                        "oldestDateOpened": "2021-04-08"
+                    },
+                    "inquirySummary":
+                    {
+                        "totalInquiry": 32,
+                        "inquiryPast30Days": "",
+                        "inquiryPast12Months": "",
+                        "inquiryPast24Months": "",
+                        "recentInquiryDate": ""
+                    }
+                }
+            }
         }]
     },
-    "status_code": 200,
-    "success": true,
-    "message": "Success",
-    "message_code": "success"
+    "pan_comprehensive":
+    {
+        "data":
+        {
+            "client_id": "pan_comprehensive_plus_kVbpojWAtPkvkiUgxPxj",
+            "pan_number": "IVZPK2103N",
+            "pan_details":
+            {
+                "full_name": "SHIV KUMAR",
+                "full_name_split": ["SHIV", "", "KUMAR"],
+                "masked_aadhaar": "XXXXXXXX5390",
+                "address":
+                {
+                    "line_1": "",
+                    "line_2": "",
+                    "street_name": "",
+                    "zip": "",
+                    "city": "",
+                    "state": "",
+                    "country": "",
+                    "full": ""
+                },
+                "email": null,
+                "phone_number": null,
+                "gender": "M",
+                "dob": "1987-05-17",
+                "input_dob": null,
+                "aadhaar_linked": true,
+                "dob_verified": false,
+                "dob_check": false,
+                "category": "person",
+                "status": "valid",
+                "less_info": false,
+                "father_name": "SATYA NARAYAN PRASAD"
+            },
+            "less_info": false
+        },
+        "status_code": 200,
+        "success": true,
+        "message": "Success",
+        "message_code": "success"
+    },
+    "status": true
 }
