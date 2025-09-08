@@ -40,6 +40,133 @@
             }
         };
     };
+    // Generate risk-based recommendation
+    RiskAssessment.prototype.generateRiskRecommendation = function() {
+        var creditWorthiness = this.calculateCreditWorthiness();
+        var defaultProbability = this.calculateDefaultProbability();
+        var defaultPatterns = this.analyzeDefaultPatterns();
+
+        var recommendation = {
+            approvalRecommendation: creditWorthiness.isCreditWorthy ? 'Approve with Conditions' : 'Reject',
+            riskLevel: defaultProbability.riskLevel,
+            suggestedActions: [],
+            loanConditions: []
+        };
+
+        if (creditWorthiness.isCreditWorthy) {
+            if (defaultProbability.probability < 30) {
+                recommendation.approvalRecommendation = 'Approve';
+                recommendation.suggestedActions.push('Standard credit assessment passed');
+            } else {
+                recommendation.suggestedActions.push('Enhanced monitoring required');
+
+                if (defaultPatterns.type === 'Willful') {
+                    recommendation.loanConditions.push('Require collateral for any new credit');
+                    recommendation.loanConditions.push('Higher interest rate recommended');
+                } else if (defaultPatterns.type === 'Situational') {
+                    recommendation.loanConditions.push('Consider smaller credit limit initially');
+                    recommendation.loanConditions.push('Quarterly review of credit status');
+                }
+            }
+        } else {
+            recommendation.suggestedActions.push('Client does not meet minimum creditworthiness criteria');
+
+            if (defaultPatterns.type === 'Willful') {
+                recommendation.suggestedActions.push('Client shows patterns of intentional default - high risk');
+            } else {
+                recommendation.suggestedActions.push('Consider secured credit options if available');
+            }
+        }
+
+        return recommendation;
+    }
+
+    // Update risk assessment to use the improved payment history data
+    RiskAssessment.prototype.calculateDefaultProbability = function() {
+        var creditWorthiness = this.calculateCreditWorthiness();
+        var paymentAnalysis = this.gradingEngine.getOverallPaymentAnalysis();
+        var utilization = this.gradingEngine.getCreditUtilization();
+        var accounts = this.gradingEngine.processAccounts();
+
+        var baseProbability = 100 - creditWorthiness.score;
+
+        // Adjust based on payment history (more weight to recent patterns)
+        var recentMissedRate = this.calculateRecentMissedRate(paymentAnalysis);
+        if (recentMissedRate > 0.2) {
+            baseProbability += 20;
+        } else if (recentMissedRate > 0.1) {
+            baseProbability += 10;
+        } else if (recentMissedRate > 0.05) {
+            baseProbability += 5;
+        }
+
+        // Adjust based on utilization
+        if (utilization > 75) {
+            baseProbability += 10;
+        } else if (utilization > 50) {
+            baseProbability += 5;
+        }
+
+        // Adjust based on overdue accounts
+        var overdueAccounts = accounts.filter(function(account) {
+            return account.status === 'Overdue' || account.status === 'Default';
+        }).length;
+
+        if (overdueAccounts > 0) {
+            baseProbability += (overdueAccounts * 5);
+        }
+
+        // Cap probability between 5% and 95%
+        var probability = Math.min(95, Math.max(5, baseProbability));
+
+        return {
+            probability: probability,
+            riskLevel: this.getRiskLevel(probability),
+            factors: {
+                creditWorthiness: creditWorthiness.score,
+                missedPaymentRate: paymentAnalysis.missedRate,
+                recentMissedRate: recentMissedRate,
+                creditUtilization: utilization,
+                overdueAccounts: overdueAccounts
+            }
+        };
+    };
+
+    RiskAssessment.prototype.calculateRecentMissedRate = function(paymentAnalysis) {
+        // Give more weight to recent payments (last 12 months)
+        var recentPayments = Math.min(12, paymentAnalysis.total);
+        var recentMissed = Math.min(recentPayments, paymentAnalysis.missed);
+
+        return recentPayments > 0 ? recentMissed / recentPayments : 0;
+    };
+
+
+    RiskAssessment.prototype.getOverallPaymentAnalysis = function() {
+        var onTime = 0,
+            delayed = 0,
+            missed = 0,
+            total = 0;
+        var self = this;
+
+        this.creditReport.accounts.forEach(function(account) {
+            var analysis = self.gradingEngine.parsePaymentHistory(account);
+            onTime += analysis.onTime;
+            delayed += analysis.delayed;
+            missed += analysis.missed;
+            total += analysis.total;
+        });
+
+        return {
+            onTime: onTime,
+            delayed: delayed,
+            missed: missed,
+            total: total,
+            onTimeRate: total > 0 ? onTime / total : 0,
+            missedRate: total > 0 ? missed / total : 0,
+            delayedRate: total > 0 ? delayed / total : 0
+        };
+    };
+
 
     // Convert letter grade to numerical score
     RiskAssessment.prototype.gradeToScore = function(grade) {
@@ -110,6 +237,8 @@
         var consistentThenStop = false;
 
         for (var i = 0; i < paymentHistory.payments.length; i++) {
+            log('Payment History :');
+            log(paymentHistory.payments[i].status);
             if (paymentHistory.payments[i].status === 'Paid') {
                 paidCount++;
                 if (missedCount > 0) break; // Pattern broken
@@ -182,51 +311,7 @@
     };
 
     // Calculate probability of future default
-    RiskAssessment.prototype.calculateDefaultProbability = function() {
-        var creditWorthiness = this.calculateCreditWorthiness();
-        var defaultPatterns = this.analyzeDefaultPatterns();
-        var paymentAnalysis = this.gradingEngine.getOverallPaymentAnalysis();
-        var utilization = this.gradingEngine.getCreditUtilization();
 
-        var baseProbability = 100 - creditWorthiness.score;
-
-        // Adjust based on default patterns
-        if (defaultPatterns.type === 'Willful') {
-            baseProbability += 20;
-        } else if (defaultPatterns.type === 'Situational') {
-            baseProbability += 10;
-        }
-
-        // Adjust based on payment history
-        if (paymentAnalysis.missedRate > 0.2) {
-            baseProbability += 15;
-        } else if (paymentAnalysis.missedRate > 0.1) {
-            baseProbability += 10;
-        } else if (paymentAnalysis.missedRate > 0.05) {
-            baseProbability += 5;
-        }
-
-        // Adjust based on credit utilization
-        if (utilization > 75) {
-            baseProbability += 10;
-        } else if (utilization > 50) {
-            baseProbability += 5;
-        }
-
-        // Cap probability between 5% and 95%
-        var probability = Math.min(95, Math.max(5, baseProbability));
-
-        return {
-            probability: probability,
-            riskLevel: this.getRiskLevel(probability),
-            factors: {
-                creditWorthiness: creditWorthiness.score,
-                defaultType: defaultPatterns.type,
-                missedPaymentRate: paymentAnalysis.missedRate,
-                creditUtilization: utilization
-            }
-        };
-    };
 
     // Convert probability to risk level
     RiskAssessment.prototype.getRiskLevel = function(probability) {
@@ -321,46 +406,7 @@
         return riskFactors;
     };
 
-    // Generate risk-based recommendation
-    RiskAssessment.prototype.generateRiskRecommendation = function() {
-        var creditWorthiness = this.calculateCreditWorthiness();
-        var defaultProbability = this.calculateDefaultProbability();
-        var defaultPatterns = this.analyzeDefaultPatterns();
 
-        var recommendation = {
-            approvalRecommendation: creditWorthiness.isCreditWorthy ? 'Approve with Conditions' : 'Reject',
-            riskLevel: defaultProbability.riskLevel,
-            suggestedActions: [],
-            loanConditions: []
-        };
-
-        if (creditWorthiness.isCreditWorthy) {
-            if (defaultProbability.probability < 30) {
-                recommendation.approvalRecommendation = 'Approve';
-                recommendation.suggestedActions.push('Standard credit assessment passed');
-            } else {
-                recommendation.suggestedActions.push('Enhanced monitoring required');
-
-                if (defaultPatterns.type === 'Willful') {
-                    recommendation.loanConditions.push('Require collateral for any new credit');
-                    recommendation.loanConditions.push('Higher interest rate recommended');
-                } else if (defaultPatterns.type === 'Situational') {
-                    recommendation.loanConditions.push('Consider smaller credit limit initially');
-                    recommendation.loanConditions.push('Quarterly review of credit status');
-                }
-            }
-        } else {
-            recommendation.suggestedActions.push('Client does not meet minimum creditworthiness criteria');
-
-            if (defaultPatterns.type === 'Willful') {
-                recommendation.suggestedActions.push('Client shows patterns of intentional default - high risk');
-            } else {
-                recommendation.suggestedActions.push('Consider secured credit options if available');
-            }
-        }
-
-        return recommendation;
-    };
 
     // Get financial institutions that might still consider this client
     RiskAssessment.prototype.getEligibleInstitutions = function() {
