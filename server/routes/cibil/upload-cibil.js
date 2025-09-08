@@ -1,6 +1,7 @@
 (function() {
     GradingEngine = require("./api/grading-engine");
     var AdvancedAnalytics = require("./api/analytics-engine-advance.js");
+    var RiskAssessment = require("./api/risk-assessment.js");
 
     // Upload and analyze CIBIL data
     app.get('/get/api/cibil/upload', function(req, res) {
@@ -43,6 +44,11 @@
                         var defaulters = analyzer.identifyDefaulters();
                         var recommendations = analyzer.generateRecommendations();
                         var advanced = new AdvancedAnalytics(cibilData, analyzer);
+                        var risk = new RiskAssessment(cibilData, analyzer);
+                        var risk_report = risk.generateRiskReport();
+                        var creditWorthiness = risk.calculateCreditWorthiness();
+                        var defaultProbability = risk.calculateDefaultProbability();
+                        var institutions = risk.getEligibleInstitutions();
 
 
 
@@ -71,6 +77,10 @@
                             report: report,
                             plan: plan,
                             bankSuggestions: bankSuggestions,
+                            risk_report: risk_report,
+                            credit_worthy: creditWorthiness,
+                            default_probability: defaultProbability,
+                            institution: institutions,
                             message: 'CIBIL data analyzed successfully'
                         });
                     });
@@ -89,6 +99,11 @@
                         var recommendations = analyzer.generateRecommendations();
                         var advanced = new AdvancedAnalytics(cibilData, analyzer);
 
+                        var risk = new RiskAssessment(cibilData, analyzer);
+                        var risk_report = risk.generateRiskReport();
+                        var creditWorthiness = risk.calculateCreditWorthiness();
+                        var defaultProbability = risk.calculateDefaultProbability();
+                        var institutions = risk.getEligibleInstitutions();
 
 
                         // Generate comprehensive report
@@ -114,6 +129,10 @@
                             report: report,
                             plan: plan,
                             bankSuggestions: bankSuggestions,
+                            risk_report: risk_report,
+                            credit_worthy: creditWorthiness,
+                            default_probability: defaultProbability,
+                            institution: institutions,
                             message: 'CIBIL data analyzed successfully'
                         });
                     });
