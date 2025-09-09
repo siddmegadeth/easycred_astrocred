@@ -80,7 +80,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
                         return $q.when(true);
                     } else {
                         log('Not Logged In');
-                        $location.path("login");
+                        $location.path("access-denied");
                         //show popup
                     }
                 }
@@ -110,23 +110,10 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             templateUrl: 'templates/access-denied.html',
             config: {
                 requireLogin: false
-            },
-            resolve: {
-                authenticated: function($q, stateManager, $location) {
-
-                    if (stateManager.isUserLogggedIn()) {
-                        log('Logged In');
-                        return $q.when(true);
-                    } else {
-                        log('Not Logged In');
-                        //$location.path("/login");
-                        //show popup
-                    }
-                }
             }
         })
         .otherwise({
-            redirectTo: '/'
+            redirectTo: '/access-denied'
         });
 
 
