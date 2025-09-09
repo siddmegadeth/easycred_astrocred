@@ -75,12 +75,12 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             resolve: {
                 authenticated: function($q, stateManager, $location) {
 
-                    if (stateManager.isLoggedIn()) {
+                    if (stateManager.isUserLogggedIn()) {
                         log('Logged In');
                         return $q.when(true);
                     } else {
                         log('Not Logged In');
-                        //$location.path("/login");
+                        $location.path("login");
                         //show popup
                     }
                 }
@@ -95,7 +95,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             resolve: {
                 authenticated: function($q, stateManager, $location) {
 
-                    if (stateManager.isLoggedIn()) {
+                    if (stateManager.isUserLogggedIn()) {
                         log('Logged In');
                         return $q.when(true);
                     } else {
@@ -114,7 +114,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             resolve: {
                 authenticated: function($q, stateManager, $location) {
 
-                    if (stateManager.isLoggedIn()) {
+                    if (stateManager.isUserLogggedIn()) {
                         log('Logged In');
                         return $q.when(true);
                     } else {

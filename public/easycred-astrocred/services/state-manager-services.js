@@ -13,51 +13,6 @@ app.provider('stateManager', [function() {
         },
         $get: ['$http', function($http) {
             return {
-                clearSaveSearchKey: function(key) {
-                    window.localStorage.removeItem("easycred_astrocred_search_key");
-
-                },
-                saveSearchKey: function(key) {
-                    window.localStorage.setItem("easycred_astrocred_search_key", JSON.stringify(key));
-                },
-                checkIfSaveSearchKeyAvailable: function() {
-                    if (window.localStorage.easycred_astrocred_search_key) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                },
-                getSaveSearchKey: function() {
-                    if (window.localStorage.easycred_astrocred_search_key) {
-                        return JSON.parse(window.localStorage.easycred_astrocred_search_key);
-                    } else {
-                        return [];
-                    }
-                },
-                checkIfUserGeoLocationAvailable: function() {
-                    if (window.localStorage.easycred_astrocred_user_geolocation) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                },
-                saveUserGeoLocation: function(user_geolocation) {
-                    window.localStorage.setItem("easycred_astrocred_user_geolocation", JSON.stringify(user_geolocation));
-                },
-                getUserGeoLocation: function() {
-                    if (window.localStorage.easycred_astrocred_user_geolocation) {
-                        return JSON.parse(window.localStorage.easycred_astrocred_user_geolocation);
-                    } else {
-                        return [];
-                    }
-                },
-                setObject: function(objectTuple) {
-                    object = objectTuple;
-                },
-                getObject: function() {
-                    return object;
-                },
-
                 isUserLogggedIn: function() {
                     if (window.localStorage.easycred_astrocred_app_access_token && window.localStorage.easycred_astrocred_profile) {
                         if (window.localStorage.easycred_astrocred_app_access_token != "undefined" && window.localStorage.easycred_astrocred_profile != "undefined" || window.localStorage.easycred_astrocred_app_access_token != null && window.localStorage.easycred_astrocred_profile != null)
@@ -65,20 +20,6 @@ app.provider('stateManager', [function() {
                         else
                             return false;
                     } else
-                        return false;
-                },
-                saveSupportedCountry: function(country) {
-
-                    window.localStorage.setItem("easycred_astrocred_app_supported_country", JSON.stringify(country));
-                },
-                getSupportedCountry: function() {
-                    if (window.localStorage.easycred_astrocred_app_supported_country)
-                        return JSON.parse(window.localStorage.easycred_astrocred_app_supported_country);
-                },
-                isSupportedCountryExist: function() {
-                    if (window.localStorage.easycred_astrocred_app_supported_country)
-                        return true;
-                    else
                         return false;
                 },
                 saveProfile: function(profile) {
@@ -90,48 +31,6 @@ app.provider('stateManager', [function() {
                         var profile = JSON.parse(window.localStorage.easycred_astrocred_profile);
                         log(profile);
                         return profile;
-                    }
-                },
-                isProfileExist: function() {
-                    // check both exist and if empty
-                    if (window.localStorage.easycred_astrocred_profile) {
-                        // check if value is empty or null
-                        var value = window.localStorage.easycred_astrocred_profile;
-                        if (value != null || value != 'null' || value != undefined || value != 'undefined') {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    } else {
-                        return false;
-                    }
-                },
-                isProfileCompleted: function() {
-                    // check both exist and if empty
-                    if (window.localStorage.easycred_astrocred_profile) {
-                        // check if value is empty or null
-                        var profileTuple = JSON.parse(window.localStorage.easycred_astrocred_profile);
-                        if (profileTuple.isProfileCompleted) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    } else {
-                        return false;
-                    }
-                },
-                isKYCCompleted: function() {
-                    // check both exist and if empty
-                    if (window.localStorage.easycred_astrocred_profile) {
-                        // check if value is empty or null
-                        var profileTuple = JSON.parse(window.localStorage.easycred_astrocred_profile);
-                        if (profileTuple.isKYCCompleted) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    } else {
-                        return false;
                     }
                 },
                 getAccessToken: function() {
@@ -197,64 +96,6 @@ app.provider('stateManager', [function() {
                                 })
                             }
                         });
-                    }
-                },
-                isCurrencyExist: function() {
-                    if (window.localStorage.easycred_astrocred_currency_code) {
-                        if (window.localStorage.easycred_astrocred_currency_code == undefined) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    } else {
-                        return false;
-                    }
-                },
-                saveCurrencyCode: function(currency) {
-                    if (currency) {
-                        window.localStorage.setItem("easycred_astrocred_currency_code", JSON.stringify(currency));
-                    }
-                },
-                getCurrencyCode: function() {
-                    if (window.localStorage.easycred_astrocred_currency_code)
-                        return JSON.parse(window.localStorage.easycred_astrocred_currency_code);
-                },
-                getCurrency: function() {
-                    if (window.localStorage.easycred_astrocred_currency_code) {
-                        var code = JSON.parse(window.localStorage.easycred_astrocred_currency_code);
-                        return code.symbol;
-                    }
-                },
-                isUserLogggedIn: function() {
-                    if (window.localStorage.easycred_astrocred_app_access_token && window.localStorage.easycred_astrocred_app_access_token) {
-                        if (window.localStorage.access_token != "undefined" && window.localStorage.profile != "undefined" || window.localStorage.access_token != null && window.localStorage.profile != null)
-                            return true;
-                        else
-                            return false;
-                    } else
-                        return false;
-                },
-                isCountryCodeExist: function() {
-                    if (window.localStorage.easycred_astrocred_website_country_code) {
-                        if (window.localStorage.easycred_astrocred_website_country_code == undefined) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    } else {
-                        return false;
-                    }
-                },
-                saveCountryCode: function(country) {
-                    if (country) {
-                        window.localStorage.setItem("easycred_astrocred_website_country_code", JSON.stringify(country));
-                    }
-                },
-                getCountryCode: function() {
-                    if (window.localStorage.easycred_astrocred_website_country_code) {
-                        return JSON.parse(window.localStorage.easycred_astrocred_website_country_code);
-                    } else {
-                        return {}
                     }
                 },
                 clearLocalStorage: function() {

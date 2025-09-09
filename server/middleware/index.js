@@ -1,5 +1,4 @@
 (function() {
-    require("./ejs-init");
     require("./init-public"); // init-public.js
     require("./middleware");
     require("./middleware-session");

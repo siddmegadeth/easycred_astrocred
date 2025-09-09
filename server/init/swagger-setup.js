@@ -7,9 +7,9 @@
         definition: {
             openapi: '3.0.0',
             info: {
-                title: 'EasyCred Retail API For PL/Gold API',
+                title: 'EasyCred ASTROCRED',
                 version: '1.0.0',
-                description: 'API documentation for the EasyCred Retail Platform',
+                description: 'API documentation for the EasyCred ASTROCRED Platform',
             },
             servers: [{
                     url: 'http://localhost:' + (process.env.PORT_NUMBER_SERVER || process.env.PORT || 3000),
