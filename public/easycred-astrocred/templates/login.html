@@ -1,11 +1,249 @@
-<section class="section">
-    <div class="container has-text-centered">
-        <h1 class="title">
-            Login
-        </h1>
-        <p class="subtitle">
-            My first website with
-            <strong class="has-text-primary">Bulma</strong>!
-        </p>
+<style>
+    .login-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-header {
+            background: linear-gradient(135deg, #ff9933 0%, #ffffff 50%, #138808 100%);
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .login-header h1 {
+            color: #333;
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        .login-header p {
+            color: #666;
+        }
+        .login-body {
+            padding: 25px;
+        }
+        .country-code {
+            background-color: #f5f5f5;
+            border: 1px solid #dbdbdb;
+            border-right: none;
+            border-radius: 4px 0 0 4px;
+            color: #363636;
+            padding: 7px 15px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        .indian-flag {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 8px;
+            background: linear-gradient(to bottom, #ff9933 33%, white 33%, white 66%, #138808 66%);
+            position: relative;
+        }
+        .indian-flag::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 6px;
+            height: 6px;
+            background: #000080;
+            border-radius: 50%;
+        }
+        .login-button {
+            background: #4CAF50;
+            color: white;
+            font-weight: 600;
+            border: none;
+            padding: 12px;
+            transition: all 0.3s;
+        }
+        .login-button:hover {
+            background: #43A047;
+            transform: translateY(-2px);
+        }
+        .or-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #777;
+            margin: 20px 0;
+        }
+        .or-divider::before,
+        .or-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #dbdbdb;
+        }
+        .or-divider::before {
+            margin-right: .5em;
+        }
+        .or-divider::after {
+            margin-left: .5em;
+        }
+        .terms {
+            font-size: 0.8rem;
+            color: #777;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .otp-input {
+            letter-spacing: 20px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.5rem;
+            padding-left: 25px;
+        }
+        .step {
+            display: none;
+        }
+        .step.active {
+            display: block;
+        }
+    </style>
+<div class="login-card">
+    <div class="login-header">
+        <h1>Login with Mobile</h1>
+        <p>India Only - We'll send an OTP to your number</p>
     </div>
-</section>
+    <div class="login-body">
+        <!-- Step 1: Mobile Number Input -->
+        <div class="step active" id="step1">
+            <div class="field">
+                <label class="label">Mobile Number</label>
+                <div class="field has-addons">
+                    <div class="control">
+                        <div class="country-code">
+                            <span class="indian-flag"></span>
+                            <span>+91</span>
+                        </div>
+                    </div>
+                    <div class="control is-expanded">
+                        <input class="input" type="tel" placeholder="Enter 10-digit mobile number" id="mobile" maxlength="10" pattern="[6-9]{1}[0-9]{9}">
+                    </div>
+                </div>
+                <p class="help">Enter a valid Indian mobile number</p>
+            </div>
+            <div class="field mt-5">
+                <div class="control">
+                    <button class="button is-fullwidth login-button" id="send-otp">
+                        <span class="icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </span>
+                        <span>Send OTP</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Step 2: OTP Verification -->
+        <div class="step" id="step2">
+            <div class="field">
+                <label class="label">Enter OTP</label>
+                <div class="control">
+                    <input class="input otp-input" type="text" placeholder="------" id="otp" maxlength="6">
+                </div>
+                <p class="help">Enter the 6-digit OTP sent to your number</p>
+            </div>
+            <div class="field mt-5">
+                <div class="control">
+                    <button class="button is-fullwidth login-button" id="verify-otp">
+                        <span class="icon">
+                            <i class="fas fa-check-circle"></i>
+                        </span>
+                        <span>Verify & Login</span>
+                    </button>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button class="button is-text is-fullwidth" id="resend-otp">
+                        <span>Didn't receive OTP? Resend</span>
+                    </button>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button class="button is-text is-fullwidth" id="back-to-mobile">
+                        <span class="icon">
+                            <i class="fas fa-arrow-left"></i>
+                        </span>
+                        <span>Change Mobile Number</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="terms">
+            By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+        </div>
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileInput = document.getElementById('mobile');
+    const sendOtpBtn = document.getElementById('send-otp');
+    const verifyOtpBtn = document.getElementById('verify-otp');
+    const resendOtpBtn = document.getElementById('resend-otp');
+    const backToMobileBtn = document.getElementById('back-to-mobile');
+    const otpInput = document.getElementById('otp');
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+
+    // Validate mobile number as user types
+    mobileInput.addEventListener('input', function() {
+        const mobile = mobileInput.value;
+        const isValid = /^[6-9]\d{9}$/.test(mobile);
+
+        if (mobile.length === 10 && !isValid) {
+            mobileInput.classList.add('is-danger');
+        } else {
+            mobileInput.classList.remove('is-danger');
+        }
+    });
+
+    // Send OTP button click handler
+    sendOtpBtn.addEventListener('click', function() {
+        const mobile = mobileInput.value;
+        const isValid = /^[6-9]\d{9}$/.test(mobile);
+
+        if (isValid) {
+            // In a real app, you would send an API request here
+            // For demo, we'll just switch to OTP step
+            step1.classList.remove('active');
+            step2.classList.add('active');
+        } else {
+            mobileInput.classList.add('is-danger');
+        }
+    });
+
+    // Back to mobile number step
+    backToMobileBtn.addEventListener('click', function() {
+        step2.classList.remove('active');
+        step1.classList.add('active');
+    });
+
+    // Resend OTP
+    resendOtpBtn.addEventListener('click', function() {
+        alert('OTP resent to your mobile number!');
+    });
+
+    // Verify OTP
+    verifyOtpBtn.addEventListener('click', function() {
+        const otp = otpInput.value;
+        if (otp.length === 6) {
+            alert('Login successful!');
+            // In a real app, you would verify the OTP with your backend
+        } else {
+            otpInput.classList.add('is-danger');
+        }
+    });
+
+    // Format OTP input
+    otpInput.addEventListener('input', function() {
+        otpInput.classList.remove('is-danger');
+    });
+});
+</script>
