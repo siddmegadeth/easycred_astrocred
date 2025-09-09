@@ -8,7 +8,7 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
 
         // });
         //$scope.dialog.show();
-        ons.ready(function() {
+        window.onload = function() {
             warn('Init loginCtrl Ready');
 
             if (stateManager.isUserLogggedIn()) {
@@ -23,8 +23,7 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
                     if (userProfile.consent.isTermsAccepted) {
                         if (stateManager.isKYCCompleted()) {
 
-                        } else {
-                        }
+                        } else {}
 
                     } else {
                         //$scope.myNavigator.resetToPage('terms.html', {});
@@ -40,7 +39,7 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
                 })
 
             }
-        });
+        };
     }, 300);
 
 

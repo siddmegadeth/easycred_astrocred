@@ -40,28 +40,6 @@ app.provider('stateManager', [function() {
                 saveAccessToken: function(access_token) {
                     return window.localStorage.setItem("easycred_astrocred_app_access_token", access_token);
                 },
-                isAccessTokenFound: function() {
-                    if (window.localStorage.easycred_astrocred_app_access_token) {
-                        if (window.localStorage.easycred_astrocred_app_access_token == undefined || window.localStorage.easycred_astrocred_app_access_token == 'undefined') {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    } else {
-                        return false;
-                    }
-
-                },
-                isAccessTokenVerified: function() {
-                    if (window.localStorage.easycred_astrocred_app_access_token)
-                        return window.localStorage.easycred_astrocred_app_access_token
-                    else
-                        return false;
-                },
-                setAccessTokenVerificationStatus: function(status) {
-                    return window.localStorage.setItem("easycred_astrocred_app_access_token", status);
-
-                },
                 verifyAccessToken: function(callback) {
 
                     warn("Token Status : " + window.localStorage.easycred_astrocred_app_access_token);
@@ -96,6 +74,34 @@ app.provider('stateManager', [function() {
                                 })
                             }
                         });
+                    }
+                },
+                isProfileExist: function() {
+                    // check both exist and if empty
+                    if (window.localStorage.easycred_astrocred_profile) {
+                        // check if value is empty or null
+                        var value = window.localStorage.easycred_astrocred_profile;
+                        if (value != null || value != 'null' || value != undefined || value != 'undefined') {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                },
+                isProfileCompleted: function() {
+                    // check both exist and if empty
+                    if (window.localStorage.easycred_astrocred_profile) {
+                        // check if value is empty or null
+                        var profileTuple = JSON.parse(window.localStorage.easycred_astrocred_profile);
+                        if (profileTuple.isProfileCompleted) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return false;
                     }
                 },
                 clearLocalStorage: function() {
