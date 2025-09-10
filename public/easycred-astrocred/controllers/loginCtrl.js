@@ -40,7 +40,7 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
 
             }
         };
-    }, 300);
+    });
 
 
 
@@ -49,12 +49,12 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
         //input.className = "text-input text-input--material";
         log(input);
         $scope.iti = window.intlTelInput(input, {
-            formatOnDisplay: false,
-            nationalMode: false,
+            formatOnDisplay: true,
+            nationalMode: true,
             initialCountry: 'in',
             onlyCountries: ['in'],
             placeholderNumberType: 'MOBILE',
-            showFlags: true,
+            showFlags: false,
             separateDialCode: false,
             strictMode: false,
             useFullscreenPopup: true,
@@ -323,33 +323,7 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
         return id;
     }
 
-    $scope.signInTrueCaller = function() {
-
-
-        const requestNonce = generateRequestId();
-        const partnerKey = 'D7VUf6fac573b7c8447b8835489f339a0f7a8';
-
-        // Construct the Truecaller URL
-        const truecallerUrl = `truecallersdk://truesdk/web_verify?type=btmsheet&requestNonce=${requestNonce}&partnerKey=${partnerKey}&partnerName=EASYCRED&lang=en&privacyUrl=https://www.easycred.co.in/privacy-policy&termsUrl=https://www.easycred.co.in/terms-and-conditions&loginPrefix=Login&loginSuffix=to%20EasyCred&ctaPrefix=Continue%20with&ctaColor=2D5BFF&ctaTextColor=FFFFFF&btnShape=rounded&skipOption=Skip%20for%20now&ttl=300000`;
-        log(truecallerUrl);
-
-        window.location = truecallerUrl;
-
-
-        // Fallback in case the app isn't installed
-        setTimeout(function() {
-            if (document.hidden === false) {
-                alert('Truecaller app not found. Please install Truecaller to continue with verification.');
-            }
-        }, 1000);
-
-        // Simulate successful verification for demo purposes
-        console.log("Truecaller Integration Ready");
-        console.log("App Key: D7VUf6fac573b7c8447b8835489f339a0f7a8");
-        console.log("Callback URL: https://retail.easycred.co.in/post/truecaller/auth/callback/url");
-
-    }
-
+  
 
 
 }])
