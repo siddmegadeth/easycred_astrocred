@@ -9,7 +9,7 @@
 
  .login-header {
      /*background: linear-gradient(135deg, #ff9933 0%, #ffffff 50%, #138808 100%);*/
-     padding: 30px 20px;
+     padding: 20px 20px;
      text-align: center;
  }
 
@@ -121,6 +121,15 @@
      display: block;
  }
 
+ .header {
+     font-weight: bold;
+     font-size: 27px;
+     font-family: sans-serif;
+     letter-spacing: 1px;
+     color: #333333;
+ }
+
+ /*Media Queries*/
 
  @media screen and (min-width: 480px) {
      .login-card {
