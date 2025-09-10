@@ -4,7 +4,6 @@
         try {
 
             log("/get/surepass/kyc/pan/plus");
-            profile = req.params.profile || req.query.profile;
             pan_number = req.params.pan_number || req.query.pan_number;
 
             log('pan_number : ' + pan_number);

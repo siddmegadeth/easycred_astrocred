@@ -70,7 +70,9 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             templateUrl: 'templates/home.html',
             controller: 'homeCtrl',
             config: {
-                requireLogin: true
+                requireLogin: true,
+                showNavbar: true,
+                showCredControl: false
             },
             resolve: {
                 authenticated: function($q, stateManager, $location) {
@@ -90,7 +92,9 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             templateUrl: 'templates/login.html',
             controller: 'loginCtrl',
             config: {
-                requireLogin: false
+                requireLogin: false,
+                showNavbar: false,
+                showCredControl: true
             },
             resolve: {
                 authenticated: function($q, stateManager, $location) {
@@ -106,10 +110,34 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
                 }
             }
         })
+        .when('/sign-up', {
+            templateUrl: 'templates/sign-up.html',
+            controller: 'loginCtrl',
+            config: {
+                requireLogin: false,
+                showNavbar: false,
+                showCredControl: true
+            },
+            resolve: {
+                authenticated: function($q, stateManager, $location) {
+
+                    if (stateManager.isUserLogggedIn()) {
+                        log('Sign In');
+                        return $q.when(true);
+                    } else {
+                        log('Not Logged In');
+                        //$location.path("/login");
+                        //show popup
+                    }
+                }
+            }
+        })
         .when('/access-denied', {
             templateUrl: 'templates/access-denied.html',
             config: {
-                requireLogin: false
+                requireLogin: false,
+                showNavbar: true,
+                showCredControl : true
             }
         })
         .otherwise({
@@ -219,6 +247,7 @@ app.run(['$rootScope', '$location', 'stateManager', function($rootScope, $locati
 
         var config = current.config;
         log(config);
+        $rootScope.config = config;
 
     });
 

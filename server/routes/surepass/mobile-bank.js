@@ -4,9 +4,8 @@
         try {
 
             log("/get/surepass/bank/account/from/mobile");
-            profile = req.params.profile || req.query.profile;
             mobile = req.params.mobile || req.query.mobile;
-
+            log('mobile : '+mobile);
             if (mobile) {
                 var URL = process.env.SUREPASS_URL + "/api/v1/mobile-to-bank-details/verification";
                 log('URL :' + URL);
@@ -33,6 +32,7 @@
                     .catch(function(errorResp) {
                         log('Response Error :');
                         log(errorResp.data);
+                        log(errorResp);
                         resp.send(errorResp);
                     });
 
@@ -40,6 +40,7 @@
                 resp.send({ status: false });
             }
         } catch (catchError) {
+            log(catchError);
             resp.send(catchError);
         }
     })

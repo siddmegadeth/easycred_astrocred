@@ -9,10 +9,10 @@
         try {
 
             log("/get/surepass/pan/from/mobile");
-            profile = req.params.profile || req.query.profile;
             mobile = req.params.mobile || req.query.mobile;
             fullname = req.params.fullname || req.query.fullname;
-
+            log('fullname : '+fullname);
+            log('mobile : '+mobile);
 
             if (mobile && fullname) {
                 var URL = process.env.SUREPASS_URL + "/api/v1/pan/mobile-to-pan";

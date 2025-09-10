@@ -21,7 +21,6 @@
     app.get("/get/surepass/mobile/to/multiple/upi", function(req, resp) {
         log("/get/surepass/mobile/to/multiple/upi");
         mobile = req.params.mobile || req.query.mobile;
-        profile = req.params.profile || req.query.profile;
 
         try {
             if (mobile) {
