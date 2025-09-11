@@ -94,7 +94,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             controller: 'loginCtrl',
             config: {
                 requireLogin: false,
-                showNavbar: false,
+                showNavbar: true,
                 showCredControl: true,
                 refresh: true
             },
@@ -117,7 +117,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             controller: 'loginCtrl',
             config: {
                 requireLogin: false,
-                showNavbar: false,
+                showNavbar: true,
                 showCredControl: true,
                 refresh: true
             },
