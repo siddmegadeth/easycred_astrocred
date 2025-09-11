@@ -7,9 +7,7 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
 
     // });
     //$scope.dialog.show();
-    $timeout(function() {}, 300);
-
-    window.onload = function() {
+    $timeout(function() {
         warn('Init loginCtrl Ready');
 
         if (stateManager.isUserLogggedIn()) {
@@ -40,6 +38,10 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
             }, 300)
 
         }
+    }, 300);
+
+    window.onload = function() {
+
 
     };
 

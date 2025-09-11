@@ -1,21 +1,21 @@
-<nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+<nav class="navbar" role="navigation" aria-label="main navigation" ng-controller="navbarCtrl">
     <div class="navbar-brand">
         <a class="navbar-item header" href="#/">
-            ASTROCRED
+            <span style="font-weight: 700; color: #2e333d;">ASTROCRED</span>
         </a>
-        <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" ng-if="config.showNavbar">
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasic" ng-if="config.showNavbar">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
         </a>
     </div>
-    <div id="navbarBasicExample" class="navbar-menu">
+    <div id="navbarBasic" class="navbar-menu">
         <div class="navbar-start" ng-if="config.showNavbar">
-            <a class="navbar-item" href="#/">
+            <a class="navbar-item is-dark" href="#/" ng-class="{ 'is-active': isActive('/')}">
                 Home
             </a>
-            <a class="navbar-item">
+            <a class="navbar-item is-dark">
                 Documentation
             </a>
             <div class="navbar-item has-dropdown is-hoverable">
@@ -39,16 +39,16 @@
                 </div>
             </div>
         </div>
-        <div class="navbar-end" ng-if="config.showCredControl">
-            <div class="navbar-item">
-                <div class="buttons">
-                   <!--  <a class="button is-primary" href="#/sign-up">
-                        <strong>Sign up</strong>
-                    </a> -->
-                    <a class="button is-light" href="#/login">
-                        Log in
-                    </a>
-                </div>
+        <div class="navbar-end">
+            <div class="navbar-item" ng-if="config.showCredControl">
+                <a class="button is-dark" href="#/login" ng-class="{ 'is-active': isActive('/login')}">
+                    Log in
+                </a>
+            </div>
+            <div class="navbar-item" ng-if="!config.showCredControl">
+                <a class="button is-dark" href="#/login">
+                    Log Out
+                </a>
             </div>
         </div>
     </div>

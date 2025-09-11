@@ -68,6 +68,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.3/css/bulma.css" integrity="sha512-UHFOfNRncoC8zFe2ZQdOFXIXCrhaPKPc/Xz6TDqszmmRkXLWC0X6WsRLuZEwrMlXgsAuBIHJlNOAvpHHwtWsPg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="styles/base.css" rel="stylesheet" />
     <link href="styles/login.css" rel="stylesheet" />
+    <link href="styles/navbar.css" rel="stylesheet" />
     <link href="styles/intl.css" rel="stylesheet" />
     <!-- For Common Media Query -->
     <link href="styles/media-query.css" rel="stylesheet" />
@@ -76,7 +77,35 @@
 </head>
 
 <body ng-app="myApp" ng-cloak>
-    <div ng-include="'templates/navbar.html'"></div>
+    <div class="loader" ng-if="loaderShow">
+        <div class="loader-in">
+            <div class="spinner-grow text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow text-secondary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow text-success" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow text-danger" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow text-warning" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow text-info" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow text-light" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow text-dark" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+    <div ng-include="'templates/navbar.html'" ></div>
     <div ng-view class="section"></div>
 </body>
 <!-- Plugins -->
@@ -99,9 +128,11 @@
 <!-- Initjs -->
 <script src="init.js"></script>
 <!-- controllers -->
+<script src="controllers/globalCtrl.js"></script>
 <script src="controllers/loginCtrl.js"></script>
 <script src="controllers/homeCtrl.js"></script>
 <script src="controllers/verifyCtrl.js"></script>
+<script src="controllers/navbarCtrl.js"></script>
 <!-- Services -->
 <script src="services/production-services.js"></script>
 <script src="services/interceptor-services.js"></script>

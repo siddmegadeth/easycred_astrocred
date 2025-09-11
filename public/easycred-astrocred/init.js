@@ -70,9 +70,10 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             templateUrl: 'templates/home.html',
             controller: 'homeCtrl',
             config: {
-                requireLogin: true,
+                requireLogin: false,
                 showNavbar: true,
-                showCredControl: false
+                showCredControl: false,
+                refresh: false
             },
             resolve: {
                 authenticated: function($q, stateManager, $location) {
@@ -82,7 +83,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
                         return $q.when(true);
                     } else {
                         log('Not Logged In');
-                        $location.path("login");
+                        // $location.path("login");
                         //show popup
                     }
                 }
@@ -94,7 +95,8 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             config: {
                 requireLogin: false,
                 showNavbar: false,
-                showCredControl: true
+                showCredControl: true,
+                refresh: true
             },
             resolve: {
                 authenticated: function($q, stateManager, $location) {
@@ -116,7 +118,8 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             config: {
                 requireLogin: false,
                 showNavbar: false,
-                showCredControl: true
+                showCredControl: true,
+                refresh: true
             },
             resolve: {
                 authenticated: function($q, stateManager, $location) {
@@ -137,7 +140,8 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             config: {
                 requireLogin: false,
                 showNavbar: false,
-                showCredControl : true
+                showCredControl: true,
+                refresh: false
             }
         })
         .otherwise({
@@ -227,10 +231,11 @@ app.directive('currencyInput', function($filter) {
 });
 
 
-app.run(['$rootScope', '$location', 'stateManager', function($rootScope, $location, stateManager) {
+app.run(['$rootScope', '$location', 'stateManager','$window', function($rootScope, $location, stateManager,$window) {
 
     $rootScope.$on('$routeChangeStart', function(event, current, next) {
 
+        warn('$routeChangeStart');
 
         // stateManager.checkAccessToken()
         //     .then(function(resp) {
@@ -251,8 +256,14 @@ app.run(['$rootScope', '$location', 'stateManager', function($rootScope, $locati
 
     });
 
-    $rootScope.$on('$routeChangeSuccess', function() {
-
+    $rootScope.$on('$routeChangeSuccess', function(event, current, next) {
+        warn('$routeChangeSuccess');
+        var config = current.config;
+        log(config);
+        $rootScope.config = config;
+        // if ($rootScope.config.refresh) {
+        //     $window.location.reload();
+        // }
     });
 
 
