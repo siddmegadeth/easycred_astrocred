@@ -68,6 +68,66 @@
         </div>
     </div>
 </div>
+<!-- OTP Modal Container -->
+<div class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <div class="container otp-container">
+            <div class="card">
+                <div class="card-content">
+                    <div class="content">
+                        <div class="has-text-centered logo">
+                            <span class="icon is-large has-text-primary">
+                                <i class="fas fa-lock fa-3x"></i>
+                            </span>
+                        </div>
+                        <h2 class="title is-3 has-text-centered">Verify Your Identity</h2>
+                        <p class="subtitle is-6 has-text-centered has-text-grey">
+                            We've sent a 6-digit verification code to your email<br>example@company.com
+                        </p>
+                        <form id="otp-form">
+                            <div class="field has-addons has-addons-centered">
+                                <div class="control">
+                                    <input class="input otp-input" type="text" maxlength="1" data-index="0" autocomplete="off" autofocus>
+                                </div>
+                                <div class="control">
+                                    <input class="input otp-input" type="text" maxlength="1" data-index="1" autocomplete="off">
+                                </div>
+                                <div class="control">
+                                    <input class="input otp-input" type="text" maxlength="1" data-index="2" autocomplete="off">
+                                </div>
+                                <div class="control">
+                                    <input class="input otp-input" type="text" maxlength="1" data-index="3" autocomplete="off">
+                                </div>
+                                <div class="control">
+                                    <input class="input otp-input" type="text" maxlength="1" data-index="4" autocomplete="off">
+                                </div>
+                                <div class="control">
+                                    <input class="input otp-input" type="text" maxlength="1" data-index="5" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="field mt-6">
+                                <div class="control">
+                                    <button type="submit" class="button is-primary is-fullwidth is-medium">
+                                        Verify & Continue
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="has-text-centered mt-5">
+                            <p class="has-text-grey">Didn't receive the code?
+                                <span id="resend" class="resend-code">
+                                    Resend in <span class="timer">60</span>s
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const mobileInput = document.getElementById('mobile');

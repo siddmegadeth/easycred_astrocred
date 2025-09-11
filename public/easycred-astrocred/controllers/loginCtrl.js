@@ -1,46 +1,47 @@
-app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 'authentication', function($scope, $rootScope, $timeout, stateManager, authentication) {
+app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 'authentication', '$window', function($scope, $rootScope, $timeout, stateManager, authentication, $window) {
 
 
-    $timeout(function() {
-        // $rootScope.$on('request_error', function(event, data) {
-        //     error('request_error');
-        //     $scope.loader.hide();
+    // $rootScope.$on('request_error', function(event, data) {
+    //     error('request_error');
+    //     $scope.loader.hide();
 
-        // });
-        //$scope.dialog.show();
-        window.onload = function() {
-            warn('Init loginCtrl Ready');
+    // });
+    //$scope.dialog.show();
+    $timeout(function() {}, 300);
 
-            if (stateManager.isUserLogggedIn()) {
-                var userProfile = stateManager.getProfile();
-                log('User Profile :');
-                log(userProfile);
+    window.onload = function() {
+        warn('Init loginCtrl Ready');
 
-                if (stateManager.isProfileCompleted()) {
-                    log('Profile Completed :');
+        if (stateManager.isUserLogggedIn()) {
+            var userProfile = stateManager.getProfile();
+            log('User Profile :');
+            log(userProfile);
+
+            if (stateManager.isProfileCompleted()) {
+                log('Profile Completed :');
 
 
-                    if (userProfile.consent.isTermsAccepted) {
-                        if (stateManager.isKYCCompleted()) {
+                if (userProfile.consent.isTermsAccepted) {
+                    if (stateManager.isKYCCompleted()) {
 
-                        } else {}
+                    } else {}
 
-                    } else {
-                        //$scope.myNavigator.resetToPage('terms.html', {});
-                    }
                 } else {
-                    log('Profile Not Completed :');
-                    // $location.path("/profile-complete");
-                    //$scope.myNavigator.resetToPage('profile-complete.html', {});
+                    //$scope.myNavigator.resetToPage('terms.html', {});
                 }
             } else {
-                $timeout(function() {
-                    $scope.initLoginMobile();
-                })
-
+                log('Profile Not Completed :');
+                // $location.path("/profile-complete");
+                //$scope.myNavigator.resetToPage('profile-complete.html', {});
             }
-        };
-    });
+        } else {
+            $timeout(function() {
+                $scope.initLoginMobile();
+            }, 300)
+
+        }
+
+    };
 
 
 
@@ -323,7 +324,108 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
         return id;
     }
 
-  
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('.otp-input');
+        const form = document.getElementById('otp-form');
+        const resend = document.getElementById('resend');
+        const timer = document.querySelector('.timer');
+
+        let countdown = 60;
+
+        // Focus management for OTP inputs
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                const nextIndex = parseInt(this.dataset.index) + 1;
+
+                if (this.value.length === 1 && nextIndex < inputs.length) {
+                    inputs[nextIndex].focus();
+                }
+
+                // Update filled state
+                if (this.value !== '') {
+                    this.classList.add('filled');
+                } else {
+                    this.classList.remove('filled');
+                }
+            });
+
+            input.addEventListener('keydown', function(e) {
+                const currentIndex = parseInt(this.dataset.index);
+
+                if (e.key === 'Backspace' && this.value === '' && currentIndex > 0) {
+                    inputs[currentIndex - 1].focus();
+                }
+            });
+        });
+
+        // Form submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            let otp = '';
+            inputs.forEach(input => {
+                otp += input.value;
+            });
+
+            if (otp.length === 6) {
+                // Show loading state
+                const button = form.querySelector('button');
+                button.classList.add('is-loading');
+
+                // Simulate verification process
+                setTimeout(() => {
+                    button.classList.remove('is-loading');
+                    alert(`OTP ${otp} verified successfully!`);
+                    // Here you would typically redirect or proceed with the verified user
+                }, 1500);
+            } else {
+                alert('Please enter a complete 6-digit code');
+            }
+        });
+
+        // Resend countdown timer
+        function updateTimer() {
+            timer.textContent = countdown;
+
+            if (countdown > 0) {
+                countdown--;
+                setTimeout(updateTimer, 1000);
+            } else {
+                resend.innerHTML = 'Resend code';
+                resend.classList.add('has-text-primary');
+            }
+        }
+
+        // Initial timer start
+        updateTimer();
+
+        // Resend functionality
+        resend.addEventListener('click', function() {
+            if (countdown === 0) {
+                // Reset timer
+                countdown = 60;
+                updateTimer();
+
+                // Simulate sending a new code
+                alert('A new verification code has been sent to your email.');
+
+                // Clear existing inputs
+                inputs.forEach(input => {
+                    input.value = '';
+                    input.classList.remove('filled');
+                });
+
+                // Focus on first input
+                inputs[0].focus();
+            }
+        });
+    });
+
+
+
+
 
 
 }])

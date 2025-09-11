@@ -82,7 +82,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
                         return $q.when(true);
                     } else {
                         log('Not Logged In');
-                        $location.path("access-denied");
+                        $location.path("login");
                         //show popup
                     }
                 }
@@ -136,7 +136,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             templateUrl: 'templates/access-denied.html',
             config: {
                 requireLogin: false,
-                showNavbar: true,
+                showNavbar: false,
                 showCredControl : true
             }
         })
