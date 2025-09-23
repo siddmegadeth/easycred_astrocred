@@ -13,5 +13,6 @@
     require("./surepass/index");
     // cibil 
     require("./cibil/index");
-
+    // product recommendation
+    require("./financial-product-recommendation/index");
 })();
