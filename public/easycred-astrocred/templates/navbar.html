@@ -1,79 +1,23 @@
-<nav class="navbar" role="navigation" aria-label="main navigation" ng-controller="navbarCtrl">
-    <div class="navbar-brand">
-        <a class="navbar-item header" href="#/">
-            <span style="font-weight: 700; color: #2e333d;">ASTROCRED</span>
-        </a>
-        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasic" ng-if="config.showNavbar">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-        </a>
-    </div>
-    <div id="navbarBasic" class="navbar-menu">
-        <div class="navbar-start">
-            <a class="navbar-item is-dark" href="#/" ng-class="{ 'is-active': isActive('/')}">
-                Home
-            </a>
-            <a class="navbar-item is-dark">
-                Documentation
-            </a>
-            <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">
-                    More
-                </a>
-                <div class="navbar-dropdown">
-                    <a class="navbar-item">
-                        About
-                    </a>
-                    <a class="navbar-item is-selected">
-                        Jobs
-                    </a>
-                    <a class="navbar-item">
-                        Contact
-                    </a>
-                    <hr class="navbar-divider">
-                    <a class="navbar-item">
-                        Report an issue
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="navbar-end">
-            <div class="navbar-item" ng-if="config.showCredControl">
-                <a class="button is-dark" href="#/login" ng-class="{ 'is-active': isActive('/login')}">
-                    Log in
-                </a>
-            </div>
-            <div class="navbar-item" ng-if="!config.showCredControl">
-                <a class="button is-dark" href="#/login">
-                    Log Out
-                </a>
-            </div>
-        </div>
+<!-- Floating Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light" ng-controller="navbarCtrl">
+    <a class="navbar-brand" href="#/">EASYCRED ASTROCRED</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="#/home" ng-class="{ 'active': isActive('/home')}" ng-if="showNavLink">Home</a>
+            </li>
+            <li class="nav-item"> 
+                <a class="nav-link" href="#/profile" ng-class="{ 'active': isActive('/profile')}" ng-if="showNavLink">Profile</a>
+            </li>
+            <li class="nav-item ms-2">
+                <a class="nav-link" href="#/login" ng-class="{ 'active': isActive('/login')}" ng-if="showLoginLink">Login</a>
+            </li>
+            <li class="nav-item ms-2">
+                <a class="nav-link" href="#/logout" ng-class="{ 'active': isActive('/logout')}" ng-if="showLogoutLink" ng-click="logout()">Logout</a>
+            </li>
+        </ul>
     </div>
 </nav>
-<script>
-// Toggle mobile menu
-document.addEventListener('DOMContentLoaded', () => {
-
-    // Get all "navbar-burger" elements
-    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-
-    // Add a click event on each of them
-    $navbarBurgers.forEach(el => {
-        el.addEventListener('click', () => {
-
-            // Get the target from the "data-target" attribute
-            const target = el.dataset.target;
-            const $target = document.getElementById(target);
-
-            // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-            el.classList.toggle('is-active');
-            $target.classList.toggle('is-active');
-
-        });
-    });
-
-});
-</script>

@@ -67,23 +67,64 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
 
     $routeProvider
         .when('/', {
-            templateUrl: 'templates/home.html',
-            controller: 'homeCtrl',
+            templateUrl: 'templates/landing.html',
             config: {
                 requireLogin: false,
-                showNavbar: true,
-                showCredControl: false,
-                refresh: false
+                isPrivate: false,
+                showNavLink: false,
+                showLoginLink: true,
+                showLogoutLink: false
             },
             resolve: {
                 authenticated: function($q, stateManager, $location) {
 
                     if (stateManager.isUserLogggedIn()) {
-                        log('Logged In');
                         return $q.when(true);
                     } else {
-                        log('Not Logged In');
                         // $location.path("login");
+                        //show popup
+                    }
+                }
+            }
+        })
+        .when('/home', {
+            templateUrl: 'templates/home.html',
+            controller: 'homeCtrl',
+            config: {
+                requireLogin: true,
+                isPrivate: true,
+                showNavLink: true,
+                showLoginLink: false,
+                showLogoutLink: true
+            },
+            resolve: {
+                authenticated: function($q, stateManager, $location) {
+
+                    if (stateManager.isUserLogggedIn()) {
+                        return $q.when(true);
+                    } else {
+                        $location.path("login");
+                        //show popup
+                    }
+                }
+            }
+        })
+        .when('/profile', {
+            templateUrl: 'templates/profile.html',
+            config: {
+                requireLogin: true,
+                isPrivate: true,
+                showNavLink: true,
+                showLoginLink: false,
+                showLogoutLink: true
+            },
+            resolve: {
+                authenticated: function($q, stateManager, $location) {
+
+                    if (stateManager.isUserLogggedIn()) {
+                        return $q.when(true);
+                    } else {
+                        $location.path("login");
                         //show popup
                     }
                 }
@@ -94,21 +135,40 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             controller: 'loginCtrl',
             config: {
                 requireLogin: false,
-                showNavbar: true,
-                showCredControl: true,
-                refresh: true
+                isPrivate: false,
+                showNavLink: false,
+                showLoginLink: true,
+                showLogoutLink: false
             },
             resolve: {
                 authenticated: function($q, stateManager, $location) {
 
                     if (stateManager.isUserLogggedIn()) {
-                        log('Logged In');
-                        return $q.when(true);
+                        $location.path("/home");
                     } else {
-                        log('Not Logged In');
                         //$location.path("/login");
                         //show popup
                     }
+                }
+            }
+        })
+        .when('/logout', {
+            templateUrl: 'templates/logout.html',
+            controller: 'logoutCtrl',
+
+            config: {
+                requireLogin: false,
+                isPrivate: false,
+                showNavLink: true,
+                showLoginLink: false,
+                showLogoutLink: true
+            },
+            resolve: {
+                authenticated: function($q, stateManager, $location) {
+
+                    if (stateManager.isUserLogggedIn()) {
+                        $location.path("/home");
+                    } else {}
                 }
             }
         })
@@ -117,31 +177,21 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             controller: 'loginCtrl',
             config: {
                 requireLogin: false,
-                showNavbar: true,
-                showCredControl: true,
-                refresh: true
-            },
-            resolve: {
-                authenticated: function($q, stateManager, $location) {
-
-                    if (stateManager.isUserLogggedIn()) {
-                        log('Sign In');
-                        return $q.when(true);
-                    } else {
-                        log('Not Logged In');
-                        //$location.path("/login");
-                        //show popup
-                    }
-                }
+                isPrivate: false,
+                showNavLink: true,
+                showLoginLink: false,
+                showLogoutLink: true
             }
+
         })
         .when('/access-denied', {
             templateUrl: 'templates/access-denied.html',
             config: {
                 requireLogin: false,
-                showNavbar: false,
-                showCredControl: true,
-                refresh: false
+                isPrivate: false,
+                showNavLink: true,
+                showLoginLink: false,
+                showLogoutLink: true
             }
         })
         .otherwise({
@@ -156,8 +206,6 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             getGeoFromIP: productionLink + '/get/website/internet/protocol/address',
         },
         authentication: {
-            generateWABusinessOtp: productionLink + "/get/auth/otp/fast2sms/whatsapp/business",
-            authenticateWABusinessOtp: productionLink + "/get/auth/otp/fast2sms/whatsapp/business/validate",
             generateOTP: productionLink + "/get/auth/otp/send/fast2sms",
             validateOTP: productionLink + "/get/auth/otp/validate/fast2sms",
         },
@@ -189,6 +237,62 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
     surePassProvider.config(prod.surepass);
     authenticationProvider.config(prod.authentication);
 }]);
+
+app.run(['$rootScope', '$location', 'stateManager', '$window', function($rootScope, $location, stateManager, $window) {
+
+    $rootScope.$on('$routeChangeStart', function(event, next, current) {
+        var config = next.config;
+        log(config);
+        $rootScope.config = config;
+
+
+        if ($rootScope.config.requireLogin) {
+            if (stateManager.isUserLogggedIn()) {
+
+            } else {
+                stateManager.clearLocalStorage();
+                $location.url("/login");
+            }
+        } else {
+            log('View For Public $routeChangeStart');
+        }
+
+
+    });
+
+    $rootScope.$on('$routeChangeSuccess', function(event, next, current) {
+        warn('$routeChangeSuccess');
+        var config = next.config;
+        log(config);
+        $rootScope.config = config;
+
+        if ($rootScope.config.requireLogin) {
+            if (stateManager.isUserLogggedIn()) {
+                $rootScope.showNavLink = config.showNavLink;
+                $rootScope.showLoginLink = config.showLoginLink;
+                $rootScope.showLogoutLink = config.showLogoutLink;
+            } else {
+
+                $rootScope.showNavLink = false;
+                $rootScope.showLoginLink = true;
+                $rootScope.showLogoutLink = false;
+            }
+        } else {
+            log('View For Public $routeChangeSuccess');
+            $rootScope.showNavLink = false;
+            $rootScope.showLoginLink = true;
+            $rootScope.showLogoutLink = false;
+        }
+
+
+
+
+    });
+
+
+}]);
+
+
 
 app.directive('currencyInput', function($filter) {
     return {
@@ -231,43 +335,6 @@ app.directive('currencyInput', function($filter) {
 });
 
 
-app.run(['$rootScope', '$location', 'stateManager','$window', function($rootScope, $location, stateManager,$window) {
-
-    $rootScope.$on('$routeChangeStart', function(event, current, next) {
-
-        warn('$routeChangeStart');
-
-        // stateManager.checkAccessToken()
-        //     .then(function(resp) {
-        //         warn('Access Token Status :');
-        //         log(resp);
-        //         if (resp.data.isLoggedIn) {
-        //             $rootScope.isLoggedIn = true;
-        //         } else {
-        //             $rootScope.isLoggedIn = false;
-        //             stateManager.clearLocalStorage();
-        //             $location.url("/login");
-        //         }
-        //     });
-
-        var config = current.config;
-        log(config);
-        $rootScope.config = config;
-
-    });
-
-    $rootScope.$on('$routeChangeSuccess', function(event, current, next) {
-        warn('$routeChangeSuccess');
-        var config = current.config;
-        log(config);
-        $rootScope.config = config;
-        // if ($rootScope.config.refresh) {
-        //     $window.location.reload();
-        // }
-    });
-
-
-}]);
 
 app.filter('statusDisplay', function() {
     return function(input) {

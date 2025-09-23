@@ -29,8 +29,8 @@ app.service('httpInterceptors', ['$timeout', '$rootScope', '$q', function($timeo
         request: function(config) {
 
             config.timeout = 18000;
-            if (window.localStorage.easycred_retail_app_access_token) {
-                var token = window.localStorage.easycred_retail_app_access_token;
+            if (window.localStorage.easycred_astro_access_token) {
+                var token = window.localStorage.easycred_astro_access_token;
                 if (token != undefined || token != null) {
 
                     // get token from a cookie or local storage
@@ -98,12 +98,7 @@ app.service('httpInterceptors', ['$timeout', '$rootScope', '$q', function($timeo
                 $rootScope.$broadcast("loader_hide");
                 $rootScope.$broadcast("progress_loader_hide");
                 $rootScope.$broadcast("request_error");
-
-                ons.notification.toast({
-                    message: "Server Communication Error Occured. Try Again Later",
-                    timeout: 4000,
-                    buttonLabel: 'Ok'
-                });
+                
             }
 
             if (!(--numLoadings)) {

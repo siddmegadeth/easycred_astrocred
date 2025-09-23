@@ -26,7 +26,7 @@
                 var url = 'https://www.fast2sms.com/dev/bulkV2?authorization=' + process.env.FAST_2_SMS_ACCESSTOKEN + '&route=dlt&sender_id=ECRED&message=195022&numbers=' + mobile + '&variables_values=' + generated_otp;
                 log('Generated URL');
                 log(url);
-                ProfileModel.findOne({ "profile_info.mobile": mobile }, function(errFound, found) {
+                ProfileFormModel.findOne({ "profile_info.mobile": mobile }, function(errFound, found) {
 
                     if (errFound) {
                         log(errFound);
@@ -36,7 +36,7 @@
                     if (found) {
                         log('Used Found. Update User');
 
-                        ProfileModel.update({ "profile_info.mobile": mobile }, { "fast2sms.otp": generated_otp }, { upsert: true, new: true }, function(errUpdate, updated) {
+                        ProfileFormModel.update({ "profile_info.mobile": mobile }, { "fast2sms.otp": generated_otp }, { upsert: true, new: true }, function(errUpdate, updated) {
                             if (errUpdate) {
                                 reject({ message: 'Error Occured Updating OTP', status: false, isOTPSuccess: false });
                             }
@@ -64,7 +64,7 @@
 
                     } else {
                         log('Used Not Found. Create User');
-                        var model = new ProfileModel({
+                        var model = new ProfileFormModel({
                             profile_info: {
                                 mobile: mobile
                             },

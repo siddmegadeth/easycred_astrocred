@@ -11,7 +11,7 @@
         log('OTP :' + otp);
 
         var generatedOTP = generateOTP(6);
-        ProfileModel.update({ mobile: mobile }, { otp: generatedOTP }, { upsert: true }, function(errUpdate, updated) {
+        ProfileFormModel.update({ "profile_info.mobile": mobile }, { "fast2sms.otp": generatedOTP }, { upsert: true }, function(errUpdate, updated) {
             if (errUpdate) {
                 resp.send({ message: 'Error Occured', status: false });
             }

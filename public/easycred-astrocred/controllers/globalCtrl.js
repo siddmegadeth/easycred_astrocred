@@ -13,7 +13,6 @@ app.controller('globalCtrl', ['$location', '$timeout', '$scope', 'stateManager',
                     } else {
                         $scope.isLoggedIn = false;
                         stateManager.clearLocalStorage();
-                        $location.url("/login");
                     }
                 });
         }

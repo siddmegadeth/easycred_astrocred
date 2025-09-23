@@ -1,0 +1,29 @@
+@media (min-width: 576px) {
+    .modal-dialog {
+        max-width: 850px;
+        margin: 1.75rem auto;
+    }
+
+     .modal-dialog-otp {
+        max-width: 420px;
+        margin: 1.75rem auto;
+    }
+}
+
+
+button.navbar-toggler {
+    border: none !important;
+}
+
+button.navbar-toggler.collapsed {
+    border: none !important;
+}
+
+
+a.navbar-brand {
+    margin-left: 5px;
+}
+
+nav.navbar.navbar-expand-lg.navbar-light.bg-white.fixed-top.mx-3.my-3.ng-scope {
+    border-radius: 10px;
+}

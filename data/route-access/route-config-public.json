@@ -1,75 +1,102 @@
 {
     "public": [
-    {
-        "path": "/",
-        "methods": [
-            "GET"
-        ]
-    },
-    {
-        "path": "/get/api/cibil/upload",
-        "methods": [
-            "GET"
-        ]
-    },
-    {
-        "path": "/get/api/cibil/analysis/",
-        "methods": [
-            "GET"
-        ]
-    },
-    {
-        "path": "/get/api/cibil/clients/grades",
-        "methods": [
-            "GET"
-        ]
-    },
-    {
-        "path": "/get/api/cibil/health",
-        "methods": [
-            "GET"
-        ]
-    },
-    {
-        "path": "/get/check/credit/report/cibil",
-        "methods": [
-            "GET"
-        ]
-    },
-    {
-        "path": "/get/api/cibil/data/calculate",
-        "methods": [
-            "GET"
-        ]
-    },
-    {
-        "path": "/get/surepass/pan/from/mobile",
-        "methods": [
-            "GET"
-        ]
-    },
-    {
-        "path": "/get/surepass/bank/account/from/mobile",
-        "methods": [
-            "GET"
-        ]
-    },
-    {
-        "path": "/get/surepass/mobile/to/multiple/upi",
-        "methods": [
-            "GET"
-        ]
-    },
-    {
-        "path": "/get/surepass/aadhar/from/pan",
-        "methods": [
-            "GET"
-        ]
-    },
-    {
-        "path": "/get/surepass/kyc/pan/plus",
-        "methods": [
-            "GET"
-        ]
-    }]
+        {
+            "path": "/",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "path": "/get/api/cibil/upload",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "path": "/get/api/cibil/analysis/",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "path": "/get/api/cibil/clients/grades",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "path": "/get/api/cibil/health",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "path": "/get/check/credit/report/cibil",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "path": "/get/api/cibil/data/calculate",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "path": "/get/surepass/pan/from/mobile",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "path": "/get/surepass/bank/account/from/mobile",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "path": "/get/surepass/mobile/to/multiple/upi",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "path": "/get/surepass/aadhar/from/pan",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "path": "/get/surepass/kyc/pan/plus",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "path": "/check/access/token",
+            "methods": [
+                "POST"
+            ]
+        },
+        {
+            "path": "/get/webhooks/fetch/profile",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "path": "/get/auth/otp/send/fast2sms",
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "path": "/get/auth/otp/validate/fast2sms",
+            "methods": [
+                "GET"
+            ]
+        }
+
+
+    ]
 }

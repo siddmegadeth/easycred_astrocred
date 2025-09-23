@@ -1,16 +1,13 @@
 (function() {
 
-
-
-    ProfileSchema = module.exports = mongoose.Schema({
+    ProfileFormSchema = module.exports = mongoose.Schema({
         profile: {
             type: String,
             unique: true,
             index: true
         },
-        cibil_client_id: {
+        customerId: {
             type: String,
-            unique: true,
             index: true
         },
         isProfileCompleted: {
@@ -27,6 +24,7 @@
                 default: false
             }
         },
+        isKYCCompleted: { type: Boolean, default: false },
         profile_info: {
             email: {
                 type: String,
@@ -35,6 +33,10 @@
                 sparse: true
             },
             isEmailAdded: {
+                type: Boolean,
+                default: false
+            },
+            email_verified: {
                 type: Boolean,
                 default: false
             },
@@ -63,45 +65,20 @@
             date_of_birth: { type: Date },
             props: Object,
         },
-        type: {
-            profileType: {
-                type: String,
-                default: 'individual',
-                enum: ['business', 'individual']
+        kyc: {
+            isKYCCompleted: { type: Boolean, default: false },
+            isAadharVerified: { type: Boolean, default: false },
+            pancard: {
+                type: Object
             },
-            createdBy: {
-                type: String,
-                enum: ['customer', 'admin', 'business', 'individual', 'intern_program', 'moderator', 'pre_sales', 'easycred_website_lead'],
-                default: 'customer'
+            aadhar: {
+                aadhaar_seeding_status: { type: String },
+                aadhar_card: { type: String },
+                verification: { type: Object }
             },
-            provider: {
-                type: String,
-                enum: ['email', 'google', 'gmail', 'facebook', 'mobile', 'instagram', 'github', 'linkedin', 'device', 'biometric', 'admin_console', 'otpless', 'easycred_website', 'fast2sms'],
-                default: 'fast2sms'
-            },
-            network: { type: Object }
-        },
-        location: {
-            location: {
-                type: Object,
-            },
-            isLocationAdded: {
-                type: Boolean,
-                default: false
+            bank_kyc: {
+                type: Object
             }
-        },
-        payments: {
-            banks: {
-
-            },
-            upi: {
-                isUPIAdded: false,
-                upi_list: [Object]
-            }
-
-        },
-        consent: {
-            isTermsAccepted: { type: Boolean, default: false },
         }
     }, {
         timestamps: {
@@ -113,40 +90,20 @@
 
 
 
-    ProfileSchema.pre("save", function(next) {
+
+    ProfileFormSchema.pre("save", function(next) {
         var user = this;
         now = new Date();
-
-        log("System generated Global Unique ID (profileId) :" + this._id);
-
-        this.profile = this._id;
-        //this.universal_customer_id = createUniversalCustomerId(this.profile_info.email);
-        log(this.profile);
 
         this.updated_at = now;
         if (!this.created_at) {
             this.created_at = now
         }
-
         next();
     });
 
 
-    ProfileModel = module.exports = mongoose.model("ProfileModel", ProfileSchema);
+
+    ProfileFormModel = module.exports = mongoose.model("ProfileFormModel", ProfileFormSchema);
 
 })()
-
-// location: {
-//             type: Object,
-//             properties: {
-//                 type: {
-//                     type: String,
-//                     enum: ['Point', 'LineString', 'Polygon'],
-//                     default: 'Point'
-//                 },
-//                 coordinates: {
-//                     type: [Number],
-//                     default: [0, 0]
-//                 }
-//             }
-//         },

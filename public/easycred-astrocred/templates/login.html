@@ -1,196 +1,203 @@
-<div class="login-card">
-    <div class="login-header">
-        <h1>ASTROCRED</h1>
-        <p>Login using your number</p>
-    </div>
-    <div class="login-body">
-        <!-- Step 1: Mobile Number Input -->
-        <div class="step active" id="step1">
-            <div class="field">
-                <label class="label">Mobile Number</label>
-                <div class="field has-addons">
-                    <div class="control is-expanded">
-                        <input class="intl-style" id="loginMobileNumber">
+<div class="page-container">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="login-container">
+                    <div class="login-header">
+                        <h2>Login with OTP</h2>
+                        <p class="text-muted">Enter your Indian mobile number to receive OTP</p>
+                    </div>
+                    <div class="success-alert alert alert-success" role="alert">
+                        <i class="bi bi-check-circle-fill"></i> Login successful! Redirecting...
+                    </div>
+                    <form id="loginForm">
+                        <div class="mb-3 flag-container">
+                            <input class="form-control flag-input" id="loginMobileNumber" placeholder="Mobile Number" maxlength="10" required autofocus>
+                            <div class="invalid-feedback">Please enter a valid 10-digit Indian mobile number</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mb-3" ng-click="generateOTP()">
+                            Send OTP
+                        </button>
+                    </form>
+                    <div class="mt-3 text-center">
+                        <p class="text-muted">By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></p>
                     </div>
                 </div>
-                <p class="help">Enter a valid Indian mobile number</p>
             </div>
-            <div class="field mt-5">
-                <div class="control">
-                    <button class="button is-fullwidth login-button" id="send-otp">
-                        <span class="icon">
-                            <i class="fas fa-mobile-alt"></i>
-                        </span>
-                        <span>Send OTP</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <!-- Step 2: OTP Verification -->
-        <div class="step" id="step2">
-            <div class="field">
-                <label class="label">Enter OTP</label>
-                <div class="control">
-                    <input class="input otp-input" type="text" placeholder="------" id="otp" maxlength="6">
-                </div>
-                <p class="help">Enter the 6-digit OTP sent to your number</p>
-            </div>
-            <div class="field mt-5">
-                <div class="control">
-                    <button class="button is-fullwidth login-button" id="verify-otp">
-                        <span class="icon">
-                            <i class="fas fa-check-circle"></i>
-                        </span>
-                        <span>Verify & Login</span>
-                    </button>
-                </div>
-            </div>
-            <div class="field">
-                <div class="control">
-                    <button class="button is-text is-fullwidth" id="resend-otp">
-                        <span>Didn't receive OTP? Resend</span>
-                    </button>
-                </div>
-            </div>
-            <div class="field">
-                <div class="control">
-                    <button class="button is-text is-fullwidth" id="back-to-mobile">
-                        <span class="icon">
-                            <i class="fas fa-arrow-left"></i>
-                        </span>
-                        <span>Change Mobile Number</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="terms">
-            By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
         </div>
     </div>
 </div>
-<!-- OTP Modal Container -->
-<div class="modal">
-    <div class="modal-background"></div>
-    <div class="modal-content">
-        <div class="container otp-container">
-            <div class="card">
-                <div class="card-content">
-                    <div class="content">
-                        <div class="has-text-centered logo">
-                            <span class="icon is-large has-text-primary">
-                                <i class="fas fa-lock fa-3x"></i>
-                            </span>
-                        </div>
-                        <h2 class="title is-3 has-text-centered">Verify Your Identity</h2>
-                        <p class="subtitle is-6 has-text-centered has-text-grey">
-                            We've sent a 6-digit verification code to your email<br>example@company.com
-                        </p>
-                        <form id="otp-form">
-                            <div class="field has-addons has-addons-centered">
-                                <div class="control">
-                                    <input class="input otp-input" type="text" maxlength="1" data-index="0" autocomplete="off" autofocus>
-                                </div>
-                                <div class="control">
-                                    <input class="input otp-input" type="text" maxlength="1" data-index="1" autocomplete="off">
-                                </div>
-                                <div class="control">
-                                    <input class="input otp-input" type="text" maxlength="1" data-index="2" autocomplete="off">
-                                </div>
-                                <div class="control">
-                                    <input class="input otp-input" type="text" maxlength="1" data-index="3" autocomplete="off">
-                                </div>
-                                <div class="control">
-                                    <input class="input otp-input" type="text" maxlength="1" data-index="4" autocomplete="off">
-                                </div>
-                                <div class="control">
-                                    <input class="input otp-input" type="text" maxlength="1" data-index="5" autocomplete="off">
-                                </div>
-                            </div>
-                            <div class="field mt-6">
-                                <div class="control">
-                                    <button type="submit" class="button is-primary is-fullwidth is-medium">
-                                        Verify & Continue
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                        <div class="has-text-centered mt-5">
-                            <p class="has-text-grey">Didn't receive the code?
-                                <span id="resend" class="resend-code">
-                                    Resend in <span class="timer">60</span>s
-                                </span>
-                            </p>
-                        </div>
+<!-- OTP Modal -->
+<div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-otp modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="otpModalLabel">Verification Required</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <i class="bi bi-shield-check success-check"></i>
+                    <h4>Enter Verification Code</h4>
+                    <p class="text-muted">We've sent a 6-digit code to your email<br>example@email.com</p>
+                </div>
+                <form id="otpForm">
+                    <div class="otp-container">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" required ng-model="otp1">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required ng-model="otp2">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required ng-model="otp3">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required ng-model="otp4">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required ng-model="otp5">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required ng-model="otp6">
                     </div>
+                    <button type="submit" class="btn btn-primary verify-btn w-100" ng-click="validateOTP(otp1,otp2,otp3,otp4,otp5,otp6)">
+                        <i class="bi bi-check-circle me-2"></i>Verify & Continue
+                    </button>
+                </form>
+                <div class="resend-text">
+                    <p>Didn't receive the code? <a href="#" id="resendLink">Resend</a> <span id="countdown" class="countdown">(60s)</span></p>
                 </div>
             </div>
         </div>
     </div>
-    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+<!-- Success Toast (hidden by default) -->
+<div class="toast align-items-center text-white bg-success position-fixed top-50 start-50 translate-middle" role="alert" aria-live="assertive" aria-atomic="true" id="successToast">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="bi bi-check-circle-fill me-2"></i> Verification successful!
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
 </div>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const mobileInput = document.getElementById('mobile');
-    const sendOtpBtn = document.getElementById('send-otp');
-    const verifyOtpBtn = document.getElementById('verify-otp');
-    const resendOtpBtn = document.getElementById('resend-otp');
-    const backToMobileBtn = document.getElementById('back-to-mobile');
-    const otpInput = document.getElementById('otp');
-    const step1 = document.getElementById('step1');
-    const step2 = document.getElementById('step2');
+$(document).ready(function() {
+    // OTP Input navigation
+    $('.otp-input').keyup(function(e) {
+        if (this.value.length === this.maxLength) {
+            $(this).addClass('filled');
+            $(this).next('.otp-input').focus();
+        } else if (this.value.length === 0 && e.keyCode === 8) {
+            $(this).removeClass('filled');
+            $(this).prev('.otp-input').focus();
+        }
 
-    // Validate mobile number as user types
-    mobileInput.addEventListener('input', function() {
-        const mobile = mobileInput.value;
-        const isValid = /^[6-9]\d{9}$/.test(mobile);
+        // Check if all fields are filled
+        checkOTPCompletion();
+    });
 
-        if (mobile.length === 10 && !isValid) {
-            mobileInput.classList.add('is-danger');
-        } else {
-            mobileInput.classList.remove('is-danger');
+    // Paste OTP from clipboard
+    $('.otp-input').on('paste', function(e) {
+        const clipboardData = e.originalEvent.clipboardData || window.clipboardData;
+        const pastedData = clipboardData.getData('text');
+
+        if (/^\d{6}$/.test(pastedData)) {
+            e.preventDefault();
+            const inputs = $('.otp-input');
+            for (let i = 0; i < 6; i++) {
+                $(inputs[i]).val(pastedData[i]).addClass('filled');
+            }
+            inputs.last().focus();
+            checkOTPCompletion();
         }
     });
 
-    // Send OTP button click handler
-    sendOtpBtn.addEventListener('click', function() {
-        const mobile = mobileInput.value;
-        const isValid = /^[6-9]\d{9}$/.test(mobile);
+    // Form submission
+    $('#otpForm').on('submit', function(e) {
+        e.preventDefault();
 
-        if (isValid) {
-            // In a real app, you would send an API request here
-            // For demo, we'll just switch to OTP step
-            step1.classList.remove('active');
-            step2.classList.add('active');
+        // Get OTP value
+        let otp = '';
+        $('.otp-input').each(function() {
+            otp += $(this).val();
+        });
+
+        // Validate OTP (simple demo validation)
+        if (otp === '123456') { // Demo code
+            // Show success toast
+            const toast = new bootstrap.Toast(document.getElementById('successToast'));
+            toast.show();
+
+            // Close modal after 2 seconds
+            setTimeout(function() {
+                $('#otpModal').modal('hide');
+            }, 2000);
         } else {
-            mobileInput.classList.add('is-danger');
+            // Shake effect for wrong OTP
+            $('.otp-container').addClass('animate__animated animate__headShake');
+            setTimeout(function() {
+                $('.otp-container').removeClass('animate__animated animate__headShake');
+            }, 1000);
+
+            // Clear inputs
+            $('.otp-input').val('').removeClass('filled').first().focus();
         }
     });
 
-    // Back to mobile number step
-    backToMobileBtn.addEventListener('click', function() {
-        step2.classList.remove('active');
-        step1.classList.add('active');
-    });
+    // Resend OTP countdown
+    let timeLeft = 60;
+    const countdownElement = $('#countdown');
+    const resendLink = $('#resendLink');
 
-    // Resend OTP
-    resendOtpBtn.addEventListener('click', function() {
-        alert('OTP resent to your mobile number!');
-    });
+    resendLink.hide();
 
-    // Verify OTP
-    verifyOtpBtn.addEventListener('click', function() {
-        const otp = otpInput.value;
-        if (otp.length === 6) {
-            alert('Login successful!');
-            // In a real app, you would verify the OTP with your backend
+    const downloadTimer = setInterval(function() {
+        if (timeLeft <= 0) {
+            clearInterval(downloadTimer);
+            countdownElement.hide();
+            resendLink.show();
         } else {
-            otpInput.classList.add('is-danger');
+            countdownElement.text('(' + timeLeft + 's)');
         }
+        timeLeft -= 1;
+    }, 1000);
+
+    // Resend OTP functionality
+    resendLink.on('click', function(e) {
+        e.preventDefault();
+        timeLeft = 60;
+        resendLink.hide();
+        countdownElement.show();
+
+        // Restart the timer
+        const newTimer = setInterval(function() {
+            if (timeLeft <= 0) {
+                clearInterval(newTimer);
+                countdownElement.hide();
+                resendLink.show();
+            } else {
+                countdownElement.text('(' + timeLeft + 's)');
+            }
+            timeLeft -= 1;
+        }, 1000);
+
+        // Show message (in a real app, this would resend the OTP)
+        alert('A new OTP has been sent to your email.');
     });
 
-    // Format OTP input
-    otpInput.addEventListener('input', function() {
-        otpInput.classList.remove('is-danger');
+    // Focus first input when modal is shown
+    $('#otpModal').on('shown.bs.modal', function() {
+        $('.otp-input').first().focus();
     });
+
+    // Clear inputs when modal is hidden
+    $('#otpModal').on('hidden.bs.modal', function() {
+        $('.otp-input').val('').removeClass('filled');
+    });
+
+    // Check if all OTP fields are filled
+    function checkOTPCompletion() {
+        let allFilled = true;
+        $('.otp-input').each(function() {
+            if ($(this).val() === '') {
+                allFilled = false;
+                return false;
+            }
+        });
+
+        if (allFilled) {
+            $('#otpForm button[type="submit"]').focus();
+        }
+    }
 });
 </script>

@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <base href="#/">
     <meta name="fast2sms" content="CHKv70C7LGjj7gy3OE5N8FQQVhBZ9Q4W">
     <title>Easycred.ASTROCRED</title>
@@ -42,7 +43,6 @@
     </script>
     <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
     </body>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.css">
     <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
     <!-- META -->
     <meta charset="UTF-8">
@@ -63,49 +63,42 @@
     <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
     <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- bulma -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.3/css/bulma.min.css" integrity="sha512-4EnjWdm80dyWrJ7rh/tlhNt6fJL52dSDSHNEqfdVmBLpJLPrRYnFa+Kn4ZZL+FRkDL5/7lAXuHylzJkpzkSM2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.3/css/bulma.css" integrity="sha512-UHFOfNRncoC8zFe2ZQdOFXIXCrhaPKPc/Xz6TDqszmmRkXLWC0X6WsRLuZEwrMlXgsAuBIHJlNOAvpHHwtWsPg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- bootstrap -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/js/bootstrap.min.js" integrity="sha512-EKWWs1ZcA2ZY9lbLISPz8aGR2+L7JVYqBAYTq5AXgBkSjRSuQEGqWx8R1zAX16KdXPaCjOCaKE8MCpU0wcHlHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/css/bootstrap-grid.min.css" integrity="sha512-Aa+z1qgIG+Hv4H2W3EMl3btnnwTQRA47ZiSecYSkWavHUkBF2aPOIIvlvjLCsjapW1IfsGrEO3FU693ReouVTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/css/bootstrap.min.css" integrity="sha512-Ez0cGzNzHR1tYAv56860NLspgUGuQw16GiOOp/I2LuTmpSK9xDXlgJz3XN4cnpXWDmkNBKXR/VDMTCnAaEooxA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="styles/landing.css" rel="stylesheet" />
+    <link href="styles/home.css" rel="stylesheet" />
     <link href="styles/base.css" rel="stylesheet" />
     <link href="styles/login.css" rel="stylesheet" />
     <link href="styles/navbar.css" rel="stylesheet" />
+    <link href="styles/apply-modal.css" rel="stylesheet" />
+    <link href="styles/loader.css" rel="stylesheet" />
+    <link href="styles/bootstrap-overwrite.css" rel="stylesheet" />
     <link href="styles/intl.css" rel="stylesheet" />
     <!-- For Common Media Query -->
     <link href="styles/media-query.css" rel="stylesheet" />
     <!-- Intl -->
     <link rel="stylesheet" href="plugins/intl-tel/build/css/intlTelInput.css">
+    <!-- FilePond JS -->
+    <script src="https://unpkg.com/filepond@4.30.4/dist/filepond.min.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.min.js"></script>
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/email.min.js"></script>
 </head>
 
-<body ng-app="myApp" ng-cloak>
+<body ng-app="myApp" ng-cloak ng-controller="globalCtrl">
     <div class="loader" ng-if="loaderShow">
-        <div class="loader-in">
-            <div class="spinner-grow text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+        <div class="loader-in text-center">
+            <div class="d-flex justify-content-center mb-3">
+                <div class="spinner-grow text-primary mx-1" role="status" style="animation-delay: 0.1s"></div>
+                <div class="spinner-grow text-success mx-1" role="status" style="animation-delay: 0.2s"></div>
+                <div class="spinner-grow text-info mx-1" role="status" style="animation-delay: 0.3s"></div>
             </div>
-            <div class="spinner-grow text-secondary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <div class="spinner-grow text-success" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <div class="spinner-grow text-danger" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <div class="spinner-grow text-warning" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <div class="spinner-grow text-info" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <div class="spinner-grow text-light" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <div class="spinner-grow text-dark" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
+            <p class="text-muted mb-0">Loading, please wait...</p>
         </div>
     </div>
-    <div ng-include="'templates/navbar.html'" ></div>
+    <div ng-include="'templates/navbar.html'"></div>
     <div ng-view class="section"></div>
 </body>
 <!-- Plugins -->
@@ -133,6 +126,7 @@
 <script src="controllers/homeCtrl.js"></script>
 <script src="controllers/verifyCtrl.js"></script>
 <script src="controllers/navbarCtrl.js"></script>
+<script src="controllers/logoutCtrl.js"></script>
 <!-- Services -->
 <script src="services/production-services.js"></script>
 <script src="services/interceptor-services.js"></script>

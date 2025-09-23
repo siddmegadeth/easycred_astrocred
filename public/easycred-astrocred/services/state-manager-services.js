@@ -22,6 +22,12 @@ app.provider('stateManager', [function() {
                     } else
                         return false;
                 },
+                checkAccessToken: function() {
+                    return $http({
+                        method: 'POST',
+                        url: "/check/access/token"
+                    })
+                },
                 saveProfile: function(profile) {
                     window.localStorage.removeItem("easycred_astrocred_profile");
                     window.localStorage.setItem("easycred_astrocred_profile", JSON.stringify(profile));
