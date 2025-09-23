@@ -71,7 +71,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             config: {
                 requireLogin: false,
                 isPrivate: false,
-                showNavLink: false,
+                showNavLink: true,
                 showLoginLink: true,
                 showLogoutLink: false
             },
@@ -93,9 +93,8 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             config: {
                 requireLogin: true,
                 isPrivate: true,
-                showNavLink: true,
-                showLoginLink: false,
-                showLogoutLink: true
+                showNavLink: true
+
             },
             resolve: {
                 authenticated: function($q, stateManager, $location) {
@@ -114,9 +113,8 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             config: {
                 requireLogin: true,
                 isPrivate: true,
-                showNavLink: true,
-                showLoginLink: false,
-                showLogoutLink: true
+                showNavLink: true
+
             },
             resolve: {
                 authenticated: function($q, stateManager, $location) {
@@ -136,9 +134,8 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             config: {
                 requireLogin: false,
                 isPrivate: false,
-                showNavLink: false,
-                showLoginLink: true,
-                showLogoutLink: false
+                showNavLink: false
+
             },
             resolve: {
                 authenticated: function($q, stateManager, $location) {
@@ -159,9 +156,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             config: {
                 requireLogin: false,
                 isPrivate: false,
-                showNavLink: true,
-                showLoginLink: false,
-                showLogoutLink: true
+                showNavLink: true
             },
             resolve: {
                 authenticated: function($q, stateManager, $location) {
@@ -178,9 +173,8 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             config: {
                 requireLogin: false,
                 isPrivate: false,
-                showNavLink: true,
-                showLoginLink: false,
-                showLogoutLink: true
+                showNavLink: true
+
             }
 
         })
@@ -189,9 +183,8 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             config: {
                 requireLogin: false,
                 isPrivate: false,
-                showNavLink: true,
-                showLoginLink: false,
-                showLogoutLink: true
+                showNavLink: true
+
             }
         })
         .otherwise({
@@ -269,8 +262,8 @@ app.run(['$rootScope', '$location', 'stateManager', '$window', function($rootSco
         if ($rootScope.config.requireLogin) {
             if (stateManager.isUserLogggedIn()) {
                 $rootScope.showNavLink = config.showNavLink;
-                $rootScope.showLoginLink = config.showLoginLink;
-                $rootScope.showLogoutLink = config.showLogoutLink;
+                $rootScope.showLoginLink = false;
+                $rootScope.showLogoutLink = true;
             } else {
 
                 $rootScope.showNavLink = false;
@@ -278,10 +271,19 @@ app.run(['$rootScope', '$location', 'stateManager', '$window', function($rootSco
                 $rootScope.showLogoutLink = false;
             }
         } else {
-            log('View For Public $routeChangeSuccess');
-            $rootScope.showNavLink = false;
-            $rootScope.showLoginLink = true;
-            $rootScope.showLogoutLink = false;
+
+            if (stateManager.isUserLogggedIn()) {
+                $rootScope.showNavLink = config.showNavLink;
+                $rootScope.showLoginLink = false;
+                $rootScope.showLogoutLink = true;
+            } else {
+                log('View For Public $routeChangeSuccess');
+                $rootScope.showNavLink = false;
+                $rootScope.showLoginLink = true;
+                $rootScope.showLogoutLink = false;
+            }
+
+
         }
 
 
