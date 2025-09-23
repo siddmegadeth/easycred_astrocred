@@ -38,10 +38,10 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
                 $scope.otpModal = new bootstrap.Modal(document.getElementById("otpModal"), {});
                 var toast = document.getElementById('successToast');
                 $scope.toastSuccess = new bootstrap.Toast(toast);
-            }, 100)
+            })
 
         }
-    }, 100);
+    });
 
 
 
