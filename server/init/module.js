@@ -103,5 +103,7 @@
     sendLoanApplicationEmail = module.exports = null;
 
     Fingerprint = module.exports = require('express-fingerprint')
+    // tensorflow
+   // tf = module.exports = require('@tensorflow/tfjs-node');
 
 })();

@@ -15,4 +15,6 @@
     require("./cibil/index");
     // product recommendation
     require("./financial-product-recommendation/index");
+    // tensorflow-model-training
+    //require("./tensorflow-model-training/index");
 })();

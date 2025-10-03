@@ -8,5 +8,7 @@
     require("./cibil/index");
     // payments-method-schema.js
     require("./payments-method/payments-method-schema");
-
+    // tensorflow
+    require("./tensorflow-model/tensor-flow-schema");
+    require("./tensorflow-model/tf-model-schema");
 })();
