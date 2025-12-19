@@ -14,13 +14,16 @@ app.provider('stateManager', [function() {
         $get: ['$http', function($http) {
             return {
                 isUserLogggedIn: function() {
-                    if (window.localStorage.easycred_astrocred_app_access_token && window.localStorage.easycred_astrocred_profile) {
-                        if (window.localStorage.easycred_astrocred_app_access_token != "undefined" && window.localStorage.easycred_astrocred_profile != "undefined" || window.localStorage.easycred_astrocred_app_access_token != null && window.localStorage.easycred_astrocred_profile != null)
-                            return true;
-                        else
-                            return false;
-                    } else
-                        return false;
+                    // DISABLED: Always return true to bypass login/OTP requirement
+                    return true;
+                    // Original code (commented out):
+                    // if (window.localStorage.easycred_astrocred_app_access_token && window.localStorage.easycred_astrocred_profile) {
+                    //     if (window.localStorage.easycred_astrocred_app_access_token != "undefined" && window.localStorage.easycred_astrocred_profile != "undefined" || window.localStorage.easycred_astrocred_app_access_token != null && window.localStorage.easycred_astrocred_profile != null)
+                    //         return true;
+                    //     else
+                    //         return false;
+                    // } else
+                    //     return false;
                 },
                 checkAccessToken: function() {
                     return $http({

@@ -1,20 +1,27 @@
 app.controller('globalCtrl', ['$location', '$timeout', '$scope', 'stateManager', '$rootScope', function($location, $timeout, $scope, stateManager, $rootScope) {
 
+    // DISABLED: Access token check removed - no authentication required
     $timeout(function() {
         window.onload = function() {
-            stateManager.checkAccessToken()
-                .then(function(resp) {
-                    warn('Access Token Status :');
-                    log(resp);
-                    if (resp.data.isLoggedIn) {
-                        $rootScope.$emit('init', {});
-                        $rootScope.$emit('init-navbar', {});
-                        $scope.isLoggedIn = true;
-                    } else {
-                        $scope.isLoggedIn = false;
-                        stateManager.clearLocalStorage();
-                    }
-                });
+            // Skip authentication check - always allow access
+            $rootScope.$emit('init', {});
+            $rootScope.$emit('init-navbar', {});
+            $scope.isLoggedIn = true;
+            
+            // Original code (commented out):
+            // stateManager.checkAccessToken()
+            //     .then(function(resp) {
+            //         warn('Access Token Status :');
+            //         log(resp);
+            //         if (resp.data.isLoggedIn) {
+            //             $rootScope.$emit('init', {});
+            //             $rootScope.$emit('init-navbar', {});
+            //             $scope.isLoggedIn = true;
+            //         } else {
+            //             $scope.isLoggedIn = false;
+            //             stateManager.clearLocalStorage();
+            //         }
+            //     });
         }
     });
 

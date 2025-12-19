@@ -1,11 +1,12 @@
 (function() {
+    const crypto = require('crypto');
 
     let a = "useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict";
 
     nanoid = module.exports = function() {
         var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 21;
         var t = "",
-            r = crypto.getRandomValues(new Uint8Array(e));
+            r = crypto.randomBytes(e);
         for (var n = 0; n < e; n++) t += a[63 & r[n]];
         return t;
     };

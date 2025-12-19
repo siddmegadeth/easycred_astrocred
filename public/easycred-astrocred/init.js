@@ -239,16 +239,17 @@ app.run(['$rootScope', '$location', 'stateManager', '$window', function($rootSco
         $rootScope.config = config;
 
 
-        if ($rootScope.config.requireLogin) {
-            if (stateManager.isUserLogggedIn()) {
-
-            } else {
-                stateManager.clearLocalStorage();
-                $location.url("/login");
-            }
-        } else {
-            log('View For Public $routeChangeStart');
-        }
+        // DISABLED: Login check removed - all routes accessible without authentication
+        // if ($rootScope.config.requireLogin) {
+        //     if (stateManager.isUserLogggedIn()) {
+        //     } else {
+        //         stateManager.clearLocalStorage();
+        //         $location.url("/login");
+        //     }
+        // } else {
+        //     log('View For Public $routeChangeStart');
+        // }
+        log('Route access allowed (login disabled)');
 
 
     });

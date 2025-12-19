@@ -117,6 +117,7 @@
     }
 
     // Add the route access middleware/ comment/uncomment to test
-    app.use(securityRoute);
+    // DISABLED: Login/Authentication removed - all routes are now public
+    // app.use(securityRoute);
 
 })();

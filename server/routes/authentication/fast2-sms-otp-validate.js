@@ -49,14 +49,32 @@
 
 
 
-                ProfileFormModel.findOne({ "profile_info.mobile": mobile, "fast2sms.otp": otp }, function(errFound, found) {
-                    if (errFound) {
-                        log('Error Found :');
-                        log(errFound);
-                        resp.send({ message: 'Error Occured', status: false, data: errFound });
-                    }
+                // Check if MongoDB is connected
+                if (mongoose.connection.readyState !== 1) {
+                    log('MongoDB not connected. ReadyState:', mongoose.connection.readyState);
+                    return resp.send({ 
+                        message: 'Database connection error. Please try again later.', 
+                        status: false, 
+                        data: { error: 'MongoDB not connected' },
+                        otpVerified: false 
+                    });
+                }
 
-                    if (found) {
+                ProfileFormModel.findOne({ "profile_info.mobile": mobile, "fast2sms.otp": otp })
+                    .maxTimeMS(5000) // 5 second timeout
+                    .exec(function(errFound, found) {
+                        if (errFound) {
+                            log('Error Found :');
+                            log(errFound);
+                            return resp.send({ 
+                                message: 'Error Occured Finding OTP', 
+                                status: false, 
+                                data: errFound,
+                                otpVerified: false 
+                            });
+                        }
+
+                        if (found) {
 
                         var promise = [];
                         promise.push(validateMobileFromEasycred(mobile));
@@ -91,12 +109,12 @@
 
 
 
-                    } else {
-                        log('Found Not Profile : ');
-                        resp.send({ message: 'OTP Not Validated', status: true, data: {}, otpVerified: false, access_token: undefined });
-                    }
+                        } else {
+                            log('Found Not Profile : ');
+                            resp.send({ message: 'OTP Not Validated', status: true, data: {}, otpVerified: false, access_token: undefined });
+                        }
 
-                });
+                    });
             } else {
                 resp.send({ message: 'Params Missing.Either Mobile Number Or OTP Is Missing ', status: false, data: {}, otpVerified: false });
             }

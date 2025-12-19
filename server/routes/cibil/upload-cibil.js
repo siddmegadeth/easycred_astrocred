@@ -97,12 +97,125 @@
 
     }
 
+    // Helper function to analyze CIBIL data and return results
+    function analyzeCibilData(cibilData, res) {
+        try {
+            var analyzer = new GradingEngine(cibilData);
+            var overallGrade = analyzer.calculateOverallGrade();
+            var defaulters = analyzer.identifyDefaulters();
+            var recommendations = analyzer.generateRecommendations();
+            var advanced = new AdvancedAnalytics(cibilData, analyzer);
+            var risk = new RiskAssessment(cibilData, analyzer);
+            var risk_report = risk.generateRiskReport();
+            var creditWorthiness = risk.calculateCreditWorthiness();
+            var defaultProbability = risk.calculateDefaultProbability();
+            var institutions = risk.getEligibleInstitutions();
+
+            // Generate comprehensive report
+            var report = advanced.generateComprehensiveReport();
+            console.log('Comprehensive Report:', report);
+
+            // Generate improvement plan
+            var plan = advanced.generateImprovementPlan();
+            console.log('Improvement Plan:', plan);
+
+            // Get bank suggestions
+            var bankSuggestions = advanced.suggestBanks();
+            console.log('Bank Suggestions:', bankSuggestions);
+
+            var advancedRiskAssessment = new AdvancedRiskAssessment(cibilData, analyzer, risk);
+            var baseRisk = risk.calculateDefaultProbability();
+
+            advancedRiskAssessment.getEnhancedRiskAssessment(function(err, enhancedAssessment) {
+                if (err) {
+                    console.error('Error generating enhanced risk assessment:', err);
+                    // Return basic analysis even if enhanced fails
+                    return res.json({
+                        success: true,
+                        client_id: cibilData.client_id,
+                        name: cibilData.name,
+                        credit_score: cibilData.credit_score,
+                        overallGrade: overallGrade,
+                        defaulters: defaulters,
+                        recommendations: recommendations,
+                        report: report,
+                        plan: plan,
+                        bankSuggestions: bankSuggestions,
+                        risk_report: risk_report,
+                        credit_worthy: creditWorthiness,
+                        default_probability: defaultProbability,
+                        institution: institutions,
+                        message: 'CIBIL data analyzed successfully (basic analysis)'
+                    });
+                }
+
+                res.json({
+                    baseRisk: baseRisk,
+                    enhancedRisk: enhancedAssessment.enhancedRisk,
+                    economicData: enhancedAssessment.economicData,
+                    comparison: {
+                        probabilityDifference: enhancedAssessment.enhancedRisk.probability - baseRisk.probability,
+                        riskLevelChange: baseRisk.riskLevel !== enhancedAssessment.enhancedRisk.riskLevel ?
+                            baseRisk.riskLevel + ' → ' + enhancedAssessment.enhancedRisk.riskLevel : 'No change',
+                        factorsConsidered: Object.keys(enhancedAssessment.enhancedRisk.economicAdjustments || {}).length +
+                            Object.keys(enhancedAssessment.enhancedRisk.incomeFactors || {}).length + 1
+                    },
+                    success: true,
+                    client_id: cibilData.client_id,
+                    name: cibilData.name,
+                    credit_score: cibilData.credit_score,
+                    overallGrade: overallGrade,
+                    defaulters: defaulters,
+                    recommendations: recommendations,
+                    report: report,
+                    plan: plan,
+                    bankSuggestions: bankSuggestions,
+                    risk_report: risk_report,
+                    credit_worthy: creditWorthiness,
+                    default_probability: defaultProbability,
+                    institution: institutions,
+                    message: 'CIBIL data analyzed successfully'
+                });
+            });
+        } catch (analysisError) {
+            console.error('Analysis error:', analysisError);
+            res.status(500).json({ error: 'Analysis error', details: analysisError.message });
+        }
+    }
+
+    // Fix database indexes - removes stale profile index
+    app.get('/get/api/cibil/fix-indexes', async function(req, res) {
+        try {
+            log('/get/api/cibil/fix-indexes');
+            
+            // Drop all indexes except _id and recreate
+            await CibilDataModel.collection.dropIndexes();
+            log('Dropped all indexes on CibilDataModel');
+            
+            // Create the correct index on client_id
+            await CibilDataModel.collection.createIndex({ client_id: 1 }, { unique: true });
+            log('Created client_id index');
+            
+            res.json({ 
+                success: true, 
+                message: 'Indexes fixed successfully. You can now use /get/api/cibil/upload' 
+            });
+        } catch (error) {
+            console.error('Error fixing indexes:', error);
+            res.status(500).json({ error: 'Error fixing indexes', details: error.message });
+        }
+    });
+
     // Upload and analyze CIBIL data
     app.get('/get/api/cibil/upload', function(req, res) {
         try {
             log('/get/api/cibil/upload');
+            
+            // Clear require cache to get fresh data
+            delete require.cache[require.resolve("./../../../data/cibil/sample-data.json")];
             var cibilData = require("./../../../data/cibil/sample-data.json");
             cibilData = cibilData.data;
+            
             log('-------------CIBIL DATA SAMPLE-------------------');
             log(cibilData);
             log('--------------------------------');
@@ -112,171 +225,34 @@
                 return res.status(400).json({ error: 'Missing required fields' });
             }
 
-            // Check if data already exists for this client
-            CibilDataModel.findOne({ client_id: cibilData.client_id }, function(err, existingData) {
-                if (err) {
-                    console.error('Error finding CIBIL data:', err);
-                    return res.status(500).json({ error: 'Internal server error' });
-                }
-
-                if (existingData) {
-                    // Update existing record
-                    CibilDataModel.findByIdAndUpdate(existingData._id, {
-                        $set: {
-                            ...cibilData,
-                            updatedAt: new Date()
-                        }
-                    }, function(err) {
-                        if (err) {
-                            console.error('Error updating CIBIL data:', err);
-                            return res.status(500).json({ error: 'Internal server error' });
-                        }
-
-                        // Analyze the data
-                        var analyzer = new GradingEngine(cibilData);
-                        var overallGrade = analyzer.calculateOverallGrade();
-                        var defaulters = analyzer.identifyDefaulters();
-                        var recommendations = analyzer.generateRecommendations();
-                        var advanced = new AdvancedAnalytics(cibilData, analyzer);
-                        var risk = new RiskAssessment(cibilData, analyzer);
-                        var risk_report = risk.generateRiskReport();
-                        var creditWorthiness = risk.calculateCreditWorthiness();
-                        var defaultProbability = risk.calculateDefaultProbability();
-                        var institutions = risk.getEligibleInstitutions();
-
-
-
-                        // Generate comprehensive report
-                        var report = advanced.generateComprehensiveReport();
-                        console.log('Comprehensive Report:', report);
-
-                        // Generate improvement plan
-                        var plan = advanced.generateImprovementPlan();
-                        console.log('Improvement Plan:', plan);
-
-                        // Get bank suggestions
-                        var bankSuggestions = advanced.suggestBanks();
-                        console.log('Bank Suggestions:', bankSuggestions);
-
-                        var riskAssessment = new RiskAssessment(cibilData, analyzer);
-                        var advancedRiskAssessment = new AdvancedRiskAssessment(cibilData, analyzer, riskAssessment);
-
-                        var baseRisk = riskAssessment.calculateDefaultProbability();
-
-                        advancedRiskAssessment.getEnhancedRiskAssessment(function(err, enhancedAssessment) {
-                            if (err) {
-                                console.error('Error generating enhanced risk assessment:', err);
-                                return res.status(500).json({ error: 'Risk assessment error' });
-                            }
-
-                            res.json({
-                                baseRisk: baseRisk,
-                                enhancedRisk: enhancedAssessment.enhancedRisk,
-                                economicData: enhancedAssessment.economicData,
-                                comparison: {
-                                    probabilityDifference: enhancedAssessment.enhancedRisk.probability - baseRisk.probability,
-                                    riskLevelChange: baseRisk.riskLevel !== enhancedAssessment.enhancedRisk.riskLevel ?
-                                        baseRisk.riskLevel + ' → ' + enhancedAssessment.enhancedRisk.riskLevel : 'No change',
-                                    factorsConsidered: Object.keys(enhancedAssessment.enhancedRisk.economicAdjustments || {}).length +
-                                        Object.keys(enhancedAssessment.enhancedRisk.incomeFactors || {}).length + 1 // +1 for sentiment
-                                },
-                                success: true,
-                                client_id: cibilData.client_id,
-                                name: cibilData.name,
-                                credit_score: cibilData.credit_score,
-                                overallGrade: overallGrade,
-                                defaulters: defaulters,
-                                recommendations: recommendations,
-                                report: report,
-                                plan: plan,
-                                bankSuggestions: bankSuggestions,
-                                risk_report: risk_report,
-                                credit_worthy: creditWorthiness,
-                                default_probability: defaultProbability,
-                                institution: institutions,
-                                message: 'CIBIL data analyzed successfully'
+            // Use findOneAndUpdate with upsert to handle both create and update
+            CibilDataModel.findOneAndUpdate(
+                { client_id: cibilData.client_id },
+                { $set: { ...cibilData, updatedAt: new Date() } },
+                { upsert: true, new: true, setDefaultsOnInsert: true },
+                function(err, savedData) {
+                    if (err) {
+                        // Check if it's a duplicate key error on profile field
+                        if (err.code === 11000 && err.keyPattern && err.keyPattern.profile) {
+                            console.log('Stale profile index detected. Please call /get/api/cibil/fix-indexes first');
+                            return res.status(500).json({ 
+                                error: 'Database has stale indexes',
+                                fix: 'Please call http://localhost:7001/get/api/cibil/fix-indexes first to fix the database',
+                                details: err.message
                             });
-                        });
-
-                    });
-                } else {
-                    // Create new record
-                    CibilDataModel.create(cibilData, function(err) {
-                        if (err) {
-                            console.error('Error creating CIBIL data:', err);
-                            return res.status(500).json({ error: 'Internal server error' });
                         }
+                        console.error('Error saving CIBIL data:', err);
+                        return res.status(500).json({ error: 'Database error', details: err.message });
+                    }
 
-                        // Analyze the data
-                        var analyzer = new GradingEngine(cibilData);
-                        var overallGrade = analyzer.calculateOverallGrade();
-                        var defaulters = analyzer.identifyDefaulters();
-                        var recommendations = analyzer.generateRecommendations();
-                        var advanced = new AdvancedAnalytics(cibilData, analyzer);
-
-                        var risk = new RiskAssessment(cibilData, analyzer);
-                        var risk_report = risk.generateRiskReport();
-                        var creditWorthiness = risk.calculateCreditWorthiness();
-                        var defaultProbability = risk.calculateDefaultProbability();
-                        var institutions = risk.getEligibleInstitutions();
-
-
-                        // Generate comprehensive report
-                        var report = advanced.generateComprehensiveReport();
-                        console.log('Comprehensive Report:', report);
-
-                        // Generate improvement plan
-                        var plan = advanced.generateImprovementPlan();
-                        console.log('Improvement Plan:', plan);
-
-                        // Get bank suggestions
-                        var bankSuggestions = advanced.suggestBanks();
-                        console.log('Bank Suggestions:', bankSuggestions);
-
-                        var advancedRiskAssessment = new AdvancedRiskAssessment(cibilData, analyzer, riskAssessment);
-
-                        var baseRisk = riskAssessment.calculateDefaultProbability();
-
-                        advancedRiskAssessment.getEnhancedRiskAssessment(function(err, enhancedAssessment) {
-                            if (err) {
-                                console.error('Error generating enhanced risk assessment:', err);
-                                return res.status(500).json({ error: 'Risk assessment error' });
-                            }
-
-                            res.json({
-                                baseRisk: baseRisk,
-                                enhancedRisk: enhancedAssessment.enhancedRisk,
-                                economicData: enhancedAssessment.economicData,
-                                comparison: {
-                                    probabilityDifference: enhancedAssessment.enhancedRisk.probability - baseRisk.probability,
-                                    riskLevelChange: baseRisk.riskLevel !== enhancedAssessment.enhancedRisk.riskLevel ?
-                                        baseRisk.riskLevel + ' → ' + enhancedAssessment.enhancedRisk.riskLevel : 'No change',
-                                    factorsConsidered: Object.keys(enhancedAssessment.enhancedRisk.economicAdjustments || {}).length +
-                                        Object.keys(enhancedAssessment.enhancedRisk.incomeFactors || {}).length + 1 // +1 for sentiment
-                                },
-                                success: true,
-                                client_id: cibilData.client_id,
-                                name: cibilData.name,
-                                credit_score: cibilData.credit_score,
-                                overallGrade: overallGrade,
-                                defaulters: defaulters,
-                                recommendations: recommendations,
-                                report: report,
-                                plan: plan,
-                                bankSuggestions: bankSuggestions,
-                                risk_report: risk_report,
-                                credit_worthy: creditWorthiness,
-                                default_probability: defaultProbability,
-                                institution: institutions,
-                                message: 'CIBIL data analyzed successfully'
-                            });
-                        });
-                    });
+                    log('CIBIL data saved/updated successfully');
+                    // Analyze the data
+                    analyzeCibilData(cibilData, res);
                 }
-            });
+            );
         } catch (error) {
             console.error('Error processing CIBIL data:', error);
-            res.status(500).json({ error: 'Internal server error' });
+            res.status(500).json({ error: 'Internal server error', details: error.message });
         }
     });
 })();
