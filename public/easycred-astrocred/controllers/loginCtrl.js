@@ -24,20 +24,20 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
 
                     } else {}
 
-                } else {
-                    //$scope.myNavigator.resetToPage('terms.html', {});
-                }
+                } else {}
             } else {
                 log('Profile Not Completed :');
-                // $location.path("/profile-complete");
-                //$scope.myNavigator.resetToPage('profile-complete.html', {});
+                $location.path("/profile-complete");
             }
         } else {
             $timeout(function() {
+                log('Not Logged :');
                 $scope.initLoginMobile();
-                $scope.otpModal = new bootstrap.Modal(document.getElementById("otpModal"), {});
+
+               $scope.otpModal = new bootstrap.Modal(document.getElementById("otpModal"), {});
                 var toast = document.getElementById('successToast');
                 $scope.toastSuccess = new bootstrap.Toast(toast);
+
             })
 
         }

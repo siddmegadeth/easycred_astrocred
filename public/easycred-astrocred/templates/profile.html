@@ -1,0 +1,412 @@
+<div class="container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="row align-items-center">
+            <div class="col-md-2 text-center">
+                <div class="profile-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <h1 class="mb-2">{{profile.profile_info.fullname}}</h1>
+                <p class="mb-3">
+                    <i class="fas fa-envelope me-2"></i>{{profile.profile_info.email}} |
+                    <i class="fas fa-phone me-2 ms-3"></i>{{profile.profile_info.mobile}}
+                </p>
+                <div class="d-flex flex-wrap">
+                    <span class="status-badge status-completed">Profile Completed</span>
+                    <span class="status-badge status-verified">KYC Verified</span>
+                    <span class="status-badge status-active">Active Account</span>
+                    <span class="status-badge">{{profile.type.profileType}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Personal Information -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-user-circle me-2"></i>Personal Information</h5>
+                    <span class="status-badge status-completed">Complete</span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="info-label">Full Name</div>
+                                <div class="info-value">{{profile.profile_info.fullname}}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Email Address</div>
+                                <div class="info-value">{{profile.profile_info.email}}</div>
+                                <span class="status-badge status-verified" ng-if="profile.profile_info.isEmailAdded">Verified</span>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Mobile Number</div>
+                                <div class="info-value">{{profile.profile_info.mobile}}</div>
+                                <span class="status-badge status-verified" ng-if="profile.profile_info.isMobileAdded">Verified</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="info-label">Date of Birth</div>
+                                <div class="info-value">{{profile.kyc.pancard.date_of_birth}}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Gender</div>
+                                <div class="info-value">{{profile.juspay_profile.gender}}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Marital Status</div>
+                                <div class="info-value">{{profile.juspay_profile.maritalStatus}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Address Information -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-home me-2"></i>Address Details</h5>
+                    <span class="status-badge status-completed" ng-if="profile.profile_info.isAddressAdded">Verified</span>
+                </div>
+                <div class="card-body">
+                    <div class="info-item">
+                        <div class="info-label">Address Line 1</div>
+                        <div class="info-value">{{profile.profile_info.address.address_line_1}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Address Line 2</div>
+                        <div class="info-value">{{profile.profile_info.address.address_line_2}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="info-item">
+                                <div class="info-label">City</div>
+                                <div class="info-value">{{profile.profile_info.address.city}}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="info-item">
+                                <div class="info-label">State</div>
+                                <div class="info-value">{{profile.profile_info.address.state}}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="info-item">
+                                <div class="info-label">Pincode</div>
+                                <div class="info-value">{{profile.profile_info.address.pincode}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Employment & Financial Details -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-briefcase me-2"></i>Employment & Financial Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="info-label">Employment Type</div>
+                                <div class="info-value">{{profile.juspay_profile.employmentType}}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Monthly Income</div>
+                                <div class="info-value">{{profile.juspay_profile.monthlyIncome | currency: '₹'}}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="info-label">Currency</div>
+                                <div class="info-value">{{profile.common.currency.code}} ({{profile.common.currency.name}})</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Country</div>
+                                <div class="info-value">{{profile.common.countryCode.name}} ({{profile.common.countryCode.iso2}})</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Right Column - KYC & Account Status -->
+        <div class="col-lg-4">
+            <!-- KYC Verification Status -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-shield-alt me-2"></i>KYC Verification</h5>
+                </div>
+                <div class="card-body">
+                    <div class="info-item">
+                        <div class="info-label">Overall KYC Status</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="info-value">Completed</span>
+                            <span class="status-badge status-completed">Verified</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">PAN Card</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="info-value">{{profile.kyc.pancard.pan_card}}</span>
+                            <span class="status-badge status-verified" ng-if="profile.kyc.isPANVerified">Verified</span>
+                        </div>
+                        <small class="text-muted">DOB: {{profile.kyc.pancard.date_of_birth}}</small>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Aadhaar Card</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="info-value">•••• •••• •••• {{profile.kyc.aadhar.aadhar_card.slice(-4)}}</span>
+                            <span class="status-badge status-verified" ng-if="profile.kyc.isAadharVerified">Verified</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">PAN-Aadhaar Linking</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="info-value">{{profile.kyc.pancard.verification.aadhaar_seeding_status === 'y' ? 'Linked' : 'Not Linked'}}</span>
+                            <span class="status-badge {{profile.kyc.pancard.verification.aadhaar_seeding_status === 'y' ? 'status-verified' : 'status-pending'}}">
+                                {{profile.kyc.pancard.verification.aadhaar_seeding_status === 'y' ? 'Linked' : 'Pending'}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Account Information -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Account Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="info-item">
+                        <div class="info-label">Account Type</div>
+                        <div class="info-value">{{profile.type.profileType | titlecase}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Customer ID</div>
+                        <div class="info-value">{{profile.universal_customer_id}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">MMTC Account</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="info-value">{{profile.mmtc.customerRefNo ? 'Active' : 'Inactive'}}</span>
+                            <span class="status-badge {{profile.mmtc.is_account_active ? 'status-active' : 'status-inactive'}}">
+                                {{profile.mmtc.is_account_active ? 'Active' : 'Inactive'}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Profile Created</div>
+                        <div class="info-value">{{profile.created_at | date:'mediumDate'}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Last Updated</div>
+                        <div class="info-value">{{profile.updated_at | date:'mediumDate'}}</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Quick Stats -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Profile Completion</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="info-label">Overall Progress</span>
+                            <span class="info-value">95%</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-gradient-primary" role="progressbar" style="width: 95%"></div>
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-6 mb-3">
+                            <div class="p-2 border rounded">
+                                <div class="fs-4 fw-bold text-gradient mb-1">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <small class="text-muted">KYC Verified</small>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="p-2 border rounded">
+                                <div class="fs-4 fw-bold text-gradient mb-1">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <small class="text-muted">Mobile Verified</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 border rounded">
+                                <div class="fs-4 fw-bold text-gradient mb-1">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <small class="text-muted">Email Verified</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 border rounded">
+                                <div class="fs-4 fw-bold text-gradient mb-1">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <small class="text-muted">Address Added</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+:root {
+    --astrocred-primary: #0a2540;
+    --astrocred-secondary: #00b4d8;
+    --astrocred-accent: #7b2cbf;
+    --astrocred-light: #f8f9fa;
+    --astrocred-gray: #6c757d;
+    --astrocred-dark: #212529;
+    --astrocred-success: #2ecc71;
+    --astrocred-warning: #f39c12;
+    --astrocred-danger: #e74c3c;
+}
+
+
+
+.profile-header {
+    background: linear-gradient(135deg, var(--astrocred-primary), var(--astrocred-accent));
+    color: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: var(--astrocred-accent);
+    margin-bottom: 20px;
+    border: 5px solid white;
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    background-color: white;
+    border-bottom: 2px solid #f0f0f0;
+    font-weight: 600;
+    color: var(--astrocred-primary);
+    padding: 20px;
+    border-radius: 15px 15px 0 0 !important;
+}
+
+.card-body {
+    padding: 25px;
+}
+
+.info-item {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.info-label {
+    color: var(--astrocred-gray);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.info-value {
+    color: var(--astrocred-dark);
+    font-weight: 500;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-right: 8px;
+    margin-bottom: 5px;
+}
+
+.status-active {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: var(--astrocred-success);
+}
+
+.status-inactive {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: var(--astrocred-danger);
+}
+
+.status-pending {
+    background-color: rgba(243, 156, 18, 0.1);
+    color: var(--astrocred-warning);
+}
+
+.status-completed {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: var(--astrocred-success);
+}
+
+.status-verified {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: var(--astrocred-success);
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, var(--astrocred-primary), var(--astrocred-accent));
+}
+
+.text-gradient {
+    background: linear-gradient(to right, var(--astrocred-primary), var(--astrocred-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+</style>
+<script>
+
+</script>

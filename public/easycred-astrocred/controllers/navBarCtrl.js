@@ -18,8 +18,7 @@ app.controller('navbarCtrl', ['$location', '$timeout', '$scope', 'stateManager',
 
     $scope.logout = function() {
         stateManager.clearLocalStorage();
-        window.location.reload();
-        $location.url("/login");
+        $location.path("login");
     }
 
 

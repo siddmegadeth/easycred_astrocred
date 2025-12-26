@@ -59,34 +59,15 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
 
     var productionLink = productionModeProvider.config({
         type: 'development',
-        servername: 'https://astrocred.easycred.co.in'
+        servername: 'https://astrocred.co.in'
     });
 
     $httpProvider.interceptors.push('httpInterceptors');
     $httpProvider.interceptors.push('httpTimeoutInterceptors');
 
-    $routeProvider
-        .when('/', {
-            templateUrl: 'templates/landing.html',
-            config: {
-                requireLogin: false,
-                isPrivate: false,
-                showNavLink: true,
-                showLoginLink: true,
-                showLogoutLink: false
-            },
-            resolve: {
-                authenticated: function($q, stateManager, $location) {
 
-                    if (stateManager.isUserLogggedIn()) {
-                        return $q.when(true);
-                    } else {
-                        // $location.path("login");
-                        //show popup
-                    }
-                }
-            }
-        })
+
+    $routeProvider
         .when('/home', {
             templateUrl: 'templates/home.html',
             controller: 'homeCtrl',
@@ -110,11 +91,11 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
         })
         .when('/profile', {
             templateUrl: 'templates/profile.html',
+            controller: 'profileCtrl',
             config: {
                 requireLogin: true,
                 isPrivate: true,
                 showNavLink: true
-
             },
             resolve: {
                 authenticated: function($q, stateManager, $location) {
@@ -141,7 +122,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
                 authenticated: function($q, stateManager, $location) {
 
                     if (stateManager.isUserLogggedIn()) {
-                        $location.path("/home");
+                        $location.path("home");
                     } else {
                         //$location.path("/login");
                         //show popup
@@ -163,7 +144,9 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
 
                     if (stateManager.isUserLogggedIn()) {
                         $location.path("/home");
-                    } else {}
+                    } else {
+                        $location.path("login");
+                    }
                 }
             }
         })
@@ -188,7 +171,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             }
         })
         .otherwise({
-            redirectTo: '/access-denied'
+            redirectTo: '/login'
         });
 
 
@@ -240,15 +223,14 @@ app.run(['$rootScope', '$location', 'stateManager', '$window', function($rootSco
 
 
         // DISABLED: Login check removed - all routes accessible without authentication
-        // if ($rootScope.config.requireLogin) {
-        //     if (stateManager.isUserLogggedIn()) {
-        //     } else {
-        //         stateManager.clearLocalStorage();
-        //         $location.url("/login");
-        //     }
-        // } else {
-        //     log('View For Public $routeChangeStart');
-        // }
+        if ($rootScope.config.requireLogin) {
+            if (stateManager.isUserLogggedIn()) {} else {
+                stateManager.clearLocalStorage();
+                $location.path("login");
+            }
+        } else {
+            log('View For Public $routeChangeStart');
+        }
         log('Route access allowed (login disabled)');
 
 
@@ -296,7 +278,11 @@ app.run(['$rootScope', '$location', 'stateManager', '$window', function($rootSco
 }]);
 
 
-
+app.filter('titlecase', function() {
+    return function(input) {
+        return input ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+    };
+});
 app.directive('currencyInput', function($filter) {
     return {
         restrict: 'A',
