@@ -109,6 +109,26 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
                 }
             }
         })
+        .when('/profile/complete', {
+            templateUrl: 'templates/profile-completion.html',
+            controller: 'profileCompletionCtrl',
+            config: {
+                requireLogin: true,
+                isPrivate: true,
+                showNavLink: true
+            },
+            resolve: {
+                authenticated: function($q, stateManager, $location) {
+
+                    if (stateManager.isUserLogggedIn()) {
+                        return $q.when(true);
+                    } else {
+                        $location.path("login");
+                        //show popup
+                    }
+                }
+            }
+        })
         .when('/login', {
             templateUrl: 'templates/login.html',
             controller: 'loginCtrl',
