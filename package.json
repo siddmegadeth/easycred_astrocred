@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@tensorflow/tfjs-node": "^4.10.0",
     "axios": "^1.7.5",
     "body-parser": "^1.19.0",
     "cloudinary": "^1.21.0",
@@ -31,12 +32,12 @@
     "multer-storage-cloudinary": "^4.0.0",
     "node-cron": "^3.0.3",
     "nodemailer": "^7.0.3",
+    "puppeteer": "^24.34.0",
     "reading-time": "^1.5.0",
     "request": "^2.88.2",
     "socket.io": "^3.1.0",
     "useragent": "^2.3.0",
-    "web-push": "^3.6.7",
-    "@tensorflow/tfjs-node": "^4.10.0"
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "swagger-jsdoc": "^6.2.8",

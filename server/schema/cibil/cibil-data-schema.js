@@ -180,6 +180,32 @@
         success: Boolean,
         message: String,
         message_code: String,
+        // Analysis results cache
+        analysis: {
+            overallGrade: String,
+            defaulters: [Schema.Types.Mixed],
+            recommendations: [Schema.Types.Mixed],
+            comprehensiveReport: Schema.Types.Mixed,
+            riskReport: Schema.Types.Mixed,
+            improvementPlan: Schema.Types.Mixed,
+            bankSuggestions: [Schema.Types.Mixed],
+            creditUtilization: Number,
+            creditAge: Number,
+            paymentAnalysis: Schema.Types.Mixed,
+            componentScores: Schema.Types.Mixed,
+            riskDetails: Schema.Types.Mixed,
+            allAccounts: [Schema.Types.Mixed],
+            // Metadata for cache invalidation
+            analysisVersion: {
+                type: String,
+                default: '1.0'
+            },
+            analyzedAt: {
+                type: Date,
+                default: Date.now
+            },
+            dataHash: String // Hash of credit_report to detect data changes
+        },
         createdAt: {
             type: Date,
             default: Date.now

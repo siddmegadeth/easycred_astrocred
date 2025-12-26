@@ -14,6 +14,11 @@
     app.use(bodyParser.urlencoded({ limit: "100mb", extended: true, parameterLimit: 100000 }));
     app.set("PORT", process.env.PORT_NUMBER_SERVER || process.env.PORT);
     app.set('host', process.env.NODE_IP || 'localhost');
+    
+    // Configure EJS view engine
+    var path = require('path');
+    app.set('view engine', 'ejs');
+    app.set('views', path.join(__dirname, '../../views'));
 
     // app.use(function(req, res, next) {
     //     log('Locals Value :');

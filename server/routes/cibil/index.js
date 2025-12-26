@@ -9,5 +9,8 @@
     require("./enhanced-risk-assessment");
     require("./risk-assessment");
     require("./calculate-cibil");
+    require("./pdf-generator");
+    require("./score-history");
+    require("./ml-prediction");
 
 })();

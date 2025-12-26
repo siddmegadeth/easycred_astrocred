@@ -19,4 +19,32 @@
         return resp.render('retail-help');
     });
 
+    // CIBIL Dashboard Route
+    app.get('/cibil-dashboard', function(req, resp) {
+        log('/cibil-dashboard');
+        // Dynamically determine baseUrl from the request
+        var protocol = req.protocol || 'http';
+        var host = req.get('host') || 'localhost:7001';
+        var baseUrl = protocol + '://' + host;
+        log('CIBIL Dashboard baseUrl: ' + baseUrl);
+        return resp.render('cibil-dashboard', {
+            title: 'CIBIL Credit Report Dashboard',
+            baseUrl: baseUrl
+        });
+    });
+
+    // Alternative route for CIBIL Dashboard
+    app.get('/dashboard/cibil', function(req, resp) {
+        log('/dashboard/cibil');
+        // Dynamically determine baseUrl from the request
+        var protocol = req.protocol || 'http';
+        var host = req.get('host') || 'localhost:7001';
+        var baseUrl = protocol + '://' + host;
+        log('CIBIL Dashboard baseUrl: ' + baseUrl);
+        return resp.render('cibil-dashboard', {
+            title: 'CIBIL Credit Report Dashboard',
+            baseUrl: baseUrl
+        });
+    });
+
 })()
