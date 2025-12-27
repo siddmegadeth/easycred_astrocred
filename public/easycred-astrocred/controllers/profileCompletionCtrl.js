@@ -14,27 +14,6 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
             .toISOString().split('T')[0];
 
         // Initialize profile object
-        $scope.profile = {
-            fullname: '',
-            email: '',
-            mobile: '',
-            dob: '',
-            gender: '',
-            maritalStatus: '',
-            employmentType: '',
-            monthlyIncome: '',
-            addressLine1: '',
-            addressLine2: '',
-            city: '',
-            state: '',
-            pincode: '',
-            country: 'India',
-            countryCode: '+91',
-            panNumber: '',
-            aadhaarNumber: '',
-            emailUpdates: true,
-            smsUpdates: true
-        };
 
         // Initialize consent
         $scope.consent = {
@@ -52,12 +31,19 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
         $scope.errors = {};
 
         if (stateManager.isUserLogggedIn()) {
+            $scope.profile = {};
+            $scope.profile.profile_info = {};
+            $scope.profile.props = {};
+            $scope.profile.kyc = {};
+            $scope.profile.consent = {};
+
             $scope.profile = stateManager.getProfile();
             log('User Profile :');
             log($scope.profile);
             window.onload = function() {
                 // Initialize on load
-                $scope.initializeProfile();
+                $scope.initLoginMobile();
+
             }
         } else {
             stateManager.clearLocalStorage();
@@ -66,6 +52,25 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
     });
 
 
+    $scope.initLoginMobile = function() {
+        const input = document.getElementById("mobileNumber");
+        //input.className = "text-input text-input--material";
+        log(input);
+        $scope.iti = window.intlTelInput(input, {
+            formatOnDisplay: true,
+            nationalMode: true,
+            initialCountry: 'in',
+            onlyCountries: ['in'],
+            placeholderNumberType: 'MOBILE',
+            showFlags: false,
+            separateDialCode: false,
+            strictMode: false,
+            useFullscreenPopup: true,
+            autoPlaceholder: 'aggressive',
+            placeHolder: "Mobile Number"
+        });
+        $scope.iti.setCountry("in");
+    }
 
     // Navigation
     $scope.goToStep = function(step) {
@@ -107,55 +112,40 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
         return /^\d{12}$/.test(aadhaar);
     };
 
-    $scope.validateFile = function(file, maxSizeMB = 2) {
-        if (!file) return false;
-        const validTypes = ['image/jpeg', 'image/png', 'application/pdf'];
-        const maxSize = maxSizeMB * 1024 * 1024;
-
-        if (!validTypes.includes(file.type)) {
-            return 'Invalid file type. Please upload JPG, PNG, or PDF';
-        }
-
-        if (file.size > maxSize) {
-            return `File too large. Maximum size is ${maxSizeMB}MB`;
-        }
-
-        return true;
-    };
 
     // Step validations
     $scope.validateStep1 = function() {
         $scope.errors = {};
 
-        if (!$scope.profile.fullname || $scope.profile.fullname.length < 2) {
+        if (!$scope.profile.profile_info.fullname || $scope.profile.profile_info.fullname.length < 2) {
             $scope.errors.fullname = 'Please enter a valid full name';
         }
 
-        if (!$scope.profile.email || !$scope.validateEmail($scope.profile.email)) {
+        if (!$scope.profile.profile_info.email || !$scope.validateEmail($scope.profile.profile_info.email)) {
             $scope.errors.email = 'Please enter a valid email address';
         }
 
-        if (!$scope.profile.mobile || !$scope.validateMobile($scope.profile.mobile)) {
+        if (!$scope.profile.profile_info.mobile || !$scope.validateMobile($scope.profile.profile_info.mobile)) {
             $scope.errors.mobile = 'Please enter a valid 10-digit mobile number';
         }
 
-        if (!$scope.profile.dob || !$scope.validateDOB($scope.profile.dob)) {
-            $scope.errors.dob = 'You must be at least 18 years old';
+        if (!$scope.profile.profile_info.date_of_birth || !$scope.validateDOB($scope.profile.profile_info.date_of_birth)) {
+            $scope.errors.date_of_birth = 'You must be at least 18 years old';
         }
 
-        if (!$scope.profile.gender) {
+        if (!$scope.profile.profile_info.gender) {
             $scope.errors.gender = 'Please select your gender';
         }
 
-        if (!$scope.profile.maritalStatus) {
+        if (!$scope.profile.profile_info.maritalStatus) {
             $scope.errors.maritalStatus = 'Please select marital status';
         }
 
-        if (!$scope.profile.employmentType) {
+        if (!$scope.profile.profile_info.employmentType) {
             $scope.errors.employmentType = 'Please select employment type';
         }
 
-        if (!$scope.profile.monthlyIncome) {
+        if (!$scope.profile.profile_info.monthlyIncome) {
             $scope.errors.monthlyIncome = 'Please select monthly income range';
         }
 
@@ -167,23 +157,23 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
     $scope.validateStep2 = function() {
         $scope.errors = {};
 
-        if (!$scope.profile.addressLine1 || $scope.profile.addressLine1.length < 5) {
+        if (!$scope.profile.props.addressLine1 || $scope.profile.props.addressLine1.length < 5) {
             $scope.errors.addressLine1 = 'Please enter a valid address';
         }
 
-        if (!$scope.profile.city || $scope.profile.city.length < 2) {
+        if (!$scope.profile.props.city || $scope.profile.props.city.length < 2) {
             $scope.errors.city = 'Please enter a valid city name';
         }
 
-        if (!$scope.profile.state) {
+        if (!$scope.profile.props.state) {
             $scope.errors.state = 'Please select your state';
         }
 
-        if (!$scope.profile.pincode || !$scope.validatePincode($scope.profile.pincode)) {
+        if (!$scope.profile.props.pincode || !$scope.validatePincode($scope.profile.props.pincode)) {
             $scope.errors.pincode = 'Please enter a valid 6-digit pincode';
         }
 
-        if (!$scope.profile.country) {
+        if (!$scope.profile.props.country) {
             $scope.errors.country = 'Please select your country';
         }
 
@@ -192,59 +182,22 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
         }
     };
 
-    // Document validations
-    $scope.validatePanDocument = function(file) {
-        const result = $scope.validateFile(file);
-        if (result === true) {
-            $scope.panDocument.file = file;
-            $scope.errors.panDocument = null;
-        } else {
-            $scope.errors.panDocument = result;
-        }
-    };
-
-    $scope.validateAadhaarDocument = function(file) {
-        const result = $scope.validateFile(file);
-        if (result === true) {
-            $scope.aadhaarDocument.file = file;
-            $scope.errors.aadhaarDocument = null;
-        } else {
-            $scope.errors.aadhaarDocument = result;
-        }
-    };
-
-    $scope.validateSelfieDocument = function(file) {
-        if (!file) return;
-        const result = $scope.validateFile(file, 5);
-        if (result === true) {
-            $scope.selfieDocument.file = file;
-            $scope.errors.selfieDocument = null;
-        } else {
-            $scope.errors.selfieDocument = result;
-        }
-    };
 
     $scope.validateStep3 = function() {
         $scope.errors = {};
 
-        if (!$scope.panDocument.file) {
-            $scope.errors.panDocument = 'Please upload PAN card document';
+
+
+        if (!$scope.profile.kyc.pan_number || !$scope.validatePAN($scope.profile.kyc.pan_number)) {
+            $scope.errors.pan_number = 'Please enter a valid PAN number';
+        } else {
+            $scope.profile.kyc.isPanVerified = true;
         }
 
-        if (!$scope.profile.panNumber || !$scope.validatePAN($scope.profile.panNumber)) {
-            $scope.errors.panNumber = 'Please enter a valid PAN number';
-        }
-
-        if (!$scope.aadhaarDocument.file) {
-            $scope.errors.aadhaarDocument = 'Please upload Aadhaar card document';
-        }
-
-        if (!$scope.profile.aadhaarNumber || !$scope.validateAadhaar($scope.profile.aadhaarNumber)) {
-            $scope.errors.aadhaarNumber = 'Please enter a valid 12-digit Aadhaar number';
-        }
-
-        if (!$scope.selfieDocument.file) {
-            $scope.errors.selfieDocument = 'Please upload a selfie for verification';
+        if (!$scope.profile.kyc.aadhaar_number || !$scope.validateAadhaar($scope.profile.kyc.aadhaar_number)) {
+            $scope.errors.aadhaar_number = 'Please enter a valid 12-digit Aadhaar number';
+        } else {
+            $scope.profile.kyc.isAadharVerified = true;
         }
 
         if (Object.keys($scope.errors).length === 0) {
@@ -256,15 +209,15 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
     $scope.submitProfile = function() {
         $scope.errors = {};
 
-        if (!$scope.consent.terms) {
+        if (!$scope.profile.consent.terms) {
             $scope.errors.terms = 'You must accept the Terms of Service';
         }
 
-        if (!$scope.consent.aadhaar) {
+        if (!$scope.profile.consent.aadhaar) {
             $scope.errors.aadhaarConsent = 'Aadhaar consent is required for KYC verification';
         }
 
-        if (!$scope.consent.pan) {
+        if (!$scope.profile.consent.pan) {
             $scope.errors.panConsent = 'PAN consent is required for financial verification';
         }
 

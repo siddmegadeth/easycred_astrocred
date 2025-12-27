@@ -58,6 +58,18 @@
                 index: true,
                 sparse: true
             },
+            gender: {
+                type: String
+            },
+            maritalStatus: {
+                type: String
+            },
+            maritalStatus: {
+                type: String
+            },
+            monthlyIncome: {
+                type: String
+            },
             isMobileAdded: {
                 type: Boolean,
                 default: false
@@ -68,6 +80,8 @@
         kyc: {
             isKYCCompleted: { type: Boolean, default: false },
             isAadharVerified: { type: Boolean, default: false },
+            isPanVerified: { type: Boolean, default: false },
+            panNumber : {type : String},
             pancard: {
                 type: Object
             },
