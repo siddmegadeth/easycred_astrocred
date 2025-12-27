@@ -9,6 +9,7 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
     //$scope.dialog.show();
     $timeout(function() {
         warn('Init loginCtrl Ready');
+        $scope.message = {};
 
         if (stateManager.isUserLogggedIn()) {
             var userProfile = stateManager.getProfile();
@@ -28,13 +29,21 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
             } else {
                 log('Profile Not Completed :');
                 $location.path("/profile-complete");
+
+                log('Profile Not Completed');
+                $scope.messageModal = new bootstrap.Modal(document.getElementById("messageModal"), {});
+                //var toast = document.getElementById('successToast');
+                //$scope.toastSuccess = new bootstrap.Toast(toast);
+                $scope.message.header = 'Profile Not Complete';
+                $scope.message.content = 'Profile Page is currently unavailable.Complete Onboarding First';
+                $scope.messageModal.show();
             }
         } else {
             $timeout(function() {
                 log('Not Logged :');
                 $scope.initLoginMobile();
 
-               $scope.otpModal = new bootstrap.Modal(document.getElementById("otpModal"), {});
+                $scope.otpModal = new bootstrap.Modal(document.getElementById("otpModal"), {});
                 var toast = document.getElementById('successToast');
                 $scope.toastSuccess = new bootstrap.Toast(toast);
 
@@ -44,7 +53,11 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
     });
 
 
+    $scope.gotoOnboarding = function() {
+        $scope.messageModal.hide();
+        $location.path("profile/complete");
 
+    }
 
 
     $scope.initLoginMobile = function() {
@@ -156,18 +169,26 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
                     log(resp);
 
                     if (resp.data.status && resp.data.otpVerified) {
+                        $scope.otpModal.hide();
                         warn("Update Status :");
                         log(resp);
-                        const state = stateManager.getProfile();
                         var userProfile = resp.data.data;
+                        const state = stateManager.getProfile();
                         stateManager.saveProfile(resp.data.data);
                         stateManager.saveAccessToken(resp.data.access_token);
                         $scope.otpModal.hide();
-                        $location.path("/home");
+
+                        if (userProfile.isProfileCompleted) {
+                            $location.path("/home");
+                        } else {
+
+                            log('Profile Not Completed');
+                            $location.path("profile/complete");
+
+                        }
 
                     } else {
                         alert(resp.data.message);
-
                     }
 
                 });

@@ -115,7 +115,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             config: {
                 requireLogin: true,
                 isPrivate: true,
-                showNavLink: true
+                showNavLink: false
             },
             resolve: {
                 authenticated: function($q, stateManager, $location) {

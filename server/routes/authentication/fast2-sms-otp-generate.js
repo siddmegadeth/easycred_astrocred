@@ -93,7 +93,6 @@
                         });
 
                         model.save()
-                            .maxTimeMS(5000)
                             .then(function(saved) {
                                 log('Saved Profile :');
                                 log(saved);
