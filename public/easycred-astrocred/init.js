@@ -41,7 +41,7 @@ Offline.on('confirmed-up', function() {
 });
 
 
-app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider', '$httpProvider', '$translateProvider', 'surePassProvider', 'authenticationProvider', '$routeProvider', '$locationProvider', function(productionModeProvider, utilityProvider, geoIPServicesProvider, $httpProvider, $translateProvider, surePassProvider, authenticationProvider, $routeProvider, $locationProvider) {
+app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider', '$httpProvider', '$translateProvider', 'surePassProvider', 'authenticationProvider', '$routeProvider', '$locationProvider', 'profileOperationsProvider', function(productionModeProvider, utilityProvider, geoIPServicesProvider, $httpProvider, $translateProvider, surePassProvider, authenticationProvider, $routeProvider, $locationProvider, profileOperationsProvider) {
 
     $locationProvider.html5Mode({
         enabled: false,
@@ -205,6 +205,9 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             generateOTP: productionLink + "/get/auth/otp/send/fast2sms",
             validateOTP: productionLink + "/get/auth/otp/validate/fast2sms",
         },
+        profile: {
+            completeOnboarding: productionLink + "/post/profile/complete/customer/onboarding"
+        },
         utility: {
             validateToken: productionLink + '/post/validate/token',
             getSupportedCountries: productionLink + '/get/supported/countries',
@@ -227,7 +230,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             mobileToMultipleUPI: productionLink + "/get/surepass/mobile/to/multiple/upi"
         }
     };
-
+    profileOperationsProvider.config(prod.profile);
     utilityProvider.config(prod.utility);
     geoIPServicesProvider.config(prod.ip_url);
     surePassProvider.config(prod.surepass);

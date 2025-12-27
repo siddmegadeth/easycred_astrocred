@@ -1,4 +1,4 @@
-app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'stateManager', '$rootScope', function($location, $timeout, $scope, stateManager, $rootScope) {
+app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'stateManager', '$rootScope', 'profileOperations', function($location, $timeout, $scope, stateManager, $rootScope, profileOperations) {
 
     $timeout(function() {
         warn('Init profileCompletionCtrl Ready');
@@ -161,6 +161,7 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
         }
 
         if (Object.keys($scope.errors).length === 0) {
+            $scope.profile.isProfileCompleted = true;
             $scope.goToStep(2);
         }
     };
@@ -211,6 +212,14 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
             $scope.profile.kyc.isAadharVerified = true;
         }
 
+        if ($scope.profile.kyc.isPanVerified && $scope.profile.kyc.isAadharVerified) {
+            $scope.profile.kyc.isKYCCompleted = true;
+            $scope.profile.isKYCCompleted = true;
+        } else {
+            $scope.profile.kyc.isKYCCompleted = false;
+            $scope.profile.isKYCCompleted = false;
+        }
+
         if (Object.keys($scope.errors).length === 0) {
             $scope.goToStep(4);
         }
@@ -234,20 +243,21 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
 
         if (Object.keys($scope.errors).length > 0) {
             return;
+        } else {
+            // Simulate API call
+            $timeout(function() {
+                $scope.isSubmitting = true;
+                $scope.isComplete = false;
+                profileOperations.completeOnboarding($scope.profile)
+                    .then(function(resp) {
+                        warn('completeOnboarding :');
+                        log(resp);
+                        $scope.isSubmitting = false;
+                        $scope.isComplete = true;
+                        log('Profile submitted:', $scope.isComplete);
+                    });
+            });
         }
-
-        $scope.isSubmitting = true;
-
-        // Simulate API call
-        $timeout(function() {
-            $scope.isSubmitting = false;
-            $scope.isComplete = true;
-
-            // In real app, this would be an API call
-            console.log('Profile submitted:', $scope.profile);
-            console.log('Consent:', $scope.consent);
-            console.log('Documents uploaded');
-        }, 2000);
     };
 
     $scope.goToDashboard = function() {
