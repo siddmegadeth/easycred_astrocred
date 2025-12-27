@@ -6,7 +6,7 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
         $scope.currentStep = 1;
         $scope.isComplete = false;
         $scope.isSubmitting = false;
-        $scope.applicationId = 'APP' + Date.now().toString().slice(-8);
+        $scope.customerId = 'ASTROCRED' + Date.now().toString().slice(-8);
 
         // Set max DOB date (18 years ago)
         const today = new Date();
