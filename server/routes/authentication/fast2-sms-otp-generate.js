@@ -33,7 +33,7 @@
                     log('Warning: MongoDB not connected, but proceeding with OTP send');
                 }
 
-                ProfileFormModel.findOne({ "profile_info.mobile": mobile })
+                ProfileModel.findOne({ "profile_info.mobile": mobile })
                     .maxTimeMS(5000) // 5 second timeout
                     .exec(function(errFound, found) {
 
@@ -48,7 +48,7 @@
                         if (found) {
                             log('Used Found. Update User');
 
-                            ProfileFormModel.updateOne({ "profile_info.mobile": mobile }, { "fast2sms.otp": generated_otp }, { upsert: true })
+                            ProfileModel.updateOne({ "profile_info.mobile": mobile }, { "fast2sms.otp": generated_otp }, { upsert: true })
                                 .maxTimeMS(5000)
                                 .exec(function(errUpdate, updated) {
                                     if (errUpdate) {
@@ -79,7 +79,7 @@
 
                     } else {
                         log('Used Not Found. Create User');
-                        var model = new ProfileFormModel({
+                        var model = new ProfileModel({
                             profile_info: {
                                 mobile: mobile
                             },

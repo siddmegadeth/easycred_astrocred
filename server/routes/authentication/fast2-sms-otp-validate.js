@@ -60,7 +60,7 @@
                     });
                 }
 
-                var isProfile = await ProfileFormModel.findOne({ "profile_info.mobile": mobile, "fast2sms.otp": otp })
+                var isProfile = await ProfileModel.findOne({ "profile_info.mobile": mobile, "fast2sms.otp": otp })
 
                 if (isProfile) {
                     var token = createJWT(isProfile);

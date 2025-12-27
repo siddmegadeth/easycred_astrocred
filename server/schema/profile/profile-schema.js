@@ -1,6 +1,6 @@
 (function() {
 
-    ProfileFormSchema = module.exports = mongoose.Schema({
+    ProfileSchema = module.exports = mongoose.Schema({
         profile: {
             type: String,
             unique: true,
@@ -107,7 +107,7 @@
 
 
 
-    ProfileFormSchema.pre("save", function(next) {
+    ProfileSchema.pre("save", function(next) {
         var user = this;
         now = new Date();
 
@@ -120,6 +120,6 @@
 
 
 
-    ProfileFormModel = module.exports = mongoose.model("ProfileFormModel", ProfileFormSchema);
+    ProfileModel = module.exports = mongoose.model("ProfileModel", ProfileSchema);
 
 })()
