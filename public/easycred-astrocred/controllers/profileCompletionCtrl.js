@@ -16,11 +16,7 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
         // Initialize profile object
 
         // Initialize consent
-        $scope.consent = {
-            terms: false,
-            aadhaar: false,
-            pan: false
-        };
+
 
         // Initialize documents
         $scope.panDocument = { file: null };
@@ -35,9 +31,24 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
             $scope.profile.profile_info = {};
             $scope.profile.props = {};
             $scope.profile.kyc = {};
-            $scope.profile.consent = {};
+
+
+
+            // $scope.profile.consent = {
+            //     terms: false,
+            //     aadhaar: false,
+            //     pan: false
+            // };
 
             $scope.profile = stateManager.getProfile();
+
+            $scope.profile.consent = {};
+            $scope.profile.consent.terms = false;
+            $scope.profile.consent.aadhaar = false;
+            $scope.profile.consent.pan = false;
+            $scope.profile.communication = {};
+
+
             log('User Profile :');
             log($scope.profile);
             window.onload = function() {
@@ -208,7 +219,7 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
     // Final submission
     $scope.submitProfile = function() {
         $scope.errors = {};
-
+        log($scope.profile.consent);
         if (!$scope.profile.consent.terms) {
             $scope.errors.terms = 'You must accept the Terms of Service';
         }

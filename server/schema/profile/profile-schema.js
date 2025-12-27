@@ -81,7 +81,7 @@
             isKYCCompleted: { type: Boolean, default: false },
             isAadharVerified: { type: Boolean, default: false },
             isPanVerified: { type: Boolean, default: false },
-            panNumber : {type : String},
+            panNumber: { type: String },
             pancard: {
                 type: Object
             },
@@ -93,7 +93,9 @@
             bank_kyc: {
                 type: Object
             }
-        }
+        },
+        consent: { type: Object },
+        communication: { type: Object }
     }, {
         timestamps: {
             createdAt: 'created_at',
