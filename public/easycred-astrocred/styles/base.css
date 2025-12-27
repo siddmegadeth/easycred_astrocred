@@ -17,3 +17,7 @@ body {
     min-height: 100vh;
     padding: 20px;
 }*/
+
+.blur-text {
+    filter: blur(4px);
+}
