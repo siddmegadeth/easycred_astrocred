@@ -1,39 +1,14 @@
 (function() {
 
-    async function validateMobileFromEasycred(mobile) {
 
-        return new Promise(function(approve, reject) {
-            try {
-                axios({
-                        url: 'https://retail.easycred.co.in/get/webhooks/fetch/profile?mobile=' + mobile,
-                        method: 'GET'
-                    })
-                    .then(function(resp) {
-
-                        if (resp.data.isSuccess) {
-                            approve({ status: true, isSuccess: true, data: resp.data });
-                        } else {
-                            approve({ status: true, isSuccess: false, data: [] });
-                        }
-                    })
-                    .catch(function(errResp) {
-                        reject({ status: false, isSuccess: false, data: errResp });
-
-
-                    });
-
-            } catch (catchErr) {
-                reject({ status: false, message: 'Not Able To Fetch Profile As Catch.Error ', isSuccess: false, data: catchErr });
-            }
-
-        });
-    }
     app.get("/get/auth/otp/validate/fast2sms", async function(req, resp) {
         log("/get/auth/otp/validate/fast2sms");
         try {
 
             var otp = req.query.otp || req.body.otp || req.params["otp"];
             var mobile = req.query.mobile || req.body.mobile || req.params["mobile"];
+
+
             if (mobile && otp) {
 
                 if (mobile && mobile.indexOf("+91") != -1) {
@@ -47,8 +22,6 @@
                 log('OTP :' + otp);
                 // 
 
-
-
                 // Check if MongoDB is connected
                 if (mongoose.connection.readyState !== 1) {
                     log('MongoDB not connected. ReadyState:', mongoose.connection.readyState);
@@ -60,8 +33,9 @@
                     });
                 }
 
-                var isProfile = await ProfileModel.findOne({ "profile_info.mobile": mobile, "fast2sms.otp": otp })
-
+                var isProfile = await ProfileModel.findOne({ "mobile": mobile, "fast2sms.otp": otp })
+                log('Profile Find Status :');
+                log(isProfile);
                 if (isProfile) {
                     var token = createJWT(isProfile);
 
@@ -74,7 +48,7 @@
                     resp.send({ message: 'OTP Validated', status: true, data: isProfile, otpVerified: true, access_token: token });
 
                 } else {
-                    log('OTP Not Validated ');
+                    log('OTP Not Validated');
                     resp.send({ message: 'OTP Not Validated ', status: true, data: {}, otpVerified: false, access_token: undefined });
                 }
 
@@ -95,9 +69,34 @@
 })()
 
 
+// async function captureOnboardingBasic(mobile) {
+
+//     return new Promise(function(approve, reject) {
+//         try {
+//             axios({
+//                     url: 'https://retail.easycred.co.in/get/webhooks/fetch/profile?mobile=' + mobile,
+//                     method: 'GET'
+//                 })
+//                 .then(function(resp) {
+
+//                     if (resp.data.isSuccess) {
+//                         approve({ status: true, isSuccess: true, data: resp.data });
+//                     } else {
+//                         approve({ status: true, isSuccess: false, data: [] });
+//                     }
+//                 })
+//                 .catch(function(errResp) {
+//                     reject({ status: false, isSuccess: false, data: errResp });
 
 
+//                 });
 
+//         } catch (catchErr) {
+//             reject({ status: false, message: 'Not Able To Fetch Profile As Catch.Error ', isSuccess: false, data: catchErr });
+//         }
+
+//     });
+// }
 
 // fast2sms.sendMessage(options).then(function(respOtp) {
 //     log(respOtp);

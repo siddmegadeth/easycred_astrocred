@@ -103,7 +103,7 @@ app.provider('stateManager', [function() {
                     if (window.localStorage.easycred_astrocred_profile) {
                         // check if value is empty or null
                         var profileTuple = JSON.parse(window.localStorage.easycred_astrocred_profile);
-                        if (profileTuple.isProfileCompleted) {
+                        if (profileTuple.isOnboardingComplete) {
                             return true;
                         } else {
                             return false;

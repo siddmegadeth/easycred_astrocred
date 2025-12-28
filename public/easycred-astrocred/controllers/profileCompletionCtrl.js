@@ -1,4 +1,4 @@
-app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'stateManager', '$rootScope', 'profileOperations', function($location, $timeout, $scope, stateManager, $rootScope, profileOperations) {
+app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'stateManager', '$rootScope', 'profileOperations', 'utility', function($location, $timeout, $scope, stateManager, $rootScope, profileOperations, utility) {
 
     $timeout(function() {
         warn('Init profileCompletionCtrl Ready');
@@ -6,7 +6,6 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
         $scope.currentStep = 1;
         $scope.isComplete = false;
         $scope.isSubmitting = false;
-        $scope.customerId = 'ASTROCRED' + Date.now().toString().slice(-8);
 
         // Set max DOB date (18 years ago)
         const today = new Date();
@@ -134,10 +133,14 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
 
         if (!$scope.profile.profile_info.email || !$scope.validateEmail($scope.profile.profile_info.email)) {
             $scope.errors.email = 'Please enter a valid email address';
+        } else {
+            $scope.profile.profile_info.isEmailAdded = true;
         }
 
         if (!$scope.profile.profile_info.mobile || !$scope.validateMobile($scope.profile.profile_info.mobile)) {
             $scope.errors.mobile = 'Please enter a valid 10-digit mobile number';
+        } else {
+            $scope.profile.profile_info.isMobileAdded = true;
         }
 
         if (!$scope.profile.profile_info.date_of_birth || !$scope.validateDOB($scope.profile.profile_info.date_of_birth)) {
@@ -159,6 +162,8 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
         if (!$scope.profile.profile_info.monthlyIncome) {
             $scope.errors.monthlyIncome = 'Please select monthly income range';
         }
+
+
 
         if (Object.keys($scope.errors).length === 0) {
             $scope.profile.isProfileCompleted = true;
@@ -200,13 +205,13 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
 
 
 
-        if (!$scope.profile.kyc.pan_number || !$scope.validatePAN($scope.profile.kyc.pan_number)) {
+        if (!$scope.profile.kyc.pan_number || !utility.validatePANCard($scope.profile.kyc.pan_number)) {
             $scope.errors.pan_number = 'Please enter a valid PAN number';
         } else {
             $scope.profile.kyc.isPanVerified = true;
         }
 
-        if (!$scope.profile.kyc.aadhaar_number || !$scope.validateAadhaar($scope.profile.kyc.aadhaar_number)) {
+        if (!$scope.profile.kyc.aadhaar_number || !utility.validateAadharNumber($scope.profile.kyc.aadhaar_number)) {
             $scope.errors.aadhaar_number = 'Please enter a valid 12-digit Aadhaar number';
         } else {
             $scope.profile.kyc.isAadharVerified = true;
@@ -214,10 +219,8 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
 
         if ($scope.profile.kyc.isPanVerified && $scope.profile.kyc.isAadharVerified) {
             $scope.profile.kyc.isKYCCompleted = true;
-            $scope.profile.isKYCCompleted = true;
         } else {
             $scope.profile.kyc.isKYCCompleted = false;
-            $scope.profile.isKYCCompleted = false;
         }
 
         if (Object.keys($scope.errors).length === 0) {
@@ -245,18 +248,27 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
             return;
         } else {
             // Simulate API call
-            $timeout(function() {
-                $scope.isSubmitting = true;
-                $scope.isComplete = false;
-                profileOperations.completeOnboarding($scope.profile)
-                    .then(function(resp) {
-                        warn('completeOnboarding :');
-                        log(resp);
-                        $scope.isSubmitting = false;
-                        $scope.isComplete = true;
-                        log('Profile submitted:', $scope.isComplete);
-                    });
-            });
+            if ($scope.validateEmail($scope.profile.profile_info.email) && $scope.validateMobile($scope.profile.profile_info.mobile) && $scope.validateDOB($scope.profile.profile_info.date_of_birth) && $scope.validatePincode($scope.profile.props.pincode)) {
+                $scope.profile.profile_info.isProfileCompleted = true;
+                $scope.profile.isOnboardingComplete = true;
+
+                $timeout(function() {
+                    $scope.isSubmitting = true;
+                    $scope.isComplete = false;
+                    profileOperations.completeOnboarding($scope.profile)
+                        .then(function(resp) {
+                            warn('completeOnboarding :');
+                            log(resp);
+                            $scope.isSubmitting = false;
+                            $scope.isComplete = true;
+                            log('Profile submitted:', $scope.isComplete);
+                        });
+                });
+            } else {
+                alert('Profile Such Email/Mobile/Address Is Not Valid');
+            }
+
+
         }
     };
 

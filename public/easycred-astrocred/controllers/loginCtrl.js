@@ -111,14 +111,16 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
 
     $scope.generateOTP = function() {
 
-
+        log($scope.iti);
         log($scope.iti.getNumber());
         log($scope.iti.isValidNumber());
 
         if ($scope.iti.isValidNumber()) {
 
             $scope.NavProgress = true;
-            authentication.generateOTP($scope.iti.getNumber())
+            telemetric = {};
+            telemetric.country_code = $scope.iti.getSelectedCountryData();
+            authentication.generateOTP($scope.iti.getNumber(), telemetric)
                 .then(function(resp) {
                     warn('Generate OTP :');
                     log(resp);
@@ -164,6 +166,8 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
         log(otp);
         log($scope.iti.getNumber());
         if ($scope.iti.isValidNumber() && otp.length == 6) {
+
+
             authentication.validateOTP($scope.iti.getNumber(), otp)
                 .then(function(resp) {
                     log(resp);

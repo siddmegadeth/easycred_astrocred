@@ -3,7 +3,7 @@
 
 
 
-    async function generateSMSFast2SMSOTP(mobile) {
+    async function generateSMSFast2SMSOTP(mobile, telemetric) {
 
         return new Promise(function(approve, reject) {
             try {
@@ -12,17 +12,16 @@
 
                 log("Original :");
                 log(mobile);
-                var generatedOTP = generateOTP(6);
+                var generated_otp = generateOTP(6);
                 log("After Split :");
                 log(mobile);
 
                 log('SMS Sending For Indian Number on SMS and Whatsapp');
 
                 //var fastSMSNumber = mobile.split("+91")[1];;
-                log("Generated OTP : " + generatedOTP);
+                log("Generated OTP : " + generated_otp);
 
 
-                var generated_otp = generateOTP(6);
                 var url = 'https://www.fast2sms.com/dev/bulkV2?authorization=' + process.env.FAST_2_SMS_ACCESSTOKEN + '&route=dlt&sender_id=ECRED&message=195022&numbers=' + mobile + '&variables_values=' + generated_otp;
                 log('Generated URL');
                 log(url);
@@ -33,8 +32,7 @@
                     log('Warning: MongoDB not connected, but proceeding with OTP send');
                 }
 
-                ProfileModel.findOne({ "profile_info.mobile": mobile })
-                    .maxTimeMS(5000) // 5 second timeout
+                ProfileModel.findOne({ "mobile": mobile })
                     .exec(function(errFound, found) {
 
                         if (errFound) {
@@ -48,8 +46,7 @@
                         if (found) {
                             log('Used Found. Update User');
 
-                            ProfileModel.updateOne({ "profile_info.mobile": mobile }, { "fast2sms.otp": generated_otp }, { upsert: true })
-                                .maxTimeMS(5000)
+                            ProfileModel.updateOne({ "mobile": mobile }, { "fast2sms.otp": generated_otp }, { upsert: true })
                                 .exec(function(errUpdate, updated) {
                                     if (errUpdate) {
                                         log('Error updating OTP:', errUpdate);
@@ -77,60 +74,51 @@
                                 });
 
 
-                    } else {
-                        log('Used Not Found. Create User');
-                        var model = new ProfileModel({
-                            profile_info: {
-                                mobile: mobile
-                            },
-                            fast2sms: {
-                                otp: generated_otp
-                            },
-                            type: {
-                                provider: 'fast2sms'
-                            },
-                            isMobileAdded: true
-                        });
-
-                        model.save()
-                            .then(function(saved) {
-                                log('Saved Profile :');
-                                log(saved);
-                                axios({
-                                        url: url,
-                                        method: 'GET'
-                                    })
-                                    .then(function(respAxios) {
-                                        log('OTP Response :');
-                                        log(respAxios.data);
-                                        approve({ message: 'OTP Sent Successfully', status: true, isOTPSuccess: true });
-                                    })
-                                    .catch(function(errAxios) {
-                                        log('Error Axios Save :');
-                                        reject({ message: 'Error Axios', data: errAxios, isOTPSuccess: false });
-                                    });
-                            })
-                            .catch(function(errSave) {
-                                log('Error saving profile:', errSave);
-                                // Still try to send OTP even if save fails
-                                axios({
-                                        url: url,
-                                        method: 'GET'
-                                    })
-                                    .then(function(respAxios) {
-                                        log('OTP Response (save failed but OTP sent):');
-                                        log(respAxios.data);
-                                        approve({ message: 'OTP Sent Successfully (but profile save failed)', status: true, isOTPSuccess: true });
-                                    })
-                                    .catch(function(errAxios) {
-                                        log('Error Axios Save :');
-                                        reject({ message: 'Error Axios', data: errAxios, isOTPSuccess: false });
-                                    });
+                        } else {
+                            log('Used Not Found. Create new');
+                            var model = new ProfileModel({
+                                mobile: mobile,
+                                customerId: 'ASTROCRED' + Date.now().toString().slice(-8),
+                                profile_info: {
+                                    mobile: mobile,
+                                    isMobileAdded: true,
+                                    mobile_verified: true
+                                },
+                                fast2sms: {
+                                    otp: generated_otp,
+                                    provider: 'fast2sms'
+                                },
+                                telemetric: telemetric
                             });
 
-                    }
+                            model.save()
+                                .then(function(saved) {
+                                    log('Saved Profile :');
+                                    log(saved);
+                                    axios({
+                                            url: url,
+                                            method: 'GET'
+                                        })
+                                        .then(function(respAxios) {
+                                            log('OTP Response :');
+                                            log(respAxios.data);
+                                            approve({ message: 'OTP Sent Successfully', status: true, isOTPSuccess: true });
+                                        })
+                                        .catch(function(errAxios) {
+                                            log('Error Axios Save :');
+                                            reject({ message: 'Error Axios', data: errAxios, isOTPSuccess: false });
+                                        });
+                                })
+                                .catch(function(errSave) {
+                                    log('Error saving profile:');
+                                    log(errSave);
+                                    approve({ message: 'OTP Not Sent .profile save failed', status: true, isOTPSuccess: false });
 
-                })
+                                });
+
+                        }
+
+                    })
 
             } catch (errException) {
                 log('Exception :');
@@ -149,13 +137,19 @@
         log("/get/auth/otp/send/fast2sms");
         try {
             var mobile = req.query.mobile || req.body.mobile || req.params["mobile"];
+            var telemetric = req.query.telemetric || req.body.telemetric || req.params["telemetric"];
+            telemetric = JSON.parse(telemetric);
+            log('Mobile : ' + mobile);
+            log('telemetric : ');
+            log(telemetric);
+
             if (mobile) {
 
                 if (mobile && mobile.indexOf("+91") != -1) {
                     mobile = mobile.split("+91")[1];
                 }
                 log('Mobile :' + mobile);
-                var value = await generateSMSFast2SMSOTP(mobile);
+                var value = await generateSMSFast2SMSOTP(mobile, telemetric);
                 resp.send(value);
             } else {
                 resp.send({ status: false, message: 'Params Missing.Mobile Number Is Missing', isOTPSuccess: false });

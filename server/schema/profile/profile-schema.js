@@ -6,13 +6,21 @@
             unique: true,
             index: true
         },
+        email: {
+            type: String,
+            unique: true,
+            index: true,
+            sparse: true
+        },
+        mobile: {
+            type: String,
+            unique: true,
+            index: true,
+            sparse: true
+        },
         customerId: {
             type: String,
             index: true
-        },
-        isProfileCompleted: {
-            type: Boolean,
-            default: false
         },
         fast2sms: {
             otp: {
@@ -22,9 +30,13 @@
             isLastOTPValid: {
                 type: Boolean,
                 default: false
-            }
+            },
+            provider: { type: String }
         },
-        isKYCCompleted: { type: Boolean, default: false },
+        isOnboardingComplete: {
+            type: Boolean,
+            default: false
+        },
         profile_info: {
             email: {
                 type: String,
@@ -64,9 +76,6 @@
             maritalStatus: {
                 type: String
             },
-            maritalStatus: {
-                type: String
-            },
             monthlyIncome: {
                 type: String
             },
@@ -74,28 +83,27 @@
                 type: Boolean,
                 default: false
             },
+            mobile_verified: {
+                type: Boolean,
+                default: false
+            },
             date_of_birth: { type: Date },
             props: Object,
+            isProfileCompleted: {
+                type: Boolean,
+                default: false
+            }
         },
         kyc: {
             isKYCCompleted: { type: Boolean, default: false },
             isAadharVerified: { type: Boolean, default: false },
             isPanVerified: { type: Boolean, default: false },
-            panNumber: { type: String },
-            pancard: {
-                type: Object
-            },
-            aadhar: {
-                aadhaar_seeding_status: { type: String },
-                aadhar_card: { type: String },
-                verification: { type: Object }
-            },
-            bank_kyc: {
-                type: Object
-            }
+            aadhaar_number: { type: String },
+            pan_number: { type: String }
         },
         consent: { type: Object },
-        communication: { type: Object }
+        communication: { type: Object },
+        telemetric: { type: Object }
     }, {
         timestamps: {
             createdAt: 'created_at',

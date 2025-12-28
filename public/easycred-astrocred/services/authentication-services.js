@@ -30,12 +30,13 @@ app.provider('authentication', [function() {
                     })
 
                 },
-                generateOTP: function(mobile) {
+                generateOTP: function(mobile,telemetric) {
                     return $http({
                         method: 'GET',
                         url: authURL.generateOTP,
                         params: {
-                            mobile: mobile
+                            mobile: mobile,
+                            telemetric: telemetric
                         }
                     })
                 },
