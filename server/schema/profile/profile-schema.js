@@ -22,6 +22,10 @@
             type: String,
             index: true
         },
+        isOnboardingComplete: {
+            type: Boolean,
+            default: false
+        },
         fast2sms: {
             otp: {
                 type: String,
@@ -32,10 +36,6 @@
                 default: false
             },
             provider: { type: String }
-        },
-        isOnboardingComplete: {
-            type: Boolean,
-            default: false
         },
         profile_info: {
             email: {

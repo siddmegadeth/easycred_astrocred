@@ -50,11 +50,22 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
 
             log('User Profile :');
             log($scope.profile);
-            window.onload = function() {
+            if (stateManager.isUserLogggedIn()) {
                 // Initialize on load
-                $scope.initLoginMobile();
+                if (stateManager.isProfileCompleted()) {
+                    log('Profile Complete');
+                    $location.path("home");
+                } else {
+                    log('Profile Not Complete');
+                    $scope.initLoginMobile();
+                }
+            } else {
+                log('Not Logged In');
+                stateManager.clearLocalStorage();
+                $location.path("login");
 
             }
+
         } else {
             stateManager.clearLocalStorage();
             $location.path("/login");
@@ -259,6 +270,7 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
                         .then(function(resp) {
                             warn('completeOnboarding :');
                             log(resp);
+                            stateManager.saveProfile(resp.data.data);
                             $scope.isSubmitting = false;
                             $scope.isComplete = true;
                             log('Profile submitted:', $scope.isComplete);

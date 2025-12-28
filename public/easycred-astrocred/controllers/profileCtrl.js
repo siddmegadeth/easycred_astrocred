@@ -8,7 +8,7 @@ app.controller('profileCtrl', ['$location', '$timeout', '$scope', 'stateManager'
             log('User Profile :');
             log($scope.profile);
 
-            if ($scope.profile.isProfileCompleted) {
+            if (stateManager.isProfileCompleted()) {
 
 
             } else {
