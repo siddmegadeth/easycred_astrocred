@@ -312,7 +312,7 @@ app.run(['$rootScope', '$location', 'stateManager', '$window', '$timeout', funct
 
             // 🔄 Redirect to login
             $timeout(function() {
-                $location.path('/login');
+                $location.path('login');
             }, 100);
         });
     });
