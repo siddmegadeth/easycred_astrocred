@@ -17,4 +17,5 @@
     require("./financial-product-recommendation/index");
     // tensorflow-model-training
     //require("./tensorflow-model-training/index");
+    require("./security/index");
 })();

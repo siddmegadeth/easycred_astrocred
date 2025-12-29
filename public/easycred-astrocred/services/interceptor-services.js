@@ -1,120 +1,92 @@
 app.service('httpTimeoutInterceptors', ['$timeout', '$rootScope', function($timeout, $rootScope) {
 
     return {
-
-
         request: function(config) {
             config.timeout = 18000;
-            // $rootScope.$broadcast("loader_hide");
-            // $rootScope.$broadcast("progress_loader_hide");
+
+            // 🔐 REQUIRED FOR SESSION COOKIE
+            config.withCredentials = true;
+
             return config;
         },
-        response: function(config) {
-            // $rootScope.$broadcast("loader_hide");
-            // $rootScope.$broadcast("progress_loader_hide");
-
-            return config;
+        response: function(response) {
+            return response;
         }
-
-    }
+    };
 
 }]);
 
+app.service('httpInterceptors', [
+    '$timeout',
+    '$rootScope',
+    '$q',
+    function($timeout, $rootScope, $q) {
 
-app.service('httpInterceptors', ['$timeout', '$rootScope', '$q', function($timeout, $rootScope, $q) {
+        var numLoadings = 0;
 
-    var numLoadings = 0;
+        return {
 
-    return {
-        request: function(config) {
+            request: function(config) {
 
-            config.timeout = 18000;
-            if (window.localStorage.easycred_astro_access_token) {
-                var token = window.localStorage.easycred_astro_access_token;
-                if (token != undefined || token != null) {
+                config.timeout = 18000;
 
-                    // get token from a cookie or local storage
+                // 🔐 REQUIRED: send session cookie
+                config.withCredentials = true;
+
+                // ⚠️ OPTIONAL: keep JWT ONLY if backend expects it
+                if (window.localStorage.easycred_astro_access_token) {
                     config.headers = config.headers || {};
-                    config.headers.Authorization = "Bearer " + token;
+                    config.headers.Authorization =
+                        "Bearer " + window.localStorage.easycred_astro_access_token;
                 }
-            }
-            $rootScope.NavProgress = true;
 
-            numLoadings++;
+                $rootScope.NavProgress = true;
+                numLoadings++;
 
-            // Show loader
-            $rootScope.$broadcast("loader_show");
-            $rootScope.$broadcast("progress_loader_show");
-            return config || $q.when(config)
+                $rootScope.$broadcast("loader_show");
+                $rootScope.$broadcast("progress_loader_show");
 
-        },
-        response: function(config) {
+                return config;
+            },
 
-            if ((--numLoadings) === 0) {
-                // Hide loader
+            response: function(response) {
+
+                if ((--numLoadings) === 0) {
+                    $rootScope.$broadcast("loader_hide");
+                    $rootScope.$broadcast("progress_loader_hide");
+                }
+
+                $rootScope.NavProgress = false;
+                return response;
+            },
+
+            responseError: function(response) {
+
+                if (response.status === 401 || response.status === 440) {
+                    // 🔥 SESSION EXPIRED / INVALID
+                    $rootScope.$emit('force-logout', {
+                        reason: 'SESSION_EXPIRED'
+                    });
+                }
+
+                if ((--numLoadings) <= 0) {
+                    $rootScope.$broadcast("loader_hide");
+                    $rootScope.$broadcast("progress_loader_hide");
+                }
+
+                $rootScope.NavProgress = false;
+
+                return $q.reject(response);
+            },
+
+            requestError: function(rejection) {
+
                 $rootScope.$broadcast("loader_hide");
                 $rootScope.$broadcast("progress_loader_hide");
+                $rootScope.NavProgress = false;
 
+                return $q.reject(rejection);
             }
-            $rootScope.NavProgress = false;
-
-            return config || $q.when(config);
-
-        },
-        requestError: function(config) {
-
-            $rootScope.$broadcast("loader_hide");
-            $rootScope.$broadcast("progress_loader_hide");
-            $rootScope.$broadcast("request_error");
-
-            $rootScope.NavProgress = false;
-
-            return config;
-
-        },
-        responseError: function(config) {
-            warn('Response Error HTTPS :');
-            log(config);
-            log(config.data);
-            if (config.data.forceLogout) {
-                $rootScope.$emit('force-logout', {});
-            }
-
-            $rootScope.$emit('exception-occured', {});
-            if (config.status == -1) {
-                warn("Slow/Or Network Issue Detected");
-                $rootScope.$broadcast("loader_hide");
-                $rootScope.$broadcast("progress_loader_hide");
-                $rootScope.$broadcast("request_error");
-
-                ons.notification.toast({
-                    message: "Some Network Issue Has Occured",
-                    timeout: 4000,
-                    buttonLabel: 'Ok'
-                }).then(function() {})
-                //document.querySelector('#myNavigator').resetToPage('offline.html');
-
-            } else {
-                $rootScope.$broadcast("loader_hide");
-                $rootScope.$broadcast("progress_loader_hide");
-                $rootScope.$broadcast("request_error");
-                
-            }
-
-            if (!(--numLoadings)) {
-                // Hide loader
-                $rootScope.$broadcast("loader_hide");
-                $rootScope.$broadcast("progress_loader_hide");
-                $rootScope.$broadcast("request_error");
-
-            }
-            $rootScope.NavProgress = false;
-
-            return $q.reject(config);
-
-        }
-
-
+        };
     }
-
-}]);
+]);

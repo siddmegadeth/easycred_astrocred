@@ -1,7 +1,7 @@
 (function() {
     require("./profile/profile-schema");
     require("./platform-analytics/platform-analytics-schema");
-    require("./login-activity/login-activity-schema");
+    require("./tracking-activity/tracking-activity-schema");
     //sitemap
     require("./sitemap/sitemap-schema");
     // cibil

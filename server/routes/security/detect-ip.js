@@ -4,7 +4,7 @@
         try {
             log("/detect/ip");
             // Get client IP address (handles proxies)
-            let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+            let ip = req.headers['x-forwarded-for'] ||req.connection.remoteAddress;
             if (ip.includes(',')) {
                 ip = ip.split(',')[0].trim();
             }

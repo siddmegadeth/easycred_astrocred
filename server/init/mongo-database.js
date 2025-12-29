@@ -5,7 +5,6 @@
         log("DATABASE NAME : " + process.env.MONGODB_NAME_DEVELOPMENT);
         mongoDbURI = module.exports = process.env.MONGODB_URI_DEVELOPMENT;
 
-
         const options = {
             dbName: process.env.MONGODB_NAME_DEVELOPMENT
         };

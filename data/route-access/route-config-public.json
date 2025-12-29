@@ -101,5 +101,12 @@
         "methods": [
             "POST"
         ]
+    },
+    {
+        "path": "/get/api/security/track",
+        "methods": [
+            "GET"
+        ]
+
     }]
 }

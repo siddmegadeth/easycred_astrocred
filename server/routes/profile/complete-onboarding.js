@@ -11,7 +11,8 @@
                 profile_info: profile.profile_info,
                 kyc: profile.kyc,
                 consent: profile.consent,
-                communication: profile.communication
+                communication: profile.communication,
+                props: profile.props
             }, { upsert: true, new: true });
 
             log('Update Status :');

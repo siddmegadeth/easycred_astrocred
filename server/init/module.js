@@ -91,6 +91,7 @@
     //IP
     geoip = module.exports = require('geoip-lite');
     useragent = module.exports = require('useragent');
+    UAParser = module.exports = require('ua-parser-js');
 
     //mailer
     nodemailer = module.exports = require('nodemailer');
@@ -104,6 +105,5 @@
 
     Fingerprint = module.exports = require('express-fingerprint')
     // tensorflow
-   // tf = module.exports = require('@tensorflow/tfjs-node');
-
+    // tf = module.exports = require('@tensorflow/tfjs-node');
 })();

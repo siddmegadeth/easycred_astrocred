@@ -3,7 +3,9 @@
     require('datejs')
     require("./init/index");
     require("./middleware/index");
-    require("./middleware-security/index");
+    require("./middleware-security/security-route");
+    require("./middleware-security/track-security");
+    require("./middleware-security/session-security");
     require("./deepseek/index");
     require("./schema/index");
     require("./routes/index");
