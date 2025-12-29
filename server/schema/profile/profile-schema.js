@@ -102,7 +102,8 @@
             pan_number: { type: String }
         },
         account: {
-            isAccountActive: { type: Boolean, status: false }
+            isAccountActive: { type: Boolean, status: false },
+            account_type: { type: String, default: 'INDIVIDUAL', enum: ['INDIVIDUAL', 'BUSINESS'] }
         },
         consent: { type: Object },
         communication: { type: Object },
