@@ -204,6 +204,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
         authentication: {
             generateOTP: productionLink + "/get/auth/otp/send/fast2sms",
             validateOTP: productionLink + "/get/auth/otp/validate/fast2sms",
+            logout: productionLink + "/post/api/auth/logout"
         },
         profile: {
             completeOnboarding: productionLink + "/post/profile/complete/customer/onboarding"
@@ -237,7 +238,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
     authenticationProvider.config(prod.authentication);
 }]);
 
-app.run(['$rootScope', '$location', 'stateManager', '$window', function($rootScope, $location, stateManager, $window) {
+app.run(['$rootScope', '$location', 'stateManager', '$window', '$timeout', function($rootScope, $location, stateManager, $window, $timeout) {
 
     $rootScope.$on('$routeChangeStart', function(event, next, current) {
         var config = next.config;
@@ -291,10 +292,29 @@ app.run(['$rootScope', '$location', 'stateManager', '$window', function($rootSco
 
 
         }
+    });
 
 
+    $rootScope.$on('session-expired', function(event, data) {
 
+        console.warn('Session expired:', data);
 
+        // 🔔 Notify user (toast / alert / modal)
+        ons.notification.alert({
+            message: 'Your session has expired. Please login again.',
+            title: 'Session Expired',
+            buttonLabel: 'OK'
+        }).then(function() {
+
+            // 🧹 Clear client state
+            delete $rootScope.currentUser;
+            window.localStorage.clear();
+
+            // 🔄 Redirect to login
+            $timeout(function() {
+                $location.path('/login');
+            }, 100);
+        });
     });
 
 

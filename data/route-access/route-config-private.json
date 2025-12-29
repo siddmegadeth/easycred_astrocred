@@ -108,13 +108,17 @@
         "methods": [
             "GET"
         ]
-
     },
     {
         "path": "/api/auth/me",
         "methods": [
             "GET"
         ]
-
+    },
+    {
+        "path": "/post/api/auth/logout",
+        "methods": [
+            "GET"
+        ]
     }]
 }

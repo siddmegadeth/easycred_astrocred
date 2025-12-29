@@ -1,4 +1,4 @@
-app.controller('navbarCtrl', ['$location', '$timeout', '$scope', 'stateManager', '$rootScope', function($location, $timeout, $scope, stateManager, $rootScope) {
+app.controller('navbarCtrl', ['$location', '$timeout', '$scope', 'stateManager', '$rootScope', 'authentication', function($location, $timeout, $scope, stateManager, $rootScope, authentication) {
 
     $timeout(function() {
 
@@ -6,7 +6,7 @@ app.controller('navbarCtrl', ['$location', '$timeout', '$scope', 'stateManager',
             warn('init-navbar');
         });
 
-       
+
     });
 
 
@@ -17,8 +17,13 @@ app.controller('navbarCtrl', ['$location', '$timeout', '$scope', 'stateManager',
     };
 
     $scope.logout = function() {
-        stateManager.clearLocalStorage();
-        $location.path("login");
+        authentication.logout()
+            .then(function(resp) {
+                warn('Logout :');
+                log(resp);
+                stateManager.clearLocalStorage();
+                $location.path("login");
+            });
     }
 
 

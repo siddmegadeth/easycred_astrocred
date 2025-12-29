@@ -16,24 +16,24 @@ app.service('httpTimeoutInterceptors', ['$timeout', '$rootScope', function($time
 
 }]);
 
+
+
 app.service('httpInterceptors', [
     '$timeout',
     '$rootScope',
     '$q',
-    function($timeout, $rootScope, $q) {
+    function ($timeout, $rootScope, $q) {
 
         var numLoadings = 0;
+        var isLoggingOut = false; // 🔐 prevent multiple triggers
 
         return {
 
-            request: function(config) {
+            request: function (config) {
 
                 config.timeout = 18000;
-
-                // 🔐 REQUIRED: send session cookie
                 config.withCredentials = true;
 
-                // ⚠️ OPTIONAL: keep JWT ONLY if backend expects it
                 if (window.localStorage.easycred_astro_access_token) {
                     config.headers = config.headers || {};
                     config.headers.Authorization =
@@ -49,7 +49,7 @@ app.service('httpInterceptors', [
                 return config;
             },
 
-            response: function(response) {
+            response: function (response) {
 
                 if ((--numLoadings) === 0) {
                     $rootScope.$broadcast("loader_hide");
@@ -60,11 +60,14 @@ app.service('httpInterceptors', [
                 return response;
             },
 
-            responseError: function(response) {
+            responseError: function (response) {
 
-                if (response.status === 401 || response.status === 440) {
-                    // 🔥 SESSION EXPIRED / INVALID
-                    $rootScope.$emit('force-logout', {
+                if (!isLoggingOut &&
+                    (response.status === 401 || response.status === 440)) {
+
+                    isLoggingOut = true;
+
+                    $rootScope.$emit('session-expired', {
                         reason: 'SESSION_EXPIRED'
                     });
                 }
@@ -79,7 +82,7 @@ app.service('httpInterceptors', [
                 return $q.reject(response);
             },
 
-            requestError: function(rejection) {
+            requestError: function (rejection) {
 
                 $rootScope.$broadcast("loader_hide");
                 $rootScope.$broadcast("progress_loader_hide");

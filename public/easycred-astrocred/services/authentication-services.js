@@ -14,6 +14,12 @@ app.provider('authentication', [function() {
                         withCredentials: true
                     })
                 },
+                logout: function() {
+                    return $http({
+                        method: 'POST',
+                        url: authURL.logout
+                    })
+                },
                 generateWABusinessOtp: function(mobile) {
                     return $http({
                         method: 'GET',
