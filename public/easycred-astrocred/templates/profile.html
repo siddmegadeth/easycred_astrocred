@@ -39,27 +39,27 @@
                             </div>
                             <div class="info-item">
                                 <div class="info-label">Email Address</div>
-                                <div class="info-value">{{profile.profile_info.email}}</div>
+                                <div class="info-value left-float ">{{profile.profile_info.email}}</div>
                                 <span class="status-badge status-verified" ng-if="profile.profile_info.isEmailAdded">Verified</span>
                             </div>
                             <div class="info-item">
                                 <div class="info-label">Mobile Number</div>
-                                <div class="info-value">{{profile.profile_info.mobile}}</div>
+                                <div class="info-value left-float ">{{profile.profile_info.mobile}}</div>
                                 <span class="status-badge status-verified" ng-if="profile.profile_info.isMobileAdded">Verified</span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="info-item">
                                 <div class="info-label">Date of Birth</div>
-                                <div class="info-value">{{profile.kyc.pancard.date_of_birth}}</div>
+                                <div class="info-value">{{profile.profile_info.date_of_birth|date:'short'}}</div>
                             </div>
                             <div class="info-item">
                                 <div class="info-label">Gender</div>
-                                <div class="info-value">{{profile.juspay_profile.gender}}</div>
+                                <div class="info-value">{{profile.profile_info.gender}}</div>
                             </div>
                             <div class="info-item">
                                 <div class="info-label">Marital Status</div>
-                                <div class="info-value">{{profile.juspay_profile.maritalStatus}}</div>
+                                <div class="info-value">{{profile.profile_info.maritalStatus}}</div>
                             </div>
                         </div>
                     </div>
@@ -74,29 +74,29 @@
                 <div class="card-body">
                     <div class="info-item">
                         <div class="info-label">Address Line 1</div>
-                        <div class="info-value">{{profile.profile_info.address.address_line_1}}</div>
+                        <div class="info-value">{{profile.props.addressLine1}}</div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Address Line 2</div>
-                        <div class="info-value">{{profile.profile_info.address.address_line_2}}</div>
+                        <div class="info-value">{{profile.props.addressLine2}}</div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="info-item">
                                 <div class="info-label">City</div>
-                                <div class="info-value">{{profile.profile_info.address.city}}</div>
+                                <div class="info-value">{{profile.props.city}}</div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="info-item">
                                 <div class="info-label">State</div>
-                                <div class="info-value">{{profile.profile_info.address.state}}</div>
+                                <div class="info-value">{{profile.props.state}}</div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="info-item">
                                 <div class="info-label">Pincode</div>
-                                <div class="info-value">{{profile.profile_info.address.pincode}}</div>
+                                <div class="info-value">{{profile.props.pincode}}</div>
                             </div>
                         </div>
                     </div>
@@ -112,21 +112,21 @@
                         <div class="col-md-6">
                             <div class="info-item">
                                 <div class="info-label">Employment Type</div>
-                                <div class="info-value">{{profile.juspay_profile.employmentType}}</div>
+                                <div class="info-value">{{profile.profile_info.employmentType}}</div>
                             </div>
                             <div class="info-item">
                                 <div class="info-label">Monthly Income</div>
-                                <div class="info-value">{{profile.juspay_profile.monthlyIncome | currency: '₹'}}</div>
+                                <div class="info-value">{{profile.profile_info.monthlyIncome | currency: '₹'}}</div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="info-item">
                                 <div class="info-label">Currency</div>
-                                <div class="info-value">{{profile.common.currency.code}} ({{profile.common.currency.name}})</div>
+                                <div class="info-value">{{profile.telemetric.currency.code}} ({{profile.common.currency.name}})</div>
                             </div>
                             <div class="info-item">
                                 <div class="info-label">Country</div>
-                                <div class="info-value">{{profile.common.countryCode.name}} ({{profile.common.countryCode.iso2}})</div>
+                                <div class="info-value">{{profile.telemetric.country_code.name}} ({{profile.telemetric.country_code.iso2}})</div>
                             </div>
                         </div>
                     </div>
@@ -151,19 +151,19 @@
                     <div class="info-item">
                         <div class="info-label">PAN Card</div>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="info-value">{{profile.kyc.pancard.pan_card}}</span>
-                            <span class="status-badge status-verified" ng-if="profile.kyc.isPANVerified">Verified</span>
+                            <span class="info-value">{{profile.kyc.pan_number}}</span>
+                            <span class="status-badge status-verified" ng-if="profile.kyc.isPanVerified">Verified</span>
+                            <span class="status-badge status-verified" ng-if="!profile.kyc.isPanVerified">Not Verified</span>
                         </div>
-                        <small class="text-muted">DOB: {{profile.kyc.pancard.date_of_birth}}</small>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Aadhaar Card</div>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="info-value">•••• •••• •••• {{profile.kyc.aadhar.aadhar_card.slice(-4)}}</span>
+                            <span class="info-value">•••• •••• •••• {{profile.kyc.aadhaar_number.slice(-4)}}</span>
                             <span class="status-badge status-verified" ng-if="profile.kyc.isAadharVerified">Verified</span>
                         </div>
                     </div>
-                    <div class="info-item">
+                    <!-- <div class="info-item">
                         <div class="info-label">PAN-Aadhaar Linking</div>
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="info-value">{{profile.kyc.pancard.verification.aadhaar_seeding_status === 'y' ? 'Linked' : 'Not Linked'}}</span>
@@ -171,7 +171,7 @@
                                 {{profile.kyc.pancard.verification.aadhaar_seeding_status === 'y' ? 'Linked' : 'Pending'}}
                             </span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <!-- Account Information -->
@@ -182,13 +182,13 @@
                 <div class="card-body">
                     <div class="info-item">
                         <div class="info-label">Account Type</div>
-                        <div class="info-value">{{profile.type.profileType | titlecase}}</div>
+                        <div class="info-value">INDIVIDUAL</div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Customer ID</div>
-                        <div class="info-value">{{profile.universal_customer_id}}</div>
+                        <div class="info-value">{{profile.customerId}}</div>
                     </div>
-                    <div class="info-item">
+                    <!-- <div class="info-item">
                         <div class="info-label">MMTC Account</div>
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="info-value">{{profile.mmtc.customerRefNo ? 'Active' : 'Inactive'}}</span>
@@ -196,7 +196,7 @@
                                 {{profile.mmtc.is_account_active ? 'Active' : 'Inactive'}}
                             </span>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="info-item">
                         <div class="info-label">Profile Created</div>
                         <div class="info-value">{{profile.created_at | date:'mediumDate'}}</div>
@@ -208,7 +208,7 @@
                 </div>
             </div>
             <!-- Quick Stats -->
-            <div class="card">
+            <!-- <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Profile Completion</h5>
                 </div>
@@ -257,7 +257,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
@@ -299,7 +299,6 @@
     --astrocred-warning: #f39c12;
     --astrocred-danger: #e74c3c;
 }
-
 
 
 .profile-header {
@@ -389,12 +388,13 @@
 
 .status-badge {
     display: inline-block;
-    padding: 5px 12px;
-    border-radius: 20px;
+    padding: 4px 8px;
+    border-radius: 5px;
     font-size: 0.8rem;
     font-weight: 600;
     margin-right: 8px;
     margin-bottom: 5px;
+
 }
 
 .status-active {
@@ -432,6 +432,76 @@
     background-clip: text;
     color: transparent;
 }
+
+
+.left-float {
+    width: 310px !important;
+    float: left;
+    overflow: hidden;
+    /* Hides the overflowing content */
+    white-space: nowrap;
+    /* Prevents the text from wrapping to a new line */
+    text-overflow: ellipsis;
+    /* Displays "..." for clipped text */
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .left-float {
+        width: 209px !important;
+        float: left;
+        overflow: hidden;
+        /* Hides the overflowing content */
+        white-space: nowrap;
+        /* Prevents the text from wrapping to a new line */
+        text-overflow: ellipsis;
+        /* Displays "..." for clipped text */
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-right: 8px;
+        margin-bottom: 5px;
+    }
+
+}
+
+@media (min-width: 782px) {
+
+    .left-float {
+        width: 240px !important;
+        float: left;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+}
+
+@media (min-width: 972px) {
+
+    .left-float {
+        width: 202px !important;
+        float: left;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+}
+
+
+@media (min-width: 1070px) {
+
+    .left-float {
+        width: 320px !important;
+        float: left;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+}
 </style>
-<script>
-</script>
