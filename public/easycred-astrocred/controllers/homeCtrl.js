@@ -1,4 +1,4 @@
-app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', '$location', function($scope, $rootScope, $timeout, stateManager, $location) {
+app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', '$location','authentication', function($scope, $rootScope, $timeout, stateManager, $location,authentication) {
 
 
 
@@ -33,7 +33,11 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
             error('request_error');
             $scope.loader.hide();
         });
-
+        authentication.getMe()
+            .then(function(resp) {
+                warn('getMe :');
+                log(resp);
+            })
 
     });
 

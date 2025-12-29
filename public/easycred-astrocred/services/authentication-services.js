@@ -9,6 +9,11 @@ app.provider('authentication', [function() {
         },
         $get: ['$http', function($http) {
             return {
+                getMe: function() {
+                    return $http.get('/api/auth/me', {
+                        withCredentials: true
+                    })
+                },
                 generateWABusinessOtp: function(mobile) {
                     return $http({
                         method: 'GET',
@@ -30,7 +35,7 @@ app.provider('authentication', [function() {
                     })
 
                 },
-                generateOTP: function(mobile,telemetric) {
+                generateOTP: function(mobile, telemetric) {
                     return $http({
                         method: 'GET',
                         url: authURL.generateOTP,

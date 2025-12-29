@@ -9,11 +9,6 @@
             index: true,
             sparse:true
         },
-        mobile: {
-            type: String,
-            unique: true,
-            index: true
-        },
         sessionId: {
             type: String,
             index: true

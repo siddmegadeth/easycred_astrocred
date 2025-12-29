@@ -48,10 +48,12 @@
 
             req.session.userId = mobile;
             req.session.mobile = mobile;
+            req.session.sessionID = req.sessionID;
             req.session.isAuthenticated = true;
             req.session.loginTime = new Date();
             req.session.device = req.headers['user-agent'];
             req.session.ip = req.ip;
+            log('SESSION AFTER OTP:', req.session);
 
             /* ===========================
                JWT (Stateless Auth)
@@ -67,7 +69,7 @@
                 token, {
                     httpOnly: true,
                     secure: true,
-                    sameSite: 'none',
+                    sameSite: 'lax',
                     maxAge: 15 * 60 * 1000
                 }
             );

@@ -14,7 +14,7 @@
     app.use(bodyParser.urlencoded({ limit: "100mb", extended: true, parameterLimit: 100000 }));
     app.set("PORT", process.env.PORT_NUMBER_SERVER || process.env.PORT);
     app.set('host', process.env.NODE_IP || 'localhost');
-    
+
     // Configure EJS view engine
     var path = require('path');
     app.set('view engine', 'ejs');
@@ -30,8 +30,14 @@
     app.use(timeout(120000));
     app.use(cookieParser())
 
-    app.options('*', cors());
-    app.use(cors());
+    //app.options('*', cors());
+    app.use(cors({
+        origin: function(origin, callback) {
+            callback(null, true);
+        },
+        credentials: true
+    }));
+
     //app.use(cookieParser());
 
 })()
