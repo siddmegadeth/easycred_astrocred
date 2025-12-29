@@ -300,21 +300,18 @@ app.run(['$rootScope', '$location', 'stateManager', '$window', '$timeout', funct
         console.warn('Session expired:', data);
 
         // 🔔 Notify user (toast / alert / modal)
-        ons.notification.alert({
+        log({
             message: 'Your session has expired. Please login again.',
             title: 'Session Expired',
-            buttonLabel: 'OK'
-        }).then(function() {
+        })
+        // 🧹 Clear client state
+        delete $rootScope.currentUser;
+        window.localStorage.clear();
 
-            // 🧹 Clear client state
-            delete $rootScope.currentUser;
-            window.localStorage.clear();
-
-            // 🔄 Redirect to login
-            $timeout(function() {
-                $location.path('login');
-            }, 100);
-        });
+        // 🔄 Redirect to login
+        $timeout(function() {
+            $location.path('login');
+        }, 100);
     });
 
 
