@@ -101,6 +101,9 @@
             aadhaar_number: { type: String },
             pan_number: { type: String }
         },
+        account: {
+            isAccountActive: { type: Boolean, status: false }
+        },
         consent: { type: Object },
         communication: { type: Object },
         telemetric: { type: Object }

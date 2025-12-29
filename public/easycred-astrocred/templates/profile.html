@@ -14,10 +14,12 @@
                     <i class="fas fa-phone me-2 ms-3"></i>{{profile.profile_info.mobile}}
                 </p>
                 <div class="d-flex flex-wrap">
-                    <span class="status-badge status-completed">Profile Completed</span>
-                    <span class="status-badge status-verified">KYC Verified</span>
-                    <span class="status-badge status-active">Active Account</span>
-                    <span class="status-badge">{{profile.type.profileType}}</span>
+                    <span class="status-badge status-completed" ng-if="profile.profile_info.isProfileCompleted">Profile Completed</span>
+                    <span class="status-badge status-pending" ng-if="!profile.profile_info.isProfileCompleted">Profile Not Completed</span>
+                    <span class="status-badge status-verified" ng-if="profile.kyc.isKYCCompleted">KYC Verified</span>
+                    <span class="status-badge status-pending" ng-if="!profile.kyc.isKYCCompleted">KYC Not Verified</span>
+                    <span class="status-badge status-active" ng-if="profile.account.isAccountActive">Account Active</span>
+                    <span class="status-badge status-inactive" ng-if="!profile.account.isAccountActive">Account Inactive</span>
                 </div>
             </div>
         </div>
