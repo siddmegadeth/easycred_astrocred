@@ -258,24 +258,29 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
         if (Object.keys($scope.errors).length > 0) {
             return;
         } else {
-            // Simulate API call
+
+
+            warn('Final Profile :');
+            log($scope.profile);
+            //Simulate API call
             if ($scope.validateEmail($scope.profile.profile_info.email) && $scope.validateMobile($scope.profile.profile_info.mobile) && $scope.validateDOB($scope.profile.profile_info.date_of_birth) && $scope.validatePincode($scope.profile.props.pincode)) {
                 $scope.profile.profile_info.isProfileCompleted = true;
                 $scope.profile.isOnboardingComplete = true;
 
-                $timeout(function() {
-                    $scope.isSubmitting = true;
-                    $scope.isComplete = false;
-                    profileOperations.completeOnboarding($scope.profile)
-                        .then(function(resp) {
-                            warn('completeOnboarding :');
-                            log(resp);
-                            stateManager.saveProfile(resp.data.data);
-                            $scope.isSubmitting = false;
-                            $scope.isComplete = true;
-                            log('Profile submitted:', $scope.isComplete);
-                        });
-                });
+                $scope.isSubmitting = true;
+                $scope.isComplete = false;
+                profileOperations.completeOnboarding($scope.profile)
+                    .then(function(resp) {
+                        warn('completeOnboarding :');
+                        log(resp);
+                        stateManager.saveProfile(resp.data.data);
+                        $scope.isSubmitting = false;
+                        $scope.isComplete = true;
+                        log('Profile submitted:', $scope.isComplete);
+                        $scope.profile = resp.data.data;
+
+
+                    });
             } else {
                 alert('Profile Such Email/Mobile/Address Is Not Valid');
             }
@@ -285,8 +290,11 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
     };
 
     $scope.goToDashboard = function() {
-        alert('Redirecting to dashboard...');
+        log('Redirecting to dashboard...');
         // In real app: window.location.href = '#/dashboard';
+        $timeout(function() {
+            $location.path("home");
+        }, 500);
     };
 
 

@@ -294,10 +294,10 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-between mt-4">
-                    <button class="btn btn-outline-primary" ng-click="goToStep(3)" ng-disabled="isSubmitting">
+                    <button class="btn btn-outline-primary" ng-click="goToStep(3)" ng-disabled="profile.isOnboardingComplete">
                         <i class="fas fa-arrow-left me-2"></i> Previous
                     </button>
-                    <button class="btn btn-primary" ng-click="submitProfile()" ng-disabled="isSubmitting">
+                    <button class="btn btn-primary" ng-click="submitProfile()" ng-disabled="profile.isOnboardingComplete">
                         <span class="loading-spinner"></span>
                         {{isSubmitting ? 'Submitting...' : 'Complete Profile'}}
                     </button>

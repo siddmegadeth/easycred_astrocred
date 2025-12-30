@@ -6,13 +6,15 @@
             log(profile);
 
             var isUpdated = await ProfileModel.findOneAndUpdate({ mobile: profile.mobile }, {
-                customerId: profile.customerId,
                 isOnboardingComplete: true,
                 profile_info: profile.profile_info,
                 kyc: profile.kyc,
                 consent: profile.consent,
                 communication: profile.communication,
-                props: profile.props
+                props: profile.props,
+                account: {
+                    isAccountActive: true
+                }
             }, { upsert: true, new: true });
 
             log('Update Status :');

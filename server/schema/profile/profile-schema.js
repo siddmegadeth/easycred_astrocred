@@ -88,12 +88,12 @@
                 default: false
             },
             date_of_birth: { type: Date },
-            props: Object,
             isProfileCompleted: {
                 type: Boolean,
                 default: false
             }
         },
+        props: Object,
         kyc: {
             isKYCCompleted: { type: Boolean, default: false },
             isAadharVerified: { type: Boolean, default: false },
