@@ -33,7 +33,7 @@
                 <div class="row g-3">
                     <!-- Full Name -->
                     <div class="col-md-6">
-                        <label class="form-label required">Full Name</label>
+                        <label class="form-label required">Full Name (As Per PAN Card)</label>
                         <input type="text" class="form-control" ng-model="profile.profile_info.fullname" ng-class="{'is-invalid': errors.fullname, 'is-valid': profile.profile_info.fullname && !errors.fullname}" placeholder="Enter your full name" required>
                         <div class="validation-error" ng-class="{'show': errors.fullname}">
                             {{errors.fullname}}
@@ -58,28 +58,7 @@
                             {{errors.mobile}}
                         </div>
                     </div>
-                    <!-- Date of Birth -->
-                    <div class="col-md-6">
-                        <label class="form-label required">Date of Birth</label>
-                        <input type="date" class="form-control" ng-model="profile.profile_info.date_of_birth" ng-class="{'is-invalid': errors.date_of_birth, 'is-valid': profile.profile_info.date_of_birth && !errors.date_of_birth && validateDOB(profile.profile_info.date_of_birth)}" max="{{maxDOBDate}}" required>
-                        <div class="validation-error" ng-class="{'show': errors.date_of_birth}">
-                            {{errors.dob}}
-                        </div>
-                        <div class="info-text">Must be 18+ years old</div>
-                    </div>
-                    <!-- Gender -->
-                    <div class="col-md-6">
-                        <label class="form-label required">Gender</label>
-                        <select class="form-select" ng-model="profile.profile_info.gender" ng-class="{'is-invalid': errors.gender, 'is-valid': profile.profile_info.gender}">
-                            <option value="">Select Gender</option>
-                            <option value="MALE">Male</option>
-                            <option value="FEMALE">Female</option>
-                            <option value="OTHER">Other</option>
-                        </select>
-                        <div class="validation-error" ng-class="{'show': errors.gender}">
-                            {{errors.gender}}
-                        </div>
-                    </div>
+                    
                     <!-- Marital Status -->
                     <div class="col-md-6">
                         <label class="form-label required">Marital Status</label>
@@ -125,6 +104,28 @@
                             {{errors.monthlyIncome}}
                         </div>
                     </div>
+                    <!-- Date of Birth -->
+                    <!-- <div class="col-md-6">
+                        <label class="form-label required">Date of Birth</label>
+                        <input type="date" class="form-control" ng-model="profile.profile_info.date_of_birth" ng-class="{'is-invalid': errors.date_of_birth, 'is-valid': profile.profile_info.date_of_birth && !errors.date_of_birth && validateDOB(profile.profile_info.date_of_birth)}" max="{{maxDOBDate}}" required>
+                        <div class="validation-error" ng-class="{'show': errors.date_of_birth}">
+                            {{errors.dob}}
+                        </div>
+                        <div class="info-text">Must be 18+ years old</div>
+                    </div> -->
+                    <!-- Gender -->
+                    <!-- <div class="col-md-6">
+                        <label class="form-label required">Gender</label>
+                        <select class="form-select" ng-model="profile.profile_info.gender" ng-class="{'is-invalid': errors.gender, 'is-valid': profile.profile_info.gender}">
+                            <option value="">Select Gender</option>
+                            <option value="MALE">Male</option>
+                            <option value="FEMALE">Female</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                        <div class="validation-error" ng-class="{'show': errors.gender}">
+                            {{errors.gender}}
+                        </div>
+                    </div> -->
                 </div>
                 <div class="d-flex justify-content-between mt-4">
                     <button class="btn btn-outline-primary" disabled>Previous</button>
@@ -219,7 +220,7 @@
                     <div class="col-md-6">
                         <div class="mt-3">
                             <label class="form-label required">PAN Number</label>
-                            <input type="text" class="form-control text-uppercase" ng-model="profile.kyc.pan_number" ng-class="{'is-invalid': errors.pan_number, 'is-valid': profile.kyc.pan_number && !errors.pan_number && validatePAN(profile.kyc.pan_number)}" placeholder="ABCDE1234F" maxlength="10">
+                            <input disabled type="text" class="form-control text-uppercase" ng-model="profile.kyc.pan_number" ng-class="{'is-invalid': errors.pan_number, 'is-valid': profile.kyc.pan_number && !errors.pan_number && validatePAN(profile.kyc.pan_number)}" placeholder="ABCDE1234F" maxlength="10">
                             <div class="validation-error" ng-class="{'show': errors.pan_number}">
                                 {{errors.pan_number}}
                             </div>
@@ -229,7 +230,7 @@
                     <div class="col-md-6">
                         <div class="mt-3">
                             <label class="form-label required">Aadhaar Number</label>
-                            <input type="text" class="form-control" ng-model="profile.kyc.aadhaar_number" ng-class="{'is-invalid': errors.aadhaar_number, 'is-valid': profile.kyc.aadhaar_number && !errors.aadhaar_number && validateAadhaar(profile.kyc.aadhaar_number)}" placeholder="12-digit Aadhaar number" maxlength="12">
+                            <input disabled type="text" class="form-control" ng-model="profile.kyc.aadhaar_number_masked" ng-class="{'is-invalid': errors.aadhaar_number, 'is-valid': profile.kyc.aadhaar_number_masked && !errors.aadhaar_number_masked}" placeholder="12-digit Aadhaar number" maxlength="12">
                             <div class="validation-error" ng-class="{'show': errors.aadhaar_number}">
                                 {{errors.aadhaar_number}}
                             </div>

@@ -35,12 +35,11 @@ app.provider('surePass', [function() {
                         }
                     })
                 },
-                KYCMobileToPAN: function(profile, mobile, fullname) {
+                getPanFromMobile: function(mobile, fullname) {
                     return $http({
                         method: 'GET',
-                        url: creditURL.KYCMobileToPAN,
+                        url: creditURL.getPanFromMobile,
                         params: {
-                            profile: profile,
                             mobile: mobile,
                             fullname: fullname
                         }
@@ -53,6 +52,15 @@ app.provider('surePass', [function() {
                         params: {
                             profile: profile,
                             pan_number: pan_number
+                        }
+                    })
+                },
+                panComprehensive: function(pan_number) {
+                    return $http({
+                        method: 'GET',
+                        url: creditURL.panComprehensive,
+                        params: {
+                            id_number: pan_number
                         }
                     })
                 },

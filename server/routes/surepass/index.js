@@ -11,5 +11,6 @@
     require("./kyc-doc-pan-aadhar-mobile");
     require("./mobile-multiple-upi");
     require("./mobile-bank");
+    require("./pan-comprehensive");
 
 })();

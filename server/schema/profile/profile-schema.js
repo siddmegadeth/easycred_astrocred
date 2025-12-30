@@ -95,15 +95,22 @@
         },
         props: Object,
         kyc: {
+            aadhaar_seeding_status: { type: String },
             isKYCCompleted: { type: Boolean, default: false },
             isAadharVerified: { type: Boolean, default: false },
             isPanVerified: { type: Boolean, default: false },
             aadhaar_number: { type: String },
-            pan_number: { type: String }
+            aadhaar_linked: { type: String },
+            aadhaar_number_masked: { type: String },
+            pan_number: { type: String },
+            pan_advance: { type: Object },
+            aadhar_advance: { type: Object },
+            dob_verified: { type: Object }
         },
         account: {
             isAccountActive: { type: Boolean, status: false },
-            account_type: { type: String, default: 'INDIVIDUAL', enum: ['INDIVIDUAL', 'BUSINESS'] }
+            account_type: { type: String, default: 'INDIVIDUAL', enum: ['INDIVIDUAL', 'BUSINESS'] },
+            category: { type: String }
         },
         consent: { type: Object },
         communication: { type: Object },

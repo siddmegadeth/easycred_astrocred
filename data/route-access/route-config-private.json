@@ -120,5 +120,11 @@
         "methods": [
             "GET"
         ]
+    },
+    {
+        "path": "/get/surepass/pan/comprehensive/from/mobile",
+        "methods": [
+            "POST"
+        ]
     }]
 }

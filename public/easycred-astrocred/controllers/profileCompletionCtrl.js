@@ -1,4 +1,4 @@
-app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'stateManager', '$rootScope', 'profileOperations', 'utility', function($location, $timeout, $scope, stateManager, $rootScope, profileOperations, utility) {
+app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'stateManager', '$rootScope', 'profileOperations', 'utility', 'surePass', function($location, $timeout, $scope, stateManager, $rootScope, profileOperations, utility, surePass) {
 
     $timeout(function() {
         warn('Init profileCompletionCtrl Ready');
@@ -31,8 +31,6 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
             $scope.profile.props = {};
             $scope.profile.kyc = {};
 
-
-
             // $scope.profile.consent = {
             //     terms: false,
             //     aadhaar: false,
@@ -40,7 +38,6 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
             // };
 
             $scope.profile = stateManager.getProfile();
-
             $scope.profile.consent = {};
             $scope.profile.consent.terms = false;
             $scope.profile.consent.aadhaar = false;
@@ -72,6 +69,14 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
         }
     });
 
+    $scope.fetchPANFromMobile = function(mobile, fullname) {
+        warn('fetchPANFromMobile :');
+        surePass.getPanFromMobile(mobile, fullname)
+            .then(function(resp) {
+                warn('getPanFromMobile :');
+                log(resp);
+            });
+    };
 
     $scope.initLoginMobile = function() {
         const input = document.getElementById("mobileNumber");
@@ -154,13 +159,13 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
             $scope.profile.profile_info.isMobileAdded = true;
         }
 
-        if (!$scope.profile.profile_info.date_of_birth || !$scope.validateDOB($scope.profile.profile_info.date_of_birth)) {
-            $scope.errors.date_of_birth = 'You must be at least 18 years old';
-        }
+        // if (!$scope.profile.profile_info.date_of_birth || !$scope.validateDOB($scope.profile.profile_info.date_of_birth)) {
+        //     $scope.errors.date_of_birth = 'You must be at least 18 years old';
+        // }
 
-        if (!$scope.profile.profile_info.gender) {
-            $scope.errors.gender = 'Please select your gender';
-        }
+        // if (!$scope.profile.profile_info.gender) {
+        //     $scope.errors.gender = 'Please select your gender';
+        // }
 
         if (!$scope.profile.profile_info.maritalStatus) {
             $scope.errors.maritalStatus = 'Please select marital status';
@@ -176,9 +181,39 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
 
 
 
+
         if (Object.keys($scope.errors).length === 0) {
+            warn('No Error Found. Move To Next Step');
             $scope.profile.isProfileCompleted = true;
-            $scope.goToStep(2);
+            surePass.getPanFromMobile($scope.profile.mobile, $scope.profile.profile_info.fullname)
+                .then(function(resp) {
+                    warn('getPanFromMobile :');
+                    log(resp);
+                    $scope.profile.kyc.pan_number = resp.data.data.pan_number;
+                    $scope.profile.kyc.aadhaar_seeding_status = resp.data.data_advance.aadhaar_seeding_status;
+                    $scope.profile.kyc.pan_advance = resp.data.data_advance;
+                    $scope.profile.kyc.aadhaar_number_masked = resp.data.data_advance.pan_details.masked_aadhaar;
+                    $scope.profile.kyc.aadhaar_linked = resp.data.data_advance.pan_details.aadhaar_linked;
+                    $scope.profile.kyc.father_name = resp.data.data_advance.pan_details.father_name;
+                    $scope.profile.kyc.dob_verified = resp.data.data_advance.pan_details.dob_verified;
+                    //
+                    $scope.profile.account.category = resp.data.data_advance.pan_details.category;
+                    //
+                    $scope.profile.profile_info.date_of_birth = resp.data.data_advance.pan_details.dob;
+
+                    if (resp.data.data_advance.pan_details.gender == 'M') {
+                        $scope.profile.profile_info.gender = "MALE";
+                    } else if (resp.data.data_advance.pan_details.gender == 'F') {
+                        $scope.profile.profile_info.gender = "FEMALE";
+                    } else {
+                        $scope.profile.profile_info.gender = "OTHER";
+                    }
+
+                    $scope.profile.kyc.isPanVerified = true;
+                    warn('Final Profile Before Step 2 :');
+                    log($scope.profile);
+                    $scope.goToStep(2);
+                });
         }
     };
 
@@ -221,8 +256,9 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
         } else {
             $scope.profile.kyc.isPanVerified = true;
         }
+        //if (!$scope.profile.kyc.aadhaar_number || !utility.validateAadharNumber($scope.profile.kyc.aadhaar_number)) {
 
-        if (!$scope.profile.kyc.aadhaar_number || !utility.validateAadharNumber($scope.profile.kyc.aadhaar_number)) {
+        if (!$scope.profile.kyc.aadhaar_number_masked) {
             $scope.errors.aadhaar_number = 'Please enter a valid 12-digit Aadhaar number';
         } else {
             $scope.profile.kyc.isAadharVerified = true;
@@ -258,8 +294,6 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
         if (Object.keys($scope.errors).length > 0) {
             return;
         } else {
-
-
             warn('Final Profile :');
             log($scope.profile);
             //Simulate API call

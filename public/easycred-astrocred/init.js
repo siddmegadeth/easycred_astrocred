@@ -224,11 +224,12 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             cibil: productionLink + "/get/check/credit/report/cibil",
             equifax: productionLink + "/get/check/credit/report/equifax",
             experion: productionLink + "/get/check/credit/report/experion",
-            KYCMobileToPAN: productionLink + "/get/surepass/kyc/pan/from/mobile",
             kycPanPlus: productionLink + "/get/surepass/kyc/pan/plus",
             KYCPanToAadhar: productionLink + "/get/surepass/kyc/aadhar/from/pan",
             KYCAllFromMobile: productionLink + "/get/surepass/pan/aadhar/from/mobile",
-            mobileToMultipleUPI: productionLink + "/get/surepass/mobile/to/multiple/upi"
+            mobileToMultipleUPI: productionLink + "/get/surepass/mobile/to/multiple/upi",
+            panComprehensive : productionLink + "/get/surepass/pan/comprehensive/from/mobile",
+            getPanFromMobile : productionLink + "/get/surepass/pan/from/mobile"
         }
     };
     profileOperationsProvider.config(prod.profile);
