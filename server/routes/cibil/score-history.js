@@ -7,7 +7,15 @@
             required: true,
             index: true
         },
+        pan: {
+            type: String,
+            index: true
+        },
         mobile: {
+            type: String,
+            index: true
+        },
+        email: {
             type: String,
             index: true
         },
@@ -36,24 +44,34 @@
 
     var ScoreHistoryModel = mongoose.model('ScoreHistoryModel', ScoreHistorySchema);
 
-    // Get score history for a client
-    app.get('/get/api/cibil/score-history/:client_id', async function(req, res) {
+    // Get score history by multiple identifiers (pan, mobile, or email)
+    app.get('/get/api/cibil/score-history', async function(req, res) {
         try {
-            log('/get/api/cibil/score-history/:client_id');
-            var client_id = req.params.client_id;
+            log('/get/api/cibil/score-history');
+            var { pan, mobile, email, client_id } = req.query;
             
-            if (!client_id) {
-                return res.status(400).json({ error: 'client_id is required' });
+            // Validate at least one identifier is provided
+            if (!pan && !mobile && !email && !client_id) {
+                return res.status(400).json({ 
+                    error: 'Please provide at least one identifier (pan, mobile, email, or client_id)' 
+                });
             }
+            
+            // Build query based on provided identifiers
+            var query = {};
+            if (client_id) query.client_id = client_id;
+            if (pan) query.pan = pan;
+            if (mobile) query.mobile = mobile;
+            if (email) query.email = email;
 
-            var history = await ScoreHistoryModel.findOne({ client_id: client_id });
+            var history = await ScoreHistoryModel.findOne(query);
             
             if (!history) {
                 return res.json({ 
                     success: true, 
-                    client_id: client_id,
+                    identifiers: { pan, mobile, email, client_id },
                     scores: [],
-                    message: 'No history found for this client'
+                    message: 'No history found for the provided identifiers'
                 });
             }
 
@@ -61,8 +79,10 @@
                 success: true,
                 client_id: history.client_id,
                 name: history.name,
+                pan: history.pan,
                 mobile: history.mobile,
-                scores: history.scores.sort((a, b) => new Date(a.date) - new Date(b.date)),
+                email: history.email,
+                scores: history.scores.sort((a, b) => new Date(b.date) - new Date(a.date)), // Latest first
                 totalRecords: history.scores.length
             });
         } catch (error) {
@@ -76,36 +96,49 @@
         try {
             log('/post/api/cibil/score-history/add');
             
-            var { client_id, mobile, name, score, grade, source } = req.body;
+            var { client_id, pan, mobile, email, name, score, grade, source } = req.body;
             
             if (!client_id || !score) {
-                return res.status(400).json({ error: 'client_id and score are required' });
+                return res.status(400).json({ 
+                    error: 'client_id and score are required',
+                    received: { client_id, score }
+                });
             }
 
-            var history = await ScoreHistoryModel.findOne({ client_id: client_id });
+            // Try to find by any identifier
+            var query = { client_id: client_id };
+            if (pan) query.pan = pan;
+            if (mobile) query.mobile = mobile;
+            if (email) query.email = email;
+
+            var history = await ScoreHistoryModel.findOne(query);
             
+            var newScoreEntry = {
+                score: parseInt(score),
+                grade: grade,
+                date: new Date(),
+                source: source || 'manual'
+            };
+
             if (history) {
                 // Add to existing history
-                history.scores.push({
-                    score: parseInt(score),
-                    grade: grade,
-                    date: new Date(),
-                    source: source || 'manual'
-                });
+                history.scores.push(newScoreEntry);
                 history.updatedAt = new Date();
+                // Update other identifiers if provided
+                if (pan) history.pan = pan;
+                if (mobile) history.mobile = mobile;
+                if (email) history.email = email;
+                if (name) history.name = name;
                 await history.save();
             } else {
                 // Create new history
                 history = new ScoreHistoryModel({
                     client_id: client_id,
+                    pan: pan,
                     mobile: mobile,
+                    email: email,
                     name: name,
-                    scores: [{
-                        score: parseInt(score),
-                        grade: grade,
-                        date: new Date(),
-                        source: source || 'manual'
-                    }]
+                    scores: [newScoreEntry]
                 });
                 await history.save();
             }
@@ -113,46 +146,14 @@
             res.json({
                 success: true,
                 message: 'Score added to history',
-                client_id: client_id,
+                client_id: history.client_id,
+                score: newScoreEntry.score,
+                grade: newScoreEntry.grade,
+                source: newScoreEntry.source,
                 totalRecords: history.scores.length
             });
         } catch (error) {
             log('Error adding score to history:', error);
-            res.status(500).json({ error: 'Internal server error', details: error.message });
-        }
-    });
-
-    // Get score history by mobile
-    app.get('/get/api/cibil/score-history/mobile/:mobile', async function(req, res) {
-        try {
-            log('/get/api/cibil/score-history/mobile/:mobile');
-            var mobile = req.params.mobile;
-            
-            if (!mobile) {
-                return res.status(400).json({ error: 'mobile is required' });
-            }
-
-            var history = await ScoreHistoryModel.findOne({ mobile: mobile });
-            
-            if (!history) {
-                return res.json({ 
-                    success: true, 
-                    mobile: mobile,
-                    scores: [],
-                    message: 'No history found for this mobile'
-                });
-            }
-
-            res.json({
-                success: true,
-                client_id: history.client_id,
-                name: history.name,
-                mobile: history.mobile,
-                scores: history.scores.sort((a, b) => new Date(a.date) - new Date(b.date)),
-                totalRecords: history.scores.length
-            });
-        } catch (error) {
-            log('Error fetching score history:', error);
             res.status(500).json({ error: 'Internal server error', details: error.message });
         }
     });
@@ -163,13 +164,15 @@
             log('/get/api/cibil/score-history/all');
             
             var histories = await ScoreHistoryModel.find({})
-                .select('client_id name mobile scores')
+                .select('client_id name pan mobile email scores')
                 .lean();
             
             var summary = histories.map(h => ({
                 client_id: h.client_id,
                 name: h.name,
+                pan: h.pan,
                 mobile: h.mobile,
+                email: h.email,
                 latestScore: h.scores.length > 0 ? h.scores[h.scores.length - 1].score : null,
                 latestGrade: h.scores.length > 0 ? h.scores[h.scores.length - 1].grade : null,
                 totalRecords: h.scores.length,
@@ -188,17 +191,30 @@
         }
     });
 
-    // Calculate score trend
-    app.get('/get/api/cibil/score-trend/:client_id', async function(req, res) {
+    // Calculate score trend by multiple identifiers
+    app.get('/get/api/cibil/score-trend', async function(req, res) {
         try {
-            log('/get/api/cibil/score-trend/:client_id');
-            var client_id = req.params.client_id;
+            log('/get/api/cibil/score-trend');
+            var { pan, mobile, email, client_id } = req.query;
             
-            var history = await ScoreHistoryModel.findOne({ client_id: client_id });
+            if (!pan && !mobile && !email && !client_id) {
+                return res.status(400).json({ 
+                    error: 'Please provide at least one identifier (pan, mobile, email, or client_id)' 
+                });
+            }
+            
+            var query = {};
+            if (client_id) query.client_id = client_id;
+            if (pan) query.pan = pan;
+            if (mobile) query.mobile = mobile;
+            if (email) query.email = email;
+
+            var history = await ScoreHistoryModel.findOne(query);
             
             if (!history || history.scores.length < 2) {
                 return res.json({ 
                     success: true, 
+                    identifiers: { pan, mobile, email, client_id },
                     trend: 'neutral',
                     message: 'Not enough data to calculate trend'
                 });
@@ -218,16 +234,30 @@
 
             res.json({
                 success: true,
-                client_id: client_id,
+                client_id: history.client_id,
+                name: history.name,
                 currentScore: latestScore,
                 previousScore: previousScore,
                 firstScore: firstScore,
                 recentChange: recentChange,
                 overallChange: overallChange,
                 trend: trend,
+                scoreCount: history.scores.length,
                 message: trend === 'improving' ? 'Your score is improving!' :
                          trend === 'declining' ? 'Your score needs attention.' :
-                         'Your score is stable.'
+                         'Your score is stable.',
+                recommendations: trend === 'declining' ? [
+                    'Check for any recent missed payments',
+                    'Review your credit utilization ratio',
+                    'Avoid applying for new credit unnecessarily'
+                ] : trend === 'improving' ? [
+                    'Continue with your good credit habits',
+                    'Keep credit utilization below 30%',
+                    'Maintain timely payments'
+                ] : [
+                    'Monitor your credit score regularly',
+                    'Maintain current credit management practices'
+                ]
             });
         } catch (error) {
             log('Error calculating score trend:', error);
@@ -235,6 +265,52 @@
         }
     });
 
+    // Search users by any identifier (for admin/analytics)
+    app.get('/get/api/cibil/score-history/search', async function(req, res) {
+        try {
+            log('/get/api/cibil/score-history/search');
+            var { query } = req.query;
+            
+            if (!query) {
+                return res.status(400).json({ 
+                    error: 'Search query is required' 
+                });
+            }
+
+            var histories = await ScoreHistoryModel.find({
+                $or: [
+                    { client_id: { $regex: query, $options: 'i' } },
+                    { pan: { $regex: query, $options: 'i' } },
+                    { mobile: { $regex: query, $options: 'i' } },
+                    { email: { $regex: query, $options: 'i' } },
+                    { name: { $regex: query, $options: 'i' } }
+                ]
+            })
+            .select('client_id name pan mobile email scores')
+            .limit(50)
+            .lean();
+
+            var results = histories.map(h => ({
+                client_id: h.client_id,
+                name: h.name,
+                pan: h.pan,
+                mobile: h.mobile,
+                email: h.email,
+                latestScore: h.scores.length > 0 ? h.scores[h.scores.length - 1].score : null,
+                latestGrade: h.scores.length > 0 ? h.scores[h.scores.length - 1].grade : null,
+                totalRecords: h.scores.length
+            }));
+
+            res.json({
+                success: true,
+                query: query,
+                count: results.length,
+                results: results
+            });
+        } catch (error) {
+            log('Error searching score histories:', error);
+            res.status(500).json({ error: 'Internal server error', details: error.message });
+        }
+    });
+
 })();
-
-
