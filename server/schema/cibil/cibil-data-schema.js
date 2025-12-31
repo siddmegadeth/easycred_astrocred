@@ -1,6 +1,4 @@
 (function() {
-
-
     MonthlyPayStatusSchema = module.exports = mongoose.Schema({
         date: String,
         status: String
@@ -43,17 +41,68 @@
     });
 
     CibilDataSchema = module.exports = mongoose.Schema({
-        client_id: {
+        // Primary identifier - mobile number (India specific)
+        mobile: {
             type: String,
             required: true,
-            unique: true
+            unique: true,
+            validate: {
+                validator: function(v) {
+                    // Indian mobile number validation: 10 digits starting with 6-9
+                    return /^[6-9]\d{9}$/.test(v);
+                },
+                message: props => `${props.value} is not a valid Indian mobile number!`
+            }
         },
-        mobile: String,
-        pan: String,
-        name: String,
-        gender: String,
-        user_email: String,
+        
+        // Secondary identifier - email
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+            lowercase: true,
+            trim: true,
+            validate: {
+                validator: function(v) {
+                    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+                },
+                message: props => `${props.value} is not a valid email address!`
+            }
+        },
+        
+        // PAN card (Indian Permanent Account Number)
+        pan: {
+            type: String,
+            required: true,
+            unique: true,
+            uppercase: true,
+            validate: {
+                validator: function(v) {
+                    // PAN format: ABCDE1234F (5 letters, 4 digits, 1 letter)
+                    return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(v);
+                },
+                message: props => `${props.value} is not a valid PAN number!`
+            }
+        },
+        
+        // User's full name
+        name: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        
+        // Gender
+        gender: {
+            type: String,
+            enum: ['Male', 'Female', 'Other'],
+            required: true
+        },
+        
+        // Credit score
         credit_score: String,
+        
+        // Credit report data
         credit_report: [{
             names: [{
                 index: String,
@@ -130,9 +179,10 @@
                 }
             }
         }],
+        
+        // PAN comprehensive data
         pan_comprehensive: {
             data: {
-                client_id: String,
                 pan_number: String,
                 pan_details: {
                     full_name: String,
@@ -168,6 +218,8 @@
             message: String,
             message_code: String
         },
+        
+        // Original parameters
         params: {
             mobile: String,
             pan: String,
@@ -175,11 +227,14 @@
             gender: String,
             consent: String
         },
+        
+        // Status flags
         status: Boolean,
         status_code: Number,
         success: Boolean,
         message: String,
         message_code: String,
+        
         // Analysis results cache
         analysis: {
             overallGrade: String,
@@ -206,6 +261,27 @@
             },
             dataHash: String // Hash of credit_report to detect data changes
         },
+        
+        // Additional Indian-specific fields
+        aadhaar_number: {
+            type: String,
+            sparse: true,
+            validate: {
+                validator: function(v) {
+                    if (!v) return true; // Optional
+                    // Aadhaar validation: 12 digits
+                    return /^\d{12}$/.test(v);
+                },
+                message: props => `${props.value} is not a valid Aadhaar number!`
+            }
+        },
+        
+        date_of_birth: {
+            type: Date,
+            required: true
+        },
+        
+        // Timestamps
         createdAt: {
             type: Date,
             default: Date.now
@@ -218,18 +294,13 @@
         timestamps: {
             createdAt: 'created_at',
             updatedAt: 'updated_at'
-
-        }
+        },
+        
+        // Compound unique index for mobile + email combination
+        indexes: [
+            { mobile: 1, email: 1, pan: 1 }
+        ]
     });
 
-
-
-
-
     CibilDataModel = module.exports = mongoose.model("CibilDataModel", CibilDataSchema);
-
-
-
-
-
-})()
+})();
