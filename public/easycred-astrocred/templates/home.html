@@ -1,24 +1,5 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="astroCredApp" ng-controller="mainCtrl">
-<head>
-    <meta charset="UTF-8">
-    <title>ASTROCRED – AI Credit Score Simplifier</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- AngularJS 1.x -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    
-    <style>
-        body {
+<style>
+    body {
             background: linear-gradient(180deg, #f6f8fc, #eef1f8);
             font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont;
         }
@@ -263,12 +244,7 @@
         .payment-default { background-color: #dc3545; }
         .payment-na { background-color: #6c757d; }
     </style>
-</head>
-
-<body>
-
 <div class="container-fluid py-4">
-
     <!-- HEADER -->
     <div class="row mb-4 align-items-center">
         <div class="col-md-8">
@@ -285,7 +261,6 @@
             </span>
         </div>
     </div>
-
     <!-- NAVIGATION TABS -->
     <ul class="nav nav-tabs mb-4" id="mainTabs" role="tablist">
         <li class="nav-item" role="presentation">
@@ -324,14 +299,11 @@
             </button>
         </li>
     </ul>
-
     <!-- TAB CONTENT -->
     <div class="tab-content" id="mainTabContent">
-        
         <!-- DASHBOARD TAB -->
         <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
             <div class="row g-4">
-                
                 <!-- LEFT: SCORE & GRADES -->
                 <div class="col-xl-3 col-lg-4">
                     <div class="card shadow-sm">
@@ -340,28 +312,22 @@
                         </div>
                         <div class="card-body text-center">
                             <!-- Score Ring with Dynamic Color -->
-                            <div class="score-ring mb-3" 
-                                 ng-style="{'background': getScoreRingGradient(creditData.credit_score)}">
+                            <div class="score-ring mb-3" ng-style="{'background': getScoreRingGradient(creditData.credit_score)}">
                                 <span>{{creditData.credit_score || 670}}</span>
                             </div>
-                            
                             <h4 class="mb-2">{{getScoreGrade(creditData.credit_score).grade}}</h4>
                             <p class="text-muted mb-4">{{getScoreGrade(creditData.credit_score).description}}</p>
-                            
                             <div class="text-start small mb-4">
                                 <div class="metric">
-                                    <i class="fas fa-calendar-check me-2" 
-                                       ng-class="{'text-success': paymentOnTime >= 80, 'text-warning': paymentOnTime >= 60 && paymentOnTime < 80, 'text-danger': paymentOnTime < 60}"></i>
+                                    <i class="fas fa-calendar-check me-2" ng-class="{'text-success': paymentOnTime >= 80, 'text-warning': paymentOnTime >= 60 && paymentOnTime < 80, 'text-danger': paymentOnTime < 60}"></i>
                                     Payment History: <b>{{paymentOnTime || 65}}%</b>
                                 </div>
                                 <div class="metric">
-                                    <i class="fas fa-percentage me-2" 
-                                       ng-class="{'text-success': creditUtilization <= 30, 'text-warning': creditUtilization > 30 && creditUtilization <= 50, 'text-danger': creditUtilization > 50}"></i>
+                                    <i class="fas fa-percentage me-2" ng-class="{'text-success': creditUtilization <= 30, 'text-warning': creditUtilization > 30 && creditUtilization <= 50, 'text-danger': creditUtilization > 50}"></i>
                                     Credit Utilization: <b>{{creditUtilization || 48}}%</b>
                                 </div>
                                 <div class="metric">
-                                    <i class="fas fa-search me-2" 
-                                       ng-class="{'text-success': recentEnquiries <= 2, 'text-warning': recentEnquiries > 2 && recentEnquiries <= 5, 'text-danger': recentEnquiries > 5}"></i>
+                                    <i class="fas fa-search me-2" ng-class="{'text-success': recentEnquiries <= 2, 'text-warning': recentEnquiries > 2 && recentEnquiries <= 5, 'text-danger': recentEnquiries > 5}"></i>
                                     Recent Enquiries: <b>{{recentEnquiries || 7}}</b> (3M)
                                 </div>
                                 <div class="metric">
@@ -373,9 +339,7 @@
                                     Default Accounts: <b>{{defaultAccounts || 4}}</b>
                                 </div>
                             </div>
-
                             <hr>
-
                             <button class="btn btn-outline-success btn-sm w-100 mb-2" ng-click="generateComprehensiveReport()">
                                 <i class="fas fa-file-alt me-1"></i> Generate ASTROCRED Report
                             </button>
@@ -385,7 +349,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- CENTER: AI CHAT + RISK ASSESSMENT -->
                 <div class="col-xl-6 col-lg-8">
                     <div class="card shadow-sm mb-4">
@@ -395,22 +358,19 @@
                                 {{riskAssessment.level || 'Medium-High'}} Risk
                             </span>
                         </div>
-
                         <div class="card-body chat-window">
                             <div class="alert chat-ai mb-3">
-                                <i class="fas fa-robot me-2"></i> 
-                                <b>Hello SHIV KUMAR! I've analyzed your CIBIL report.</b> 
+                                <i class="fas fa-robot me-2"></i>
+                                <b>Hello SHIV KUMAR! I've analyzed your CIBIL report.</b>
                                 You have a <strong>670 credit score</strong> with <strong>4 default accounts</strong> totaling ₹48,018 overdue.
                             </div>
-
                             <div class="text-end mb-3">
                                 <span class="badge chat-user px-3 py-2">
                                     What's my biggest problem?
                                 </span>
                             </div>
-
                             <div class="alert chat-ai mb-3">
-                                <i class="fas fa-exclamation-triangle me-2"></i> 
+                                <i class="fas fa-exclamation-triangle me-2"></i>
                                 <b>Priority Issue: Multiple Defaults</b>
                                 <ul class="mb-0 mt-2">
                                     <li>ICICI Bank: ₹27,760 overdue ⚠️</li>
@@ -419,15 +379,13 @@
                                     <li>Axis Bank: ₹2,099 overdue</li>
                                 </ul>
                             </div>
-
                             <div class="text-end mb-3">
                                 <span class="badge chat-user px-3 py-2">
                                     How can I improve quickly?
                                 </span>
                             </div>
-
                             <div class="alert chat-ai">
-                                <i class="fas fa-bolt me-2"></i> 
+                                <i class="fas fa-bolt me-2"></i>
                                 <b>Quick Improvement Plan:</b>
                                 <div class="row mt-2">
                                     <div class="col-md-6">
@@ -453,21 +411,15 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="card-footer">
                             <div class="input-group">
-                                <input type="text" 
-                                       class="form-control" 
-                                       placeholder="Ask about credit, loans, improvements..."
-                                       ng-model="chatInput"
-                                       ng-keyup="$event.keyCode === 13 && sendChat()">
+                                <input type="text" class="form-control" placeholder="Ask about credit, loans, improvements..." ng-model="chatInput" ng-keyup="$event.keyCode === 13 && sendChat()">
                                 <button class="btn btn-astro" ng-click="sendChat()">
                                     <i class="fas fa-paper-plane"></i> Ask AI
                                 </button>
                             </div>
                         </div>
                     </div>
-
                     <!-- RISK METRICS & CHARTS -->
                     <div class="row g-3">
                         <div class="col-md-4">
@@ -493,7 +445,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- RIGHT: QUICK ACTIONS & DATA SOURCES -->
                 <div class="col-xl-3">
                     <div class="card shadow-sm h-100">
@@ -511,9 +462,7 @@
                             <button class="btn btn-outline-primary btn-sm w-100 mb-2" ng-click="downloadMultiBureau()">
                                 <i class="fas fa-layer-group me-1"></i> Multi-Bureau Report
                             </button>
-
                             <hr>
-
                             <h6 class="mb-3">Real-time Actions</h6>
                             <button class="btn btn-outline-warning btn-sm w-100 mb-2" ng-click="simulateScoreImprovement()">
                                 <i class="fas fa-chart-line me-1"></i> Simulate Score Improvement
@@ -524,11 +473,9 @@
                             <button class="btn btn-outline-danger btn-sm w-100 mb-2" ng-click="checkLoanEligibility()">
                                 <i class="fas fa-percent me-1"></i> Check Loan Eligibility
                             </button>
-
                             <hr>
-
                             <div class="assistant-tip p-3 rounded">
-                                <i class="fas fa-lightbulb me-1"></i> 
+                                <i class="fas fa-lightbulb me-1"></i>
                                 <b>Pro Tip:</b> Clearing the ₹27,760 ICICI overdue first will give you the biggest score boost.
                             </div>
                         </div>
@@ -536,7 +483,6 @@
                 </div>
             </div>
         </div>
-
         <!-- REPORTS TAB -->
         <div class="tab-pane fade" id="reports" role="tabpanel">
             <div class="row g-4">
@@ -567,7 +513,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                
                                 <!-- ASTROCRED Analysis Card -->
                                 <div class="col-md-6 mb-4">
                                     <div class="card border p-4 h-100">
@@ -588,7 +533,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                
                                 <!-- Multi-Bureau Card -->
                                 <div class="col-md-6 mb-4">
                                     <div class="card border p-4 h-100">
@@ -609,7 +553,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                
                                 <!-- 24-Month Roadmap Card -->
                                 <div class="col-md-6 mb-4">
                                     <div class="card border p-4 h-100">
@@ -634,7 +577,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <div class="col-md-4">
                     <div class="card shadow-sm h-100">
                         <div class="card-header">
@@ -674,9 +616,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            
                             <hr>
-                            
                             <div class="text-center">
                                 <div class="mb-3">
                                     <h6>API Integration Status</h6>
@@ -684,7 +624,6 @@
                                     <span class="badge bg-warning">Multi-Bureau: Premium</span>
                                     <span class="badge bg-secondary">Finvu: Not Connected</span>
                                 </div>
-                                
                                 <button class="btn btn-astro btn-sm w-100" ng-click="connectFinvu()">
                                     <i class="fas fa-plug me-1"></i> Connect Finvu for Complete Data
                                 </button>
@@ -694,7 +633,6 @@
                 </div>
             </div>
         </div>
-
         <!-- ANALYSIS TAB -->
         <div class="tab-pane fade" id="analysis" role="tabpanel">
             <div class="row g-4">
@@ -710,7 +648,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     <!-- Risk Assessment -->
                     <div class="card shadow-sm">
                         <div class="card-header">
@@ -761,9 +698,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            
                             <hr>
-                            
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="text-center p-3">
@@ -787,7 +722,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <div class="col-md-4">
                     <!-- Payment History Chart -->
                     <div class="card shadow-sm mb-4">
@@ -800,7 +734,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     <!-- Quick Recommendations -->
                     <div class="card shadow-sm">
                         <div class="card-header">
@@ -828,7 +761,6 @@
                 </div>
             </div>
         </div>
-
         <!-- ACCOUNTS TAB -->
         <div class="tab-pane fade" id="accounts" role="tabpanel">
             <div class="row g-4">
@@ -851,7 +783,6 @@
                                     <button type="button" class="btn btn-outline-primary" ng-click="filterAccounts('default')">Defaults</button>
                                 </div>
                             </div>
-                            
                             <!-- Accounts Table -->
                             <div class="table-responsive">
                                 <table class="table table-hover">
@@ -868,8 +799,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="account in filteredAccounts" 
-                                            ng-class="{'table-danger': account.amountOverdue > 0, 'table-warning': account.risk === 'high'}">
+                                        <tr ng-repeat="account in filteredAccounts" ng-class="{'table-danger': account.amountOverdue > 0, 'table-warning': account.risk === 'high'}">
                                             <td>{{account.accountNumber | limitTo:12}}...</td>
                                             <td>{{account.bank}}</td>
                                             <td>
@@ -885,8 +815,7 @@
                                                 <span ng-if="account.amountOverdue <= 0" class="text-success">-</span>
                                             </td>
                                             <td>
-                                                <span class="status-badge" 
-                                                      ng-class="{'status-good': account.status === 'Good', 'status-warning': account.status === 'Warning', 'status-danger': account.status === 'Default'}">
+                                                <span class="status-badge" ng-class="{'status-good': account.status === 'Good', 'status-warning': account.status === 'Warning', 'status-danger': account.status === 'Default'}">
                                                     {{account.status}}
                                                 </span>
                                             </td>
@@ -900,7 +829,6 @@
                                     </tbody>
                                 </table>
                             </div>
-                            
                             <!-- Account Summary -->
                             <div class="row mt-4">
                                 <div class="col-md-3">
@@ -933,7 +861,6 @@
                 </div>
             </div>
         </div>
-
         <!-- FINVU TAB -->
         <div class="tab-pane fade" id="finvu" role="tabpanel">
             <div class="row g-4">
@@ -947,7 +874,6 @@
                                 <i class="fas fa-info-circle me-2"></i>
                                 <b>Launching Soon:</b> Finvu integration will provide complete financial picture by connecting all your bank accounts, investments, and financial data in one place.
                             </div>
-
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <h6 class="mb-3">Coming Features</h6>
@@ -980,7 +906,6 @@
                                     </ul>
                                 </div>
                             </div>
-
                             <div class="text-center">
                                 <button class="btn btn-astro btn-lg px-5" disabled>
                                     <i class="fas fa-clock me-2"></i> Coming Soon
@@ -992,7 +917,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <div class="col-md-4">
                     <div class="card shadow-sm h-100">
                         <div class="card-header">
@@ -1011,9 +935,7 @@
                                 <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Savings recommendations</li>
                                 <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Income-to-debt ratio tracking</li>
                             </ul>
-                            
                             <hr>
-                            
                             <div class="text-center">
                                 <button class="btn btn-outline-primary btn-sm w-100" onclick="alert('This feature will be available soon with Finvu integration')">
                                     <i class="fas fa-bell me-1"></i> Notify Me When Ready
@@ -1024,7 +946,6 @@
                 </div>
             </div>
         </div>
-
         <!-- ROADMAP TAB -->
         <div class="tab-pane fade" id="roadmap" role="tabpanel">
             <div class="row g-4">
@@ -1038,7 +959,7 @@
                                 <div class="timeline-item">
                                     <h5>Months 1-3: Crisis Management</h5>
                                     <p class="text-muted">
-                                        <strong>Actions:</strong> Clear all overdue amounts (₹48,018), set up payment reminders, 
+                                        <strong>Actions:</strong> Clear all overdue amounts (₹48,018), set up payment reminders,
                                         no new credit applications, reduce utilization to 40%
                                     </p>
                                     <p><strong>Target Score:</strong> 670 → 690</p>
@@ -1047,7 +968,7 @@
                                 <div class="timeline-item">
                                     <h5>Months 4-6: Stability Building</h5>
                                     <p class="text-muted">
-                                        <strong>Actions:</strong> Maintain perfect payment history, reduce utilization to 30%, 
+                                        <strong>Actions:</strong> Maintain perfect payment history, reduce utilization to 30%,
                                         consider secured credit card, monitor score monthly
                                     </p>
                                     <p><strong>Target Score:</strong> 690 → 710</p>
@@ -1056,7 +977,7 @@
                                 <div class="timeline-item">
                                     <h5>Months 7-12: Score Acceleration</h5>
                                     <p class="text-muted">
-                                        <strong>Actions:</strong> Request credit limit increases, maintain 25% utilization, 
+                                        <strong>Actions:</strong> Request credit limit increases, maintain 25% utilization,
                                         add small installment loan, continue perfect payments
                                     </p>
                                     <p><strong>Target Score:</strong> 710 → 730</p>
@@ -1064,7 +985,7 @@
                                 <div class="timeline-item">
                                     <h5>Months 13-18: Advanced Optimization</h5>
                                     <p class="text-muted">
-                                        <strong>Actions:</strong> Become authorized user on good accounts, optimize credit age, 
+                                        <strong>Actions:</strong> Become authorized user on good accounts, optimize credit age,
                                         maintain 20% utilization, review credit mix
                                     </p>
                                     <p><strong>Target Score:</strong> 730 → 750</p>
@@ -1072,7 +993,7 @@
                                 <div class="timeline-item">
                                     <h5>Months 19-24: Excellence Maintenance</h5>
                                     <p class="text-muted">
-                                        <strong>Actions:</strong> Maintain utilization below 10%, annual credit reviews, 
+                                        <strong>Actions:</strong> Maintain utilization below 10%, annual credit reviews,
                                         continuous monitoring, explore premium credit offers
                                     </p>
                                     <p><strong>Target Score:</strong> 750+</p>
@@ -1081,7 +1002,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <div class="col-md-4">
                     <div class="card shadow-sm h-100">
                         <div class="card-header">
@@ -1096,7 +1016,6 @@
                                 </div>
                                 <small>Current: 670/690</small>
                             </div>
-                            
                             <div class="text-center mb-4">
                                 <h3 class="text-warning">710</h3>
                                 <p class="text-muted">6-Month Target Score</p>
@@ -1105,7 +1024,6 @@
                                 </div>
                                 <small>Current: 670/710</small>
                             </div>
-                            
                             <div class="text-center mb-4">
                                 <h3 class="text-success">750+</h3>
                                 <p class="text-muted">24-Month Target Score</p>
@@ -1114,7 +1032,6 @@
                                 </div>
                                 <small>Current: 670/750</small>
                             </div>
-                            
                             <button class="btn btn-astro w-100" ng-click="downloadRoadmap()">
                                 <i class="fas fa-download me-2"></i> Download Roadmap PDF
                             </button>
@@ -1123,7 +1040,6 @@
                 </div>
             </div>
         </div>
-
         <!-- OFFERS TAB -->
         <div class="tab-pane fade" id="offers" role="tabpanel">
             <div class="row mb-4">
@@ -1132,7 +1048,6 @@
                     <p class="text-muted">Based on your current credit profile (Score: 670, Risk: Medium-High)</p>
                 </div>
             </div>
-            
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="card shadow-sm offer-card">
@@ -1152,7 +1067,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <div class="col-md-4">
                     <div class="card shadow-sm offer-card">
                         <div class="card-header text-center">
@@ -1171,7 +1085,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <div class="col-md-4">
                     <div class="card shadow-sm offer-card">
                         <div class="card-header text-center">
@@ -1191,7 +1104,6 @@
                     </div>
                 </div>
             </div>
-            
             <div class="row mt-4">
                 <div class="col-12">
                     <div class="alert alert-warning">
@@ -1202,20 +1114,9 @@
             </div>
         </div>
     </div>
-
     <!-- FOOTER -->
     <div class="text-center footer-note mt-4">
-        <p>ASTROCRED v1.0 • Real CIBIL Data Integration • Built with Bootstrap 5 + AngularJS 1.x + Chart.js</p>
+        <p>ASTROCRED v1.0 • Real CIBIL Data Integration </p>
         <p>Data Source: CIBIL TransUnion • Report Generated: {{reportDate | date:'fullDate'}}</p>
     </div>
-
 </div>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>    
- 
-</script>
-</body>
-</html>
