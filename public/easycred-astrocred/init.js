@@ -41,7 +41,7 @@ Offline.on('confirmed-up', function() {
 });
 
 
-app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider', '$httpProvider', '$translateProvider', 'surePassProvider', 'authenticationProvider', '$routeProvider', '$locationProvider', 'profileOperationsProvider', function(productionModeProvider, utilityProvider, geoIPServicesProvider, $httpProvider, $translateProvider, surePassProvider, authenticationProvider, $routeProvider, $locationProvider, profileOperationsProvider) {
+app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider', '$httpProvider', '$translateProvider', 'surePassProvider', 'authenticationProvider', '$routeProvider', '$locationProvider', 'profileOperationsProvider', 'cibilCoreProvider', function(productionModeProvider, utilityProvider, geoIPServicesProvider, $httpProvider, $translateProvider, surePassProvider, authenticationProvider, $routeProvider, $locationProvider, profileOperationsProvider, cibilCoreProvider) {
 
     $locationProvider.html5Mode({
         enabled: false,
@@ -228,8 +228,11 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             KYCPanToAadhar: productionLink + "/get/surepass/kyc/aadhar/from/pan",
             KYCAllFromMobile: productionLink + "/get/surepass/pan/aadhar/from/mobile",
             mobileToMultipleUPI: productionLink + "/get/surepass/mobile/to/multiple/upi",
-            panComprehensive : productionLink + "/get/surepass/pan/comprehensive/from/mobile",
-            getPanFromMobile : productionLink + "/get/surepass/pan/from/mobile"
+            panComprehensive: productionLink + "/get/surepass/pan/comprehensive/from/mobile",
+            getPanFromMobile: productionLink + "/get/surepass/pan/from/mobile"
+        },
+        cibil_core: {
+            cibil: productionLink + ''
         }
     };
     profileOperationsProvider.config(prod.profile);
@@ -237,6 +240,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
     geoIPServicesProvider.config(prod.ip_url);
     surePassProvider.config(prod.surepass);
     authenticationProvider.config(prod.authentication);
+    cibilCoreProvider.config(prod.cibil_core);
 }]);
 
 app.run(['$rootScope', '$location', 'stateManager', '$window', '$timeout', function($rootScope, $location, stateManager, $window, $timeout) {
