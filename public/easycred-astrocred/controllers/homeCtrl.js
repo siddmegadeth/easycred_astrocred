@@ -16,9 +16,17 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
 
                 if (userProfile.consent.isTermsAccepted) {
                     if (stateManager.isKYCCompleted()) {
-                        $scope.runScoreSimulation();
-                        $scope.quickSimulation();
-                        $scope.testWithSampleData();
+                        window.onload = function() {
+                            console.log('ASTROCRED Platform Initialized with Real CIBIL Data');
+                            console.log('Client: SHIV KUMAR (PAN: IVZPK2103N)');
+                            console.log('Credit Score: 670');
+                            console.log('Default Accounts: 4');
+                            console.log('Total Overdue: ₹48,018');
+                            $scope.runScoreSimulation();
+                            initializeCharts();
+                            $scope.quickSimulation();
+                            $scope.testWithSampleData();
+                        }
 
                     } else {}
 
@@ -423,13 +431,5 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
         $scope.chatInput = '';
     };
 
-    // Initialize charts after Angular is ready
-    $timeout(function() {
-        // initializeCharts();
-        console.log('ASTROCRED Platform Initialized with Real CIBIL Data');
-        console.log('Client: SHIV KUMAR (PAN: IVZPK2103N)');
-        console.log('Credit Score: 670');
-        console.log('Default Accounts: 4');
-        console.log('Total Overdue: ₹48,018');
-    }, 500);
+
 }]);
