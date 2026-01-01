@@ -590,6 +590,30 @@ app.provider('cibilCore', [function() {
                         analysis: "curl '" + cibilUrls.analysis.basic + "?pan=IVZPK2103N'",
                         health: "curl '" + cibilUrls.health.check + "'"
                     };
+                },
+                runScoreSimulation: function(cibilData) {
+
+                    // Backend expects raw CIBIL data object
+                    return $http({
+                        method: 'POST',
+                        url: cibilUrls.simulation.runScoreSimulation,
+                        data: cibilData,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                },
+                quickSimulation: function(cibilData) {
+
+                    // Backend expects raw CIBIL data object
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.simulation.quickSimulation,
+                        data: cibilData,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
                 }
             };
         }]

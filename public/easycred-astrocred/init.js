@@ -310,6 +310,10 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             // ⚙️ LEGACY/COMPATIBILITY
             legacy: {
                 cibil: productionLink + "/get/api/cibil/upload" // Original endpoint
+            },
+            simulation: {
+                runScoreSimulation: productionLink + "/post/api/cibil/score-simulation",
+                quickSimulation: productionLink + "/get/api/cibil/quick-simulation"
             }
         }
     };

@@ -12,6 +12,7 @@
     require("./pdf-generator");
     require("./score-history");
     require("./ml-prediction");
+    require("./score-simulation");
 
 })();
 

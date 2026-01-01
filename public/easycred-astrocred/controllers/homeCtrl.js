@@ -1,4 +1,4 @@
-app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', '$location', 'authentication','cibilCore', function($scope, $rootScope, $timeout, stateManager, $location, authentication,cibilCore) {
+app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', '$location', 'authentication', 'cibilCore', function($scope, $rootScope, $timeout, stateManager, $location, authentication, cibilCore) {
 
 
 
@@ -16,7 +16,10 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
 
                 if (userProfile.consent.isTermsAccepted) {
                     if (stateManager.isKYCCompleted()) {
+                        $scope.runScoreSimulation();
+                        $scope.quickSimulation();
                         $scope.testWithSampleData();
+
                     } else {}
 
                 } else {}
@@ -103,6 +106,37 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
                 $scope.testResults = 'Test failed: ' + error.message;
             });
     };
+
+
+    // In your AngularJS controller
+    $scope.runScoreSimulation = function() {
+        warn('runScoreSimulation : ');
+
+        cibilCore.runScoreSimulation({
+                pan: 'IVZPK2103N',
+                simulation_type: 'optimistic',
+                months: 24
+            })
+            .then(function(response) {
+                warn('runScoreSimulation : ');
+                $scope.simulationResults = response.data;
+                $scope.monthlyProjections = response.data.monthly_projections;
+                $scope.keyActions = response.data.quick_actions;
+            });
+    };
+
+    // Quick simulation
+    $scope.quickSimulation = function() {
+        warn('quickSimulation : ');
+
+        cibilCore.quickSimulation({ pan: 'IVZPK2103N' })
+            .then(function(response) {
+                warn('quickSimulation : ');
+                $scope.quickResults = response.data;
+            });
+    };
+
+
 
     // Quick test commands
     $scope.getTestCommands = function() {
@@ -391,7 +425,7 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
 
     // Initialize charts after Angular is ready
     $timeout(function() {
-        initializeCharts();
+        // initializeCharts();
         console.log('ASTROCRED Platform Initialized with Real CIBIL Data');
         console.log('Client: SHIV KUMAR (PAN: IVZPK2103N)');
         console.log('Credit Score: 670');
