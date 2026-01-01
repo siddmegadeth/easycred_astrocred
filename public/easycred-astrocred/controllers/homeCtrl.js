@@ -1,4 +1,4 @@
-app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', '$location', 'authentication', function($scope, $rootScope, $timeout, stateManager, $location, authentication) {
+app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', '$location', 'authentication','cibilCore', function($scope, $rootScope, $timeout, stateManager, $location, authentication,cibilCore) {
 
 
 
@@ -16,7 +16,7 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
 
                 if (userProfile.consent.isTermsAccepted) {
                     if (stateManager.isKYCCompleted()) {
-
+                        $scope.testWithSampleData();
                     } else {}
 
                 } else {}
@@ -43,7 +43,71 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
 
 
 
+    // Test with real sample data
+    $scope.testWithSampleData = function() {
+        var sampleData = {
+            data: {
+                client_id: "credit_report_cibil_jIifktiYhrHTbZcMdlsU",
+                mobile: "9708016996",
+                pan: "IVZPK2103N",
+                name: "SHIV KUMAR",
+                credit_score: "670",
+                // ... rest of sample data
+            }
+        };
 
+        // 1. Normalize data first
+        var normalizedData = cibilCore.normalizeData(sampleData.data);
+
+        // 2. Upload data
+        cibilCore.uploadData(normalizedData)
+            .then(function(response) {
+                console.log('✅ Upload successful:', response.data);
+
+                // 3. Get analysis
+                return cibilCore.getAnalysis({ pan: 'IVZPK2103N' });
+            })
+            .then(function(response) {
+                console.log('✅ Analysis successful:', response.data);
+
+                // 4. Get risk assessment
+                return cibilCore.getRiskAssessment({ pan: 'IVZPK2103N' });
+            })
+            .then(function(response) {
+                console.log('✅ Risk assessment successful:', response.data);
+
+                // 5. Add to score history
+                return cibilCore.addScoreToHistory({
+                    client_id: "credit_report_cibil_jIifktiYhrHTbZcMdlsU",
+                    pan: "IVZPK2103N",
+                    mobile: "9708016996",
+                    name: "SHIV KUMAR",
+                    score: 670,
+                    grade: "B",
+                    source: "upload"
+                });
+            })
+            .then(function(response) {
+                console.log('✅ Score history updated:', response.data);
+
+                // 6. Check health
+                return cibilCore.checkHealth();
+            })
+            .then(function(response) {
+                console.log('✅ Health check successful:', response.data);
+
+                $scope.testResults = 'All tests passed successfully!';
+            })
+            .catch(function(error) {
+                console.error('❌ Test failed:', error);
+                $scope.testResults = 'Test failed: ' + error.message;
+            });
+    };
+
+    // Quick test commands
+    $scope.getTestCommands = function() {
+        return cibilCore.quickTestCommands();
+    };
 
 
     // Initialize with sample data

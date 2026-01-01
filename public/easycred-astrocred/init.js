@@ -194,8 +194,10 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             redirectTo: '/login'
         });
 
-
-
+    warn('productionLink :' + productionLink);
+    cibilCoreProvider.config({
+        base: productionLink // Your backend URL
+    });
 
     var prod = {
         ip_url: {
@@ -231,8 +233,84 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             panComprehensive: productionLink + "/get/surepass/pan/comprehensive/from/mobile",
             getPanFromMobile: productionLink + "/get/surepass/pan/from/mobile"
         },
+        // ... existing sections remain the same ...
         cibil_core: {
-            cibil: productionLink + ''
+            // BASE ENDPOINTS
+            base: productionLink,
+
+            // 🔧 DATABASE & MAINTENANCE
+            database: {
+                fixIndexes: productionLink + "/get/api/cibil/fix-indexes",
+                refreshAnalysis: productionLink + "/post/api/cibil/analysis/refresh"
+            },
+
+            // 📊 DATA UPLOAD & PROCESSING
+            upload: {
+                data: productionLink + "/post/api/cibil/upload",
+                sample: productionLink + "/get/api/cibil/upload"
+            },
+
+            // 🔍 ANALYSIS & REPORTS
+            analysis: {
+                basic: productionLink + "/get/api/cibil/analysis",
+                comprehensive: productionLink + "/comprehensive-report",
+                statistics: productionLink + "/get/api/cibil/analysis/statistics"
+            },
+
+            // ⚠️ RISK ASSESSMENT
+            risk: {
+                basic: productionLink + "/risk-assessment",
+                enhanced: productionLink + "/enhanced-risk-assessment",
+                comparison: productionLink + "/risk-comparison",
+                defaultProbability: productionLink + "/default-probability",
+                creditWorthiness: productionLink + "/credit-worthiness"
+            },
+
+            // 📈 GRADES & SCORES
+            grades: {
+                client: productionLink + "/get/api/cibil/client/grade",
+                allClients: productionLink + "/get/api/cibil/clients/grades",
+                statistics: productionLink + "/get/api/cibil/grades/statistics"
+            },
+
+            // 📅 SCORE HISTORY
+            history: {
+                get: productionLink + "/get/api/cibil/score-history",
+                add: productionLink + "/post/api/cibil/score-history/add",
+                search: productionLink + "/get/api/cibil/score-history/search",
+                trend: productionLink + "/get/api/cibil/score-trend"
+            },
+
+            // 💡 IMPROVEMENT & SUGGESTIONS
+            improvement: {
+                plan: productionLink + "/improvement-plan",
+                bankSuggestions: productionLink + "/bank-suggestions",
+                eligibleInstitutions: productionLink + "/eligible-institutions"
+            },
+
+            // 📊 VISUALIZATION
+            charts: {
+                data: productionLink + "/chart-data",
+                summary: productionLink + "/credit-summary"
+            },
+
+            // 🌐 ECONOMIC DATA
+            economic: {
+                data: productionLink + "/economic-data",
+                trends: productionLink + "/economic-trends"
+            },
+
+            // 🩺 HEALTH & MONITORING
+            health: {
+                check: productionLink + "/get/api/cibil/health",
+                quick: productionLink + "/get/api/cibil/health/quick",
+                component: productionLink + "/get/api/cibil/health/" // + component name
+            },
+
+            // ⚙️ LEGACY/COMPATIBILITY
+            legacy: {
+                cibil: productionLink + "/get/api/cibil/upload" // Original endpoint
+            }
         }
     };
     profileOperationsProvider.config(prod.profile);
