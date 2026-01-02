@@ -102,8 +102,10 @@
     sendMMTCBuyConfirmationEmail = module.exports = null;
     sendMMTCSellConfirmationEmail = module.exports = null;
     sendLoanApplicationEmail = module.exports = null;
+    NodeCache  = module.exports = require('node-cache');
+    myCache= module.exports = new NodeCache();
 
-    Fingerprint = module.exports = require('express-fingerprint')
+    Fingerprint = module.exports = require('express-fingerprint');
     // tensorflow
     // tf = module.exports = require('@tensorflow/tfjs-node');
 })();

@@ -1,31 +1,46 @@
 (function() {
 
+
     ProfileSchema = module.exports = mongoose.Schema({
+
+        /* ================= CORE IDENTIFIERS ================= */
+
         profile: {
             type: String,
             unique: true,
-            index: true
+            index: true,
+            required: true
         },
+
         email: {
             type: String,
             unique: true,
             index: true,
-            sparse: true
+            sparse: true,
+            lowercase: true,
+            trim: true
         },
+
         mobile: {
             type: String,
             unique: true,
             index: true,
-            sparse: true
+            sparse: true,
+            trim: true
         },
+
         customerId: {
             type: String,
             index: true
         },
+
         isOnboardingComplete: {
             type: Boolean,
             default: false
         },
+
+        /* ================= OTP ================= */
+
         fast2sms: {
             otp: {
                 type: String,
@@ -35,14 +50,18 @@
                 type: Boolean,
                 default: false
             },
-            provider: { type: String }
+            provider: {
+                type: String
+            }
         },
+
+        /* ================= PROFILE INFO ================= */
+
         profile_info: {
             email: {
                 type: String,
-                unique: true,
-                index: true,
-                sparse: true
+                lowercase: true,
+                trim: true
             },
             isEmailAdded: {
                 type: Boolean,
@@ -54,30 +73,30 @@
             },
             fullname: {
                 type: String,
+                trim: true
             },
             address: {
                 type: String
             },
             image: {
-                type: Object
+                type: Schema.Types.Mixed
             },
             background_image: {
-                type: Object
+                type: Schema.Types.Mixed
             },
             mobile: {
                 type: String,
-                unique: true,
-                index: true,
-                sparse: true
+                trim: true
             },
             gender: {
-                type: String
+                type: String,
+                enum: ['MALE', 'FEMALE', 'OTHER']
             },
             maritalStatus: {
                 type: String
             },
             monthlyIncome: {
-                type: String
+                type: Number
             },
             isMobileAdded: {
                 type: Boolean,
@@ -87,58 +106,69 @@
                 type: Boolean,
                 default: false
             },
-            date_of_birth: { type: Date },
+            date_of_birth: {
+                type: Date
+            },
             isProfileCompleted: {
                 type: Boolean,
                 default: false
             }
         },
-        props: Object,
+
+        /* ================= KYC ================= */
+
         kyc: {
-            aadhaar_seeding_status: { type: String },
-            isKYCCompleted: { type: Boolean, default: false },
-            isAadharVerified: { type: Boolean, default: false },
-            isPanVerified: { type: Boolean, default: false },
-            aadhaar_number: { type: String },
-            aadhaar_linked: { type: String },
-            aadhaar_number_masked: { type: String },
-            pan_number: { type: String },
-            pan_advance: { type: Object },
-            aadhar_advance: { type: Object },
-            dob_verified: { type: Object }
+            aadhaar_seeding_status: String,
+            isKYCCompleted: {
+                type: Boolean,
+                default: false
+            },
+            isAadharVerified: {
+                type: Boolean,
+                default: false
+            },
+            isPanVerified: {
+                type: Boolean,
+                default: false
+            },
+            aadhaar_number: String,
+            aadhaar_linked: String,
+            aadhaar_number_masked: String,
+            pan_number: String,
+            pan_advance: Schema.Types.Mixed,
+            aadhar_advance: Schema.Types.Mixed,
+            dob_verified: Schema.Types.Mixed
         },
+
+        /* ================= ACCOUNT ================= */
+
         account: {
-            isAccountActive: { type: Boolean, status: false },
-            account_type: { type: String, default: 'INDIVIDUAL', enum: ['INDIVIDUAL', 'BUSINESS'] },
-            category: { type: String }
+            isAccountActive: {
+                type: Boolean,
+                default: false
+            },
+            account_type: {
+                type: String,
+                enum: ['INDIVIDUAL', 'BUSINESS'],
+                default: 'INDIVIDUAL'
+            },
+            category: String
         },
-        consent: { type: Object },
-        communication: { type: Object },
-        telemetric: { type: Object }
+
+        /* ================= META ================= */
+
+        props: Schema.Types.Mixed,
+        consent: Schema.Types.Mixed,
+        communication: Schema.Types.Mixed,
+        telemetric: Schema.Types.Mixed
+
     }, {
         timestamps: {
             createdAt: 'created_at',
             updatedAt: 'updated_at'
-
         }
     });
 
+    ProfileModel = module.exports = mongoose.model('ProfileModel', ProfileSchema);
 
-
-
-    ProfileSchema.pre("save", function(next) {
-        var user = this;
-        now = new Date();
-
-        this.updated_at = now;
-        if (!this.created_at) {
-            this.created_at = now
-        }
-        next();
-    });
-
-
-
-    ProfileModel = module.exports = mongoose.model("ProfileModel", ProfileSchema);
-
-})()
+})();
