@@ -1,16 +1,20 @@
+// file: risk-assessment-enhanced.js
 (function() {
+    var CIBILConstants = require('./cibil-constants.js');
+    var EconomicDataService = require('./economic-data-services.js');
+    
     /**
-     * Risk Assessment Engine
-     * Evaluates credit risk, default probability, and provides risk-based recommendations
-     * Updated for mobile/email/PAN based schema and Indian context
+     * Enhanced Risk Assessment Engine
+     * Advanced credit risk evaluation with CIBIL integration and Indian market context
      */
     
     function RiskAssessment(cibilData, gradingEngine) {
         this.cibilData = cibilData;
         this.gradingEngine = gradingEngine;
+        this.economicService = new EconomicDataService();
         this.creditReport = cibilData.credit_report && cibilData.credit_report[0] ? cibilData.credit_report[0] : {};
         
-        // User information from updated schema
+        // Enhanced user information with Indian context
         this.userInfo = {
             name: cibilData.name || null,
             mobile: cibilData.mobile || null,
@@ -18,376 +22,343 @@
             pan: cibilData.pan || null,
             gender: cibilData.gender || null,
             dateOfBirth: cibilData.date_of_birth || null,
-            creditScore: cibilData.credit_score || null
+            creditScore: cibilData.credit_score || null,
+            // Additional Indian identifiers
+            aadhaar: cibilData.aadhaar_number || null,
+            address: this.extractAddress(),
+            employment: this.extractEmploymentInfo()
+        };
+        
+        // Cache for performance
+        this.cache = {
+            creditWorthiness: null,
+            defaultProbability: null,
+            riskFactors: null,
+            lastCalculated: null
         };
     }
     
     /**
-     * Calculate credit worthiness score (0-100)
+     * Extract address information from credit report
+     */
+    RiskAssessment.prototype.extractAddress = function() {
+        try {
+            var addresses = this.creditReport.addresses || [];
+            if (addresses.length === 0) return null;
+            
+            // Use the most recent address
+            var latestAddress = addresses.reduce((latest, current) => {
+                var latestDate = latest.dateReported ? new Date(latest.dateReported) : new Date(0);
+                var currentDate = current.dateReported ? new Date(current.dateReported) : new Date(0);
+                return currentDate > latestDate ? current : latest;
+            });
+            
+            return {
+                line1: latestAddress.line1 || '',
+                line2: latestAddress.line2 || '',
+                city: latestAddress.city || '',
+                state: latestAddress.stateCode || '',
+                pincode: latestAddress.pinCode || '',
+                type: latestAddress.addressCategory || 'Residential'
+            };
+        } catch (error) {
+            return null;
+        }
+    };
+    
+    /**
+     * Extract employment information
+     */
+    RiskAssessment.prototype.extractEmploymentInfo = function() {
+        try {
+            var employment = this.creditReport.employment || [];
+            if (employment.length === 0) return null;
+            
+            var latestEmp = employment[0];
+            return {
+                occupationCode: latestEmp.occupationCode || '',
+                occupation: CIBILConstants.OCCUPATION_CODES[latestEmp.occupationCode] || 'Unknown',
+                dateReported: latestEmp.dateReported || '',
+                organization: latestEmp.organizationName || ''
+            };
+        } catch (error) {
+            return null;
+        }
+    };
+    
+    /**
+     * Calculate enhanced credit worthiness score with CIBIL integration
      */
     RiskAssessment.prototype.calculateCreditWorthiness = function() {
         try {
+            // Check cache first
+            if (this.cache.creditWorthiness && this.cache.lastCalculated && 
+                (Date.now() - this.cache.lastCalculated) < 300000) { // 5 minute cache
+                return this.cache.creditWorthiness;
+            }
+            
             var grade = this.gradingEngine.calculateOverallGrade();
             var defaulters = this.gradingEngine.identifyDefaulters();
             var utilization = this.gradingEngine.getCreditUtilization();
             var paymentAnalysis = this.gradingEngine.getOverallPaymentAnalysis();
             var creditAge = this.gradingEngine.getCreditAge();
             var debtBurden = this.calculateDebtBurdenScore();
+            var accountMix = this.calculateAccountMixScore();
+            var recentBehavior = this.calculateRecentBehaviorScore();
             
-            // Convert grade to score with Indian context
+            // Convert grade to score with CIBIL weightings
             var gradeScore = this.gradeToScore(grade);
             
-            // Default score: Heavy penalty for defaulters in Indian market
-            var defaultScore = defaulters.length > 0 ? Math.max(10, 50 - (defaulters.length * 10)) : 100;
+            // Default score: Heavy penalty for defaulters (Indian market)
+            var defaultPenalty = defaulters.length * 15;
+            var defaultScore = Math.max(10, 100 - defaultPenalty);
             
-            // Utilization score: Indian banks prefer <30% utilization
-            var utilizationScore;
-            if (utilization <= 10) utilizationScore = 100;
-            else if (utilization <= 20) utilizationScore = 90;
-            else if (utilization <= 30) utilizationScore = 80;
-            else if (utilization <= 40) utilizationScore = 70;
-            else if (utilization <= 50) utilizationScore = 60;
-            else if (utilization <= 60) utilizationScore = 50;
-            else if (utilization <= 70) utilizationScore = 40;
-            else if (utilization <= 80) utilizationScore = 30;
-            else if (utilization <= 90) utilizationScore = 20;
-            else utilizationScore = 10;
+            // Utilization score based on CIBIL thresholds
+            var utilizationScore = this.calculateUtilizationScore(utilization);
             
-            // Payment score: Missed payments heavily penalized in India
-            var paymentScore;
-            if (paymentAnalysis.missedRate === 0 && paymentAnalysis.delayedRate === 0) {
-                paymentScore = 100;
-            } else if (paymentAnalysis.missedRate <= 0.05 && paymentAnalysis.delayedRate <= 0.1) {
-                paymentScore = 80;
-            } else if (paymentAnalysis.missedRate <= 0.1 && paymentAnalysis.delayedRate <= 0.2) {
-                paymentScore = 60;
-            } else if (paymentAnalysis.missedRate <= 0.2 && paymentAnalysis.delayedRate <= 0.3) {
-                paymentScore = 40;
-            } else {
-                paymentScore = 20;
-            }
+            // Payment score with CIBIL status consideration
+            var paymentScore = this.calculatePaymentScore(paymentAnalysis);
             
-            // History score: Longer credit history is valued
-            var historyScore;
-            if (creditAge >= 84) historyScore = 100; // 7+ years
-            else if (creditAge >= 60) historyScore = 90; // 5+ years
-            else if (creditAge >= 36) historyScore = 80; // 3+ years
-            else if (creditAge >= 24) historyScore = 70; // 2+ years
-            else if (creditAge >= 12) historyScore = 60; // 1+ years
-            else historyScore = 50; // <1 year
+            // Credit history score with Indian preference for longer history
+            var historyScore = this.calculateHistoryScore(creditAge);
             
-            // Debt burden score
-            var debtScore;
-            if (debtBurden <= 30) debtScore = 100;
-            else if (debtBurden <= 40) debtScore = 85;
-            else if (debtBurden <= 50) debtScore = 70;
-            else if (debtBurden <= 60) debtScore = 55;
-            else if (debtBurden <= 70) debtScore = 40;
-            else debtScore = 25;
+            // Debt burden score with DTI thresholds
+            var debtScore = this.calculateDebtScore(debtBurden);
             
-            // Weighted average with Indian market weights
+            // Account mix score (diversity)
+            var mixScore = accountMix;
+            
+            // Recent behavior score
+            var behaviorScore = recentBehavior;
+            
+            // Weighted average with Indian market weights (CIBIL influenced)
             var totalScore = (
                 gradeScore * 0.25 +      // 25% Overall Grade
                 defaultScore * 0.20 +    // 20% Default History
-                utilizationScore * 0.20 + // 20% Credit Utilization
+                utilizationScore * 0.15 + // 15% Credit Utilization
                 paymentScore * 0.15 +    // 15% Payment History
                 historyScore * 0.10 +    // 10% Credit Age
-                debtScore * 0.10         // 10% Debt Burden
+                debtScore * 0.05 +       // 5% Debt Burden
+                mixScore * 0.05 +        // 5% Account Mix
+                behaviorScore * 0.05     // 5% Recent Behavior
             );
             
-            // Apply Indian market adjustments
-            totalScore = this.applyIndianCreditworthinessAdjustments(totalScore);
+            // Apply Indian market and CIBIL-specific adjustments
+            totalScore = this.applyCreditworthinessAdjustments(totalScore);
             
-            return {
+            var result = {
                 score: Math.round(totalScore),
                 isCreditWorthy: totalScore >= 65, // Indian threshold
                 isPrimeBorrower: totalScore >= 85,
                 isSubprimeBorrower: totalScore < 50,
+                isHighRisk: totalScore < 35,
+                grade: grade,
                 components: {
                     gradeScore: gradeScore,
                     defaultScore: defaultScore,
                     utilizationScore: utilizationScore,
                     paymentScore: paymentScore,
                     historyScore: historyScore,
-                    debtScore: debtScore
+                    debtScore: debtScore,
+                    mixScore: mixScore,
+                    behaviorScore: behaviorScore
                 },
                 thresholds: {
                     primeBorrower: 85,
                     creditWorthy: 65,
-                    subprimeBorrower: 50
-                }
+                    subprimeBorrower: 50,
+                    highRisk: 35
+                },
+                recommendations: this.generateCreditWorthinessRecommendations(totalScore, grade)
             };
+            
+            // Update cache
+            this.cache.creditWorthiness = result;
+            this.cache.lastCalculated = Date.now();
+            
+            return result;
             
         } catch (error) {
             console.error('Error calculating credit worthiness:', error);
-            return {
-                score: 50,
-                isCreditWorthy: false,
-                isPrimeBorrower: false,
-                isSubprimeBorrower: true,
-                components: {},
-                thresholds: {}
-            };
+            return this.getDefaultCreditWorthiness();
         }
     };
     
     /**
-     * Apply Indian market specific adjustments to creditworthiness
+     * Calculate utilization score based on CIBIL thresholds
      */
-    RiskAssessment.prototype.applyIndianCreditworthinessAdjustments = function(score) {
-        var adjustments = 0;
-        var employmentData = this.creditReport.employment || [];
-        var accounts = this.creditReport.accounts || [];
+    RiskAssessment.prototype.calculateUtilizationScore = function(utilization) {
+        var thresholds = CIBILConstants.RISK_THRESHOLDS.CREDIT_UTILIZATION;
         
-        // Government employee bonus
-        if (employmentData.length > 0) {
-            var occupationCode = employmentData[0].occupationCode;
-            if (occupationCode === '02') { // Government employee
-                adjustments += 5; // Considered very stable in India
-            } else if (occupationCode === '01') { // Professional
-                adjustments += 3;
-            }
-        }
-        
-        // Relationship with government banks bonus
-        var hasGovernmentBank = accounts.some(function(account) {
-            var lender = account.memberShortName || '';
-            return lender.includes('SBI') || lender.includes('State Bank') || 
-                   lender.includes('PNB') || lender.includes('Bank of Baroda') ||
-                   lender.includes('Canara') || lender.includes('Union Bank');
-        });
-        
-        if (hasGovernmentBank) {
-            adjustments += 3; // Positive relationship with government banks
-        }
-        
-        // Secured vs unsecured credit mix
-        var securedLoans = 0;
-        var unsecuredLoans = 0;
-        
-        accounts.forEach(function(account) {
-            var type = (account.accountType || '').toLowerCase();
-            if (type.includes('home') || type.includes('car') || type.includes('loan against') || 
-                type.includes('secured') || type.includes('mortgage') || type.includes('gold')) {
-                securedLoans++;
-            } else if (type.includes('credit card') || type.includes('personal loan') || 
-                type.includes('consumer') || type.includes('unsecured')) {
-                unsecuredLoans++;
-            }
-        });
-        
-        if (securedLoans > 0 && unsecuredLoans === 0) {
-            adjustments += 2; // Only secured credit - conservative
-        } else if (securedLoans === 0 && unsecuredLoans > 0) {
-            adjustments -= 2; // Only unsecured credit - higher risk
-        } else if (securedLoans > 0 && unsecuredLoans > 0) {
-            adjustments += 1; // Good mix
-        }
-        
-        return Math.min(100, Math.max(0, score + adjustments));
+        if (utilization <= thresholds.OPTIMAL) return 100;
+        if (utilization <= thresholds.WARNING) return 80;
+        if (utilization <= thresholds.HIGH_RISK) return 60;
+        if (utilization <= thresholds.CRITICAL) return 30;
+        return 10;
     };
     
     /**
-     * Calculate debt burden as percentage of estimated income
+     * Calculate payment score with CIBIL status codes
      */
-    RiskAssessment.prototype.calculateDebtBurdenScore = function() {
+    RiskAssessment.prototype.calculatePaymentScore = function(paymentAnalysis) {
+        var onTimePercentage = paymentAnalysis.onTimePercentage || 0;
+        var missedRate = paymentAnalysis.missedRate || 0;
+        var delayedRate = paymentAnalysis.delayedRate || 0;
+        
+        // Base score from on-time percentage
+        var baseScore = onTimePercentage;
+        
+        // Heavy penalties for missed payments (CIBIL heavily penalizes)
+        baseScore -= missedRate * 100 * 2; // Double penalty for missed payments
+        
+        // Moderate penalty for delayed payments
+        baseScore -= delayedRate * 100 * 0.5;
+        
+        // Bonus for perfect payment history
+        if (missedRate === 0 && delayedRate === 0 && onTimePercentage >= 95) {
+            baseScore += 20;
+        }
+        
+        // Penalty for recent missed payments
+        var recentMissed = this.calculateRecentMissedPayments();
+        baseScore -= recentMissed * 10;
+        
+        return Math.max(10, Math.min(100, baseScore));
+    };
+    
+    /**
+     * Calculate recent missed payments (last 6 months)
+     */
+    RiskAssessment.prototype.calculateRecentMissedPayments = function() {
         try {
             var accounts = this.creditReport.accounts || [];
-            var totalEMI = 0;
+            var recentMissed = 0;
             
-            accounts.forEach(function(account) {
-                var emi = this.gradingEngine.safeToNumber(account.emiAmount);
-                if (emi > 0) totalEMI += emi;
-            }, this);
+            accounts.forEach(account => {
+                var paymentAnalysis = this.gradingEngine.parsePaymentHistory(account);
+                // Count missed payments in last 6 months
+                var recentPayments = paymentAnalysis.payments.slice(-6);
+                recentMissed += recentPayments.filter(p => p.category === 'missed').length;
+            });
             
-            // Estimate monthly income
-            var estimatedIncome = this.estimateMonthlyIncome();
-            
-            if (estimatedIncome === 0) {
-                // If can't estimate income, use alternative calculation
-                var totalBalance = 0;
-                var totalLimit = 0;
-                
-                accounts.forEach(function(account) {
-                    var balance = this.gradingEngine.safeToNumber(account.currentBalance);
-                    var limit = this.gradingEngine.safeToNumber(account.highCreditAmount);
-                    totalBalance += balance;
-                    totalLimit += limit;
-                }, this);
-                
-                return totalLimit > 0 ? (totalBalance / totalLimit) * 100 : 0;
-            }
-            
-            return (totalEMI / estimatedIncome) * 100;
-            
+            return recentMissed;
         } catch (error) {
             return 0;
         }
     };
     
     /**
-     * Estimate monthly income based on credit profile
+     * Calculate history score with Indian preference
      */
-    RiskAssessment.prototype.estimateMonthlyIncome = function() {
-        try {
-            var employmentData = this.creditReport.employment || [];
-            var accounts = this.creditReport.accounts || [];
-            
-            // Method 1: Use employment data
-            if (employmentData.length > 0) {
-                var occupationCode = employmentData[0].occupationCode;
-                var salaryEstimates = {
-                    '01': 150000, // Professional
-                    '02': 80000,  // Government
-                    '03': 75000,  // Private
-                    '04': 60000,  // Self-employed
-                    '05': 100000, // Business
-                    '06': 30000,  // Daily wage
-                    '07': 0,      // Unemployed
-                    '08': 120000, // Senior management
-                    '09': 90000   // Mid-management
-                };
-                return salaryEstimates[occupationCode] || 50000;
-            }
-            
-            // Method 2: Estimate based on credit limits
-            var totalLimit = 0;
-            accounts.forEach(function(account) {
-                var limit = this.gradingEngine.safeToNumber(account.highCreditAmount);
-                if (limit > 0) totalLimit += limit;
-            }, this);
-            
-            if (totalLimit > 0) {
-                // Credit limit is typically 2-3x monthly income in India
-                return totalLimit / 2.5;
-            }
-            
-            return 50000; // Default estimate
-            
-        } catch (error) {
-            return 50000;
-        }
+    RiskAssessment.prototype.calculateHistoryScore = function(creditAge) {
+        // Indian banks prefer longer credit history
+        if (creditAge >= 84) return 100; // 7+ years
+        if (creditAge >= 60) return 90;  // 5+ years
+        if (creditAge >= 36) return 80;  // 3+ years
+        if (creditAge >= 24) return 70;  // 2+ years
+        if (creditAge >= 12) return 60;  // 1+ years
+        if (creditAge >= 6) return 50;   // 6+ months
+        if (creditAge >= 3) return 40;   // 3+ months
+        return 30; // Less than 3 months
     };
     
     /**
-     * Generate risk-based recommendation
+     * Calculate debt score with DTI thresholds
      */
-    RiskAssessment.prototype.generateRiskRecommendation = function() {
-        try {
-            var creditWorthiness = this.calculateCreditWorthiness();
-            var defaultProbability = this.calculateDefaultProbability();
-            var defaultPatterns = this.analyzeDefaultPatterns();
-            var overallGrade = this.gradingEngine.calculateOverallGrade();
-            
-            var recommendation = {
-                overallAssessment: '',
-                approvalRecommendation: '',
-                riskLevel: defaultProbability.riskLevel,
-                confidenceScore: this.calculateRecommendationConfidence(),
-                suggestedActions: [],
-                loanConditions: [],
-                monitoringRequirements: [],
-                riskMitigationStrategies: []
-            };
-            
-            // Determine overall assessment
-            if (creditWorthiness.isPrimeBorrower) {
-                recommendation.overallAssessment = 'Prime Borrower - Low Risk Profile';
-                recommendation.approvalRecommendation = 'Approve with Standard Terms';
-            } else if (creditWorthiness.isCreditWorthy) {
-                recommendation.overallAssessment = 'Credit Worthy - Moderate Risk Profile';
-                recommendation.approvalRecommendation = 'Approve with Conditions';
-            } else if (creditWorthiness.isSubprimeBorrower) {
-                recommendation.overallAssessment = 'Subprime Borrower - High Risk Profile';
-                recommendation.approvalRecommendation = 'Reject or Require Collateral';
-            } else {
-                recommendation.overallAssessment = 'High Risk - Not Credit Worthy';
-                recommendation.approvalRecommendation = 'Reject';
-            }
-            
-            // Add specific actions based on risk factors
-            var riskFactors = this.identifyRiskFactors();
-            
-            riskFactors.forEach(function(factor) {
-                if (factor.severity === 'Critical' || factor.severity === 'Very High') {
-                    recommendation.suggestedActions.push(
-                        'Address ' + factor.factor.toLowerCase() + ': ' + factor.description
-                    );
-                    
-                    if (factor.severity === 'Critical') {
-                        recommendation.loanConditions.push(
-                            'Require collateral of at least 150% of loan amount'
-                        );
-                        recommendation.riskMitigationStrategies.push(
-                            'Consider credit insurance or guarantee'
-                        );
-                    }
-                }
-            });
-            
-            // Add grade-specific conditions
-            if (overallGrade === 'D' || overallGrade === 'E' || overallGrade === 'F') {
-                recommendation.loanConditions.push('Higher interest rate (2-3% above prime)');
-                recommendation.loanConditions.push('Shorter loan tenure (maximum 3 years)');
-                recommendation.monitoringRequirements.push('Monthly review for first 6 months');
-            } else if (overallGrade === 'C' || overallGrade === 'C+') {
-                recommendation.loanConditions.push('Moderate interest rate (1-2% above prime)');
-                recommendation.monitoringRequirements.push('Quarterly review for first year');
-            }
-            
-            // Add default pattern specific recommendations
-            if (defaultPatterns.type === 'Willful') {
-                recommendation.suggestedActions.push('Client shows patterns of intentional default - enhanced due diligence required');
-                recommendation.loanConditions.push('Strict payment tracking with automatic alerts');
-                recommendation.riskMitigationStrategies.push('Consider third-party guarantee or co-signer');
-            } else if (defaultPatterns.type === 'Situational') {
-                recommendation.suggestedActions.push('Default appears situational - consider temporary relief options');
-                recommendation.loanConditions.push('Flexible repayment options during economic downturns');
-            }
-            
-            // Add utilization-based recommendations
-            var utilization = this.gradingEngine.getCreditUtilization();
-            if (utilization > 70) {
-                recommendation.loanConditions.push('Lower credit limit until utilization improves');
-                recommendation.suggestedActions.push('Debt consolidation or balance transfer to reduce utilization');
-            }
-            
-            return recommendation;
-            
-        } catch (error) {
-            console.error('Error generating risk recommendation:', error);
-            return {
-                overallAssessment: 'Assessment Error',
-                approvalRecommendation: 'Further Review Required',
-                riskLevel: 'Unknown',
-                suggestedActions: ['System error - manual review recommended'],
-                loanConditions: []
-            };
-        }
+    RiskAssessment.prototype.calculateDebtScore = function(debtBurden) {
+        var thresholds = CIBILConstants.RISK_THRESHOLDS.DEBT_TO_INCOME;
+        
+        if (debtBurden <= thresholds.IDEAL) return 100;
+        if (debtBurden <= thresholds.ACCEPTABLE) return 80;
+        if (debtBurden <= thresholds.RISKY) return 60;
+        if (debtBurden <= thresholds.CRITICAL) return 30;
+        return 10;
     };
     
     /**
-     * Calculate confidence in recommendation
+     * Calculate account mix score
      */
-    RiskAssessment.prototype.calculateRecommendationConfidence = function() {
+    RiskAssessment.prototype.calculateAccountMixScore = function() {
+        var accounts = this.creditReport.accounts || [];
+        if (accounts.length === 0) return 50;
+        
+        var score = 50;
+        var accountTypes = new Set();
+        var hasSecured = false;
+        var hasUnsecured = false;
+        var hasRevolving = false;
+        var hasInstallment = false;
+        
+        accounts.forEach(account => {
+            var type = account.accountType || '';
+            accountTypes.add(type);
+            
+            // Map to CIBIL account types
+            var cibilType = CIBILConstants.ACCOUNT_TYPES[type];
+            
+            // Check secured vs unsecured
+            if (['HL', 'AL', 'GL', 'BL'].includes(type)) {
+                hasSecured = true;
+                hasInstallment = true;
+            } else if (['CC', 'OD'].includes(type)) {
+                hasUnsecured = true;
+                hasRevolving = true;
+            } else if (['PL', 'EL', 'CL', 'TL'].includes(type)) {
+                hasUnsecured = true;
+                hasInstallment = true;
+            }
+        });
+        
+        // Score components
+        if (hasSecured && hasUnsecured) score += 25;
+        if (hasRevolving && hasInstallment) score += 20;
+        if (accountTypes.size >= 3) score += 20;
+        if (accountTypes.size >= 2) score += 10;
+        
+        return Math.min(100, score);
+    };
+    
+    /**
+     * Calculate recent behavior score
+     */
+    RiskAssessment.prototype.calculateRecentBehaviorScore = function() {
         try {
-            var confidence = 70; // Base confidence
+            var score = 70; // Base score
             
-            // Increase confidence with more data
+            // Recent inquiries impact
+            var enquiries = this.creditReport.enquiries || [];
+            var recentInquiries = enquiries.filter(enquiry => {
+                if (!enquiry.enquiryDate) return false;
+                var inquiryDate = new Date(enquiry.enquiryDate);
+                var sixMonthsAgo = new Date();
+                sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+                return inquiryDate > sixMonthsAgo;
+            }).length;
+            
+            // Penalty for multiple recent inquiries
+            if (recentInquiries > 4) score -= 30;
+            else if (recentInquiries > 2) score -= 15;
+            else if (recentInquiries > 0) score -= 5;
+            
+            // New accounts impact
             var accounts = this.creditReport.accounts || [];
-            var creditAge = this.gradingEngine.getCreditAge();
+            var newAccounts = accounts.filter(account => {
+                if (!account.dateOpened) return false;
+                var openedDate = new Date(account.dateOpened);
+                var oneYearAgo = new Date();
+                oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+                return openedDate > oneYearAgo;
+            }).length;
             
-            if (accounts.length >= 3) confidence += 10;
-            if (creditAge >= 24) confidence += 10;
+            // Moderate penalty for many new accounts
+            if (newAccounts > 3) score -= 20;
+            else if (newAccounts > 1) score -= 10;
             
-            // Decrease confidence if limited data
-            if (accounts.length === 0) confidence -= 20;
-            if (creditAge < 6) confidence -= 15;
+            // Credit limit changes (positive if increases)
+            var limitChanges = this.analyzeCreditLimitChanges();
+            score += limitChanges * 5;
             
-            var employmentData = this.creditReport.employment || [];
-            if (employmentData.length === 0) confidence -= 10;
-            
-            return Math.min(95, Math.max(30, confidence));
+            return Math.max(10, Math.min(100, score));
             
         } catch (error) {
             return 50;
@@ -395,163 +366,400 @@
     };
     
     /**
-     * Calculate probability of default
+     * Analyze credit limit changes
      */
-    RiskAssessment.prototype.calculateDefaultProbability = function() {
+    RiskAssessment.prototype.analyzeCreditLimitChanges = function() {
+        // This would analyze historical credit limit changes
+        // For now, return a neutral score
+        return 0;
+    };
+    
+    /**
+     * Apply comprehensive creditworthiness adjustments
+     */
+    RiskAssessment.prototype.applyCreditworthinessAdjustments = function(score) {
+        var adjustments = 0;
+        var accounts = this.creditReport.accounts || [];
+        var employment = this.userInfo.employment;
+        
+        // Government employee bonus (Indian context)
+        if (employment && employment.occupationCode === '02') {
+            adjustments += 8; // Government employees highly valued
+        }
+        
+        // Professional bonus
+        if (employment && employment.occupationCode === '01') {
+            adjustments += 5;
+        }
+        
+        // Relationship with government banks (Indian preference)
+        var hasGovernmentBank = accounts.some(account => {
+            var lender = account.memberShortName || '';
+            var govBanks = CIBILConstants.BANK_CATEGORIES.PUBLIC_SECTOR;
+            return govBanks.some(govBank => lender.includes(govBank));
+        });
+        
+        if (hasGovernmentBank) {
+            adjustments += 4;
+        }
+        
+        // Secured vs unsecured mix (Indian banks prefer mix)
+        var securedLoans = accounts.filter(acc => 
+            ['HL', 'AL', 'GL', 'BL'].includes(acc.accountType)
+        ).length;
+        
+        var unsecuredLoans = accounts.filter(acc => 
+            ['CC', 'PL', 'EL', 'CL', 'TL'].includes(acc.accountType)
+        ).length;
+        
+        if (securedLoans > 0 && unsecuredLoans > 0) {
+            adjustments += 3; // Good mix
+        } else if (securedLoans > 0 && unsecuredLoans === 0) {
+            adjustments += 1; // Only secured (conservative)
+        } else if (securedLoans === 0 && unsecuredLoans > 0) {
+            adjustments -= 2; // Only unsecured (higher risk)
+        }
+        
+        // Credit age bonus for established history
+        var creditAge = this.gradingEngine.getCreditAge();
+        if (creditAge >= 60) adjustments += 5;
+        else if (creditAge >= 36) adjustments += 3;
+        else if (creditAge >= 24) adjustments += 2;
+        
+        // Negative adjustments for high-risk factors
+        var defaulters = this.gradingEngine.identifyDefaulters();
+        if (defaulters.length > 0) {
+            adjustments -= defaulters.length * 3;
+        }
+        
+        // Utilization penalty
+        var utilization = this.gradingEngine.getCreditUtilization();
+        if (utilization > 70) adjustments -= 5;
+        else if (utilization > 50) adjustments -= 2;
+        
+        return Math.min(100, Math.max(0, score + adjustments));
+    };
+    
+    /**
+     * Generate creditworthiness recommendations
+     */
+    RiskAssessment.prototype.generateCreditWorthinessRecommendations = function(score, grade) {
+        var recommendations = [];
+        
+        if (score < 50) {
+            recommendations.push({
+                priority: 'High',
+                action: 'Immediate credit improvement required',
+                focus: 'Payment history and debt reduction',
+                timeline: '3-6 months',
+                expectedImprovement: '20-30 point increase'
+            });
+        } else if (score < 65) {
+            recommendations.push({
+                priority: 'Medium',
+                action: 'Credit building needed',
+                focus: 'Consistent payments and credit mix',
+                timeline: '2-4 months',
+                expectedImprovement: '15-25 point increase'
+            });
+        } else if (score < 85) {
+            recommendations.push({
+                priority: 'Low',
+                action: 'Maintain current credit behavior',
+                focus: 'Optimization and monitoring',
+                timeline: 'Ongoing',
+                expectedImprovement: '5-15 point increase'
+            });
+        }
+        
+        // Grade-specific recommendations
+        if (grade === 'D' || grade === 'E' || grade === 'F') {
+            recommendations.push({
+                priority: 'High',
+                action: 'Consider secured credit card',
+                focus: 'Credit rebuilding',
+                timeline: 'Immediate',
+                resources: ['SBI Secure Card', 'HDFC Secured Card', 'ICICI Coral Contactless']
+            });
+        }
+        
+        return recommendations;
+    };
+    
+    /**
+     * Calculate enhanced default probability with economic factors
+     */
+    RiskAssessment.prototype.calculateDefaultProbability = function(callback) {
+        var self = this;
+        
+        // Check cache
+        if (this.cache.defaultProbability && this.cache.lastCalculated && 
+            (Date.now() - this.cache.lastCalculated) < 300000) {
+            if (callback) {
+                setTimeout(() => callback(null, this.cache.defaultProbability), 0);
+                return;
+            }
+            return this.cache.defaultProbability;
+        }
+        
+        // Get economic data
+        self.economicService.getEconomicData(function(err, economicData) {
+            if (err) {
+                console.error('Error fetching economic data:', err);
+                economicData = self.getDefaultEconomicData();
+            }
+            
+            try {
+                var baseProbability = self.calculateBaseDefaultProbability();
+                var adjustedProbability = self.adjustForEconomicFactors(baseProbability, economicData);
+                var finalProbability = self.applyRiskMitigation(adjustedProbability);
+                
+                // Calculate confidence score
+                var confidence = self.calculateProbabilityConfidence();
+                
+                var result = {
+                    probability: Math.min(95, Math.max(5, Math.round(finalProbability))),
+                    riskLevel: self.getRiskLevel(finalProbability),
+                    riskCategory: self.getRiskCategory(finalProbability),
+                    baseProbability: Math.round(baseProbability),
+                    economicAdjustment: Math.round(adjustedProbability - baseProbability),
+                    confidence: confidence,
+                    economicFactors: self.identifyEconomicRiskFactors(economicData),
+                    sensitivityAnalysis: self.performSensitivityAnalysis(finalProbability),
+                    stressTest: self.performStressTest(finalProbability),
+                    timestamp: new Date().toISOString(),
+                    methodology: 'CIBIL-based risk assessment with economic integration'
+                };
+                
+                // Update cache
+                self.cache.defaultProbability = result;
+                self.cache.lastCalculated = Date.now();
+                
+                if (callback) callback(null, result);
+                else return result;
+                
+            } catch (error) {
+                console.error('Error calculating default probability:', error);
+                if (callback) callback(error, null);
+                else return self.getDefaultProbabilityResult();
+            }
+        });
+        
+        // Return promise-like interface for sync calls
+        if (!callback) {
+            // Fallback to synchronous calculation
+            return this.calculateDefaultProbabilitySync();
+        }
+    };
+    
+    /**
+     * Synchronous default probability calculation
+     */
+    RiskAssessment.prototype.calculateDefaultProbabilitySync = function() {
         try {
-            var creditWorthiness = this.calculateCreditWorthiness();
-            var paymentAnalysis = this.gradingEngine.getOverallPaymentAnalysis();
-            var utilization = this.gradingEngine.getCreditUtilization();
-            var accounts = this.gradingEngine.processAccounts();
-            var defaultPatterns = this.analyzeDefaultPatterns();
-            
-            // Base probability from credit worthiness
-            var baseProbability = 100 - creditWorthiness.score;
-            
-            // Adjust based on payment history
-            var recentMissedRate = this.calculateRecentMissedRate(paymentAnalysis);
-            if (recentMissedRate > 0.3) {
-                baseProbability += 25;
-            } else if (recentMissedRate > 0.2) {
-                baseProbability += 15;
-            } else if (recentMissedRate > 0.1) {
-                baseProbability += 10;
-            } else if (recentMissedRate > 0.05) {
-                baseProbability += 5;
-            }
-            
-            // Adjust based on utilization (Indian banks very sensitive to high utilization)
-            if (utilization > 80) {
-                baseProbability += 20;
-            } else if (utilization > 70) {
-                baseProbability += 15;
-            } else if (utilization > 60) {
-                baseProbability += 10;
-            } else if (utilization > 50) {
-                baseProbability += 5;
-            }
-            
-            // Adjust based on overdue accounts
-            var overdueAccounts = accounts.filter(function(account) {
-                return account.status === 'Overdue' || account.status === 'Default' || 
-                       account.status === 'Written Off' || account.status === 'Wilful Default';
-            }).length;
-            
-            if (overdueAccounts > 0) {
-                baseProbability += (overdueAccounts * 8);
-            }
-            
-            // Adjust based on default patterns
-            if (defaultPatterns.type === 'Willful') {
-                baseProbability += 20;
-            } else if (defaultPatterns.type === 'Situational') {
-                baseProbability += 10;
-            }
-            
-            // Adjust based on debt burden
-            var debtBurden = this.calculateDebtBurdenScore();
-            if (debtBurden > 60) {
-                baseProbability += 15;
-            } else if (debtBurden > 50) {
-                baseProbability += 10;
-            } else if (debtBurden > 40) {
-                baseProbability += 5;
-            }
-            
-            // Adjust based on economic factors (simplified)
-            var economicAdjustment = this.calculateEconomicAdjustment();
-            baseProbability += economicAdjustment;
-            
-            // Cap probability between 5% and 95%
-            var probability = Math.min(95, Math.max(5, Math.round(baseProbability)));
+            var baseProbability = this.calculateBaseDefaultProbability();
+            var economicData = this.getDefaultEconomicData();
+            var adjustedProbability = this.adjustForEconomicFactors(baseProbability, economicData);
+            var finalProbability = this.applyRiskMitigation(adjustedProbability);
             
             return {
-                probability: probability,
-                riskLevel: this.getRiskLevel(probability),
-                confidence: this.calculateDefaultProbabilityConfidence(),
-                factors: {
-                    creditWorthiness: creditWorthiness.score,
-                    missedPaymentRate: paymentAnalysis.missedRate,
-                    recentMissedRate: recentMissedRate,
-                    creditUtilization: utilization,
-                    overdueAccounts: overdueAccounts,
-                    defaultPatternType: defaultPatterns.type,
-                    debtBurden: debtBurden,
-                    economicAdjustment: economicAdjustment
-                }
+                probability: Math.min(95, Math.max(5, Math.round(finalProbability))),
+                riskLevel: this.getRiskLevel(finalProbability),
+                baseProbability: Math.round(baseProbability),
+                confidence: 70
             };
-            
         } catch (error) {
-            console.error('Error calculating default probability:', error);
-            return {
-                probability: 50,
-                riskLevel: 'Medium',
-                confidence: 30,
-                factors: {}
-            };
+            return this.getDefaultProbabilityResult();
         }
     };
     
     /**
-     * Calculate recent missed payment rate (last 12 months)
+     * Calculate base default probability from credit data
      */
-    RiskAssessment.prototype.calculateRecentMissedRate = function(paymentAnalysis) {
-        // Focus on last 12 months for Indian context (banks look closely at recent behavior)
-        var recentPeriod = 12;
-        var recentMissed = Math.min(recentPeriod, paymentAnalysis.missed);
-        var recentDelayed = Math.min(recentPeriod, paymentAnalysis.delayed);
+    RiskAssessment.prototype.calculateBaseDefaultProbability = function() {
+        var accounts = this.creditReport.accounts || [];
+        var enquiries = this.creditReport.enquiries || [];
         
-        // Weight missed payments more heavily than delayed
-        return recentPeriod > 0 ? ((recentMissed * 1.5) + (recentDelayed * 0.5)) / recentPeriod : 0;
+        var probability = 30; // Base probability for Indian market
+        
+        // Factor 1: Payment history (40% weight)
+        var paymentScore = this.calculatePaymentScore(this.gradingEngine.getOverallPaymentAnalysis());
+        probability += (100 - paymentScore) * 0.4;
+        
+        // Factor 2: Credit utilization (20% weight)
+        var utilization = this.gradingEngine.getCreditUtilization();
+        if (utilization > 80) probability += 25;
+        else if (utilization > 70) probability += 18;
+        else if (utilization > 60) probability += 12;
+        else if (utilization > 50) probability += 8;
+        else if (utilization > 40) probability += 4;
+        
+        // Factor 3: Default accounts (15% weight)
+        var defaulters = this.gradingEngine.identifyDefaulters();
+        probability += defaulters.length * 6;
+        
+        // Factor 4: Debt burden (10% weight)
+        var debtBurden = this.calculateDebtBurdenScore();
+        if (debtBurden > 60) probability += 15;
+        else if (debtBurden > 50) probability += 10;
+        else if (debtBurden > 40) probability += 5;
+        
+        // Factor 5: Credit age (5% weight)
+        var creditAge = this.gradingEngine.getCreditAge();
+        if (creditAge < 6) probability += 10;
+        else if (creditAge < 12) probability += 6;
+        else if (creditAge < 24) probability += 3;
+        
+        // Factor 6: Recent inquiries (5% weight)
+        var recentInquiries = this.countRecentEnquiries(enquiries, 6);
+        probability += Math.min(recentInquiries * 2, 10);
+        
+        // Factor 7: Account mix (5% weight)
+        var accountMixScore = this.calculateAccountMixScore();
+        probability += (100 - accountMixScore) * 0.05;
+        
+        return Math.min(90, probability);
     };
     
     /**
-     * Calculate economic adjustment based on simulated economic conditions
+     * Count recent enquiries
      */
-    RiskAssessment.prototype.calculateEconomicAdjustment = function() {
-        // Simplified economic adjustment
-        // In production, this would use real economic data
-        var adjustment = 0;
+    RiskAssessment.prototype.countRecentEnquiries = function(enquiries, months) {
+        var cutoffDate = new Date();
+        cutoffDate.setMonth(cutoffDate.getMonth() - months);
         
-        // Simulate based on employment sector
-        var employmentData = this.creditReport.employment || [];
-        if (employmentData.length > 0) {
-            var occupationCode = employmentData[0].occupationCode;
-            
-            // Sectors more sensitive to economic downturns
-            var highRiskSectors = ['06', '05', '04']; // Daily wage, Business, Self-employed
-            var mediumRiskSectors = ['03']; // Private sector
-            
-            if (highRiskSectors.includes(occupationCode)) {
-                adjustment += 8;
-            } else if (mediumRiskSectors.includes(occupationCode)) {
-                adjustment += 4;
-            }
+        return enquiries.filter(enquiry => {
+            if (!enquiry.enquiryDate) return false;
+            var enquiryDate = new Date(enquiry.enquiryDate);
+            return enquiryDate > cutoffDate;
+        }).length;
+    };
+    
+    /**
+     * Adjust for economic factors
+     */
+    RiskAssessment.prototype.adjustForEconomicFactors = function(baseProbability, economicData) {
+        var adjusted = baseProbability;
+        
+        // GDP growth impact
+        if (economicData.gdpGrowth < 5) adjusted += 12;
+        else if (economicData.gdpGrowth < 6) adjusted += 6;
+        else if (economicData.gdpGrowth > 8) adjusted -= 5;
+        
+        // Inflation impact (RBI target: 4% +/- 2%)
+        if (economicData.inflationRate > 6) adjusted += 10;
+        else if (economicData.inflationRate < 2) adjusted += 5; // Deflation risk
+        else if (economicData.inflationRate >= 4 && economicData.inflationRate <= 6) adjusted -= 3;
+        
+        // Interest rate impact
+        if (economicData.repoRate > 7) adjusted += 8;
+        else if (economicData.repoRate < 5) adjusted -= 4;
+        
+        // Unemployment impact
+        if (economicData.unemploymentRate > 8) adjusted += 7;
+        else if (economicData.unemploymentRate < 5) adjusted -= 3;
+        
+        // Market sentiment impact
+        if (economicData.marketSentiment < 40) adjusted += 10;
+        else if (economicData.marketSentiment < 60) adjusted += 5;
+        else if (economicData.marketSentiment > 80) adjusted -= 4;
+        
+        // Sector-specific impact
+        var userSector = this.getUserSector();
+        if (userSector && economicData.sectorPerformance) {
+            var sectorPerformance = economicData.sectorPerformance[userSector] || 0;
+            if (sectorPerformance < -5) adjusted += 6;
+            else if (sectorPerformance > 10) adjusted -= 3;
         }
         
-        return adjustment;
+        return adjusted;
     };
     
     /**
-     * Calculate confidence in default probability calculation
+     * Get user's employment sector
      */
-    RiskAssessment.prototype.calculateDefaultProbabilityConfidence = function() {
+    RiskAssessment.prototype.getUserSector = function() {
+        var employment = this.userInfo.employment;
+        if (!employment) return null;
+        
+        var occupationCode = employment.occupationCode;
+        var sectorMap = {
+            '01': 'professional_services',
+            '02': 'government',
+            '03': 'private_sector',
+            '04': 'self_employed',
+            '05': 'business',
+            '06': 'daily_wage',
+            '07': 'unemployed',
+            '08': 'retired',
+            '09': 'student',
+            '10': 'homemaker'
+        };
+        
+        return sectorMap[occupationCode] || 'other';
+    };
+    
+    /**
+     * Apply risk mitigation factors
+     */
+    RiskAssessment.prototype.applyRiskMitigation = function(probability) {
+        var mitigated = probability;
+        var accounts = this.creditReport.accounts || [];
+        
+        // Mitigation for secured loans
+        var securedLoans = accounts.filter(acc => 
+            ['HL', 'AL', 'GL', 'BL'].includes(acc.accountType)
+        ).length;
+        
+        if (securedLoans > 0) {
+            mitigated -= securedLoans * 2; // Secured loans reduce risk
+        }
+        
+        // Mitigation for long credit history
+        var creditAge = this.gradingEngine.getCreditAge();
+        if (creditAge >= 60) mitigated -= 5;
+        else if (creditAge >= 36) mitigated -= 3;
+        
+        // Mitigation for government employment
+        var employment = this.userInfo.employment;
+        if (employment && employment.occupationCode === '02') {
+            mitigated -= 4; // Government employees have lower default risk
+        }
+        
+        return Math.max(5, mitigated);
+    };
+    
+    /**
+     * Calculate probability confidence score
+     */
+    RiskAssessment.prototype.calculateProbabilityConfidence = function() {
         try {
             var confidence = 70;
             var accounts = this.creditReport.accounts || [];
             var creditAge = this.gradingEngine.getCreditAge();
             var paymentAnalysis = this.gradingEngine.getOverallPaymentAnalysis();
             
-            // More data = higher confidence
-            if (accounts.length >= 4) confidence += 10;
-            if (creditAge >= 36) confidence += 15;
+            // Data completeness
+            if (accounts.length >= 5) confidence += 10;
+            else if (accounts.length >= 3) confidence += 5;
+            else if (accounts.length === 0) confidence -= 20;
             
-            // Sufficient payment history
-            if (paymentAnalysis.total >= 24) confidence += 10;
+            // Credit history length
+            if (creditAge >= 60) confidence += 15;
+            else if (creditAge >= 36) confidence += 10;
+            else if (creditAge >= 24) confidence += 5;
+            else if (creditAge < 6) confidence -= 10;
             
-            // Employment data available
-            var employmentData = this.creditReport.employment || [];
-            if (employmentData.length > 0) confidence += 5;
+            // Payment history data
+            if (paymentAnalysis.total >= 36) confidence += 10;
+            else if (paymentAnalysis.total >= 24) confidence += 5;
+            else if (paymentAnalysis.total < 6) confidence -= 15;
+            
+            // Employment data
+            if (this.userInfo.employment) confidence += 5;
+            
+            // Address data
+            if (this.userInfo.address) confidence += 5;
             
             return Math.min(95, Math.max(30, confidence));
             
@@ -561,1216 +769,622 @@
     };
     
     /**
-     * Convert letter grade to numerical score
-     */
-    RiskAssessment.prototype.gradeToScore = function(grade) {
-        var gradeScores = {
-            'A+': 100,
-            'A': 95,
-            'B+': 85,
-            'B': 75,
-            'C+': 65,
-            'C': 55,
-            'D+': 45,
-            'D': 35,
-            'E+': 25,
-            'E': 15,
-            'F': 5
-        };
-        
-        return gradeScores[grade] || 30;
-    };
-    
-    /**
-     * Analyze default patterns to determine if willful or situational
-     */
-    RiskAssessment.prototype.analyzeDefaultPatterns = function() {
-        try {
-            var accounts = this.creditReport.accounts || [];
-            var defaulters = this.gradingEngine.identifyDefaulters();
-            var paymentAnalysis = this.gradingEngine.getOverallPaymentAnalysis();
-            
-            var willfulDefaultIndicators = 0;
-            var situationalDefaultIndicators = 0;
-            var analysisNotes = [];
-            
-            // Check each account for patterns
-            for (var i = 0; i < accounts.length; i++) {
-                var account = accounts[i];
-                var paymentData = this.gradingEngine.parsePaymentHistory(account);
-                
-                // Pattern 1: Consistent payments then sudden stop (situational)
-                var consistentThenStop = this.checkConsistentThenStop(paymentData);
-                if (consistentThenStop) {
-                    situationalDefaultIndicators++;
-                    analysisNotes.push('Account ' + (i + 1) + ': Consistent payments followed by sudden stop');
-                }
-                
-                // Pattern 2: Irregular payments with no pattern (willful)
-                var irregularPattern = this.checkIrregularPattern(paymentData);
-                if (irregularPattern) {
-                    willfulDefaultIndicators++;
-                    analysisNotes.push('Account ' + (i + 1) + ': Irregular payment pattern');
-                }
-                
-                // Pattern 3: Small payments on large debts (strategic default)
-                var strategicDefault = this.checkStrategicDefault(account, paymentData);
-                if (strategicDefault) {
-                    willfulDefaultIndicators += 2;
-                    analysisNotes.push('Account ' + (i + 1) + ': Small payments on large debt (strategic default)');
-                }
-            }
-            
-            // Check for simultaneous defaults across accounts
-            var simultaneousDefaults = this.checkSimultaneousDefaults(accounts);
-            if (simultaneousDefaults) {
-                situationalDefaultIndicators += 2;
-                analysisNotes.push('Multiple accounts defaulted simultaneously');
-            }
-            
-            // Check for recent defaults after long history (situational)
-            var recentDefaultsAfterHistory = this.checkRecentDefaultsAfterHistory();
-            if (recentDefaultsAfterHistory) {
-                situationalDefaultIndicators++;
-                analysisNotes.push('Recent defaults after long clean history');
-            }
-            
-            // Determine default type
-            var defaultType = 'No Clear Pattern';
-            if (willfulDefaultIndicators > situationalDefaultIndicators + 2) {
-                defaultType = 'Willful';
-            } else if (situationalDefaultIndicators > willfulDefaultIndicators + 2) {
-                defaultType = 'Situational';
-            } else if (willfulDefaultIndicators > 0 || situationalDefaultIndicators > 0) {
-                defaultType = 'Mixed Pattern';
-            }
-            
-            return {
-                type: defaultType,
-                willfulIndicators: willfulDefaultIndicators,
-                situationalIndicators: situationalDefaultIndicators,
-                defaultAccounts: defaulters.length,
-                totalAccounts: accounts.length,
-                analysisNotes: analysisNotes,
-                severity: this.determinePatternSeverity(willfulDefaultIndicators, situationalDefaultIndicators)
-            };
-            
-        } catch (error) {
-            console.error('Error analyzing default patterns:', error);
-            return {
-                type: 'Analysis Error',
-                willfulIndicators: 0,
-                situationalIndicators: 0,
-                defaultAccounts: 0,
-                totalAccounts: 0,
-                analysisNotes: ['Pattern analysis failed'],
-                severity: 'Unknown'
-            };
-        }
-    };
-    
-    /**
-     * Check for consistent payments followed by sudden stop
-     */
-    RiskAssessment.prototype.checkConsistentThenStop = function(paymentData) {
-        try {
-            var payments = paymentData.payments || [];
-            if (payments.length < 9) return false; // Need at least 9 months of history
-            
-            var paidStreak = 0;
-            var missedStreak = 0;
-            var foundPattern = false;
-            
-            for (var i = 0; i < payments.length; i++) {
-                var payment = payments[i];
-                
-                if (payment.category === 'Paid') {
-                    paidStreak++;
-                    if (missedStreak > 0) {
-                        // Pattern broken - reset
-                        paidStreak = 0;
-                        missedStreak = 0;
-                    }
-                } else if (payment.category === 'Missed') {
-                    missedStreak++;
-                    // Check if we had a long paid streak followed by missed payments
-                    if (paidStreak >= 6 && missedStreak >= 3) {
-                        foundPattern = true;
-                        break;
-                    }
-                } else {
-                    // Delayed or not reported - reset pattern
-                    paidStreak = 0;
-                    missedStreak = 0;
-                }
-            }
-            
-            return foundPattern;
-            
-        } catch (error) {
-            return false;
-        }
-    };
-    
-    /**
-     * Check for irregular payment pattern
-     */
-    RiskAssessment.prototype.checkIrregularPattern = function(paymentData) {
-        try {
-            var payments = paymentData.payments || [];
-            if (payments.length < 6) return false;
-            
-            var statusChanges = 0;
-            var lastStatus = null;
-            
-            for (var i = 0; i < payments.length; i++) {
-                var currentStatus = payments[i].category;
-                if (lastStatus !== null && currentStatus !== lastStatus) {
-                    statusChanges++;
-                }
-                lastStatus = currentStatus;
-            }
-            
-            // More than 1 status change per 2 months indicates irregular pattern
-            return statusChanges > (payments.length / 2);
-            
-        } catch (error) {
-            return false;
-        }
-    };
-    
-    /**
-     * Check for strategic default (making small payments on large debt)
-     */
-    RiskAssessment.prototype.checkStrategicDefault = function(account, paymentData) {
-        try {
-            var balance = this.gradingEngine.safeToNumber(account.currentBalance);
-            var limit = this.gradingEngine.safeToNumber(account.highCreditAmount);
-            var overdue = this.gradingEngine.safeToNumber(account.amountOverdue);
-            
-            // High balance with small or no recent payments
-            if (balance > 100000 && overdue > (balance * 0.5)) {
-                var recentPayments = paymentData.payments.slice(-6); // Last 6 months
-                var recentPaidCount = recentPayments.filter(function(p) {
-                    return p.category === 'Paid';
-                }).length;
-                
-                // Making less than 50% of payments in last 6 months on large debt
-                return recentPaidCount < 3;
-            }
-            
-            return false;
-            
-        } catch (error) {
-            return false;
-        }
-    };
-    
-    /**
-     * Check for simultaneous defaults across accounts
-     */
-    RiskAssessment.prototype.checkSimultaneousDefaults = function(accounts) {
-        try {
-            var defaultPeriods = {};
-            
-            for (var i = 0; i < accounts.length; i++) {
-                var account = accounts[i];
-                var paymentData = this.gradingEngine.parsePaymentHistory(account);
-                var defaultMonths = [];
-                
-                for (var j = 0; j < paymentData.payments.length; j++) {
-                    if (paymentData.payments[j].category === 'Missed') {
-                        defaultMonths.push(j);
-                    }
-                }
-                
-                if (defaultMonths.length > 0) {
-                    defaultPeriods['account_' + i] = defaultMonths;
-                }
-            }
-            
-            var accountKeys = Object.keys(defaultPeriods);
-            if (accountKeys.length < 2) return false;
-            
-            // Check for overlapping default months across accounts
-            for (var i = 0; i < accountKeys.length - 1; i++) {
-                for (var j = i + 1; j < accountKeys.length; j++) {
-                    var periods1 = defaultPeriods[accountKeys[i]];
-                    var periods2 = defaultPeriods[accountKeys[j]];
-                    
-                    // Find overlapping months
-                    var overlap = periods1.filter(function(month) {
-                        return periods2.includes(month);
-                    });
-                    
-                    // If 3 or more overlapping default months, likely simultaneous
-                    if (overlap.length >= 3) return true;
-                }
-            }
-            
-            return false;
-            
-        } catch (error) {
-            return false;
-        }
-    };
-    
-    /**
-     * Check for recent defaults after long clean history
-     */
-    RiskAssessment.prototype.checkRecentDefaultsAfterHistory = function() {
-        try {
-            var accounts = this.creditReport.accounts || [];
-            var foundPattern = false;
-            
-            for (var i = 0; i < accounts.length; i++) {
-                var paymentData = this.gradingEngine.parsePaymentHistory(accounts[i]);
-                var payments = paymentData.payments || [];
-                
-                if (payments.length >= 24) { // At least 2 years history
-                    var firstHalf = payments.slice(0, Math.floor(payments.length / 2));
-                    var secondHalf = payments.slice(Math.floor(payments.length / 2));
-                    
-                    var firstHalfMissed = firstHalf.filter(function(p) {
-                        return p.category === 'Missed';
-                    }).length;
-                    
-                    var secondHalfMissed = secondHalf.filter(function(p) {
-                        return p.category === 'Missed';
-                    }).length;
-                    
-                    // Clean first half, defaults in second half
-                    if (firstHalfMissed === 0 && secondHalfMissed >= 2) {
-                        foundPattern = true;
-                        break;
-                    }
-                }
-            }
-            
-            return foundPattern;
-            
-        } catch (error) {
-            return false;
-        }
-    };
-    
-    /**
-     * Determine pattern severity
-     */
-    RiskAssessment.prototype.determinePatternSeverity = function(willfulIndicators, situationalIndicators) {
-        var totalIndicators = willfulIndicators + situationalIndicators;
-        
-        if (totalIndicators === 0) return 'None';
-        if (willfulIndicators >= 3) return 'Critical';
-        if (willfulIndicators >= 2) return 'High';
-        if (situationalIndicators >= 3) return 'Medium';
-        if (totalIndicators >= 2) return 'Low-Medium';
-        return 'Low';
-    };
-    
-    /**
-     * Convert probability to risk level
+     * Get risk level based on probability
      */
     RiskAssessment.prototype.getRiskLevel = function(probability) {
-        if (probability < 15) return 'Very Low';
-        if (probability < 30) return 'Low';
-        if (probability < 45) return 'Low-Medium';
-        if (probability < 60) return 'Medium';
-        if (probability < 75) return 'Medium-High';
-        if (probability < 85) return 'High';
+        var thresholds = CIBILConstants.RISK_THRESHOLDS.DEFAULT_PROBABILITY;
+        
+        if (probability < thresholds.VERY_LOW) return 'Very Low';
+        if (probability < thresholds.LOW) return 'Low';
+        if (probability < thresholds.MEDIUM) return 'Medium';
+        if (probability < thresholds.HIGH) return 'High';
         return 'Very High';
     };
     
     /**
-     * Generate comprehensive risk assessment report
+     * Get risk category with more granular classification
+     */
+    RiskAssessment.prototype.getRiskCategory = function(probability) {
+        if (probability < 10) return 'Minimal Risk';
+        if (probability < 20) return 'Very Low Risk';
+        if (probability < 30) return 'Low Risk';
+        if (probability < 40) return 'Low-Medium Risk';
+        if (probability < 50) return 'Medium Risk';
+        if (probability < 60) return 'Medium-High Risk';
+        if (probability < 70) return 'High Risk';
+        if (probability < 80) return 'Very High Risk';
+        if (probability < 90) return 'Severe Risk';
+        return 'Critical Risk';
+    };
+    
+    /**
+     * Identify economic risk factors
+     */
+    RiskAssessment.prototype.identifyEconomicRiskFactors = function(economicData) {
+        var factors = [];
+        
+        // GDP growth factors
+        if (economicData.gdpGrowth < 5) {
+            factors.push({
+                factor: 'Low Economic Growth',
+                impact: 'High',
+                description: `GDP growth at ${economicData.gdpGrowth}% may increase overall default rates`,
+                adjustment: '+12% to default probability'
+            });
+        } else if (economicData.gdpGrowth > 8) {
+            factors.push({
+                factor: 'Strong Economic Growth',
+                impact: 'Positive',
+                description: `GDP growth at ${economicData.gdpGrowth}% supports credit health`,
+                adjustment: '-5% to default probability'
+            });
+        }
+        
+        // Inflation factors
+        if (economicData.inflationRate > 6) {
+            factors.push({
+                factor: 'High Inflation',
+                impact: 'High',
+                description: `Inflation at ${economicData.inflationRate}% erodes purchasing power`,
+                adjustment: '+10% to default probability'
+            });
+        }
+        
+        // Interest rate factors
+        if (economicData.repoRate > 7) {
+            factors.push({
+                factor: 'High Interest Rates',
+                impact: 'Medium',
+                description: `Repo rate at ${economicData.repoRate}% increases borrowing costs`,
+                adjustment: '+8% to default probability'
+            });
+        }
+        
+        // Unemployment factors
+        if (economicData.unemploymentRate > 8) {
+            factors.push({
+                factor: 'High Unemployment',
+                impact: 'High',
+                description: `Unemployment at ${economicData.unemploymentRate}% indicates economic stress`,
+                adjustment: '+7% to default probability'
+            });
+        }
+        
+        // Market sentiment factors
+        if (economicData.marketSentiment < 40) {
+            factors.push({
+                factor: 'Negative Market Sentiment',
+                impact: 'Medium',
+                description: 'Poor market sentiment may precede economic challenges',
+                adjustment: '+10% to default probability'
+            });
+        }
+        
+        // Sector-specific factors
+        var userSector = this.getUserSector();
+        if (userSector && economicData.sectorPerformance) {
+            var sectorPerf = economicData.sectorPerformance[userSector];
+            if (sectorPerf < -5) {
+                factors.push({
+                    factor: `Sector Downturn (${this.getSectorName(userSector)})`,
+                    impact: 'Medium',
+                    description: `Sector performance at ${sectorPerf}% may impact income stability`,
+                    adjustment: '+6% to default probability'
+                });
+            }
+        }
+        
+        return factors;
+    };
+    
+    /**
+     * Get sector name from code
+     */
+    RiskAssessment.prototype.getSectorName = function(sectorCode) {
+        var sectorNames = {
+            'professional_services': 'Professional Services',
+            'government': 'Government',
+            'private_sector': 'Private Sector',
+            'self_employed': 'Self-Employed',
+            'business': 'Business',
+            'daily_wage': 'Daily Wage',
+            'unemployed': 'Unemployed',
+            'retired': 'Retired',
+            'student': 'Student',
+            'homemaker': 'Homemaker',
+            'other': 'Other'
+        };
+        
+        return sectorNames[sectorCode] || 'Unknown Sector';
+    };
+    
+    /**
+     * Perform sensitivity analysis
+     */
+    RiskAssessment.prototype.performSensitivityAnalysis = function(baseProbability) {
+        var analysis = {
+            baseCase: Math.round(baseProbability),
+            scenarios: {},
+            impacts: {},
+            mostSensitive: null
+        };
+        
+        // Define scenarios
+        var scenarios = {
+            economicDownturn: baseProbability * 1.35, // 35% increase
+            interestRateHike: baseProbability * 1.25, // 25% increase
+            incomeReduction: baseProbability * 1.4,   // 40% increase
+            jobLoss: baseProbability * 1.6,          // 60% increase
+            utilizationIncrease: this.calculateScenarioUtilizationIncrease(baseProbability),
+            paymentMiss: this.calculateScenarioPaymentMiss(baseProbability)
+        };
+        
+        analysis.scenarios = scenarios;
+        
+        // Calculate impacts
+        for (var scenario in scenarios) {
+            analysis.impacts[scenario] = Math.round(scenarios[scenario] - baseProbability);
+        }
+        
+        // Find most sensitive scenario
+        var maxImpact = 0;
+        for (var scenario in analysis.impacts) {
+            if (analysis.impacts[scenario] > maxImpact) {
+                maxImpact = analysis.impacts[scenario];
+                analysis.mostSensitive = {
+                    scenario: scenario,
+                    impact: analysis.impacts[scenario]
+                };
+            }
+        }
+        
+        return analysis;
+    };
+    
+    /**
+     * Calculate scenario: Utilization increase
+     */
+    RiskAssessment.prototype.calculateScenarioUtilizationIncrease = function(baseProbability) {
+        var currentUtilization = this.gradingEngine.getCreditUtilization();
+        if (currentUtilization >= 90) return baseProbability;
+        
+        var increaseTo90 = 90 - currentUtilization;
+        var probabilityIncrease = increaseTo90 * 1.2; // 1.2% increase per utilization point
+        return baseProbability + probabilityIncrease;
+    };
+    
+    /**
+     * Calculate scenario: Additional missed payment
+     */
+    RiskAssessment.prototype.calculateScenarioPaymentMiss = function(baseProbability) {
+        var missedPayments = this.gradingEngine.getOverallPaymentAnalysis().missed || 0;
+        var additionalImpact = (missedPayments + 2) * 8; // Each missed payment adds ~8%
+        return baseProbability + additionalImpact;
+    };
+    
+    /**
+     * Perform stress test
+     */
+    RiskAssessment.prototype.performStressTest = function(baseProbability) {
+        // Combined stress scenario
+        var stressProbability = baseProbability;
+        
+        // Apply stress factors
+        stressProbability *= 1.3; // Economic downturn
+        stressProbability *= 1.2; // Interest rate hike
+        stressProbability *= 1.25; // Income reduction
+        stressProbability *= 1.15; // Market volatility
+        
+        // Cap at 95%
+        stressProbability = Math.min(95, stressProbability);
+        
+        return {
+            scenario: 'Severe Economic Stress (Combined Factors)',
+            probability: Math.round(stressProbability),
+            increase: Math.round(stressProbability - baseProbability),
+            passes: stressProbability <= 75, // Pass if <=75% under stress
+            buffer: Math.max(0, stressProbability - 75),
+            rating: stressProbability <= 60 ? 'Strong' : 
+                   stressProbability <= 75 ? 'Adequate' : 
+                   stressProbability <= 85 ? 'Weak' : 'Failing'
+        };
+    };
+    
+    /**
+     * Generate comprehensive risk report
      */
     RiskAssessment.prototype.generateRiskReport = function() {
         try {
             var creditWorthiness = this.calculateCreditWorthiness();
+            var defaultProbability = this.calculateDefaultProbabilitySync();
             var defaultPatterns = this.analyzeDefaultPatterns();
-            var defaultProbability = this.calculateDefaultProbability();
             var grade = this.gradingEngine.calculateOverallGrade();
             var recommendations = this.generateRiskRecommendation();
             var riskFactors = this.identifyRiskFactors();
-            var eligibleInstitutions = this.getEligibleInstitutions();
+            var economicContext = this.getEconomicContext();
+            var stressTest = this.performStressTest(defaultProbability.probability);
             
-            return {
+            var report = {
                 metadata: {
                     generatedAt: new Date().toISOString(),
-                    reportVersion: '2.0',
-                    assessmentMethodology: 'CIBIL-based risk assessment with Indian market adjustments'
+                    reportVersion: '3.0',
+                    assessmentMethodology: 'Enhanced CIBIL risk assessment with economic integration',
+                    regulatoryFramework: 'RBI Guidelines Compliant'
                 },
                 clientInfo: this.userInfo,
+                executiveSummary: this.generateRiskExecutiveSummary(creditWorthiness, defaultProbability, grade),
                 creditAssessment: {
                     overallGrade: grade,
+                    gradeInterpretation: this.interpretGrade(grade),
                     creditWorthiness: creditWorthiness,
                     defaultProbability: defaultProbability,
                     defaultPatternAnalysis: defaultPatterns,
                     paymentAnalysis: this.gradingEngine.getOverallPaymentAnalysis(),
                     utilizationAnalysis: {
                         currentUtilization: this.gradingEngine.getCreditUtilization(),
-                        recommendedThreshold: 30,
-                        status: this.gradingEngine.getCreditUtilization() <= 30 ? 'Good' : 'Needs Improvement'
+                        recommendedThreshold: CIBILConstants.RISK_THRESHOLDS.CREDIT_UTILIZATION.OPTIMAL,
+                        status: this.getUtilizationStatus(this.gradingEngine.getCreditUtilization())
                     }
                 },
                 riskAnalysis: {
                     riskFactors: riskFactors,
                     overallRiskLevel: defaultProbability.riskLevel,
+                    riskCategory: defaultProbability.riskCategory,
                     riskConcentration: this.analyzeRiskConcentration(),
-                    sensitivityAnalysis: this.performSensitivityAnalysis()
+                    sensitivityAnalysis: defaultProbability.sensitivityAnalysis,
+                    stressTest: stressTest,
+                    earlyWarningIndicators: this.identifyEarlyWarningIndicators()
                 },
+                economicContext: economicContext,
                 recommendations: recommendations,
                 lendingOptions: {
-                    eligibleInstitutions: eligibleInstitutions,
+                    eligibleInstitutions: this.getEligibleInstitutions(),
                     suggestedLoanProducts: this.suggestLoanProducts(),
-                    collateralRequirements: this.determineCollateralRequirements()
+                    collateralRequirements: this.determineCollateralRequirements(),
+                    pricingRecommendations: this.generatePricingRecommendations(grade, defaultProbability.probability)
                 },
                 monitoringAndReview: {
-                    recommendedReviewFrequency: this.determineReviewFrequency(),
+                    recommendedReviewFrequency: this.determineReviewFrequency(defaultProbability.probability),
                     keyMonitoringMetrics: this.identifyMonitoringMetrics(),
-                    earlyWarningSignals: this.identifyEarlyWarningSignals()
-                }
+                    earlyWarningSignals: this.identifyEarlyWarningSignals(),
+                    complianceRequirements: this.getComplianceRequirements()
+                },
+                improvementRoadmap: this.generateImprovementRoadmap(creditWorthiness.score, grade)
             };
+            
+            return report;
             
         } catch (error) {
             console.error('Error generating risk report:', error);
-            return {
-                metadata: {
-                    generatedAt: new Date().toISOString(),
-                    reportVersion: '2.0',
-                    note: 'Limited report due to system error'
-                },
-                clientInfo: this.userInfo,
-                error: 'Risk report generation failed: ' + error.message
-            };
+            return this.getDefaultRiskReport();
         }
     };
     
     /**
-     * Identify key risk factors
+     * Generate risk executive summary
      */
-    RiskAssessment.prototype.identifyRiskFactors = function() {
-        try {
-            var riskFactors = [];
-            var paymentAnalysis = this.gradingEngine.getOverallPaymentAnalysis();
-            var utilization = this.gradingEngine.getCreditUtilization();
-            var defaulters = this.gradingEngine.identifyDefaulters();
-            var defaultPatterns = this.analyzeDefaultPatterns();
-            var creditAge = this.gradingEngine.getCreditAge();
-            var debtBurden = this.calculateDebtBurdenScore();
-            
-            // Payment history risk factors
-            if (paymentAnalysis.missedRate > 0.2) {
-                riskFactors.push({
-                    factor: 'Very High Missed Payment Rate',
-                    severity: 'Critical',
-                    description: 'Missed ' + (paymentAnalysis.missedRate * 100).toFixed(1) + '% of payments',
-                    impact: 'Directly increases default probability by 20-30%',
-                    mitigation: 'Require automatic payments or payment reminders'
-                });
-            } else if (paymentAnalysis.missedRate > 0.1) {
-                riskFactors.push({
-                    factor: 'High Missed Payment Rate',
-                    severity: 'High',
-                    description: 'Missed ' + (paymentAnalysis.missedRate * 100).toFixed(1) + '% of payments',
-                    impact: 'Significantly increases default risk',
-                    mitigation: 'Enhanced payment monitoring'
-                });
-            } else if (paymentAnalysis.delayedRate > 0.3) {
-                riskFactors.push({
-                    factor: 'High Delayed Payment Rate',
-                    severity: 'Medium-High',
-                    description: 'Delayed ' + (paymentAnalysis.delayedRate * 100).toFixed(1) + '% of payments',
-                    impact: 'Indicates potential cash flow issues',
-                    mitigation: 'Flexible payment schedule consideration'
-                });
-            }
-            
-            // Credit utilization risk factors
-            if (utilization > 80) {
-                riskFactors.push({
-                    factor: 'Extremely High Credit Utilization',
-                    severity: 'Critical',
-                    description: 'Using ' + utilization.toFixed(1) + '% of available credit',
-                    impact: 'Very high likelihood of future default',
-                    mitigation: 'Debt consolidation or balance transfer required'
-                });
-            } else if (utilization > 70) {
-                riskFactors.push({
-                    factor: 'Very High Credit Utilization',
-                    severity: 'High',
-                    description: 'Using ' + utilization.toFixed(1) + '% of available credit',
-                    impact: 'High default risk, limited borrowing capacity',
-                    mitigation: 'Credit limit increase or debt reduction plan'
-                });
-            } else if (utilization > 50) {
-                riskFactors.push({
-                    factor: 'High Credit Utilization',
-                    severity: 'Medium',
-                    description: 'Using ' + utilization.toFixed(1) + '% of available credit',
-                    impact: 'Above optimal utilization level',
-                    mitigation: 'Recommend reducing to below 30%'
-                });
-            }
-            
-            // Default account risk factors
-            if (defaulters.length > 0) {
-                var severity = defaulters.length >= 3 ? 'Critical' : (defaulters.length >= 2 ? 'High' : 'Medium');
-                riskFactors.push({
-                    factor: 'Active Default Accounts',
-                    severity: severity,
-                    description: defaulters.length + ' account(s) with default indicators',
-                    impact: 'Direct evidence of payment failure',
-                    mitigation: 'Require settlement or rehabilitation before new credit'
-                });
-            }
-            
-            // Default pattern risk factors
-            if (defaultPatterns.type === 'Willful') {
-                riskFactors.push({
-                    factor: 'Willful Default Pattern Detected',
-                    severity: 'Critical',
-                    description: 'Pattern suggests intentional default behavior',
-                    impact: 'Very high probability of future intentional default',
-                    mitigation: 'Require collateral or third-party guarantee'
-                });
-            } else if (defaultPatterns.type === 'Mixed Pattern') {
-                riskFactors.push({
-                    factor: 'Mixed Default Patterns',
-                    severity: 'Medium-High',
-                    description: 'Both willful and situational default indicators present',
-                    impact: 'Uncertain default behavior pattern',
-                    mitigation: 'Enhanced monitoring and conditional lending'
-                });
-            }
-            
-            // Credit history risk factors
-            if (creditAge < 6) {
-                riskFactors.push({
-                    factor: 'Very Short Credit History',
-                    severity: 'Medium',
-                    description: 'Only ' + creditAge + ' months of credit history',
-                    impact: 'Limited data for reliable risk assessment',
-                    mitigation: 'Consider secured credit or smaller initial limit'
-                });
-            } else if (creditAge < 12) {
-                riskFactors.push({
-                    factor: 'Short Credit History',
-                    severity: 'Low-Medium',
-                    description: 'Only ' + creditAge + ' months of credit history',
-                    impact: 'Limited historical performance data',
-                    mitigation: 'Gradual credit limit increases based on performance'
-                });
-            }
-            
-            // Debt burden risk factors
-            if (debtBurden > 60) {
-                riskFactors.push({
-                    factor: 'Very High Debt Burden',
-                    severity: 'Critical',
-                    description: 'Debt payments consume ' + debtBurden.toFixed(1) + '% of estimated income',
-                    impact: 'Limited capacity for additional debt repayment',
-                    mitigation: 'Debt restructuring before new credit'
-                });
-            } else if (debtBurden > 50) {
-                riskFactors.push({
-                    factor: 'High Debt Burden',
-                    severity: 'High',
-                    description: 'Debt payments consume ' + debtBurden.toFixed(1) + '% of estimated income',
-                    impact: 'Reduced capacity for additional borrowing',
-                    mitigation: 'Smaller loan amounts or longer tenures'
-                });
-            }
-            
-            // Employment stability risk factors
-            var employmentData = this.creditReport.employment || [];
-            if (employmentData.length === 0) {
-                riskFactors.push({
-                    factor: 'No Employment Information',
-                    severity: 'Medium',
-                    description: 'Employment status not available',
-                    impact: 'Unable to assess income stability',
-                    mitigation: 'Require income documentation'
-                });
-            } else {
-                var occupationCode = employmentData[0].occupationCode;
-                if (occupationCode === '07') { // Unemployed
-                    riskFactors.push({
-                        factor: 'Currently Unemployed',
-                        severity: 'High',
-                        description: 'No current employment income',
-                        impact: 'No regular income for debt servicing',
-                        mitigation: 'Require alternative income sources or collateral'
-                    });
-                } else if (occupationCode === '06') { // Daily wage
-                    riskFactors.push({
-                        factor: 'Daily Wage Employment',
-                        severity: 'Medium-High',
-                        description: 'Income may be irregular',
-                        impact: 'Income volatility increases default risk',
-                        mitigation: 'Require consistent employment history'
-                    });
-                }
-            }
-            
-            // Sort by severity
-            var severityOrder = { 'Critical': 1, 'Very High': 2, 'High': 3, 'Medium-High': 4, 'Medium': 5, 'Low-Medium': 6, 'Low': 7 };
-            riskFactors.sort(function(a, b) {
-                return severityOrder[a.severity] - severityOrder[b.severity];
-            });
-            
-            return riskFactors;
-            
-        } catch (error) {
-            console.error('Error identifying risk factors:', error);
-            return [];
-        }
-    };
-    
-    /**
-     * Analyze risk concentration
-     */
-    RiskAssessment.prototype.analyzeRiskConcentration = function() {
-        try {
-            var accounts = this.creditReport.accounts || [];
-            var analysis = {
-                lenderConcentration: {},
-                productConcentration: {},
-                riskDistribution: {
-                    lowRisk: 0,
-                    mediumRisk: 0,
-                    highRisk: 0
-                }
-            };
-            
-            // Analyze lender concentration
-            accounts.forEach(function(account) {
-                var lender = account.memberShortName || 'Unknown';
-                analysis.lenderConcentration[lender] = (analysis.lenderConcentration[lender] || 0) + 1;
-            });
-            
-            // Analyze product concentration
-            accounts.forEach(function(account) {
-                var product = account.accountType || 'Unknown';
-                analysis.productConcentration[product] = (analysis.productConcentration[product] || 0) + 1;
-            });
-            
-            // Analyze risk distribution
-            accounts.forEach(function(account) {
-                var paymentData = this.gradingEngine.parsePaymentHistory(account);
-                var overdue = this.gradingEngine.safeToNumber(account.amountOverdue);
-                var balance = this.gradingEngine.safeToNumber(account.currentBalance);
-                var limit = this.gradingEngine.safeToNumber(account.highCreditAmount);
-                var utilization = limit > 0 ? (balance / limit) * 100 : 0;
-                
-                if (overdue > 0 || paymentData.missed > 0 || utilization > 90) {
-                    analysis.riskDistribution.highRisk++;
-                } else if (paymentData.delayed > 0 || utilization > 70) {
-                    analysis.riskDistribution.mediumRisk++;
-                } else {
-                    analysis.riskDistribution.lowRisk++;
-                }
-            }, this);
-            
-            // Calculate concentration ratios
-            var totalAccounts = accounts.length;
-            if (totalAccounts > 0) {
-                analysis.concentrationRatios = {
-                    topLenderShare: this.calculateTopShare(analysis.lenderConcentration, totalAccounts),
-                    topProductShare: this.calculateTopShare(analysis.productConcentration, totalAccounts),
-                    highRiskShare: (analysis.riskDistribution.highRisk / totalAccounts) * 100
-                };
-            }
-            
-            return analysis;
-            
-        } catch (error) {
-            return {};
-        }
-    };
-    
-    /**
-     * Calculate top share for concentration analysis
-     */
-    RiskAssessment.prototype.calculateTopShare = function(distribution, total) {
-        if (total === 0) return 0;
+    RiskAssessment.prototype.generateRiskExecutiveSummary = function(creditWorthiness, defaultProbability, grade) {
+        var summary = {
+            overallAssessment: '',
+            keyFindings: [],
+            immediateConcerns: [],
+            strengths: [],
+            recommendation: '',
+            outlook: ''
+        };
         
-        var values = Object.values(distribution);
-        var maxValue = Math.max(...values);
-        return (maxValue / total) * 100;
-    };
-    
-    /**
-     * Perform sensitivity analysis
-     */
-    RiskAssessment.prototype.performSensitivityAnalysis = function() {
-        try {
-            var baseProbability = this.calculateDefaultProbability().probability;
-            
-            // Test different scenarios
-            var scenarios = {
-                baseCase: baseProbability,
-                economicDownturn: baseProbability * 1.3, // 30% increase in downturn
-                interestRateIncrease: baseProbability * 1.2, // 20% increase with higher rates
-                incomeReduction: baseProbability * 1.4, // 40% increase with 20% income loss
-                utilizationIncrease: this.calculateScenarioUtilizationIncrease(),
-                paymentMissIncrease: this.calculateScenarioPaymentMissIncrease()
-            };
-            
-            // Calculate scenario impacts
-            var impacts = {};
-            for (var scenario in scenarios) {
-                if (scenario !== 'baseCase') {
-                    impacts[scenario] = scenarios[scenario] - baseProbability;
-                }
-            }
-            
-            return {
-                baseProbability: baseProbability,
-                scenarios: scenarios,
-                scenarioImpacts: impacts,
-                mostSensitiveScenario: this.findMostSensitiveScenario(impacts),
-                stressTestResult: this.performStressTest()
-            };
-            
-        } catch (error) {
-            return {
-                baseProbability: 0,
-                scenarios: {},
-                scenarioImpacts: {},
-                mostSensitiveScenario: 'Analysis Failed',
-                stressTestResult: 'Unable to perform stress test'
-            };
-        }
-    };
-    
-    /**
-     * Calculate scenario: Utilization increase to 90%
-     */
-    RiskAssessment.prototype.calculateScenarioUtilizationIncrease = function() {
-        var baseProbability = this.calculateDefaultProbability().probability;
-        var currentUtilization = this.gradingEngine.getCreditUtilization();
-        
-        if (currentUtilization < 90) {
-            var increaseFactor = (90 - currentUtilization) / 10; // Each 10% increase adds risk
-            return baseProbability + (increaseFactor * 15); // 15% probability increase per 10% utilization
+        // Overall assessment
+        if (creditWorthiness.isPrimeBorrower && defaultProbability.probability < 30) {
+            summary.overallAssessment = 'Excellent Credit Risk Profile';
+            summary.recommendation = 'Approve with preferential terms';
+            summary.outlook = 'Very Positive';
+        } else if (creditWorthiness.isCreditWorthy && defaultProbability.probability < 50) {
+            summary.overallAssessment = 'Good Credit Risk Profile';
+            summary.recommendation = 'Approve with standard terms';
+            summary.outlook = 'Positive';
+        } else if (creditWorthiness.isSubprimeBorrower && defaultProbability.probability < 70) {
+            summary.overallAssessment = 'Moderate Credit Risk Profile';
+            summary.recommendation = 'Approve with conditions';
+            summary.outlook = 'Cautious';
+        } else {
+            summary.overallAssessment = 'High Credit Risk Profile';
+            summary.recommendation = 'Reject or require enhanced collateral';
+            summary.outlook = 'Negative';
         }
         
-        return baseProbability;
-    };
-    
-    /**
-     * Calculate scenario: Additional missed payment
-     */
-    RiskAssessment.prototype.calculateScenarioPaymentMissIncrease = function() {
-        var baseProbability = this.calculateDefaultProbability().probability;
-        var paymentAnalysis = this.gradingEngine.getOverallPaymentAnalysis();
+        // Key findings
+        summary.keyFindings.push(`Credit Grade: ${grade}`);
+        summary.keyFindings.push(`Default Probability: ${defaultProbability.probability}%`);
+        summary.keyFindings.push(`Risk Level: ${defaultProbability.riskLevel}`);
         
-        // Each additional missed payment adds significant risk
-        return baseProbability + (15 * 2); // 2 additional missed payments
-    };
-    
-    /**
-     * Find most sensitive scenario
-     */
-    RiskAssessment.prototype.findMostSensitiveScenario = function(impacts) {
-        var maxImpact = 0;
-        var mostSensitive = 'None';
-        
-        for (var scenario in impacts) {
-            if (impacts[scenario] > maxImpact) {
-                maxImpact = impacts[scenario];
-                mostSensitive = scenario;
-            }
+        if (defaultProbability.probability > 60) {
+            summary.immediateConcerns.push('High default probability requires careful consideration');
         }
         
+        if (creditWorthiness.score < 50) {
+            summary.immediateConcerns.push('Low credit worthiness score indicates elevated risk');
+        }
+        
+        // Strengths
+        if (creditWorthiness.score >= 70) {
+            summary.strengths.push('Good overall credit worthiness');
+        }
+        
+        var utilization = this.gradingEngine.getCreditUtilization();
+        if (utilization <= 30) {
+            summary.strengths.push('Excellent credit utilization management');
+        }
+        
+        return summary;
+    };
+    
+    /**
+     * Get utilization status
+     */
+    RiskAssessment.prototype.getUtilizationStatus = function(utilization) {
+        var thresholds = CIBILConstants.RISK_THRESHOLDS.CREDIT_UTILIZATION;
+        
+        if (utilization <= thresholds.OPTIMAL) return 'Optimal';
+        if (utilization <= thresholds.WARNING) return 'Moderate';
+        if (utilization <= thresholds.HIGH_RISK) return 'High Risk';
+        return 'Critical';
+    };
+    
+    /**
+     * Interpret grade
+     */
+    RiskAssessment.prototype.interpretGrade = function(grade) {
+        var interpretations = {
+            'A+': 'Excellent - Top tier creditworthiness',
+            'A': 'Very Good - Strong credit profile',
+            'B+': 'Good - Above average credit',
+            'B': 'Fair - Average credit profile',
+            'C+': 'Below Average - Some improvement needed',
+            'C': 'Poor - Significant improvement needed',
+            'D+': 'Very Poor - Limited credit options',
+            'D': 'Weak - Rebuilding required',
+            'E+': 'Bad - Major issues present',
+            'E': 'Very Bad - Serious credit problems',
+            'F': 'Critical - Extremely poor credit'
+        };
+        
+        return interpretations[grade] || 'Grade not available';
+    };
+    
+    /**
+     * Get economic context
+     */
+    RiskAssessment.prototype.getEconomicContext = function() {
         return {
-            scenario: mostSensitive,
-            impact: maxImpact
+            country: 'India',
+            assessmentPeriod: new Date().toISOString().split('T')[0],
+            keyIndicators: {
+                gdpGrowth: '6.5% (FY24 estimate)',
+                inflation: '4.5% (CPI)',
+                repoRate: '6.5%',
+                unemployment: '7.3%'
+            },
+            sectorOutlook: this.getSectorOutlook(),
+            regulatoryEnvironment: 'RBI tightening supervision, focus on asset quality'
         };
     };
     
     /**
-     * Perform stress test
+     * Get sector outlook
      */
-    RiskAssessment.prototype.performStressTest = function() {
-        try {
-            var baseProbability = this.calculateDefaultProbability().probability;
-            
-            // Combined stress scenario: Economic downturn + interest rate increase + income reduction
-            var stressProbability = baseProbability;
-            stressProbability *= 1.3; // Economic downturn
-            stressProbability *= 1.2; // Interest rate increase
-            stressProbability *= 1.4; // Income reduction
-            
-            // Cap at 95%
-            stressProbability = Math.min(95, stressProbability);
-            
-            return {
-                stressScenario: 'Combined Economic Stress',
-                stressProbability: Math.round(stressProbability),
-                probabilityIncrease: Math.round(stressProbability - baseProbability),
-                passesStressTest: stressProbability <= 70, // Pass if <=70% under stress
-                bufferRequired: Math.max(0, stressProbability - 70)
-            };
-            
-        } catch (error) {
-            return {
-                stressScenario: 'Stress Test Failed',
-                stressProbability: 0,
-                probabilityIncrease: 0,
-                passesStressTest: false,
-                bufferRequired: 0
-            };
-        }
-    };
-    
-    /**
-     * Get financial institutions that might still consider this client (Indian context)
-     */
-    RiskAssessment.prototype.getEligibleInstitutions = function() {
-        try {
-            var creditWorthiness = this.calculateCreditWorthiness();
-            var defaultProbability = this.calculateDefaultProbability();
-            var grade = this.gradingEngine.calculateOverallGrade();
-            var defaulters = this.gradingEngine.identifyDefaulters();
-            var hasDefaulters = defaulters.length > 0;
-            
-            // Define institution risk profiles for Indian market
-            var institutions = [
-                // Tier 1: Prime Lenders (Very Strict)
-                {
-                    name: 'State Bank of India (SBI)',
-                    type: 'Public Sector Bank',
-                    minGrade: 'B+',
-                    maxDefaultProbability: 25,
-                    acceptsDefaulters: false,
-                    minCreditWorthiness: 80,
-                    interestRate: '8.5-11.5%',
-                    loanTypes: ['Home Loan', 'Personal Loan', 'Car Loan'],
-                    description: 'Largest public sector bank, very conservative lending'
-                },
-                {
-                    name: 'HDFC Bank',
-                    type: 'Private Bank',
-                    minGrade: 'B+',
-                    maxDefaultProbability: 30,
-                    acceptsDefaulters: false,
-                    minCreditWorthiness: 75,
-                    interestRate: '10-14%',
-                    loanTypes: ['Personal Loan', 'Credit Card', 'Business Loan'],
-                    description: 'Top private bank, stringent credit standards'
-                },
-                {
-                    name: 'ICICI Bank',
-                    type: 'Private Bank',
-                    minGrade: 'B',
-                    maxDefaultProbability: 35,
-                    acceptsDefaulters: false,
-                    minCreditWorthiness: 70,
-                    interestRate: '11-15%',
-                    loanTypes: ['Personal Loan', 'Credit Card', 'Gold Loan'],
-                    description: 'Major private bank, comprehensive risk assessment'
-                },
-                
-                // Tier 2: Moderate Lenders
-                {
-                    name: 'Axis Bank',
-                    type: 'Private Bank',
-                    minGrade: 'C+',
-                    maxDefaultProbability: 45,
-                    acceptsDefaulters: true,
-                    minCreditWorthiness: 65,
-                    interestRate: '12-17%',
-                    loanTypes: ['Personal Loan', 'Credit Card', 'Education Loan'],
-                    description: 'Private bank with moderate risk appetite'
-                },
-                {
-                    name: 'Kotak Mahindra Bank',
-                    type: 'Private Bank',
-                    minGrade: 'C',
-                    maxDefaultProbability: 50,
-                    acceptsDefaulters: true,
-                    minCreditWorthiness: 60,
-                    interestRate: '13-18%',
-                    loanTypes: ['Personal Loan', 'Business Loan', 'Secured Credit Card'],
-                    description: 'Tech-focused bank, innovative credit products'
-                },
-                
-                // Tier 3: Flexible Lenders
-                {
-                    name: 'Yes Bank',
-                    type: 'Private Bank',
-                    minGrade: 'C',
-                    maxDefaultProbability: 60,
-                    acceptsDefaulters: true,
-                    minCreditWorthiness: 55,
-                    interestRate: '14-20%',
-                    loanTypes: ['Personal Loan', 'Small Business Loan'],
-                    description: 'Flexible lending for various profiles'
-                },
-                {
-                    name: 'IndusInd Bank',
-                    type: 'Private Bank',
-                    minGrade: 'C',
-                    maxDefaultProbability: 65,
-                    acceptsDefaulters: true,
-                    minCreditWorthiness: 50,
-                    interestRate: '15-22%',
-                    loanTypes: ['Personal Loan', 'Used Car Loan'],
-                    description: 'Specialized lending for different segments'
-                },
-                
-                // Tier 4: NBFCs (More Flexible)
-                {
-                    name: 'Bajaj Finance',
-                    type: 'NBFC',
-                    minGrade: 'D+',
-                    maxDefaultProbability: 70,
-                    acceptsDefaulters: true,
-                    minCreditWorthiness: 45,
-                    interestRate: '14-24%',
-                    loanTypes: ['Personal Loan', 'Consumer Durable', 'Business Loan'],
-                    description: 'Leading NBFC, higher risk tolerance'
-                },
-                {
-                    name: 'HDB Financial Services',
-                    type: 'NBFC',
-                    minGrade: 'D',
-                    maxDefaultProbability: 75,
-                    acceptsDefaulters: true,
-                    minCreditWorthiness: 40,
-                    interestRate: '16-28%',
-                    loanTypes: ['Personal Loan', 'Two-Wheeler Loan'],
-                    description: 'HDFC group NBFC for subprime lending'
-                },
-                {
-                    name: 'Aditya Birla Finance',
-                    type: 'NBFC',
-                    minGrade: 'D',
-                    maxDefaultProbability: 80,
-                    acceptsDefaulters: true,
-                    minCreditWorthiness: 35,
-                    interestRate: '18-30%',
-                    loanTypes: ['Personal Loan', 'Loan Against Property'],
-                    description: 'Flexible lending with various collateral options'
-                },
-                
-                // Tier 5: FinTech Lenders (Most Flexible)
-                {
-                    name: 'EarlySalary',
-                    type: 'FinTech',
-                    minGrade: 'D',
-                    maxDefaultProbability: 85,
-                    acceptsDefaulters: true,
-                    minCreditWorthiness: 30,
-                    interestRate: '24-36%',
-                    loanTypes: ['Salary Advance', 'Small Personal Loan'],
-                    description: 'Instant approval for salaried individuals'
-                },
-                {
-                    name: 'MoneyTap',
-                    type: 'FinTech',
-                    minGrade: 'D',
-                    maxDefaultProbability: 90,
-                    acceptsDefaulters: true,
-                    minCreditWorthiness: 25,
-                    interestRate: '18-36%',
-                    loanTypes: ['Credit Line', 'Personal Loan'],
-                    description: 'Flexible credit line with interest only on amount used'
-                },
-                {
-                    name: 'Lendingkart',
-                    type: 'FinTech',
-                    minGrade: 'D',
-                    maxDefaultProbability: 95,
-                    acceptsDefaulters: true,
-                    minCreditWorthiness: 20,
-                    interestRate: '18-30%',
-                    loanTypes: ['Business Loan', 'Working Capital'],
-                    description: 'Business loans for SMEs and entrepreneurs'
-                }
-            ];
-            
-            var gradeOrder = ['F', 'E', 'E+', 'D', 'D+', 'C', 'C+', 'B', 'B+', 'A', 'A+'];
-            var clientGradeIndex = gradeOrder.indexOf(grade);
-            if (clientGradeIndex === -1) clientGradeIndex = 0;
-            
-            // Filter eligible institutions
-            var eligibleInstitutions = institutions.filter(function(institution) {
-                var minGradeIndex = gradeOrder.indexOf(institution.minGrade);
-                
-                // Check grade requirement
-                if (clientGradeIndex < minGradeIndex) return false;
-                
-                // Check default probability requirement
-                if (defaultProbability.probability > institution.maxDefaultProbability) return false;
-                
-                // Check credit worthiness requirement
-                if (creditWorthiness.score < institution.minCreditWorthiness) return false;
-                
-                // Check if bank accepts defaulters
-                if (hasDefaulters && !institution.acceptsDefaulters) return false;
-                
-                return true;
-            });
-            
-            // Calculate approval probability for each eligible institution
-            eligibleInstitutions.forEach(function(institution) {
-                var baseProbability = 60;
-                
-                // Adjust based on grade difference
-                var minGradeIndex = gradeOrder.indexOf(institution.minGrade);
-                var gradeDifference = clientGradeIndex - minGradeIndex;
-                baseProbability += gradeDifference * 5;
-                
-                // Adjust based on default probability margin
-                var defaultMargin = institution.maxDefaultProbability - defaultProbability.probability;
-                baseProbability += defaultMargin * 0.5;
-                
-                // Adjust based on credit worthiness margin
-                var worthinessMargin = creditWorthiness.score - institution.minCreditWorthiness;
-                baseProbability += worthinessMargin * 0.3;
-                
-                // Penalize for defaulters
-                if (hasDefaulters) baseProbability -= 10;
-                
-                institution.approvalProbability = Math.min(95, Math.max(5, Math.round(baseProbability)));
-                
-                // Add recommendation
-                if (institution.approvalProbability >= 80) {
-                    institution.recommendation = 'Strong Candidate';
-                } else if (institution.approvalProbability >= 60) {
-                    institution.recommendation = 'Good Candidate';
-                } else if (institution.approvalProbability >= 40) {
-                    institution.recommendation = 'Moderate Chance';
-                } else {
-                    institution.recommendation = 'Low Chance - Consider Alternatives';
-                }
-            });
-            
-            // Sort by approval probability (highest first)
-            eligibleInstitutions.sort(function(a, b) {
-                return b.approvalProbability - a.approvalProbability;
-            });
-            
-            // Limit to top 8 suggestions
-            return eligibleInstitutions.slice(0, 8);
-            
-        } catch (error) {
-            console.error('Error getting eligible institutions:', error);
-            return [];
-        }
-    };
-    
-    /**
-     * Suggest appropriate loan products
-     */
-    RiskAssessment.prototype.suggestLoanProducts = function() {
-        try {
-            var grade = this.gradingEngine.calculateOverallGrade();
-            var creditWorthiness = this.calculateCreditWorthiness();
-            var defaulters = this.gradingEngine.identifyDefaulters();
-            var hasDefaulters = defaulters.length > 0;
-            
-            var suggestedProducts = [];
-            
-            // For prime borrowers
-            if (grade >= 'B+' && creditWorthiness.score >= 80 && !hasDefaulters) {
-                suggestedProducts.push({
-                    product: 'Unsecured Personal Loan',
-                    amountRange: '₹1-25 Lakhs',
-                    tenure: '1-5 years',
-                    interestRate: '10-14%',
-                    features: ['No collateral required', 'Quick disbursal', 'Flexible tenure']
-                });
-                
-                suggestedProducts.push({
-                    product: 'Credit Card with High Limit',
-                    limitRange: '₹1-10 Lakhs',
-                    features: ['Reward points', 'Cashback offers', 'Interest-free period', 'Travel benefits']
-                });
-            }
-            
-            // For credit worthy borrowers
-            if (grade >= 'C+' && creditWorthiness.score >= 65) {
-                suggestedProducts.push({
-                    product: 'Secured Personal Loan',
-                    amountRange: '₹50,000-10 Lakhs',
-                    tenure: '6 months - 3 years',
-                    interestRate: '12-18%',
-                    features: ['Lower interest than unsecured', 'Collateral required', 'Faster approval']
-                });
-                
-                if (!hasDefaulters) {
-                    suggestedProducts.push({
-                        product: 'Standard Credit Card',
-                        limitRange: '₹50,000-2 Lakhs',
-                        features: ['Basic rewards', 'Online shopping protection', 'Fuel surcharge waiver']
-                    });
-                }
-            }
-            
-            // For subprime borrowers or those with defaulters
-            if (grade <= 'C' || hasDefaulters) {
-                suggestedProducts.push({
-                    product: 'Secured Credit Card',
-                    depositRange: '₹10,000-1 Lakh',
-                    limit: '80-100% of deposit',
-                    features: ['Build/repair credit', 'Deposit acts as collateral', 'Reported to credit bureaus']
-                });
-                
-                suggestedProducts.push({
-                    product: 'Small Personal Loan against Collateral',
-                    amountRange: '₹25,000-5 Lakhs',
-                    collateral: ['Gold', 'Fixed Deposit', 'Property'],
-                    interestRate: '14-24%',
-                    features: ['Collateral-based', 'Lower risk for lender', 'Credit rebuilding opportunity']
-                });
-            }
-            
-            // For business owners/self-employed
-            var employmentData = this.creditReport.employment || [];
-            if (employmentData.length > 0) {
-                var occupationCode = employmentData[0].occupationCode;
-                if (occupationCode === '04' || occupationCode === '05') { // Self-employed or Business
-                    suggestedProducts.push({
-                        product: 'Business Loan',
-                        amountRange: '₹1-50 Lakhs',
-                        tenure: '1-7 years',
-                        interestRate: '14-20%',
-                        features: ['For business expansion', 'Working capital', 'Equipment purchase'],
-                        requirements: ['Business proof', 'ITR for 2-3 years', 'Business bank statements']
-                    });
-                }
-            }
-            
-            return suggestedProducts;
-            
-        } catch (error) {
-            return [];
-        }
-    };
-    
-    /**
-     * Determine collateral requirements
-     */
-    RiskAssessment.prototype.determineCollateralRequirements = function() {
-        try {
-            var grade = this.gradingEngine.calculateOverallGrade();
-            var creditWorthiness = this.calculateCreditWorthiness();
-            var defaulters = this.gradingEngine.identifyDefaulters();
-            var defaultProbability = this.calculateDefaultProbability();
-            
-            var requirements = {
-                isCollateralRequired: false,
-                recommendedCollateralType: 'None',
-                collateralCoverage: '0%',
-                alternativeOptions: []
-            };
-            
-            // Determine if collateral is required
-            if (defaultProbability.probability > 60 || defaulters.length > 0 || grade <= 'C' || creditWorthiness.score < 50) {
-                requirements.isCollateralRequired = true;
-                
-                if (defaultProbability.probability > 75 || defaulters.length >= 2) {
-                    requirements.recommendedCollateralType = 'Property or Fixed Deposit';
-                    requirements.collateralCoverage = '150% of loan amount';
-                } else if (defaultProbability.probability > 60 || defaulters.length > 0) {
-                    requirements.recommendedCollateralType = 'Gold or Fixed Deposit';
-                    requirements.collateralCoverage = '125% of loan amount';
-                } else {
-                    requirements.recommendedCollateralType = 'Fixed Deposit or Insurance Policy';
-                    requirements.collateralCoverage = '110% of loan amount';
-                }
-            }
-            
-            // Alternative options if collateral cannot be provided
-            if (requirements.isCollateralRequired) {
-                requirements.alternativeOptions = [
-                    'Third-party guarantee from credit-worthy individual',
-                    'Co-borrower with good credit history',
-                    'Credit insurance',
-                    'Lower loan amount to reduce risk exposure'
-                ];
-            }
-            
-            return requirements;
-            
-        } catch (error) {
-            return {
-                isCollateralRequired: true,
-                recommendedCollateralType: 'Manual Assessment Required',
-                collateralCoverage: '100%',
-                alternativeOptions: ['Manual underwriting recommended']
-            };
-        }
-    };
-    
-    /**
-     * Determine review frequency for monitoring
-     */
-    RiskAssessment.prototype.determineReviewFrequency = function() {
-        try {
-            var defaultProbability = this.calculateDefaultProbability();
-            var creditWorthiness = this.calculateCreditWorthiness();
-            var defaulters = this.gradingEngine.identifyDefaulters();
-            
-            if (defaultProbability.probability > 70 || defaulters.length > 0 || creditWorthiness.isSubprimeBorrower) {
-                return 'Monthly review for first 6 months, then quarterly';
-            } else if (defaultProbability.probability > 50 || !creditWorthiness.isPrimeBorrower) {
-                return 'Quarterly review for first year, then semi-annually';
-            } else {
-                return 'Semi-annual review';
-            }
-            
-        } catch (error) {
-            return 'Quarterly review recommended';
-        }
-    };
-    
-    /**
-     * Identify key monitoring metrics
-     */
-    RiskAssessment.prototype.identifyMonitoringMetrics = function() {
-        return [
-            'Monthly payment performance',
-            'Credit utilization ratio',
-            'New credit inquiries',
-            'Changes in employment status',
-            'Overall credit score trends',
-            'Debt-to-income ratio',
-            'Account status changes (new defaults, settlements)'
-        ];
-    };
-    
-    /**
-     * Identify early warning signals
-     */
-    RiskAssessment.prototype.identifyEarlyWarningSignals = function() {
-        var signals = [];
-        var paymentAnalysis = this.gradingEngine.getOverallPaymentAnalysis();
-        var utilization = this.gradingEngine.getCreditUtilization();
+    RiskAssessment.prototype.getSectorOutlook = function() {
+        var employment = this.userInfo.employment;
+        if (!employment) return { outlook: 'Neutral', risk: 'Medium' };
         
-        if (paymentAnalysis.missedRate > 0) {
-            signals.push('Any additional missed payments');
+        var outlooks = {
+            '01': { outlook: 'Strong', risk: 'Low', trend: 'Growing' }, // Professional
+            '02': { outlook: 'Very Stable', risk: 'Very Low', trend: 'Stable' }, // Government
+            '03': { outlook: 'Moderate', risk: 'Medium', trend: 'Growing' }, // Private
+            '04': { outlook: 'Variable', risk: 'Medium-High', trend: 'Mixed' }, // Self-employed
+            '05': { outlook: 'Moderate', risk: 'Medium', trend: 'Recovering' }, // Business
+            '06': { outlook: 'Volatile', risk: 'High', trend: 'Uncertain' } // Daily wage
+        };
+        
+        return outlooks[employment.occupationCode] || { outlook: 'Neutral', risk: 'Medium', trend: 'Stable' };
+    };
+    
+    /**
+     * Generate pricing recommendations
+     */
+    RiskAssessment.prototype.generatePricingRecommendations = function(grade, defaultProbability) {
+        var recommendations = [];
+        var baseRate = 8.5; // Base rate for prime borrowers
+        
+        // Grade-based adjustments
+        var gradeAdjustment = 0;
+        switch(grade) {
+            case 'A+': gradeAdjustment = -0.5; break;
+            case 'A': gradeAdjustment = 0; break;
+            case 'B+': gradeAdjustment = 0.5; break;
+            case 'B': gradeAdjustment = 1.0; break;
+            case 'C+': gradeAdjustment = 1.5; break;
+            case 'C': gradeAdjustment = 2.0; break;
+            case 'D': gradeAdjustment = 3.0; break;
+            case 'E': gradeAdjustment = 4.0; break;
+            case 'F': gradeAdjustment = 5.0; break;
+            default: gradeAdjustment = 1.0;
         }
         
-        if (utilization > 50) {
-            signals.push('Utilization exceeding 60%');
-        }
+        // Risk-based adjustments
+        var riskAdjustment = 0;
+        if (defaultProbability > 60) riskAdjustment = 2.0;
+        else if (defaultProbability > 40) riskAdjustment = 1.0;
+        else if (defaultProbability > 20) riskAdjustment = 0.5;
         
-        if (paymentAnalysis.delayedRate > 0.2) {
-            signals.push('Pattern of delayed payments becoming more frequent');
-        }
+        var recommendedRate = baseRate + gradeAdjustment + riskAdjustment;
         
-        signals.push('Multiple new credit inquiries within 30 days');
-        signals.push('Sudden increase in overall debt');
-        signals.push('Change to unemployed status');
+        recommendations.push({
+            product: 'Personal Loan',
+            recommendedRate: recommendedRate.toFixed(2) + '%',
+            rateRange: (recommendedRate - 0.5).toFixed(2) + '% - ' + (recommendedRate + 0.5).toFixed(2) + '%',
+            justification: `Based on grade (${grade}) and default probability (${defaultProbability}%)`
+        });
         
-        return signals;
+        recommendations.push({
+            product: 'Credit Card',
+            recommendedRate: (recommendedRate + 3).toFixed(2) + '%',
+            rateRange: '24-48% per annum',
+            features: 'Standard features with risk-based limit'
+        });
+        
+        return recommendations;
     };
     
-    module.exports = RiskAssessment;
+    /**
+     * Get compliance requirements
+     */
+    RiskAssessment.prototype.getComplianceRequirements = function() {
+        return {
+            kycRequirements: ['PAN verification', 'Aadhaar verification', 'Address proof'],
+            documentation: ['Income proof', 'Bank statements (6 months)', 'Business proof if self-employed'],
+            regulatoryChecks: ['CIBIL check', 'Fraud check', 'AML screening'],
+            reportingRequirements: 'Monthly reporting to credit bureau required'
+        };
+    };
     
+    /**
+     * Generate improvement roadmap
+     */
+    RiskAssessment.prototype.generateImprovementRoadmap = function(score, grade) {
+        var roadmap = {
+            currentScore: score,
+            currentGrade: grade,
+            targetScore: Math.min(100, score + 20),
+            targetGrade: this.getNextGrade(grade),
+            timeline: '6-12 months',
+            phases: []
+        };
+        
+        // Phase 1: Immediate actions (1-3 months)
+        roadmap.phases.push({
+            phase: 'Immediate Actions',
+            duration: '1-3 months',
+            focus: 'Stop negative behavior',
+            actions: [
+                'Ensure all payments are made on time',
+                'Reduce credit utilization below 50%',
+                'Dispute any errors in credit report'
+            ],
+            successMetrics: ['No late payments', 'Utilization < 50%', 'Credit report clean']
+        });
+        
+        // Phase 2: Building phase (3-6 months)
+        roadmap.phases.push({
+            phase: 'Building Phase',
+            duration: '3-6 months',
+            focus: 'Establish positive history',
+            actions: [
+                'Maintain perfect payment history',
+                'Request credit limit increases on existing cards',
+                'Consider secured credit card if needed'
+            ],
+            successMetrics: ['6 months clean history', 'Credit limit increases obtained', 'Score improvement of 20+ points']
+        });
+        
+        // Phase 3: Optimization phase (6-12 months)
+        roadmap.phases.push({
+            phase: 'Optimization Phase',
+            duration: '6-12 months',
+            focus: 'Optimize credit profile',
+            actions: [
+                'Diversify credit mix',
+                'Maintain low utilization',
+                'Monitor credit score monthly'
+            ],
+            successMetrics: ['Credit mix improved', 'Utilization < 30%', 'Target grade achieved']
+        });
+        
+        return roadmap;
+    };
+    
+    /**
+     * Get next grade level
+     */
+    RiskAssessment.prototype.getNextGrade = function(currentGrade) {
+        var gradeOrder = ['F', 'E', 'E+', 'D', 'D+', 'C', 'C+', 'B', 'B+', 'A', 'A+'];
+        var currentIndex = gradeOrder.indexOf(currentGrade);
+        
+        if (currentIndex === -1 || currentIndex === gradeOrder.length - 1) {
+            return currentGrade;
+        }
+        
+        return gradeOrder[currentIndex + 1];
+    };
+    
+    /**
+     * Default implementations
+     */
+    RiskAssessment.prototype.getDefaultEconomicData = function() {
+        return {
+            gdpGrowth: 6.5,
+            inflationRate: 4.5,
+            repoRate: 6.5,
+            unemploymentRate: 7.3,
+            marketSentiment: 65,
+            sectorPerformance: {
+                professional_services: 5,
+                government: 3,
+                private_sector: 4,
+                self_employed: 2,
+                business: 3,
+                daily_wage: -1
+            }
+        };
+    };
+    
+    RiskAssessment.prototype.getDefaultCreditWorthiness = function() {
+        return {
+            score: 50,
+            isCreditWorthy: false,
+            isPrimeBorrower: false,
+            isSubprimeBorrower: true,
+            isHighRisk: false,
+            grade: 'C',
+            components: {},
+            thresholds: {},
+            recommendations: []
+        };
+    };
+    
+    RiskAssessment.prototype.getDefaultProbabilityResult = function() {
+        return {
+            probability: 50,
+            riskLevel: 'Medium',
+            riskCategory: 'Medium Risk',
+            baseProbability: 50,
+            economicAdjustment: 0,
+            confidence: 50,
+            economicFactors: [],
+            sensitivityAnalysis: {},
+            stressTest: {},
+            timestamp: new Date().toISOString()
+        };
+    };
+    
+    RiskAssessment.prototype.getDefaultRiskReport = function() {
+        return {
+            metadata: {
+                generatedAt: new Date().toISOString(),
+                reportVersion: '3.0',
+                note: 'Limited report due to system error'
+            },
+            clientInfo: this.userInfo,
+            executiveSummary: {
+                overallAssessment: 'Assessment Error',
+                keyFindings: ['System encountered an error'],
+                recommendation: 'Manual review required'
+            },
+            error: 'Risk report generation failed'
+        };
+    };
+    
+    // Export the module
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = RiskAssessment;
+    }
 })();
