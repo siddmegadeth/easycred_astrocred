@@ -1,36 +1,6 @@
 (function() {
-    MonthlyPayStatusSchema = module.exports = mongoose.Schema({
-        date: String,
-        status: String
-    });
 
-    CreditAccountSchema = module.exports = mongoose.Schema({
-        index: String,
-        accountType: String,
-        accountNumber: String,
-        memberShortName: String,
-        ownershipIndicator: String,
-        dateOpened: String,
-        dateReported: String,
-        dateClosed: String,
-        highCreditAmount: Number,
-        currentBalance: Number,
-        amountOverdue: Number,
-        actualPaymentAmount: Number,
-        paymentHistory: String,
-        monthlyPayStatus: [MonthlyPayStatusSchema],
-        paymentStartDate: String,
-        paymentEndDate: String,
-        creditFacilityStatus: String,
-        collateralType: String,
-        interestRate: Number,
-        paymentTenure: Number,
-        termMonths: Number,
-        emiAmount: Number,
-        paymentFrequency: String,
-        woAmountPrincipal: Number,
-        woAmountTotal: Number
-    });
+
 
     EnquirySchema = module.exports = mongoose.Schema({
         index: String,
@@ -54,7 +24,7 @@
                 message: props => `${props.value} is not a valid Indian mobile number!`
             }
         },
-        
+
         // Secondary identifier - email
         email: {
             type: String,
@@ -69,7 +39,7 @@
                 message: props => `${props.value} is not a valid email address!`
             }
         },
-        
+
         // PAN card (Indian Permanent Account Number)
         pan: {
             type: String,
@@ -84,24 +54,24 @@
                 message: props => `${props.value} is not a valid PAN number!`
             }
         },
-        
+
         // User's full name
         name: {
             type: String,
             required: true,
             trim: true
         },
-        
+
         // Gender
         gender: {
             type: String,
             enum: ['Male', 'Female', 'Other'],
             required: true
         },
-        
+
         // Credit score
         credit_score: String,
-        
+
         // Credit report data
         credit_report: [{
             names: [{
@@ -179,7 +149,7 @@
                 }
             }
         }],
-        
+
         // PAN comprehensive data
         pan_comprehensive: {
             data: {
@@ -218,7 +188,7 @@
             message: String,
             message_code: String
         },
-        
+
         // Original parameters
         params: {
             mobile: String,
@@ -227,14 +197,14 @@
             gender: String,
             consent: String
         },
-        
+
         // Status flags
         status: Boolean,
         status_code: Number,
         success: Boolean,
         message: String,
         message_code: String,
-        
+
         // Analysis results cache
         analysis: {
             overallGrade: String,
@@ -261,7 +231,7 @@
             },
             dataHash: String // Hash of credit_report to detect data changes
         },
-        
+
         // Additional Indian-specific fields
         aadhaar_number: {
             type: String,
@@ -275,12 +245,12 @@
                 message: props => `${props.value} is not a valid Aadhaar number!`
             }
         },
-        
+
         date_of_birth: {
             type: Date,
             required: true
         },
-        
+
         // Timestamps
         createdAt: {
             type: Date,
@@ -295,7 +265,7 @@
             createdAt: 'created_at',
             updatedAt: 'updated_at'
         },
-        
+
         // Compound unique index for mobile + email combination
         indexes: [
             { mobile: 1, email: 1, pan: 1 }
