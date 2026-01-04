@@ -2,13 +2,14 @@
 (function() {
     var CIBILConstants = {
         // CIBIL Score Ranges (Standardized from PDF and earlier code)
+        // Enhanced with weights from Manager V3 for ML predictions and risk calculations
         SCORE_RANGES: {
-            VERY_POOR: { min: 300, max: 549, description: 'Very Poor Credit History' },
-            POOR: { min: 550, max: 649, description: 'Poor Credit History' },
-            FAIR: { min: 650, max: 699, description: 'Fair Credit History' },
-            GOOD: { min: 700, max: 749, description: 'Good Credit History' },
-            VERY_GOOD: { min: 750, max: 799, description: 'Very Good Credit History' },
-            EXCELLENT: { min: 800, max: 900, description: 'Excellent Credit History' }
+            VERY_POOR: { min: 300, max: 549, description: 'Very Poor Credit History', weight: 0.40 },
+            POOR: { min: 550, max: 649, description: 'Poor Credit History', weight: 0.30 },
+            FAIR: { min: 650, max: 699, description: 'Fair Credit History', weight: 0.20 },
+            GOOD: { min: 700, max: 749, description: 'Good Credit History', weight: 0.10 },
+            VERY_GOOD: { min: 750, max: 799, description: 'Very Good Credit History', weight: -0.10 },
+            EXCELLENT: { min: 800, max: 900, description: 'Excellent Credit History', weight: -0.20 }
         },
 
         // Account Type Codes (Standardized)

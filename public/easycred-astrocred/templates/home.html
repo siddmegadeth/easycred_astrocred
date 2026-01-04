@@ -1,7 +1,9 @@
 <style>
+    /* ASTROCRED - EasyCred Brand Theme - Enhanced AI Finance UI */
     body {
-            background: linear-gradient(180deg, #f6f8fc, #eef1f8);
+            background: linear-gradient(135deg, #f5f5ff 0%, #e8eaff 50%, #ffffff 100%) !important;
             font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont;
+            min-height: 100vh;
         }
         
         .blur-text {
@@ -11,70 +13,106 @@
         }
         
         .card {
-            border-radius: 18px;
-            border: none;
-            transition: transform 0.3s ease;
+            border-radius: 16px !important;
+            border: none !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
             height: 100%;
+            box-shadow: 0 4px 12px rgba(28, 31, 190, 0.08) !important;
+            background: #ffffff !important;
         }
         
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px) !important;
+            box-shadow: 0 12px 32px rgba(28, 31, 190, 0.15) !important;
         }
         
         .card-header {
-            background: transparent;
-            font-weight: 600;
-            border-bottom: 1px solid #eee;
+            background: linear-gradient(135deg, rgba(28, 31, 190, 0.05) 0%, rgba(51, 201, 211, 0.05) 100%) !important;
+            font-weight: 600 !important;
+            border-bottom: 2px solid rgba(28, 31, 190, 0.1) !important;
             padding: 1rem 1.25rem;
+            color: #1c1fbe !important;
         }
         
         .badge-ai {
-            background: linear-gradient(135deg, #6f42c1, #2575fc);
-            color: #fff;
+            background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%) !important;
+            color: #fff !important;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(28, 31, 190, 0.2) !important;
         }
         
         .chat-window {
             max-height: 420px;
             overflow-y: auto;
+            padding: 1rem;
         }
         
         .chat-ai {
-            background: #f8f9ff;
-            border-left: 4px solid #6f42c1;
-            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(245, 245, 255, 0.8) 0%, rgba(248, 249, 255, 0.9) 100%);
+            border-left: 4px solid #1c1fbe;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(28, 31, 190, 0.1);
         }
         
         .chat-user {
-            background: linear-gradient(135deg, #6f42c1, #2575fc);
+            background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
             color: #fff;
-            border-radius: 10px;
+            border-radius: 12px;
+            padding: 0.75rem 1.25rem;
+            box-shadow: 0 4px 12px rgba(28, 31, 190, 0.3);
         }
         
         .score-ring {
-            width: 140px;
-            height: 140px;
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto;
+            background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
+            box-shadow: 0 8px 24px rgba(28, 31, 190, 0.3);
+            position: relative;
+        }
+        
+        .score-ring::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1c1fbe, #33c9d3);
+            opacity: 0.3;
+            filter: blur(8px);
+            z-index: -1;
         }
         
         .score-ring span {
-            font-size: 42px;
-            font-weight: 700;
+            font-size: 48px;
+            font-weight: 800;
             background: #fff;
-            width: 110px;
-            height: 110px;
+            width: 130px;
+            height: 130px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: #1c1fbe;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         
         .metric {
-            padding: 8px 0;
-            border-bottom: 1px dashed #eee;
+            padding: 10px 0;
+            border-bottom: 1px dashed rgba(28, 31, 190, 0.2);
+            transition: all 0.2s ease;
+        }
+        
+        .metric:hover {
+            background: rgba(28, 31, 190, 0.03);
+            padding-left: 8px;
+            border-radius: 6px;
         }
         
         .metric:last-child {
@@ -82,9 +120,12 @@
         }
         
         .assistant-tip {
-            background: linear-gradient(135deg, #fff7e6, #fff);
+            background: linear-gradient(135deg, #fff7e6 0%, #fff 100%);
             border-left: 4px solid #ffc107;
             font-size: 0.9rem;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.2);
         }
         
         .footer-note {
@@ -92,24 +133,39 @@
             color: #6c757d;
         }
         
+        .nav-tabs {
+            border-bottom: 2px solid rgba(28, 31, 190, 0.1);
+            margin-bottom: 2rem;
+        }
+        
         .nav-tabs .nav-link {
             border: none;
             color: #6c757d;
             font-weight: 500;
-            padding: 0.75rem 1.5rem;
+            padding: 0.875rem 1.5rem;
+            transition: all 0.3s ease;
+            border-radius: 8px 8px 0 0;
+            margin-right: 0.5rem;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            background: rgba(28, 31, 190, 0.05);
+            color: #1c1fbe;
         }
         
         .nav-tabs .nav-link.active {
-            color: #6f42c1;
-            border-bottom: 3px solid #6f42c1;
-            background: transparent;
+            color: #1c1fbe !important;
+            border-bottom: 3px solid #1c1fbe !important;
+            background: linear-gradient(180deg, rgba(28, 31, 190, 0.05) 0%, transparent 100%) !important;
+            font-weight: 600 !important;
         }
         
         .progress-container {
-            background: #f8f9fa;
-            border-radius: 10px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 12px;
             padding: 1.5rem;
             margin: 1rem 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         
         .timeline {
@@ -123,8 +179,9 @@
             left: 15px;
             top: 0;
             bottom: 0;
-            width: 2px;
-            background: #6f42c1;
+            width: 3px;
+            background: linear-gradient(180deg, #1c1fbe 0%, #33c9d3 100%);
+            border-radius: 2px;
         }
         
         .timeline-item {
@@ -135,114 +192,225 @@
         .timeline-item:before {
             content: '';
             position: absolute;
-            left: -23px;
+            left: -25px;
             top: 5px;
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
-            background: #6f42c1;
+            background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
             border: 3px solid #fff;
-            box-shadow: 0 0 0 2px #6f42c1;
+            box-shadow: 0 0 0 3px #1c1fbe, 0 4px 12px rgba(28, 31, 190, 0.3);
         }
         
         .offer-card {
             border: 2px solid transparent;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
+            border-radius: 12px;
         }
         
         .offer-card:hover {
-            border-color: #6f42c1;
-            transform: scale(1.02);
+            border-color: #1c1fbe;
+            transform: scale(1.03) translateY(-4px);
+            box-shadow: 0 8px 24px rgba(28, 31, 190, 0.2);
         }
         
         .subscription-card {
             border: 2px solid #e9ecef;
             transition: all 0.3s ease;
             cursor: pointer;
+            border-radius: 12px;
         }
         
         .subscription-card.selected {
-            border-color: #6f42c1;
-            box-shadow: 0 5px 15px rgba(111, 66, 193, 0.1);
+            border-color: #1c1fbe;
+            box-shadow: 0 8px 24px rgba(28, 31, 190, 0.2);
+            background: linear-gradient(135deg, rgba(28, 31, 190, 0.02) 0%, rgba(51, 201, 211, 0.02) 100%);
         }
         
         .api-badge {
-            background: linear-gradient(135deg, #20c997, #17a2b8);
+            background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);
             color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
         }
         
         .monetization-badge {
-            background: linear-gradient(135deg, #fd7e14, #e83e8c);
+            background: linear-gradient(135deg, #fd7e14 0%, #e83e8c 100%);
             color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
         }
         
         .btn-astro {
-            background: linear-gradient(135deg, #6f42c1, #2575fc);
+            background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
             color: white;
             border: none;
-            padding: 0.5rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 500;
+            padding: 0.625rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(28, 31, 190, 0.3);
         }
         
         .btn-astro:hover {
-            background: linear-gradient(135deg, #5a32a3, #1c6bd8);
+            background: linear-gradient(135deg, #15189e 0%, #28a7af 100%);
             color: white;
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(28, 31, 190, 0.4);
+        }
+        
+        .btn-astro:active {
+            transform: translateY(0);
         }
         
         .chart-container {
             position: relative;
             height: 300px;
             width: 100%;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 1rem;
         }
         
         .risk-indicator {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             display: inline-block;
             margin-right: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
         
-        .risk-low { background-color: #28a745; }
-        .risk-medium { background-color: #ffc107; }
-        .risk-high { background-color: #dc3545; }
-        .risk-very-high { background-color: #6c757d; }
+        .risk-low { background: linear-gradient(135deg, #28a745 0%, #4CAF50 100%); }
+        .risk-medium { background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%); }
+        .risk-high { background: linear-gradient(135deg, #dc3545 0%, #f44336 100%); }
+        .risk-very-high { background: linear-gradient(135deg, #6c757d 0%, #495057 100%); }
         
         .account-card {
             border-left: 4px solid;
-            margin-bottom: 10px;
-            padding: 10px;
+            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            background: #ffffff;
         }
         
-        .account-credit-card { border-left-color: #2575fc; }
+        .account-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateX(4px);
+        }
+        
+        .account-credit-card { border-left-color: #1c1fbe; }
         .account-personal-loan { border-left-color: #28a745; }
         .account-consumer-loan { border-left-color: #fd7e14; }
         
         .status-badge {
             font-size: 0.7rem;
-            padding: 2px 8px;
-            border-radius: 10px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
         }
         
-        .status-good { background-color: #d4edda; color: #155724; }
-        .status-warning { background-color: #fff3cd; color: #856404; }
-        .status-danger { background-color: #f8d7da; color: #721c24; }
+        .status-good { background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); color: #155724; }
+        .status-warning { background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); color: #856404; }
+        .status-danger { background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%); color: #721c24; }
         
         .payment-status {
             display: inline-block;
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            margin-right: 2px;
+            margin-right: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
-        .payment-ontime { background-color: #28a745; }
-        .payment-late { background-color: #ffc107; }
-        .payment-default { background-color: #dc3545; }
-        .payment-na { background-color: #6c757d; }
+        .payment-ontime { background: #28a745; }
+        .payment-late { background: #ffc107; }
+        .payment-default { background: #dc3545; }
+        .payment-na { background: #6c757d; }
+        
+        /* Enhanced Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%) !important;
+            border: none !important;
+            border-color: #1c1fbe !important;
+            border-radius: 10px;
+            padding: 0.625rem 1.25rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(28, 31, 190, 0.3) !important;
+            color: #ffffff !important;
+        }
+        
+        .btn-primary:hover,
+        .btn-primary:focus,
+        .btn-primary:active {
+            background: linear-gradient(135deg, #15189e 0%, #28a7af 100%) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(28, 31, 190, 0.4) !important;
+            border-color: #15189e !important;
+            color: #ffffff !important;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #4CAF50 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 0.625rem 1.25rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(135deg, #218838 0%, #45a049 100%);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline-primary {
+            border: 2px solid #1c1fbe;
+            color: #1c1fbe;
+            border-radius: 10px;
+            padding: 0.625rem 1.25rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+        
+        .btn-outline-primary:hover {
+            background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(28, 31, 190, 0.3);
+        }
+        
+        /* Header Enhancement */
+        h2.fw-bold {
+            color: #1c1fbe;
+            text-shadow: 0 2px 4px rgba(28, 31, 190, 0.1);
+        }
+        
+        /* Override Bootstrap primary colors with EasyCred brand */
+        .text-primary {
+            color: #1c1fbe !important;
+        }
+        
+        h2.fw-bold .text-primary {
+            color: #1c1fbe !important;
+        }
+        
+        /* Enhanced Shadow for Cards */
+        .shadow-sm {
+            box-shadow: 0 4px 12px rgba(28, 31, 190, 0.08) !important;
+        }
+        
+        /* Enhanced Input Fields */
+        .form-control:focus {
+            border-color: #1c1fbe;
+            box-shadow: 0 0 0 0.2rem rgba(28, 31, 190, 0.25);
+        }
     </style>
 <div class="container-fluid py-4">
     <!-- HEADER -->

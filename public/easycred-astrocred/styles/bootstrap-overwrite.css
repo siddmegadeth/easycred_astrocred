@@ -1,0 +1,78 @@
+/* Bootstrap Override - EasyCred Brand Colors */
+/* Force EasyCred theme to override Bootstrap defaults */
+
+:root {
+    --bs-primary: #1c1fbe !important;
+    --bs-primary-rgb: 28, 31, 190 !important;
+    --bs-secondary: #33c9d3 !important;
+    --bs-info: #33c9d3 !important;
+}
+
+/* Primary Color Overrides */
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+    background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%) !important;
+    border-color: #1c1fbe !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(28, 31, 190, 0.3) !important;
+}
+
+.text-primary {
+    color: #1c1fbe !important;
+}
+
+.bg-primary {
+    background-color: #1c1fbe !important;
+}
+
+.border-primary {
+    border-color: #1c1fbe !important;
+}
+
+/* Card Enhancements */
+.card {
+    border-radius: 16px !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(28, 31, 190, 0.08) !important;
+    background: #ffffff !important;
+}
+
+.card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 12px 32px rgba(28, 31, 190, 0.15) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.card-header {
+    background: linear-gradient(135deg, rgba(28, 31, 190, 0.05) 0%, rgba(51, 201, 211, 0.05) 100%) !important;
+    border-bottom: 2px solid rgba(28, 31, 190, 0.1) !important;
+    color: #1c1fbe !important;
+    font-weight: 600 !important;
+}
+
+/* Navigation Tabs */
+.nav-tabs .nav-link {
+    color: #6c757d !important;
+    border: none !important;
+}
+
+.nav-tabs .nav-link:hover {
+    background: rgba(28, 31, 190, 0.05) !important;
+    color: #1c1fbe !important;
+}
+
+.nav-tabs .nav-link.active {
+    color: #1c1fbe !important;
+    border-bottom: 3px solid #1c1fbe !important;
+    background: linear-gradient(180deg, rgba(28, 31, 190, 0.05) 0%, transparent 100%) !important;
+    font-weight: 600 !important;
+}
+
+/* Body Background */
+body {
+    background: linear-gradient(135deg, #f5f5ff 0%, #e8eaff 50%, #ffffff 100%) !important;
+}
+

@@ -1,0 +1,814 @@
+/* Dashboard Enhancements - Applied to credit-dashboard.html */
+/* These styles enhance the existing dashboard with modern, AI/finance theme */
+
+/* Main Dashboard Container */
+.credit-dashboard {
+    background: linear-gradient(135deg, #f5f5ff 0%, #e8eaff 50%, #ffffff 100%);
+    min-height: 100vh;
+    padding: 20px 0;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
+    color: white;
+    padding: 30px 0;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(28, 31, 190, 0.2);
+    border-radius: 0 0 20px 20px;
+}
+
+.dashboard-header .container {
+    position: relative;
+}
+
+.dashboard-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-title i {
+    font-size: 2.2rem;
+    opacity: 0.9;
+}
+
+.dashboard-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.95;
+    margin: 0;
+    font-weight: 300;
+}
+
+/* Dashboard Cards */
+.dashboard-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(28, 31, 190, 0.12);
+    border: 1px solid rgba(28, 31, 190, 0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    height: 100%;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 32px rgba(28, 31, 190, 0.18);
+}
+
+.dashboard-card .card-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-bottom: 2px solid #1c1fbe;
+    padding: 20px 25px;
+    font-weight: 600;
+    color: #1c1fbe;
+}
+
+.dashboard-card .card-header h5 {
+    margin: 0;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dashboard-card .card-header h5 i {
+    color: #33c9d3;
+    font-size: 1.2rem;
+}
+
+.dashboard-card .card-body {
+    padding: 25px;
+}
+
+/* Score Card Specific Styles */
+.score-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+    border: 2px solid #1c1fbe;
+}
+
+.score-card .score-value {
+    font-size: 4rem;
+    font-weight: 800;
+    color: #1c1fbe;
+    margin: 15px 0;
+    text-shadow: 0 2px 8px rgba(28, 31, 190, 0.2);
+}
+
+.score-card .score-max {
+    font-size: 2rem;
+    color: #666;
+    font-weight: 400;
+}
+
+.score-card .score-label {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-top: 10px;
+    padding: 8px 20px;
+    border-radius: 25px;
+    display: inline-block;
+}
+
+/* Grade Card */
+.grade-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+    border: 2px solid #33c9d3;
+}
+
+.grade-card .grade-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin: 20px auto;
+    box-shadow: 0 8px 24px rgba(28, 31, 190, 0.3);
+    border: 5px solid white;
+}
+
+.grade-card .grade-description {
+    font-size: 1rem;
+    color: #666;
+    font-weight: 500;
+}
+
+/* Risk Card */
+.risk-card {
+    background: linear-gradient(135deg, #ffffff 0%, #fff5f5 100%);
+}
+
+.risk-card.low-risk {
+    border: 2px solid #28a745;
+}
+
+.risk-card.medium-risk {
+    border: 2px solid #ffc107;
+}
+
+.risk-card.high-risk {
+    border: 2px solid #dc3545;
+}
+
+.risk-card .risk-indicator {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+}
+
+.risk-card.low-risk .risk-indicator {
+    background: linear-gradient(135deg, #28a745 0%, #4CAF50 100%);
+    color: white;
+    box-shadow: 0 8px 24px rgba(40, 167, 69, 0.3);
+}
+
+.risk-card.medium-risk .risk-indicator {
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    color: #333;
+    box-shadow: 0 8px 24px rgba(255, 193, 7, 0.3);
+}
+
+.risk-card.high-risk .risk-indicator {
+    background: linear-gradient(135deg, #dc3545 0%, #f44336 100%);
+    color: white;
+    box-shadow: 0 8px 24px rgba(220, 53, 69, 0.3);
+}
+
+.risk-card .risk-label {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-top: 15px;
+}
+
+.risk-card .risk-probability {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-top: 10px;
+}
+
+/* Info Rows */
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    color: #666;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.info-value {
+    color: #333;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: right;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(28, 31, 190, 0.15);
+    border-color: #1c1fbe;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1c1fbe;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.stat-value.warning {
+    color: #ffc107;
+}
+
+.stat-value.danger {
+    color: #dc3545;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Payment History Bar */
+.payment-history-bar {
+    height: 40px;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    margin-bottom: 20px;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.payment-bar-segment {
+    height: 100%;
+    transition: width 0.5s ease;
+}
+
+.payment-bar-segment.ontime {
+    background: linear-gradient(135deg, #28a745 0%, #4CAF50 100%);
+}
+
+.payment-bar-segment.delayed {
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+}
+
+.payment-bar-segment.missed {
+    background: linear-gradient(135deg, #dc3545 0%, #f44336 100%);
+}
+
+.payment-legend {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.legend-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+}
+
+.legend-dot.ontime {
+    background: #28a745;
+}
+
+.legend-dot.delayed {
+    background: #ffc107;
+}
+
+.legend-dot.missed {
+    background: #dc3545;
+}
+
+/* ML Predictions Section */
+.ml-section {
+    background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+    border: 2px solid #33c9d3;
+}
+
+.prediction-timeline {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    padding: 30px 0;
+    margin-bottom: 20px;
+}
+
+.prediction-month {
+    text-align: center;
+    flex: 1;
+}
+
+.month-label {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.predicted-score {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1c1fbe;
+    margin-bottom: 5px;
+}
+
+.score-change {
+    font-size: 1rem;
+    color: #28a745;
+    font-weight: 600;
+}
+
+.confidence {
+    font-size: 0.75rem;
+    color: #999;
+}
+
+.final-prediction {
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
+    border-radius: 16px;
+    color: white;
+    margin-top: 20px;
+}
+
+.final-score {
+    font-size: 4rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.final-label {
+    font-size: 1.1rem;
+    opacity: 0.95;
+}
+
+/* AI Recommendations */
+.ai-recommendations {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.ai-tip {
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border-left: 4px solid #1c1fbe;
+    transition: all 0.3s ease;
+}
+
+.ai-tip:hover {
+    background: #f0f0f0;
+    transform: translateX(5px);
+}
+
+.ai-tip-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
+    color: white;
+    font-size: 1.2rem;
+}
+
+.ai-tip-content h6 {
+    margin: 0 0 5px 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.ai-tip-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+.ai-tip-impact {
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: #28a745;
+    font-weight: 600;
+}
+
+/* Bank Suggestions Grid */
+.bank-suggestions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+.bank-card {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.bank-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(28, 31, 190, 0.15);
+    border-color: #1c1fbe;
+}
+
+.bank-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 1.8rem;
+}
+
+.bank-name {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+.bank-products {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.product-tag {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    background: #e9ecef;
+    border-radius: 12px;
+    color: #666;
+}
+
+.bank-approval {
+    font-size: 0.9rem;
+    color: #28a745;
+    font-weight: 600;
+}
+
+/* Accounts Table */
+.accounts-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.accounts-table thead {
+    background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
+    color: white;
+}
+
+.accounts-table th {
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.accounts-table tbody tr {
+    border-bottom: 1px solid #e9ecef;
+    transition: background 0.2s ease;
+}
+
+.accounts-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.accounts-table td {
+    padding: 15px;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.utilization-bar {
+    width: 100px;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.utilization-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.utilization-fill.low {
+    background: #28a745;
+}
+
+.utilization-fill.medium {
+    background: #ffc107;
+}
+
+.utilization-fill.high {
+    background: #dc3545;
+}
+
+/* Improvement Timeline */
+.improvement-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.timeline-item {
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border-left: 4px solid #1c1fbe;
+}
+
+.timeline-month {
+    font-weight: 600;
+    color: #1c1fbe;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.timeline-action {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Loan Calculator */
+.loan-calculator {
+    background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+}
+
+.loan-form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.loan-form-group {
+    flex: 1;
+    min-width: 150px;
+}
+
+.loan-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.loan-form-group select,
+.loan-form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: border-color 0.3s ease;
+}
+
+.loan-form-group select:focus,
+.loan-form-group input:focus {
+    outline: none;
+    border-color: #1c1fbe;
+    box-shadow: 0 0 0 3px rgba(28, 31, 190, 0.1);
+}
+
+.btn-calculate {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-calculate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(28, 31, 190, 0.3);
+}
+
+.loan-result {
+    display: flex;
+    gap: 20px;
+    justify-content: space-around;
+    padding: 25px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+
+.result-item {
+    text-align: center;
+}
+
+.result-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1c1fbe;
+    margin-bottom: 5px;
+}
+
+.result-label {
+    font-size: 0.85rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.result-item.approval .result-value {
+    color: #28a745;
+}
+
+/* Economic Indicators Grid */
+.economic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+.economic-item {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.economic-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(28, 31, 190, 0.15);
+    border-color: #1c1fbe;
+}
+
+.economic-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1c1fbe;
+    margin-bottom: 8px;
+}
+
+.economic-label {
+    font-size: 0.85rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* No Data State */
+.no-data-state {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.icon-wrapper {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30px;
+    font-size: 4rem;
+}
+
+.no-data-state h3 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.no-data-state p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+.sample-files-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(28, 31, 190, 0.12);
+}
+
+.sample-files-section h5 {
+    color: #1c1fbe;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-title {
+        font-size: 1.8rem;
+    }
+    
+    .dashboard-subtitle {
+        font-size: 0.95rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .bank-suggestions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .economic-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .prediction-timeline {
+        flex-wrap: wrap;
+    }
+    
+    .loan-form-row {
+        flex-direction: column;
+    }
+}
+

@@ -76,7 +76,10 @@
 
                         } else {
                             log('Used Not Found. Create new');
+                            // Generate unique profile ID (using mobile as base since it's unique)
+                            var profileId = 'PROFILE_' + mobile + '_' + Date.now().toString().slice(-8);
                             var model = new ProfileModel({
+                                profile: profileId,
                                 mobile: mobile,
                                 customerId: 'ASTROCRED' + Date.now().toString().slice(-8),
                                 profile_info: {

@@ -13,8 +13,18 @@
     require("./surepass/index");
     // cibil 
     require("./cibil/index");
+    // multi-bureau
+    require("./equifax/index");
+    require("./experion/index");
+    require("./multi-bureau/index");
     // product recommendation
     require("./financial-product-recommendation/index");
+    // subscription
+    require("./subscription/index");
+    // api-ecosystem
+    require("./api-ecosystem/index");
+    // financial-hub
+    require("./financial-hub/index");
     // tensorflow-model-training
     //require("./tensorflow-model-training/index");
     require("./security/index");

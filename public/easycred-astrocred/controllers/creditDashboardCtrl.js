@@ -1,6 +1,6 @@
 // Premium Credit Dashboard Controller
-app.controller('creditDashboardCtrl', ['$scope', '$http', '$timeout', '$location', 'productionMode',
-    function($scope, $http, $timeout, $location, productionMode) {
+app.controller('creditDashboardCtrl', ['$scope', '$http', '$timeout', '$location', 'productionMode', 'cibilCore', 'stateManager',
+    function($scope, $http, $timeout, $location, productionMode, cibilCore, stateManager) {
         
         log('creditDashboardCtrl initialized');
         
@@ -25,9 +25,45 @@ app.controller('creditDashboardCtrl', ['$scope', '$http', '$timeout', '$location
         $scope.selectedSampleFile = '';
         $scope.uploadedFileName = null;
 
-        // Load credit data on init
+        // Load credit data on init - REAL DATA CONNECTION
         $scope.init = function() {
-            log('Initializing credit dashboard...');
+            log('Initializing credit dashboard with REAL DATA...');
+            
+            // Get user profile for identifiers
+            var profile = stateManager.getProfile();
+            if (profile && (profile.profile_info || profile.kyc)) {
+                var identifier = {};
+                
+                // Extract identifiers from profile
+                if (profile.kyc && profile.kyc.pan_number) {
+                    identifier.pan = profile.kyc.pan_number;
+                }
+                if (profile.profile_info && profile.profile_info.mobile) {
+                    identifier.mobile = profile.profile_info.mobile;
+                }
+                if (profile.profile_info && profile.profile_info.email) {
+                    identifier.email = profile.profile_info.email;
+                }
+                
+                // Fetch real data from API if we have at least one identifier
+                if (identifier.pan || identifier.mobile || identifier.email) {
+                    log('Fetching real credit data with identifier:', identifier);
+                    $scope.fetchRealCreditData(identifier);
+                } else {
+                    log('No profile identifiers found, checking cache...');
+                    $scope.loadFromCache();
+                }
+            } else {
+                log('No profile found, checking cache...');
+                $scope.loadFromCache();
+            }
+            
+            $scope.loadScoreHistory();
+            $scope.loadSampleFilesList();
+        };
+        
+        // Load from cache (fallback)
+        $scope.loadFromCache = function() {
             var cachedData = localStorage.getItem('creditData');
             if (cachedData) {
                 try {
@@ -38,8 +74,42 @@ app.controller('creditDashboardCtrl', ['$scope', '$http', '$timeout', '$location
                     log('Error parsing cached data:', e);
                 }
             }
-            $scope.loadScoreHistory();
-            $scope.loadSampleFilesList();
+        };
+        
+        // Fetch real credit data from API
+        $scope.fetchRealCreditData = function(identifier) {
+            $scope.isLoading = true;
+            
+            cibilCore.getAnalysis(identifier)
+                .then(function(response) {
+                    if (response.data && response.data.success !== false) {
+                        log('✅ Real credit data fetched successfully:', response.data);
+                        $scope.creditData = response.data;
+                        $scope.reportDate = new Date();
+                        
+                        // Cache the data
+                        localStorage.setItem('creditData', JSON.stringify(response.data));
+                        
+                        // Initialize predictions with real data
+                        $scope.initializeMLPredictions();
+                    } else {
+                        log('⚠️ No data returned, using cache if available');
+                        $scope.loadFromCache();
+                    }
+                })
+                .catch(function(error) {
+                    log('❌ Error fetching real credit data:', error);
+                    // Fallback to cache on error
+                    $scope.loadFromCache();
+                    
+                    // Show user-friendly error (optional)
+                    if (error.status !== 404) {
+                        console.warn('Unable to fetch latest data, showing cached data if available');
+                    }
+                })
+                .finally(function() {
+                    $scope.isLoading = false;
+                });
         };
 
         // Initialize ML Predictions

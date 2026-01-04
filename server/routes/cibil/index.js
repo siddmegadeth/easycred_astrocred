@@ -13,6 +13,7 @@
     require("./score-history");
     require("./ml-prediction");
     require("./score-simulation");
+    require("./roadmap-generator");
 
 })();
 
