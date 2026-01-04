@@ -314,6 +314,17 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             simulation: {
                 runScoreSimulation: productionLink + "/post/api/cibil/score-simulation",
                 quickSimulation: productionLink + "/get/api/cibil/quick-simulation"
+            },
+            // 📄 PDF GENERATION
+            pdf: {
+                cibil: productionLink + "/get/api/cibil/generate-pdf",
+                astrocred: productionLink + "/get/api/cibil/astrocred-report-pdf",
+                roadmap: productionLink + "/get/api/cibil/roadmap-pdf",
+                multiBureau: productionLink + "/get/api/multi-bureau/generate-pdf"
+            },
+            // 🗺️ ROADMAP
+            roadmap: {
+                generate: productionLink + "/get/api/cibil/roadmap"
             }
         }
     };

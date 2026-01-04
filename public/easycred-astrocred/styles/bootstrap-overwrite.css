@@ -8,19 +8,32 @@
     --bs-info: #33c9d3 !important;
 }
 
-/* Primary Color Overrides */
+/* Primary Color Overrides - ALL button variants */
 .btn-primary,
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active,
-.btn-primary.active {
+.btn-primary.active,
+button.btn-primary,
+button.btn-primary:hover {
     background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%) !important;
     border-color: #1c1fbe !important;
+    border: none !important;
     color: #ffffff !important;
     box-shadow: 0 4px 12px rgba(28, 31, 190, 0.3) !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
 }
 
-.text-primary {
+.btn-primary:hover {
+    background: linear-gradient(135deg, #15189e 0%, #28a7af 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(28, 31, 190, 0.4) !important;
+}
+
+.text-primary,
+.text-primary *,
+i.text-primary {
     color: #1c1fbe !important;
 }
 
@@ -32,47 +45,108 @@
     border-color: #1c1fbe !important;
 }
 
-/* Card Enhancements */
-.card {
+/* Card Enhancements - MORE VISIBLE */
+.card,
+.card.border {
     border-radius: 16px !important;
     border: none !important;
     box-shadow: 0 4px 12px rgba(28, 31, 190, 0.08) !important;
     background: #ffffff !important;
-}
-
-.card:hover {
-    transform: translateY(-8px) !important;
-    box-shadow: 0 12px 32px rgba(28, 31, 190, 0.15) !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-.card-header {
-    background: linear-gradient(135deg, rgba(28, 31, 190, 0.05) 0%, rgba(51, 201, 211, 0.05) 100%) !important;
-    border-bottom: 2px solid rgba(28, 31, 190, 0.1) !important;
-    color: #1c1fbe !important;
-    font-weight: 600 !important;
+.card:hover,
+.card.border:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 12px 32px rgba(28, 31, 190, 0.15) !important;
 }
 
-/* Navigation Tabs */
+.card-header {
+    background: linear-gradient(135deg, rgba(28, 31, 190, 0.08) 0%, rgba(51, 201, 211, 0.08) 100%) !important;
+    border-bottom: 2px solid rgba(28, 31, 190, 0.15) !important;
+    color: #1c1fbe !important;
+    font-weight: 600 !important;
+    border-radius: 16px 16px 0 0 !important;
+}
+
+/* Navigation Tabs - MORE VISIBLE */
+.nav-tabs {
+    border-bottom: 2px solid rgba(28, 31, 190, 0.1) !important;
+}
+
 .nav-tabs .nav-link {
     color: #6c757d !important;
     border: none !important;
+    border-radius: 8px 8px 0 0 !important;
+    transition: all 0.3s ease !important;
 }
 
 .nav-tabs .nav-link:hover {
-    background: rgba(28, 31, 190, 0.05) !important;
+    background: rgba(28, 31, 190, 0.08) !important;
     color: #1c1fbe !important;
 }
 
 .nav-tabs .nav-link.active {
     color: #1c1fbe !important;
     border-bottom: 3px solid #1c1fbe !important;
-    background: linear-gradient(180deg, rgba(28, 31, 190, 0.05) 0%, transparent 100%) !important;
-    font-weight: 600 !important;
+    background: linear-gradient(180deg, rgba(28, 31, 190, 0.1) 0%, transparent 100%) !important;
+    font-weight: 700 !important;
 }
 
-/* Body Background */
-body {
+/* Body Background - MORE VISIBLE */
+body,
+body.section {
     background: linear-gradient(135deg, #f5f5ff 0%, #e8eaff 50%, #ffffff 100%) !important;
+    background-attachment: fixed !important;
+}
+
+/* Badge AI - MORE VISIBLE */
+.badge-ai,
+.badge.badge-ai {
+    background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%) !important;
+    color: #fff !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 20px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 12px rgba(28, 31, 190, 0.2) !important;
+}
+
+/* Score Ring - EasyCred colors */
+.score-ring {
+    background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%) !important;
+    box-shadow: 0 8px 24px rgba(28, 31, 190, 0.3) !important;
+}
+
+/* All outline buttons */
+.btn-outline-primary {
+    border: 2px solid #1c1fbe !important;
+    color: #1c1fbe !important;
+    border-radius: 10px !important;
+}
+
+.btn-outline-primary:hover {
+    background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%) !important;
+    color: white !important;
+    border-color: #1c1fbe !important;
+}
+
+/* Chat AI */
+.chat-ai {
+    background: linear-gradient(135deg, rgba(245, 245, 255, 0.8) 0%, rgba(248, 249, 255, 0.9) 100%) !important;
+    border-left: 4px solid #1c1fbe !important;
+}
+
+.chat-user {
+    background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%) !important;
+    color: #fff !important;
+}
+
+/* Headers */
+h2.fw-bold {
+    color: #1c1fbe !important;
+}
+
+h2.fw-bold i.text-primary {
+    color: #1c1fbe !important;
 }
 

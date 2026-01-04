@@ -1,8 +1,26 @@
-app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', '$location', 'authentication', 'cibilCore', function($scope, $rootScope, $timeout, stateManager, $location, authentication, cibilCore) {
+app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', '$location', 'authentication', 'cibilCore', 'productionMode', function($scope, $rootScope, $timeout, stateManager, $location, authentication, cibilCore, productionMode) {
 
-
+    // #region agent log
+    $scope.$on('$viewContentLoaded', function() {
+        setTimeout(function() {
+            fetch('http://127.0.0.1:7244/ingest/f843917b-97b2-459f-8899-9885ac655872',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'homeCtrl.js:$viewContentLoaded',message:'Template loaded, checking CSS after enhancement',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'B'})}).catch(()=>{});
+            var testCard = document.querySelector('.card');
+            var cardComputed = testCard ? window.getComputedStyle(testCard) : null;
+            var btnPrimary = document.querySelector('.btn-primary');
+            var btnPrimaryComputed = btnPrimary ? window.getComputedStyle(btnPrimary) : null;
+            var badgeAi = document.querySelector('.badge-ai');
+            var badgeComputed = badgeAi ? window.getComputedStyle(badgeAi) : null;
+            var navActive = document.querySelector('.nav-tabs .nav-link.active');
+            var navComputed = navActive ? window.getComputedStyle(navActive) : null;
+            fetch('http://127.0.0.1:7244/ingest/f843917b-97b2-459f-8899-9885ac655872',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'homeCtrl.js:$viewContentLoaded',message:'Enhanced CSS verification',data:{cardBorderRadius:cardComputed?.borderRadius,cardBoxShadow:cardComputed?.boxShadow?.substring(0,60),btnPrimaryBg:btnPrimaryComputed?.background?.substring(0,100),badgeAiBg:badgeComputed?.background?.substring(0,100),navActiveColor:navComputed?.color,navActiveBorderBottom:navComputed?.borderBottom},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'C'})}).catch(()=>{});
+        }, 500);
+    });
+    // #endregion
 
     $timeout(function() {
+        // #region agent log
+        fetch('http://127.0.0.1:7244/ingest/f843917b-97b2-459f-8899-9885ac655872',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'homeCtrl.js:$timeout',message:'Controller init started',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+        // #endregion
 
 
         if (stateManager.isUserLogggedIn()) {
@@ -341,20 +359,101 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
         });
     }
 
+    // Helper function to get user identifiers
+    $scope.getUserIdentifiers = function() {
+        var userProfile = stateManager.getProfile();
+        var identifiers = {};
+        
+        if (userProfile) {
+            if (userProfile.kyc && userProfile.kyc.pan_number) {
+                identifiers.pan = userProfile.kyc.pan_number;
+            }
+            if (userProfile.profile_info && userProfile.profile_info.mobile) {
+                identifiers.mobile = userProfile.profile_info.mobile;
+            }
+            if (userProfile.profile_info && userProfile.profile_info.email) {
+                identifiers.email = userProfile.profile_info.email;
+            }
+        }
+        
+        return identifiers;
+    };
+
+    // Helper function to download PDF from API
+    $scope.downloadPDF = function(url, params, fileName) {
+        var baseUrl = productionMode.getMode();
+        var fullUrl = baseUrl + url;
+        var queryString = Object.keys(params).map(function(key) {
+            return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+        }).join('&');
+        
+        if (queryString) {
+            fullUrl += '?' + queryString;
+        }
+        
+        // Open URL in new window to trigger download
+        window.open(fullUrl, '_blank');
+    };
+
     // Action functions
     $scope.downloadCIBILReport = function() {
-        alert('Downloading official CIBIL report for SHIV KUMAR (PAN: IVZPK2103N)...');
-        console.log('CIBIL report download initiated');
+        var identifiers = $scope.getUserIdentifiers();
+        if (!identifiers.pan && !identifiers.mobile && !identifiers.email) {
+            alert('Please complete your profile with PAN, Mobile, or Email to download reports.');
+            return;
+        }
+        
+        var baseUrl = productionMode.getMode();
+        var url = baseUrl + '/get/api/cibil/generate-pdf';
+        var queryString = Object.keys(identifiers).map(function(key) {
+            return encodeURIComponent(key) + '=' + encodeURIComponent(identifiers[key]);
+        }).join('&');
+        
+        if (queryString) {
+            url += '?' + queryString;
+        }
+        
+        window.open(url, '_blank');
     };
 
     $scope.downloadASTROCREDReport = function() {
-        alert('Generating ASTROCRED analysis report with AI insights...');
-        console.log('ASTROCRED report generation initiated');
+        var identifiers = $scope.getUserIdentifiers();
+        if (!identifiers.pan && !identifiers.mobile && !identifiers.email) {
+            alert('Please complete your profile with PAN, Mobile, or Email to download reports.');
+            return;
+        }
+        
+        var baseUrl = productionMode.getMode();
+        var url = baseUrl + '/get/api/cibil/astrocred-report-pdf';
+        var queryString = Object.keys(identifiers).map(function(key) {
+            return encodeURIComponent(key) + '=' + encodeURIComponent(identifiers[key]);
+        }).join('&');
+        
+        if (queryString) {
+            url += '?' + queryString;
+        }
+        
+        window.open(url, '_blank');
     };
 
     $scope.downloadMultiBureau = function() {
-        alert('Multi-bureau report requires Premium subscription');
-        console.log('Multi-bureau report requested');
+        var identifiers = $scope.getUserIdentifiers();
+        if (!identifiers.pan && !identifiers.mobile && !identifiers.email) {
+            alert('Please complete your profile with PAN, Mobile, or Email to download reports.');
+            return;
+        }
+        
+        var baseUrl = productionMode.getMode();
+        var url = baseUrl + '/get/api/multi-bureau/generate-pdf';
+        var queryString = Object.keys(identifiers).map(function(key) {
+            return encodeURIComponent(key) + '=' + encodeURIComponent(identifiers[key]);
+        }).join('&');
+        
+        if (queryString) {
+            url += '?' + queryString;
+        }
+        
+        window.open(url, '_blank');
     };
 
     $scope.generateComprehensiveReport = function() {
@@ -382,9 +481,25 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
         console.log('Loan eligibility check');
     };
 
-    $scope.downloadRoadmap = function() {
-        alert('Downloading 24-month improvement roadmap PDF...');
-        console.log('Roadmap download requested');
+    $scope.downloadRoadmap = function(months) {
+        var roadmapMonths = months || 24;
+        var identifiers = $scope.getUserIdentifiers();
+        if (!identifiers.pan && !identifiers.mobile && !identifiers.email) {
+            alert('Please complete your profile with PAN, Mobile, or Email to download roadmap.');
+            return;
+        }
+        
+        var baseUrl = productionMode.getMode();
+        var url = baseUrl + '/get/api/cibil/roadmap-pdf/' + roadmapMonths;
+        var queryString = Object.keys(identifiers).map(function(key) {
+            return encodeURIComponent(key) + '=' + encodeURIComponent(identifiers[key]);
+        }).join('&');
+        
+        if (queryString) {
+            url += '?' + queryString;
+        }
+        
+        window.open(url, '_blank');
     };
 
     $scope.getDebtConsolidationPlan = function() {

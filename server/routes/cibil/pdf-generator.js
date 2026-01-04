@@ -348,6 +348,245 @@
         return currentAccounts + ' of ' + totalAccounts + ' accounts current';
     };
 
-    module.exports = new PDFGenerator();
+    var pdfGenerator = new PDFGenerator();
+
+    // ============== API ENDPOINTS ==============
+
+    // Get CIBIL PDF Report
+    app.get('/get/api/cibil/generate-pdf', async function(req, res) {
+        try {
+            var fs = require('fs');
+            var { pan, mobile, email } = req.query;
+            var CibilDataModel = require('../../schema/cibil/cibil-data-schema.js');
+
+            if (!pan && !mobile && !email) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Please provide at least one identifier (pan, mobile, or email)'
+                });
+            }
+
+            var query = {};
+            if (pan) query.pan = pan.toUpperCase();
+            if (mobile) query.mobile = mobile;
+            if (email) query.email = email.toLowerCase();
+
+            var cibilData = await CibilDataModel.findOne(query).lean();
+            if (!cibilData) {
+                return res.status(404).json({
+                    success: false,
+                    error: 'CIBIL data not found'
+                });
+            }
+
+            var outputDir = path.join(__dirname, '../../temp/pdf');
+            if (!fs.existsSync(outputDir)) {
+                fs.mkdirSync(outputDir, { recursive: true });
+            }
+
+            var fileName = 'CIBIL_Report_' + (pan || mobile || email) + '_' + Date.now() + '.pdf';
+            var outputPath = path.join(outputDir, fileName);
+
+            pdfGenerator.generateCIBILPDF(cibilData, outputPath, function(error, filePath) {
+                if (error) {
+                    console.error('Error generating CIBIL PDF:', error);
+                    return res.status(500).json({
+                        success: false,
+                        error: 'Failed to generate PDF',
+                        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+                    });
+                }
+
+                res.download(filePath, fileName, function(downloadError) {
+                    if (downloadError) {
+                        console.error('Error downloading PDF:', downloadError);
+                    }
+                    // Clean up file after download
+                    setTimeout(function() {
+                        if (fs.existsSync(filePath)) {
+                            fs.unlinkSync(filePath);
+                        }
+                    }, 5000);
+                });
+            });
+
+        } catch (error) {
+            console.error('Error in CIBIL PDF generation:', error);
+            res.status(500).json({
+                success: false,
+                error: 'Failed to generate PDF',
+                details: process.env.NODE_ENV === 'development' ? error.message : undefined
+            });
+        }
+    });
+
+    // Get ASTROCRED Analysis PDF Report
+    app.get('/get/api/cibil/astrocred-report-pdf', async function(req, res) {
+        try {
+            var fs = require('fs');
+            var { pan, mobile, email } = req.query;
+            var CibilDataModel = require('../../schema/cibil/cibil-data-schema.js');
+            var AdvancedAnalytics = require('./api/analytics-engine-advance.js');
+            var GradingEngine = require('./api/grading-engine.js');
+
+            if (!pan && !mobile && !email) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Please provide at least one identifier (pan, mobile, or email)'
+                });
+            }
+
+            var query = {};
+            if (pan) query.pan = pan.toUpperCase();
+            if (mobile) query.mobile = mobile;
+            if (email) query.email = email.toLowerCase();
+
+            var cibilData = await CibilDataModel.findOne(query).lean();
+            if (!cibilData) {
+                return res.status(404).json({
+                    success: false,
+                    error: 'CIBIL data not found'
+                });
+            }
+
+            // Generate comprehensive analysis
+            var gradingEngine = new GradingEngine(cibilData);
+            var advancedAnalytics = new AdvancedAnalytics(cibilData, gradingEngine);
+            var comprehensiveReport = advancedAnalytics.generateComprehensiveReport();
+
+            // Add analysis to cibilData for PDF generation
+            cibilData.analysis = comprehensiveReport;
+
+            var outputDir = path.join(__dirname, '../../temp/pdf');
+            if (!fs.existsSync(outputDir)) {
+                fs.mkdirSync(outputDir, { recursive: true });
+            }
+
+            var fileName = 'ASTROCRED_Analysis_' + (pan || mobile || email) + '_' + Date.now() + '.pdf';
+            var outputPath = path.join(outputDir, fileName);
+
+            pdfGenerator.generateCIBILPDF(cibilData, outputPath, function(error, filePath) {
+                if (error) {
+                    console.error('Error generating ASTROCRED PDF:', error);
+                    return res.status(500).json({
+                        success: false,
+                        error: 'Failed to generate PDF',
+                        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+                    });
+                }
+
+                res.download(filePath, fileName, function(downloadError) {
+                    if (downloadError) {
+                        console.error('Error downloading PDF:', downloadError);
+                    }
+                    // Clean up file after download
+                    setTimeout(function() {
+                        if (fs.existsSync(filePath)) {
+                            fs.unlinkSync(filePath);
+                        }
+                    }, 5000);
+                });
+            });
+
+        } catch (error) {
+            console.error('Error in ASTROCRED PDF generation:', error);
+            res.status(500).json({
+                success: false,
+                error: 'Failed to generate PDF',
+                details: process.env.NODE_ENV === 'development' ? error.message : undefined
+            });
+        }
+    });
+
+    // Get Roadmap PDF
+    app.get('/get/api/cibil/roadmap-pdf/:months', async function(req, res) {
+        try {
+            var fs = require('fs');
+            var months = parseInt(req.params.months);
+            var { pan, mobile, email } = req.query;
+            var CibilDataModel = require('../../schema/cibil/cibil-data-schema.js');
+            var AdvancedAnalytics = require('./api/analytics-engine-advance.js');
+            var GradingEngine = require('./api/grading-engine.js');
+
+            var validMonths = [6, 12, 18, 24];
+            if (!validMonths.includes(months)) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Invalid timeline. Supported timelines: 6, 12, 18, 24 months'
+                });
+            }
+
+            if (!pan && !mobile && !email) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Please provide at least one identifier (pan, mobile, or email)'
+                });
+            }
+
+            var query = {};
+            if (pan) query.pan = pan.toUpperCase();
+            if (mobile) query.mobile = mobile;
+            if (email) query.email = email.toLowerCase();
+
+            var cibilData = await CibilDataModel.findOne(query).lean();
+            if (!cibilData) {
+                return res.status(404).json({
+                    success: false,
+                    error: 'CIBIL data not found'
+                });
+            }
+
+            // Generate roadmap
+            var gradingEngine = new GradingEngine(cibilData);
+            var advancedAnalytics = new AdvancedAnalytics(cibilData, gradingEngine);
+            var roadmap = advancedAnalytics.generateImprovementPlan(months);
+
+            // Create a document structure for PDF (simplified - you may want to create a dedicated roadmap PDF generator)
+            cibilData.roadmap = roadmap;
+            cibilData.analysis = { roadmap: roadmap };
+
+            var outputDir = path.join(__dirname, '../../temp/pdf');
+            if (!fs.existsSync(outputDir)) {
+                fs.mkdirSync(outputDir, { recursive: true });
+            }
+
+            var fileName = 'Roadmap_' + months + 'Months_' + (pan || mobile || email) + '_' + Date.now() + '.pdf';
+            var outputPath = path.join(outputDir, fileName);
+
+            // Use CIBIL PDF generator for now (you can create a dedicated roadmap PDF generator later)
+            pdfGenerator.generateCIBILPDF(cibilData, outputPath, function(error, filePath) {
+                if (error) {
+                    console.error('Error generating Roadmap PDF:', error);
+                    return res.status(500).json({
+                        success: false,
+                        error: 'Failed to generate PDF',
+                        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+                    });
+                }
+
+                res.download(filePath, fileName, function(downloadError) {
+                    if (downloadError) {
+                        console.error('Error downloading PDF:', downloadError);
+                    }
+                    // Clean up file after download
+                    setTimeout(function() {
+                        if (fs.existsSync(filePath)) {
+                            fs.unlinkSync(filePath);
+                        }
+                    }, 5000);
+                });
+            });
+
+        } catch (error) {
+            console.error('Error in Roadmap PDF generation:', error);
+            res.status(500).json({
+                success: false,
+                error: 'Failed to generate PDF',
+                details: process.env.NODE_ENV === 'development' ? error.message : undefined
+            });
+        }
+    });
+
+    module.exports = pdfGenerator;
 
 })();
