@@ -1,6 +1,6 @@
-(function() {
-    require('./boot-config');
+(function () {
     require('dotenv').config()
+    require('./boot-config');
     require("./server/index");
 
 })()

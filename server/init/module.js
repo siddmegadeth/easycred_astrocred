@@ -1,4 +1,4 @@
-(function() {
+(function () {
 
     log = module.exports = console.log.bind(console);
     cluster = module.exports = require('cluster');
@@ -48,6 +48,8 @@
     moment = module.exports = require('moment');
     Schema = module.exports = mongoose.Schema;
     ObjectId = module.exports = mongoose.ObjectId;
+    LinkedAccountModel = module.exports = require('../schema/financial-aggregator/linked-account-schema');
+    SubscriptionModel = module.exports = require('../schema/subscription/subscription-schema');
 
     compression = module.exports = require('compression');
     customId = module.exports = require("custom-id");
@@ -102,8 +104,8 @@
     sendMMTCBuyConfirmationEmail = module.exports = null;
     sendMMTCSellConfirmationEmail = module.exports = null;
     sendLoanApplicationEmail = module.exports = null;
-    NodeCache  = module.exports = require('node-cache');
-    myCache= module.exports = new NodeCache();
+    NodeCache = module.exports = require('node-cache');
+    myCache = module.exports = new NodeCache();
 
     Fingerprint = module.exports = require('express-fingerprint');
     // tensorflow

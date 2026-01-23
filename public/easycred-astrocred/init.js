@@ -27,21 +27,21 @@ Offline.options = {
     requests: true,
     game: false
 };
-Offline.on('down', function() {
+Offline.on('down', function () {
     log("Down");
 });
-Offline.on('confirmed-down', function() {
+Offline.on('confirmed-down', function () {
     log(" confirmedDown");
 
 });
 
-Offline.on('confirmed-up', function() {
+Offline.on('confirmed-up', function () {
     log("confirmed Up");
 
 });
 
 
-app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider', '$httpProvider', '$translateProvider', 'surePassProvider', 'authenticationProvider', '$routeProvider', '$locationProvider', 'profileOperationsProvider', 'cibilCoreProvider', function(productionModeProvider, utilityProvider, geoIPServicesProvider, $httpProvider, $translateProvider, surePassProvider, authenticationProvider, $routeProvider, $locationProvider, profileOperationsProvider, cibilCoreProvider) {
+app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider', '$httpProvider', '$translateProvider', 'surePassProvider', 'authenticationProvider', '$routeProvider', '$locationProvider', 'profileOperationsProvider', 'cibilCoreProvider', function (productionModeProvider, utilityProvider, geoIPServicesProvider, $httpProvider, $translateProvider, surePassProvider, authenticationProvider, $routeProvider, $locationProvider, profileOperationsProvider, cibilCoreProvider) {
 
     $locationProvider.html5Mode({
         enabled: false,
@@ -78,7 +78,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
 
             },
             resolve: {
-                authenticated: function($q, stateManager, $location) {
+                authenticated: function ($q, stateManager, $location) {
 
                     if (stateManager.isUserLogggedIn()) {
                         return $q.when(true);
@@ -98,7 +98,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
                 showNavLink: true
             },
             resolve: {
-                authenticated: function($q, stateManager, $location) {
+                authenticated: function ($q, stateManager, $location) {
 
                     if (stateManager.isUserLogggedIn()) {
                         return $q.when(true);
@@ -118,7 +118,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
                 showNavLink: false
             },
             resolve: {
-                authenticated: function($q, stateManager, $location) {
+                authenticated: function ($q, stateManager, $location) {
 
                     if (stateManager.isUserLogggedIn()) {
                         return $q.when(true);
@@ -127,6 +127,51 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
                         //show popup
                     }
                 }
+            }
+        })
+        .when('/financial-dashboard', {
+            templateUrl: 'templates/financial-dashboard.html',
+            controller: 'financialDashboardCtrl',
+            config: {
+                requireLogin: true,
+                isPrivate: true,
+                showNavLink: true
+            },
+            resolve: {
+                authenticated: function ($q, stateManager, $location) {
+                    if (stateManager.isUserLogggedIn()) {
+                        return $q.when(true);
+                    } else {
+                        $location.path("login");
+                    }
+                }
+            }
+        })
+        .when('/pricing', {
+            templateUrl: 'templates/pricing.html',
+            controller: 'pricingCtrl',
+            config: {
+                requireLogin: false,
+                isPrivate: false,
+                showNavLink: true
+            }
+        })
+        .when('/subscription/success', {
+            templateUrl: 'templates/subscription-success.html',
+            controller: 'pricingCtrl',
+            config: {
+                requireLogin: true,
+                isPrivate: true,
+                showNavLink: false
+            }
+        })
+        .when('/finvu-connect', {
+            templateUrl: 'templates/finvu-connect.html',
+            controller: 'finvuConnectCtrl',
+            config: {
+                requireLogin: true,
+                isPrivate: true,
+                showNavLink: true
             }
         })
         .when('/login', {
@@ -139,7 +184,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
 
             },
             resolve: {
-                authenticated: function($q, stateManager, $location) {
+                authenticated: function ($q, stateManager, $location) {
 
                     if (stateManager.isUserLogggedIn()) {
                         $location.path("home");
@@ -160,7 +205,7 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
                 showNavLink: true
             },
             resolve: {
-                authenticated: function($q, stateManager, $location) {
+                authenticated: function ($q, stateManager, $location) {
 
                     if (stateManager.isUserLogggedIn()) {
                         $location.path("/home");
@@ -336,9 +381,9 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
     cibilCoreProvider.config(prod.cibil_core);
 }]);
 
-app.run(['$rootScope', '$location', 'stateManager', '$window', '$timeout', function($rootScope, $location, stateManager, $window, $timeout) {
+app.run(['$rootScope', '$location', 'stateManager', '$window', '$timeout', function ($rootScope, $location, stateManager, $window, $timeout) {
 
-    $rootScope.$on('$routeChangeStart', function(event, next, current) {
+    $rootScope.$on('$routeChangeStart', function (event, next, current) {
         var config = next.config;
         log(config);
         $rootScope.config = config;
@@ -346,7 +391,7 @@ app.run(['$rootScope', '$location', 'stateManager', '$window', '$timeout', funct
 
         // DISABLED: Login check removed - all routes accessible without authentication
         if ($rootScope.config.requireLogin) {
-            if (stateManager.isUserLogggedIn()) {} else {
+            if (stateManager.isUserLogggedIn()) { } else {
                 stateManager.clearLocalStorage();
                 $location.path("login");
             }
@@ -358,7 +403,7 @@ app.run(['$rootScope', '$location', 'stateManager', '$window', '$timeout', funct
 
     });
 
-    $rootScope.$on('$routeChangeSuccess', function(event, next, current) {
+    $rootScope.$on('$routeChangeSuccess', function (event, next, current) {
         warn('$routeChangeSuccess');
         var config = next.config;
         log(config);
@@ -393,7 +438,7 @@ app.run(['$rootScope', '$location', 'stateManager', '$window', '$timeout', funct
     });
 
 
-    $rootScope.$on('session-expired', function(event, data) {
+    $rootScope.$on('session-expired', function (event, data) {
 
         console.warn('Session expired:', data);
 
@@ -407,7 +452,7 @@ app.run(['$rootScope', '$location', 'stateManager', '$window', '$timeout', funct
         window.localStorage.clear();
 
         // 🔄 Redirect to login
-        $timeout(function() {
+        $timeout(function () {
             $location.path('login');
         }, 100);
     });
@@ -416,17 +461,17 @@ app.run(['$rootScope', '$location', 'stateManager', '$window', '$timeout', funct
 }]);
 
 
-app.filter('titlecase', function() {
-    return function(input) {
+app.filter('titlecase', function () {
+    return function (input) {
         return input ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
     };
 });
-app.directive('currencyInput', function($filter) {
+app.directive('currencyInput', function ($filter) {
     return {
         restrict: 'A',
         require: 'ngModel',
-        link: function(scope, element, attrs, ngModel) {
-            element.on('keydown', function(event) {
+        link: function (scope, element, attrs, ngModel) {
+            element.on('keydown', function (event) {
                 // Allow backspace, delete, tab, and arrow keys
                 if (event.keyCode == 8 || event.keyCode == 46 || event.keyCode == 9 ||
                     (event.keyCode >= 37 && event.keyCode <= 40)) {
@@ -438,7 +483,7 @@ app.directive('currencyInput', function($filter) {
                 }
             });
 
-            element.on('blur', function() {
+            element.on('blur', function () {
                 var value = element.val();
                 if (value) {
                     var formattedValue = $filter('currency')(parseFloat(value), '₹');
@@ -449,7 +494,7 @@ app.directive('currencyInput', function($filter) {
                 }
             });
 
-            ngModel.$parsers.push(function(value) {
+            ngModel.$parsers.push(function (value) {
                 if (value) {
                     var strValue = value.toString(); // Fix: convert to string before replace
                     log(strValue);
@@ -463,8 +508,8 @@ app.directive('currencyInput', function($filter) {
 
 
 
-app.filter('statusDisplay', function() {
-    return function(input) {
+app.filter('statusDisplay', function () {
+    return function (input) {
         if (!input) return '';
         // Convert status codes to display-friendly text
         const statusMap = {

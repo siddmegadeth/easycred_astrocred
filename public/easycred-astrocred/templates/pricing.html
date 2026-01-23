@@ -1,0 +1,366 @@
+<div class="container py-5">
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-astrocred-primary">
+            <i class="fas fa-crown text-warning me-2"></i>
+            Upgrade Your Credit Journey
+        </h1>
+        <p class="lead text-muted">Choose the plan that fits your financial goals</p>
+
+        <!-- Billing Toggle -->
+        <div class="d-inline-flex align-items-center bg-light rounded-pill p-1 mt-4">
+            <button class="btn btn-sm px-4 py-2 rounded-pill"
+                ng-class="{'btn-primary': billingInterval === 'monthly', 'btn-light': billingInterval !== 'monthly'}"
+                ng-click="billingInterval = 'monthly'">
+                Monthly
+            </button>
+            <button class="btn btn-sm px-4 py-2 rounded-pill"
+                ng-class="{'btn-primary': billingInterval === 'yearly', 'btn-light': billingInterval !== 'yearly'}"
+                ng-click="billingInterval = 'yearly'">
+                Yearly <span class="badge bg-success ms-1">Save 20%</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Pricing Cards -->
+    <div class="row g-4 justify-content-center">
+        <!-- Free Plan -->
+        <div class="col-lg-3 col-md-6">
+            <div class="card h-100 border-0 shadow-sm pricing-card">
+                <div class="card-body text-center p-4">
+                    <div class="plan-icon mb-3">
+                        <i class="fas fa-user fa-2x text-muted"></i>
+                    </div>
+                    <h4 class="fw-bold">Free</h4>
+                    <div class="pricing-amount my-4">
+                        <span class="display-4 fw-bold">₹0</span>
+                        <span class="text-muted">/forever</span>
+                    </div>
+                    <ul class="list-unstyled text-start mb-4">
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> 1 CIBIL Report/month</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Basic Score Analysis</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> 10 AI Chat/day</li>
+                        <li class="mb-2 text-muted"><i class="fas fa-times text-danger me-2"></i> Multi-Bureau Reports
+                        </li>
+                        <li class="mb-2 text-muted"><i class="fas fa-times text-danger me-2"></i> FinVu Connect</li>
+                        <li class="mb-2 text-muted"><i class="fas fa-times text-danger me-2"></i> Loan Marketplace</li>
+                    </ul>
+                    <button class="btn btn-outline-primary w-100" ng-if="currentPlan !== 'FREE'" disabled>
+                        Current Plan
+                    </button>
+                    <button class="btn btn-outline-secondary w-100" ng-if="currentPlan === 'FREE'" disabled>
+                        <i class="fas fa-check me-1"></i> Active
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pro Plan -->
+        <div class="col-lg-3 col-md-6">
+            <div class="card h-100 border-0 shadow pricing-card pricing-popular">
+                <div class="popular-badge">Most Popular</div>
+                <div class="card-body text-center p-4">
+                    <div class="plan-icon mb-3">
+                        <i class="fas fa-rocket fa-2x text-primary"></i>
+                    </div>
+                    <h4 class="fw-bold">Pro</h4>
+                    <div class="pricing-amount my-4">
+                        <span class="display-4 fw-bold">₹{{billingInterval === 'yearly' ? '249' : '299'}}</span>
+                        <span class="text-muted">/{{billingInterval === 'yearly' ? 'mo (billed yearly)' :
+                            'month'}}</span>
+                    </div>
+                    <ul class="list-unstyled text-start mb-4">
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> 5 Credit Reports/month</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>Multi-Bureau
+                                Access</strong></li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> 100 AI Chats/day</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Score Simulations</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Loan Marketplace</li>
+                        <li class="mb-2 text-muted"><i class="fas fa-times text-danger me-2"></i> FinVu Connect</li>
+                    </ul>
+                    <button class="btn btn-primary w-100" ng-click="subscribe('PRO')" ng-disabled="subscribing">
+                        <span ng-if="!subscribing">Upgrade to Pro</span>
+                        <span ng-if="subscribing"><i class="fas fa-spinner fa-spin me-1"></i> Processing...</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Premium Plan -->
+        <div class="col-lg-3 col-md-6">
+            <div class="card h-100 border-0 shadow-sm pricing-card">
+                <div class="card-body text-center p-4">
+                    <div class="plan-icon mb-3">
+                        <i class="fas fa-crown fa-2x text-warning"></i>
+                    </div>
+                    <h4 class="fw-bold">Premium</h4>
+                    <div class="pricing-amount my-4">
+                        <span class="display-4 fw-bold">₹{{billingInterval === 'yearly' ? '499' : '599'}}</span>
+                        <span class="text-muted">/{{billingInterval === 'yearly' ? 'mo (billed yearly)' :
+                            'month'}}</span>
+                    </div>
+                    <ul class="list-unstyled text-start mb-4">
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>Unlimited
+                                Reports</strong></li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> All Bureaus (CIBIL, Equifax,
+                            Experian)</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>Unlimited AI
+                                Chat</strong></li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>FinVu
+                                Integration</strong></li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Priority Loan Offers</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Priority Support</li>
+                    </ul>
+                    <button class="btn btn-warning w-100" ng-click="subscribe('PREMIUM')" ng-disabled="subscribing">
+                        <span ng-if="!subscribing">Go Premium</span>
+                        <span ng-if="subscribing"><i class="fas fa-spinner fa-spin me-1"></i> Processing...</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enterprise Plan -->
+        <div class="col-lg-3 col-md-6">
+            <div class="card h-100 border-0 shadow-sm pricing-card">
+                <div class="card-body text-center p-4">
+                    <div class="plan-icon mb-3">
+                        <i class="fas fa-building fa-2x text-dark"></i>
+                    </div>
+                    <h4 class="fw-bold">Enterprise</h4>
+                    <div class="pricing-amount my-4">
+                        <span class="display-4 fw-bold">₹2,999</span>
+                        <span class="text-muted">/month</span>
+                    </div>
+                    <ul class="list-unstyled text-start mb-4">
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Everything in Premium</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>API Access</strong></li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> White-label Reports</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Bulk Processing</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Dedicated Support</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Custom Integrations</li>
+                    </ul>
+                    <button class="btn btn-outline-dark w-100" ng-click="contactSales()">
+                        Contact Sales
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Comparison -->
+    <div class="mt-5 pt-5">
+        <h3 class="text-center fw-bold mb-4">Compare All Features</h3>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Feature</th>
+                        <th class="text-center">Free</th>
+                        <th class="text-center bg-primary-subtle">Pro</th>
+                        <th class="text-center">Premium</th>
+                        <th class="text-center">Enterprise</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Credit Reports</strong></td>
+                        <td class="text-center">1/month</td>
+                        <td class="text-center bg-primary-subtle">5/month</td>
+                        <td class="text-center">Unlimited</td>
+                        <td class="text-center">Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Multi-Bureau Access</strong></td>
+                        <td class="text-center"><i class="fas fa-times text-danger"></i></td>
+                        <td class="text-center bg-primary-subtle"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Credit Advisor</strong></td>
+                        <td class="text-center">10/day</td>
+                        <td class="text-center bg-primary-subtle">100/day</td>
+                        <td class="text-center">Unlimited</td>
+                        <td class="text-center">Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Score Simulations</strong></td>
+                        <td class="text-center"><i class="fas fa-times text-danger"></i></td>
+                        <td class="text-center bg-primary-subtle"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td><strong>FinVu Integration</strong></td>
+                        <td class="text-center"><i class="fas fa-times text-danger"></i></td>
+                        <td class="text-center bg-primary-subtle"><i class="fas fa-times text-danger"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Loan Marketplace</strong></td>
+                        <td class="text-center"><i class="fas fa-times text-danger"></i></td>
+                        <td class="text-center bg-primary-subtle"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td><strong>API Access</strong></td>
+                        <td class="text-center"><i class="fas fa-times text-danger"></i></td>
+                        <td class="text-center bg-primary-subtle">100 calls</td>
+                        <td class="text-center">1000 calls</td>
+                        <td class="text-center">Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Priority Support</strong></td>
+                        <td class="text-center"><i class="fas fa-times text-danger"></i></td>
+                        <td class="text-center bg-primary-subtle"><i class="fas fa-times text-danger"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="mt-5 pt-5">
+        <h3 class="text-center fw-bold mb-4">Frequently Asked Questions</h3>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="pricingFAQ">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faq1">
+                                Can I cancel my subscription anytime?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#pricingFAQ">
+                            <div class="accordion-body">
+                                Yes! You can cancel your subscription at any time. You'll continue to have access until
+                                the end of your billing period.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faq2">
+                                Is my payment information secure?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
+                            <div class="accordion-body">
+                                Absolutely. We use Razorpay, India's leading payment gateway, which is PCI-DSS
+                                compliant. We never store your card details on our servers.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faq3">
+                                What happens when I upgrade?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
+                            <div class="accordion-body">
+                                Your new features are activated immediately. We'll prorate any remaining balance from
+                                your current plan.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faq4">
+                                Do you offer refunds?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
+                            <div class="accordion-body">
+                                We offer a 7-day money-back guarantee for first-time subscribers. Contact
+                                support@astrocred.co.in for assistance.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trust Badges -->
+    <div class="text-center mt-5 pt-4">
+        <div class="d-flex justify-content-center gap-4 flex-wrap">
+            <div class="text-muted">
+                <i class="fas fa-shield-alt fa-2x mb-2 d-block"></i>
+                <small>256-bit SSL Encrypted</small>
+            </div>
+            <div class="text-muted">
+                <i class="fas fa-lock fa-2x mb-2 d-block"></i>
+                <small>Secure Payments</small>
+            </div>
+            <div class="text-muted">
+                <i class="fas fa-undo fa-2x mb-2 d-block"></i>
+                <small>7-Day Refund</small>
+            </div>
+            <div class="text-muted">
+                <i class="fas fa-headset fa-2x mb-2 d-block"></i>
+                <small>24/7 Support</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .pricing-card {
+        border-radius: 16px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .pricing-card:hover {
+        transform: translateY(-10px);
+    }
+
+    .pricing-popular {
+        border: 2px solid #1c1fbe !important;
+    }
+
+    .popular-badge {
+        position: absolute;
+        top: 12px;
+        right: -35px;
+        background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
+        color: white;
+        padding: 4px 40px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        transform: rotate(45deg);
+    }
+
+    .plan-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    .pricing-amount {
+        min-height: 80px;
+    }
+
+    .text-astrocred-primary {
+        color: #1c1fbe;
+    }
+
+    .bg-primary-subtle {
+        background-color: rgba(28, 31, 190, 0.05) !important;
+    }
+</style>

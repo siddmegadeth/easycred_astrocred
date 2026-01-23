@@ -1,8 +1,8 @@
 // EQUIFAX Credit Bureau Data Schema
 // Based on CIBIL schema structure, adapted for EQUIFAX format
-(function() {
-    
-    // EQUIFAX Enquiry Schema (similar to CIBIL)
+(function () {
+
+    // EQUIFAX Enquiry Schema
     EquifaxEnquirySchema = module.exports = mongoose.Schema({
         index: String,
         enquiryDate: String,
@@ -11,7 +11,7 @@
         enquiryAmount: Number
     });
 
-    // EQUIFAX Account Schema (similar to CIBIL CreditAccountSchema)
+    // EQUIFAX Account Schema
     EquifaxAccountSchema = module.exports = mongoose.Schema({
         index: String,
         memberShortName: String,
@@ -59,17 +59,11 @@
 
     // Main EQUIFAX Data Schema
     EquifaxDataSchema = module.exports = mongoose.Schema({
-        // Primary identifier - mobile number (India specific)
+        // Primary identifier - mobile number
         mobile: {
             type: String,
             required: true,
-            index: true,
-            validate: {
-                validator: function(v) {
-                    return /^[6-9]\d{9}$/.test(v);
-                },
-                message: props => `${props.value} is not a valid Indian mobile number!`
-            }
+            index: true
         },
 
         // Secondary identifier - email
@@ -78,13 +72,7 @@
             required: true,
             index: true,
             lowercase: true,
-            trim: true,
-            validate: {
-                validator: function(v) {
-                    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-                },
-                message: props => `${props.value} is not a valid email address!`
-            }
+            trim: true
         },
 
         // PAN card
@@ -92,13 +80,7 @@
             type: String,
             required: true,
             index: true,
-            uppercase: true,
-            validate: {
-                validator: function(v) {
-                    return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(v);
-                },
-                message: props => `${props.value} is not a valid PAN number!`
-            }
+            uppercase: true
         },
 
         // User's full name
@@ -118,7 +100,7 @@
         // EQUIFAX Credit score
         credit_score: String,
 
-        // EQUIFAX Credit report data (similar structure to CIBIL)
+        // EQUIFAX Credit report data
         credit_report: [{
             names: [{
                 index: String,
@@ -208,7 +190,7 @@
         message: String,
         message_code: String,
 
-        // Analysis results cache (same structure as CIBIL)
+        // Analysis results cache
         analysis: {
             overallGrade: String,
             defaulters: [Schema.Types.Mixed],
@@ -265,4 +247,3 @@
 
     EquifaxDataModel = module.exports = mongoose.model("EquifaxDataModel", EquifaxDataSchema);
 })();
-

@@ -1,0 +1,124 @@
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-gradient-primary text-white p-4 text-center">
+                    <img src="assets/images/finvu-logo-white.png" alt="FinVu" height="40" class="mb-3"
+                        onerror="this.onerror=null; this.src='https://placehold.co/120x40?text=FinVu'">
+                    <h3 class="mb-1">Connect Your Bank Accounts</h3>
+                    <p class="mb-0 opacity-75">Securely link your financial data via Account Aggregator</p>
+                </div>
+
+                <div class="card-body p-5">
+
+                    <!-- Step 1: Input Handle -->
+                    <div ng-if="step === 1" class="animate__animated animate__fadeIn">
+                        <div class="text-center mb-4">
+                            <div class="d-inline-block p-3 rounded-circle bg-light mb-3">
+                                <i class="fas fa-university fa-3x text-primary"></i>
+                            </div>
+                            <h5>Link your accounts for 360° financial view</h5>
+                            <p class="text-muted small">We use RB-regulated Account Aggregator framework. Your data is
+                                encrypted and secure.</p>
+                        </div>
+
+                        <form ng-submit="initiateConsent()">
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Your Mobile Number</label>
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text bg-light border-end-0 text-muted">+91</span>
+                                    <input type="text" class="form-control border-start-0 ps-0" ng-model="mobile"
+                                        readonly>
+                                    <span class="input-group-text bg-success text-white"><i
+                                            class="fas fa-check-circle"></i></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Account Aggregator Handle (VUA)</label>
+                                <div class="input-group input-group-lg">
+                                    <input type="text" class="form-control" ng-model="aaHandle"
+                                        placeholder="e.g. 9876543210@finvu" required>
+                                </div>
+                                <div class="form-text">
+                                    Usually your mobile number followed by @finvu, @onemoney, etc.
+                                </div>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg" ng-disabled="loading">
+                                    <span ng-if="!loading">Send Consent Request <i
+                                            class="fas fa-arrow-right ms-2"></i></span>
+                                    <span ng-if="loading"><i class="fas fa-spinner fa-spin me-2"></i>
+                                        Initiating...</span>
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="text-center mt-4">
+                            <img src="https://sahamati.net.in/wp-content/uploads/2021/04/Account-Aggregator-Eco-system.png"
+                                alt="AA" class="img-fluid opacity-50" style="max-height: 40px;">
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Waiting for Approval -->
+                    <div ng-if="step === 2" class="text-center animate__animated animate__fadeIn">
+                        <div class="mb-4">
+                            <div class="spinner-grow text-primary" role="status" style="width: 3rem; height: 3rem;">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+
+                        <h4 class="mb-3">Check your phone!</h4>
+                        <p class="text-muted mb-4">
+                            We've sent a consent request to <strong>{{aaHandle}}</strong>.<br>
+                            Please verify the request in your FinVu/AA app or SMS link.
+                        </p>
+
+                        <div class="alert alert-warning d-inline-block text-start">
+                            <small>
+                                <i class="fas fa-info-circle me-1"></i> <strong>Demo Mode Instructions:</strong><br>
+                                Since this is a test environment, you can simulate approval instantly.
+                            </small>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button class="btn btn-outline-success" ng-click="simulateApproval()" ng-disabled="loading">
+                                <span ng-if="!loading"><i class="fas fa-check-double me-2"></i> Simulate
+                                    "Approved"</span>
+                                <span ng-if="loading"><i class="fas fa-spinner fa-spin me-2"></i> Syncing Data...</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Success -->
+                    <div ng-if="step === 3" class="text-center animate__animated animate__fadeIn">
+                        <div class="success-animation mb-4" style="transform: scale(0.8);">
+                            <div class="success-checkmark">
+                                <div class="check-icon">
+                                    <span class="icon-line line-tip"></span>
+                                    <span class="icon-line line-long"></span>
+                                    <div class="icon-circle"></div>
+                                    <div class="icon-fix"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 class="fw-bold text-success mb-3">Sync Successful!</h3>
+                        <p class="text-muted mb-4">
+                            Your bank accounts have been securely linked.<br>
+                            We are now analyzing your financial health.
+                        </p>
+
+                        <div class="d-grid gap-3">
+                            <button class="btn btn-primary btn-lg" ng-click="goToDashboard()">
+                                Go to Financial Hub
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

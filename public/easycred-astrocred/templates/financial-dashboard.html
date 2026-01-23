@@ -1,0 +1,180 @@
+<div class="container-fluid py-4 fade-in">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="display-5 fw-bold text-astrocred-primary">Your Financial Universe</h1>
+            <p class="lead text-muted">A unified view of your credit, liquidity, and assets.</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="astrocred-badge astrocred-badge-premium clickable" ng-if="user.isPremium">
+                <i class="fas fa-crown"></i> PREMIUM MEMBER
+            </div>
+            <div class="astrocred-badge astrocred-badge-info" ng-if="!user.isPremium">
+                <i class="fas fa-user"></i> FREE PLAN
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Summary Row -->
+    <div class="row g-4 mb-4 text-center">
+        <!-- Credit Score -->
+        <div class="col-md-4">
+            <div class="astrocred-card h-100">
+                <div class="stat-label">Credit Score</div>
+                <div class="stat-value" ng-class="getScoreColor(financialData.creditScore)">
+                    {{financialData.creditScore || '---'}}
+                </div>
+                <div class="stat-change positive">
+                    Grade: {{financialData.creditGrade || 'N/A'}}
+                </div>
+                <div class="mt-3">
+                    <div class="astrocred-progress">
+                        <div class="astrocred-progress-bar"
+                            ng-style="{width: (financialData.creditScore/900)*100 + '%'}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bank Balance -->
+        <div class="col-md-4">
+            <div class="astrocred-card h-100">
+                <div class="stat-label">Total Bank Balance</div>
+                <div class="stat-value text-primary">
+                    ₹{{financialData.bankBalance | number:2}}
+                </div>
+                <div class="stat-change text-muted" ng-if="financialData.linkedAccounts.length > 0">
+                    Linked across {{financialData.linkedAccounts.length}} accounts
+                </div>
+                <div class="stat-change text-danger" ng-if="financialData.linkedAccounts.length == 0">
+                    No accounts linked
+                </div>
+                <button class="btn-astrocred btn-sm mt-3" ng-click="linkBank()">
+                    <i class="fas fa-link"></i> Link Bank
+                </button>
+            </div>
+        </div>
+
+        <!-- Verified Assets -->
+        <div class="col-md-4">
+            <div class="astrocred-card h-100">
+                <div class="stat-label">Verified Assets</div>
+                <div class="stat-value text-success">
+                    {{financialData.verifiedAssets.length}}
+                </div>
+                <div class="stat-change">
+                    <span ng-repeat="asset in financialData.verifiedAssets"
+                        class="badge bg-secondary me-1">{{asset}}</span>
+                </div>
+                <button class="btn-astrocred btn-astrocred-secondary btn-sm mt-3" ng-click="verifyAsset()">
+                    <i class="fas fa-shield-alt"></i> Verify More
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Insights & Recommendations -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="ai-assistant-card">
+                <div class="ai-assistant-content">
+                    <h4 class="fw-bold mb-3"><i class="fas fa-robot text-primary"></i> Astro Intelligence (AI)</h4>
+                    <div class="ai-message" ng-repeat="rec in financialData.recommendations | limitTo: 2">
+                        <strong>{{rec.area}}:</strong> {{rec.message}}
+                    </div>
+                    <div class="ai-message text-muted" ng-if="financialData.recommendations.length == 0">
+                        Analyzing your financial universe... Link more data for deeper insights.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Sections -->
+    <div class="row g-4">
+        <!-- Bank Accounts Table -->
+        <div class="col-md-8">
+            <div class="astrocred-card">
+                <div class="astrocred-card-header d-flex justify-content-between align-items-center">
+                    <h5 class="astrocred-card-title"><i class="fas fa-university"></i> Linked Bank Accounts</h5>
+                    <button class="btn btn-outline-primary btn-sm" ng-click="refreshAccounts()"><i
+                            class="fas fa-sync"></i></button>
+                </div>
+                <div class="table-responsive">
+                    <table class="astrocred-table">
+                        <thead>
+                            <tr>
+                                <th>Bank</th>
+                                <th>Account</th>
+                                <th>Type</th>
+                                <th>Balance</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="acc in financialData.linkedAccounts">
+                                <td><strong>{{acc.bankName}}</strong></td>
+                                <td>{{acc.accountNumber}}</td>
+                                <td>{{acc.accountType}}</td>
+                                <td>₹{{acc.currentBalance | number:2}}</td>
+                                <td><span class="astrocred-badge astrocred-badge-success">Active</span></td>
+                            </tr>
+                            <tr ng-if="financialData.linkedAccounts.length == 0">
+                                <td colspan="5" class="text-center py-5 text-muted">
+                                    <i class="fas fa-info-circle"></i> No bank accounts linked yet. Use FinVu to connect
+                                    yours.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Asset Progress -->
+        <div class="col-md-4">
+            <div class="astrocred-card h-100">
+                <h5 class="astrocred-card-title mb-4"><i class="fas fa-tasks"></i> Asset Verification</h5>
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Driving License</span>
+                        <span class="badge bg-success"
+                            ng-if="financialData.verifiedAssets.includes('DL')">Verified</span>
+                        <a href="" ng-if="!financialData.verifiedAssets.includes('DL')" ng-click="openSetu('DL')">Verify
+                            Now</a>
+                    </div>
+                    <div class="astrocred-progress">
+                        <div class="astrocred-progress-bar"
+                            ng-style="{width: financialData.verifiedAssets.includes('DL') ? '100%' : '0%'}"></div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Vehicle RC</span>
+                        <span class="badge bg-success"
+                            ng-if="financialData.verifiedAssets.includes('RC')">Verified</span>
+                        <a href="" ng-if="!financialData.verifiedAssets.includes('RC')" ng-click="openSetu('RC')">Verify
+                            Now</a>
+                    </div>
+                    <div class="astrocred-progress">
+                        <div class="astrocred-progress-bar"
+                            ng-style="{width: financialData.verifiedAssets.includes('RC') ? '100%' : '0%'}"></div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Insurance Policy</span>
+                        <span class="badge bg-success"
+                            ng-if="financialData.verifiedAssets.includes('INS')">Verified</span>
+                        <a href="" ng-if="!financialData.verifiedAssets.includes('INS')" class="text-muted">Coming
+                            Soon</a>
+                    </div>
+                    <div class="astrocred-progress">
+                        <div class="astrocred-progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

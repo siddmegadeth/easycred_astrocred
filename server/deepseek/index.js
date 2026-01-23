@@ -1,3 +1,6 @@
-(function() {
-   require("./init");
+(function () {
+    'use strict';
+
+    require('./init');
+
 })();

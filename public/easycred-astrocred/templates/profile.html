@@ -14,12 +14,17 @@
                     <i class="fas fa-phone me-2 ms-3"></i>{{profile.profile_info.mobile}}
                 </p>
                 <div class="d-flex flex-wrap">
-                    <span class="status-badge status-completed" ng-if="profile.profile_info.isProfileCompleted">Profile Completed</span>
-                    <span class="status-badge status-pending" ng-if="!profile.profile_info.isProfileCompleted">Profile Not Completed</span>
+                    <span class="status-badge status-completed" ng-if="profile.profile_info.isProfileCompleted">Profile
+                        Completed</span>
+                    <span class="status-badge status-pending" ng-if="!profile.profile_info.isProfileCompleted">Profile
+                        Not Completed</span>
                     <span class="status-badge status-verified" ng-if="profile.kyc.isKYCCompleted">KYC Verified</span>
-                    <span class="status-badge status-pending" ng-if="!profile.kyc.isKYCCompleted">KYC Not Verified</span>
-                    <span class="status-badge status-active" ng-if="profile.account.isAccountActive">Account Active</span>
-                    <span class="status-badge status-inactive" ng-if="!profile.account.isAccountActive">Account Inactive</span>
+                    <span class="status-badge status-pending" ng-if="!profile.kyc.isKYCCompleted">KYC Not
+                        Verified</span>
+                    <span class="status-badge status-active" ng-if="profile.account.isAccountActive">Account
+                        Active</span>
+                    <span class="status-badge status-inactive" ng-if="!profile.account.isAccountActive">Account
+                        Inactive</span>
                 </div>
             </div>
         </div>
@@ -42,12 +47,14 @@
                             <div class="info-item">
                                 <div class="info-label">Email Address</div>
                                 <div class="info-value left-float ">{{profile.profile_info.email}}</div>
-                                <span class="status-badge status-verified" ng-if="profile.profile_info.isEmailAdded">Verified</span>
+                                <span class="status-badge status-verified"
+                                    ng-if="profile.profile_info.isEmailAdded">Verified</span>
                             </div>
                             <div class="info-item">
                                 <div class="info-label">Mobile Number</div>
                                 <div class="info-value left-float ">{{profile.profile_info.mobile}}</div>
-                                <span class="status-badge status-verified" ng-if="profile.profile_info.isMobileAdded">Verified</span>
+                                <span class="status-badge status-verified"
+                                    ng-if="profile.profile_info.isMobileAdded">Verified</span>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -71,7 +78,8 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0"><i class="fas fa-home me-2"></i>Address Details</h5>
-                    <span class="status-badge status-completed" ng-if="profile.profile_info.isAddressAdded">Verified</span>
+                    <span class="status-badge status-completed"
+                        ng-if="profile.profile_info.isAddressAdded">Verified</span>
                 </div>
                 <div class="card-body">
                     <div class="info-item">
@@ -124,11 +132,13 @@
                         <div class="col-md-6">
                             <div class="info-item">
                                 <div class="info-label">Currency</div>
-                                <div class="info-value">{{profile.telemetric.currency.code}} ({{profile.common.currency.name}})</div>
+                                <div class="info-value">{{profile.telemetric.currency.code}}
+                                    ({{profile.common.currency.name}})</div>
                             </div>
                             <div class="info-item">
                                 <div class="info-label">Country</div>
-                                <div class="info-value">{{profile.telemetric.country_code.name}} ({{profile.telemetric.country_code.iso2}})</div>
+                                <div class="info-value">{{profile.telemetric.country_code.name}}
+                                    ({{profile.telemetric.country_code.iso2}})</div>
                             </div>
                         </div>
                     </div>
@@ -155,14 +165,17 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="info-value">{{profile.kyc.pan_number}}</span>
                             <span class="status-badge status-verified" ng-if="profile.kyc.isPanVerified">Verified</span>
-                            <span class="status-badge status-verified" ng-if="!profile.kyc.isPanVerified">Not Verified</span>
+                            <span class="status-badge status-verified" ng-if="!profile.kyc.isPanVerified">Not
+                                Verified</span>
                         </div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Aadhaar Card</div>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="info-value">•••• •••• •••• {{profile.kyc.aadhaar_number_masked.slice(-4)}}</span>
-                            <span class="status-badge status-verified" ng-if="profile.kyc.isAadharVerified">Verified</span>
+                            <span class="info-value">•••• •••• ••••
+                                {{profile.kyc.aadhaar_number_masked.slice(-4)}}</span>
+                            <span class="status-badge status-verified"
+                                ng-if="profile.kyc.isAadharVerified">Verified</span>
                         </div>
                     </div>
                     <!-- <div class="info-item">
@@ -174,6 +187,38 @@
                             </span>
                         </div>
                     </div> -->
+                </div>
+            </div>
+            <!-- Financial Integrations -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-link me-2"></i>Financial Hub Connect</h5>
+                </div>
+                <div class="card-body">
+                    <div class="info-item">
+                        <div class="info-label">Account Aggregator (FinVu)</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="info-value">{{profile.finvu.handle || 'Not Linked'}}</span>
+                            <span
+                                class="status-badge {{profile.finvu.isLinked ? 'status-verified' : 'status-pending'}}">
+                                {{profile.finvu.isLinked ? 'Linked' : 'Not Linked'}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Asset Verification (API Setu)</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex flex-wrap gap-1">
+                                <span ng-repeat="asset in profile.api_setu.verifiedAssets"
+                                    class="badge bg-light text-dark border">{{asset}}</span>
+                                <span ng-if="!profile.api_setu.verifiedAssets.length">None</span>
+                            </div>
+                            <span
+                                class="status-badge {{profile.api_setu.isVerified ? 'status-verified' : 'status-pending'}}">
+                                {{profile.api_setu.isVerified ? 'Verified' : 'Pending'}}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- Account Information -->
@@ -190,15 +235,6 @@
                         <div class="info-label">Customer ID</div>
                         <div class="info-value">{{profile.customerId}}</div>
                     </div>
-                    <!-- <div class="info-item">
-                        <div class="info-label">MMTC Account</div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="info-value">{{profile.mmtc.customerRefNo ? 'Active' : 'Inactive'}}</span>
-                            <span class="status-badge {{profile.mmtc.is_account_active ? 'status-active' : 'status-inactive'}}">
-                                {{profile.mmtc.is_account_active ? 'Active' : 'Inactive'}}
-                            </span>
-                        </div>
-                    </div> -->
                     <div class="info-item">
                         <div class="info-label">Profile Created</div>
                         <div class="info-value">{{profile.created_at | date:'mediumDate'}}</div>
@@ -264,7 +300,8 @@
     </div>
 </div>
 <!-- OTP Modal -->
-<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-otp modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -281,184 +318,113 @@
     </div>
 </div>
 <!-- Success Toast (hidden by default) -->
-<div class="toast align-items-center text-white bg-success position-fixed top-50 start-50 translate-middle" role="alert" aria-live="assertive" aria-atomic="true" id="successToast">
+<div class="toast align-items-center text-white bg-success position-fixed top-50 start-50 translate-middle" role="alert"
+    aria-live="assertive" aria-atomic="true" id="successToast">
     <div class="d-flex">
         <div class="toast-body">
             <i class="bi bi-check-circle-fill me-2"></i> Verification successful!
         </div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+            aria-label="Close"></button>
     </div>
 </div>
 <style>
-:root {
-    --astrocred-primary: #0a2540;
-    --astrocred-secondary: #00b4d8;
-    --astrocred-accent: #7b2cbf;
-    --astrocred-light: #f8f9fa;
-    --astrocred-gray: #6c757d;
-    --astrocred-dark: #212529;
-    --astrocred-success: #2ecc71;
-    --astrocred-warning: #f39c12;
-    --astrocred-danger: #e74c3c;
-}
+    :root {
+        --astrocred-primary: #0a2540;
+        --astrocred-secondary: #00b4d8;
+        --astrocred-accent: #7b2cbf;
+        --astrocred-light: #f8f9fa;
+        --astrocred-gray: #6c757d;
+        --astrocred-dark: #212529;
+        --astrocred-success: #2ecc71;
+        --astrocred-warning: #f39c12;
+        --astrocred-danger: #e74c3c;
+    }
 
 
-.profile-header {
-    background: linear-gradient(135deg, var(--astrocred-primary), var(--astrocred-accent));
-    color: white;
-    border-radius: 15px;
-    padding: 30px;
-    margin-bottom: 30px;
-    position: relative;
-    overflow: hidden;
-}
-
-.profile-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 200px;
-    height: 200px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    transform: translate(50%, -50%);
-}
-
-.profile-avatar {
-    width: 120px;
-    height: 120px;
-    background: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 48px;
-    color: var(--astrocred-accent);
-    margin-bottom: 20px;
-    border: 5px solid white;
-}
-
-.card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s;
-    margin-bottom: 20px;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-}
-
-.card-header {
-    background-color: white;
-    border-bottom: 2px solid #f0f0f0;
-    font-weight: 600;
-    color: var(--astrocred-primary);
-    padding: 20px;
-    border-radius: 15px 15px 0 0 !important;
-}
-
-.card-body {
-    padding: 25px;
-}
-
-.info-item {
-    margin-bottom: 15px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.info-item:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-
-.info-label {
-    color: var(--astrocred-gray);
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-bottom: 5px;
-}
-
-.info-value {
-    color: var(--astrocred-dark);
-    font-weight: 500;
-}
-
-.status-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 5px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-right: 8px;
-    margin-bottom: 5px;
-
-}
-
-.status-active {
-    background-color: rgba(46, 204, 113, 0.1);
-    color: var(--astrocred-success);
-}
-
-.status-inactive {
-    background-color: rgba(231, 76, 60, 0.1);
-    color: var(--astrocred-danger);
-}
-
-.status-pending {
-    background-color: rgba(243, 156, 18, 0.1);
-    color: var(--astrocred-warning);
-}
-
-.status-completed {
-    background-color: rgba(46, 204, 113, 0.1);
-    color: var(--astrocred-success);
-}
-
-.status-verified {
-    background-color: rgba(46, 204, 113, 0.1);
-    color: var(--astrocred-success);
-}
-
-.bg-gradient-primary {
-    background: linear-gradient(135deg, var(--astrocred-primary), var(--astrocred-accent));
-}
-
-.text-gradient {
-    background: linear-gradient(to right, var(--astrocred-primary), var(--astrocred-accent));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-
-.left-float {
-    width: 310px !important;
-    float: left;
-    overflow: hidden;
-    /* Hides the overflowing content */
-    white-space: nowrap;
-    /* Prevents the text from wrapping to a new line */
-    text-overflow: ellipsis;
-    /* Displays "..." for clipped text */
-}
-
-
-/* Responsive adjustments */
-@media (max-width: 576px) {
-    .left-float {
-        width: 209px !important;
-        float: left;
+    .profile-header {
+        background: linear-gradient(135deg, var(--astrocred-primary), var(--astrocred-accent));
+        color: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        position: relative;
         overflow: hidden;
-        /* Hides the overflowing content */
-        white-space: nowrap;
-        /* Prevents the text from wrapping to a new line */
-        text-overflow: ellipsis;
-        /* Displays "..." for clipped text */
+    }
+
+    .profile-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: translate(50%, -50%);
+    }
+
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        color: var(--astrocred-accent);
+        margin-bottom: 20px;
+        border: 5px solid white;
+    }
+
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s;
+        margin-bottom: 20px;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-header {
+        background-color: white;
+        border-bottom: 2px solid #f0f0f0;
+        font-weight: 600;
+        color: var(--astrocred-primary);
+        padding: 20px;
+        border-radius: 15px 15px 0 0 !important;
+    }
+
+    .card-body {
+        padding: 25px;
+    }
+
+    .info-item {
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .info-label {
+        color: var(--astrocred-gray);
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 5px;
+    }
+
+    .info-value {
+        color: var(--astrocred-dark);
+        font-weight: 500;
     }
 
     .status-badge {
@@ -469,41 +435,114 @@
         font-weight: 600;
         margin-right: 8px;
         margin-bottom: 5px;
+
     }
 
-}
+    .status-active {
+        background-color: rgba(46, 204, 113, 0.1);
+        color: var(--astrocred-success);
+    }
 
-@media (min-width: 782px) {
+    .status-inactive {
+        background-color: rgba(231, 76, 60, 0.1);
+        color: var(--astrocred-danger);
+    }
+
+    .status-pending {
+        background-color: rgba(243, 156, 18, 0.1);
+        color: var(--astrocred-warning);
+    }
+
+    .status-completed {
+        background-color: rgba(46, 204, 113, 0.1);
+        color: var(--astrocred-success);
+    }
+
+    .status-verified {
+        background-color: rgba(46, 204, 113, 0.1);
+        color: var(--astrocred-success);
+    }
+
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, var(--astrocred-primary), var(--astrocred-accent));
+    }
+
+    .text-gradient {
+        background: linear-gradient(to right, var(--astrocred-primary), var(--astrocred-accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
 
     .left-float {
-        width: 240px !important;
+        width: 310px !important;
         float: left;
         overflow: hidden;
+        /* Hides the overflowing content */
         white-space: nowrap;
+        /* Prevents the text from wrapping to a new line */
         text-overflow: ellipsis;
+        /* Displays "..." for clipped text */
     }
-}
 
-@media (min-width: 972px) {
 
-    .left-float {
-        width: 202px !important;
-        float: left;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+    /* Responsive adjustments */
+    @media (max-width: 576px) {
+        .left-float {
+            width: 209px !important;
+            float: left;
+            overflow: hidden;
+            /* Hides the overflowing content */
+            white-space: nowrap;
+            /* Prevents the text from wrapping to a new line */
+            text-overflow: ellipsis;
+            /* Displays "..." for clipped text */
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 5px;
+        }
+
     }
-}
 
+    @media (min-width: 782px) {
 
-@media (min-width: 1070px) {
-
-    .left-float {
-        width: 320px !important;
-        float: left;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+        .left-float {
+            width: 240px !important;
+            float: left;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
     }
-}
+
+    @media (min-width: 972px) {
+
+        .left-float {
+            width: 202px !important;
+            float: left;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+
+
+    @media (min-width: 1070px) {
+
+        .left-float {
+            width: 320px !important;
+            float: left;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
 </style>

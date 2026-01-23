@@ -1,16 +1,16 @@
-app.provider('cibilCore', [function() {
+app.provider('cibilCore', [function () {
     var cibilUrls;
 
     return {
-        config: function(urls) {
+        config: function (urls) {
             cibilUrls = urls.cibil_core || urls;
         },
-        $get: ['$http', function($http) {
+        $get: ['$http', function ($http) {
             return {
                 // ✅ FULLY COMPATIBLE APIs
 
                 // 1. Data Upload & Processing
-                uploadData: function(cibilData) {
+                uploadData: function (cibilData) {
                     // Backend expects raw CIBIL data object
                     return $http({
                         method: 'POST',
@@ -22,7 +22,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                uploadSampleData: function() {
+                uploadSampleData: function () {
                     // Backend: GET /get/api/cibil/upload (no params)
                     return $http({
                         method: 'GET',
@@ -31,7 +31,7 @@ app.provider('cibilCore', [function() {
                 },
 
                 // 2. Analysis & Reports
-                getAnalysis: function(identifier) {
+                getAnalysis: function (identifier) {
                     // Backend: GET /get/api/cibil/analysis?pan=...&mobile=...&email=...&client_id=...&force_refresh=...
                     var params = {};
 
@@ -50,7 +50,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                refreshAnalysis: function(identifier) {
+                refreshAnalysis: function (identifier) {
                     // Backend: POST /post/api/cibil/analysis/refresh
                     // Body: { pan, mobile, email, client_id }
                     var data = {};
@@ -70,7 +70,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                getComprehensiveReport: function(identifier) {
+                getComprehensiveReport: function (identifier) {
                     // Backend: GET /comprehensive-report?pan=...&mobile=...&email=...&client_id=...
                     var params = {};
 
@@ -86,7 +86,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                getAnalysisStatistics: function() {
+                getAnalysisStatistics: function () {
                     // Backend: GET /get/api/cibil/analysis/statistics (no params)
                     return $http({
                         method: 'GET',
@@ -95,7 +95,7 @@ app.provider('cibilCore', [function() {
                 },
 
                 // 3. Risk Assessment
-                getRiskAssessment: function(identifier) {
+                getRiskAssessment: function (identifier) {
                     // Backend: GET /risk-assessment?pan=...&mobile=...&email=...&client_id=...
                     var params = {};
 
@@ -111,7 +111,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                getEnhancedRiskAssessment: function(identifier) {
+                getEnhancedRiskAssessment: function (identifier) {
                     // Backend: GET /enhanced-risk-assessment?pan=...&mobile=...&email=...&client_id=...
                     var params = {};
 
@@ -127,7 +127,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                getRiskComparison: function(identifier) {
+                getRiskComparison: function (identifier) {
                     // Backend: GET /risk-comparison?pan=...&mobile=...&email=...&client_id=...
                     var params = {};
 
@@ -143,7 +143,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                getDefaultProbability: function(identifier) {
+                getDefaultProbability: function (identifier) {
                     // Backend: GET /default-probability?pan=...&mobile=...&email=...&client_id=...
                     var params = {};
 
@@ -159,7 +159,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                getCreditWorthiness: function(identifier) {
+                getCreditWorthiness: function (identifier) {
                     // Backend: GET /credit-worthiness?pan=...&mobile=...&email=...&client_id=...
                     var params = {};
 
@@ -175,7 +175,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                getEligibleInstitutions: function(identifier) {
+                getEligibleInstitutions: function (identifier) {
                     // Backend: GET /eligible-institutions?pan=...&mobile=...&email=...&client_id=...
                     var params = {};
 
@@ -192,7 +192,7 @@ app.provider('cibilCore', [function() {
                 },
 
                 // 4. Grades & Scores
-                getClientGrade: function(identifier) {
+                getClientGrade: function (identifier) {
                     // Backend: GET /get/api/cibil/client/grade?pan=...&mobile=...&email=...&client_id=...
                     var params = {};
 
@@ -208,7 +208,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                getAllClientsGrades: function(filters) {
+                getAllClientsGrades: function (filters) {
                     // Backend: GET /get/api/cibil/clients/grades?min_score=...&max_score=...&grade=...&pan=...&mobile=...&email=...&name=...&page=...&limit=...&sort_by=...&sort_order=...
                     var params = filters || {};
 
@@ -225,7 +225,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                getGradesStatistics: function() {
+                getGradesStatistics: function () {
                     // Backend: GET /get/api/cibil/grades/statistics (no params)
                     return $http({
                         method: 'GET',
@@ -234,7 +234,7 @@ app.provider('cibilCore', [function() {
                 },
 
                 // 5. Score History
-                getScoreHistory: function(identifier) {
+                getScoreHistory: function (identifier) {
                     // Backend: GET /get/api/cibil/score-history?pan=...&mobile=...&email=...&client_id=...
                     var params = {};
 
@@ -250,7 +250,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                addScoreToHistory: function(scoreData) {
+                addScoreToHistory: function (scoreData) {
                     // Backend: POST /post/api/cibil/score-history/add
                     // Body: { client_id, pan, mobile, email, name, score, grade, source }
                     var data = {
@@ -276,7 +276,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                searchScoreHistory: function(query) {
+                searchScoreHistory: function (query) {
                     // Backend: GET /get/api/cibil/score-history/search?query=...
                     return $http({
                         method: 'GET',
@@ -285,7 +285,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                getScoreTrend: function(identifier) {
+                getScoreTrend: function (identifier) {
                     // Backend: GET /get/api/cibil/score-trend?pan=...&mobile=...&email=...&client_id=...
                     var params = {};
 
@@ -302,7 +302,7 @@ app.provider('cibilCore', [function() {
                 },
 
                 // 6. Improvement & Suggestions
-                getImprovementPlan: function(identifier) {
+                getImprovementPlan: function (identifier) {
                     // Backend: GET /improvement-plan?pan=...&mobile=...&email=...&client_id=...
                     var params = {};
 
@@ -318,7 +318,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                getBankSuggestions: function(identifier) {
+                getBankSuggestions: function (identifier) {
                     // Backend: GET /bank-suggestions?pan=...&mobile=...&email=...&client_id=...
                     var params = {};
 
@@ -335,7 +335,7 @@ app.provider('cibilCore', [function() {
                 },
 
                 // 7. Visualization
-                getChartData: function(identifier) {
+                getChartData: function (identifier) {
                     // Backend: GET /chart-data?pan=...&mobile=...&email=...&client_id=...
                     var params = {};
 
@@ -351,7 +351,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                getCreditSummary: function(identifier) {
+                getCreditSummary: function (identifier) {
                     // Backend: GET /credit-summary?pan=...&mobile=...&email=...&client_id=...
                     var params = {};
 
@@ -368,7 +368,7 @@ app.provider('cibilCore', [function() {
                 },
 
                 // 8. Economic Data
-                getEconomicData: function() {
+                getEconomicData: function () {
                     // Backend: GET /economic-data (no params)
                     return $http({
                         method: 'GET',
@@ -376,7 +376,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                getEconomicTrends: function(params) {
+                getEconomicTrends: function (params) {
                     // Backend: GET /economic-trends?period=...&indicators=...
                     var queryParams = params || {};
                     if (!queryParams.period) queryParams.period = '30d';
@@ -389,7 +389,7 @@ app.provider('cibilCore', [function() {
                 },
 
                 // 9. Health & Monitoring
-                checkHealth: function() {
+                checkHealth: function () {
                     // Backend: GET /get/api/cibil/health (no params)
                     return $http({
                         method: 'GET',
@@ -397,7 +397,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                quickHealthCheck: function() {
+                quickHealthCheck: function () {
                     // Backend: GET /get/api/cibil/health/quick (no params)
                     return $http({
                         method: 'GET',
@@ -405,7 +405,7 @@ app.provider('cibilCore', [function() {
                     });
                 },
 
-                checkComponentHealth: function(component) {
+                checkComponentHealth: function (component) {
                     // Backend: GET /get/api/cibil/health/:component
                     return $http({
                         method: 'GET',
@@ -414,7 +414,7 @@ app.provider('cibilCore', [function() {
                 },
 
                 // 10. Database Maintenance
-                fixIndexes: function() {
+                fixIndexes: function () {
                     // Backend: GET /get/api/cibil/fix-indexes (no params)
                     return $http({
                         method: 'GET',
@@ -423,7 +423,7 @@ app.provider('cibilCore', [function() {
                 },
 
                 // 11. Legacy/Compatibility
-                legacyCibil: function(profile) {
+                legacyCibil: function (profile) {
                     // Backend: GET /get/api/cibil/upload?profile=...
                     return $http({
                         method: 'GET',
@@ -435,7 +435,7 @@ app.provider('cibilCore', [function() {
                 },
 
                 // 🔧 HELPER METHODS FOR DATA NORMALIZATION
-                normalizeData: function(cibilData) {
+                normalizeData: function (cibilData) {
                     var normalized = angular.copy(cibilData);
 
                     // Normalize identifiers (as per backend requirements)
@@ -462,7 +462,7 @@ app.provider('cibilCore', [function() {
                     return normalized;
                 },
 
-                interpretPaymentStatus: function(statusCode) {
+                interpretPaymentStatus: function (statusCode) {
                     // Backend payment status interpretation
                     var statusMap = {
                         '0': { status: 'Paid/No Due', color: 'success', numeric: 0 },
@@ -490,14 +490,14 @@ app.provider('cibilCore', [function() {
                     return statusMap[statusCode] || { status: 'Unknown', color: 'secondary', numeric: 0 };
                 },
 
-                calculateCreditUtilization: function(accounts) {
+                calculateCreditUtilization: function (accounts) {
                     // Backend calculation method
                     if (!accounts || !accounts.length) return 0;
 
                     var totalBalance = 0;
                     var totalLimit = 0;
 
-                    accounts.forEach(function(account) {
+                    accounts.forEach(function (account) {
                         var balance = parseFloat(account.current_balance) || 0;
                         var limit = parseFloat(account.highCreditAmount) || 0;
 
@@ -509,27 +509,27 @@ app.provider('cibilCore', [function() {
                 },
 
                 // 🧪 TESTING CHECKLIST - Helper methods matching backend tests
-                testUploadWithSample: function() {
+                testUploadWithSample: function () {
                     // 1. Upload data - Uses sample data structure from backend
                     return this.uploadData(window.sampleData || this.createSampleData());
                 },
 
-                testBasicAnalysis: function(pan) {
+                testBasicAnalysis: function (pan) {
                     // 2. Get analysis - With proper identifier
                     return this.getAnalysis({ pan: pan || 'IVZPK2103N' });
                 },
 
-                testRiskAssessment: function(pan) {
+                testRiskAssessment: function (pan) {
                     // 3. Risk Assessment - With proper identifier
                     return this.getRiskAssessment({ pan: pan || 'IVZPK2103N' });
                 },
 
-                testGradeCheck: function(pan) {
+                testGradeCheck: function (pan) {
                     // 4. Grade Check - With proper identifier
                     return this.getClientGrade({ pan: pan || 'IVZPK2103N' });
                 },
 
-                testScoreHistory: function() {
+                testScoreHistory: function () {
                     // 5. Score History - Add test score
                     return this.addScoreToHistory({
                         client_id: "credit_report_cibil_jIifktiYhrHTbZcMdlsU",
@@ -543,7 +543,7 @@ app.provider('cibilCore', [function() {
                 },
 
                 // Create sample data matching backend structure
-                createSampleData: function() {
+                createSampleData: function () {
                     return {
                         client_id: "credit_report_cibil_jIifktiYhrHTbZcMdlsU",
                         mobile: "9708016996",
@@ -552,11 +552,11 @@ app.provider('cibilCore', [function() {
                         gender: "male",
                         user_email: "MANGALDHAWANI@GMAIL.COM",
                         credit_score: "670",
-                        credit_report: [ /*... full credit report data ...*/ ]
+                        credit_report: [ /*... full credit report data ...*/]
                     };
                 },
 
-                runAllTests: function() {
+                runAllTests: function () {
                     var tests = [];
 
                     // 🚀 IMMEDIATE ACTION PLAN from backend
@@ -579,19 +579,19 @@ app.provider('cibilCore', [function() {
                 },
 
                 // Utility method to get all URLs (for debugging)
-                getUrls: function() {
+                getUrls: function () {
                     return cibilUrls;
                 },
 
                 // Quick test commands from backend
-                quickTestCommands: function() {
+                quickTestCommands: function () {
                     return {
                         upload: "curl -X POST " + cibilUrls.upload.data + " -H 'Content-Type: application/json' -d @sample-data.json",
                         analysis: "curl '" + cibilUrls.analysis.basic + "?pan=IVZPK2103N'",
                         health: "curl '" + cibilUrls.health.check + "'"
                     };
                 },
-                runScoreSimulation: function(cibilData) {
+                runScoreSimulation: function (cibilData) {
 
                     // Backend expects raw CIBIL data object
                     return $http({
@@ -603,7 +603,7 @@ app.provider('cibilCore', [function() {
                         }
                     });
                 },
-                quickSimulation: function(cibilData) {
+                quickSimulation: function (cibilData) {
 
                     // Backend expects raw CIBIL data object
                     return $http({

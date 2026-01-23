@@ -1,4 +1,4 @@
-(function() {
+(function () {
 
 
     ProfileSchema = module.exports = mongoose.Schema({
@@ -153,6 +153,21 @@
                 default: 'INDIVIDUAL'
             },
             category: String
+        },
+
+        /* ================= FINANCIAL AGGREGATORS ================= */
+
+        finvu: {
+            isLinked: { type: Boolean, default: false },
+            consentId: String,
+            lastSynced: Date,
+            handle: String // AA handle like user@finvu
+        },
+
+        api_setu: {
+            isVerified: { type: Boolean, default: false },
+            verifiedAssets: [String], // ['DL', 'RC', 'INSURANCE']
+            lastCheck: Date
         },
 
         /* ================= META ================= */

@@ -1,4 +1,4 @@
-(function() {
+(function () {
     //profile
     require("./profile/index");
     //authentication
@@ -27,5 +27,8 @@
     require("./financial-hub/index");
     // tensorflow-model-training
     //require("./tensorflow-model-training/index");
+    require("./api-setu/index");
+    require("./finvu/index");
+    require("./ai/index");
     require("./security/index");
 })();

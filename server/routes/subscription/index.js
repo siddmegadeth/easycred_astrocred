@@ -1,13 +1,8 @@
-(function() {
-    require("./razorpay-service");
-    require("./create-order");
-    require("./verify-payment");
-    require("./create-subscription");
-    require("./subscription-status");
-    require("./cancel-subscription");
-    require("./upgrade-downgrade");
-    require("./plans");
-    require("./bundle-plans");
-    require("./webhook-handler");
-})();
+(function () {
+    'use strict';
 
+    // Register subscription routes
+    require('./razorpay');
+
+    log('💰 Subscription Routes Module Loaded');
+})();
