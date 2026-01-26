@@ -1,124 +1,740 @@
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
-                <div class="card-header bg-gradient-primary text-white p-4 text-center">
-                    <img src="assets/images/finvu-logo-white.png" alt="FinVu" height="40" class="mb-3"
-                        onerror="this.onerror=null; this.src='https://placehold.co/120x40?text=FinVu'">
-                    <h3 class="mb-1">Connect Your Bank Accounts</h3>
-                    <p class="mb-0 opacity-75">Securely link your financial data via Account Aggregator</p>
+<!-- FinVu Account Aggregator Connect Page -->
+<div class="finvu-connect-page astro-login-page">
+    <!-- Background -->
+    <div class="astro-bg-pattern">
+        <div class="astro-orb astro-orb-1"></div>
+        <div class="astro-orb astro-orb-2"></div>
+    </div>
+
+    <div class="container py-4">
+        <!-- Header -->
+        <div class="finvu-header mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="finvu-title">
+                        <i class="fas fa-link"></i> Link Your Bank Accounts
+                    </h1>
+                    <p class="finvu-subtitle">Connect your bank accounts to get personalized financial insights</p>
                 </div>
-
-                <div class="card-body p-5">
-
-                    <!-- Step 1: Input Handle -->
-                    <div ng-if="step === 1" class="animate__animated animate__fadeIn">
-                        <div class="text-center mb-4">
-                            <div class="d-inline-block p-3 rounded-circle bg-light mb-3">
-                                <i class="fas fa-university fa-3x text-primary"></i>
-                            </div>
-                            <h5>Link your accounts for 360° financial view</h5>
-                            <p class="text-muted small">We use RB-regulated Account Aggregator framework. Your data is
-                                encrypted and secure.</p>
-                        </div>
-
-                        <form ng-submit="initiateConsent()">
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">Your Mobile Number</label>
-                                <div class="input-group input-group-lg">
-                                    <span class="input-group-text bg-light border-end-0 text-muted">+91</span>
-                                    <input type="text" class="form-control border-start-0 ps-0" ng-model="mobile"
-                                        readonly>
-                                    <span class="input-group-text bg-success text-white"><i
-                                            class="fas fa-check-circle"></i></span>
-                                </div>
-                            </div>
-
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">Account Aggregator Handle (VUA)</label>
-                                <div class="input-group input-group-lg">
-                                    <input type="text" class="form-control" ng-model="aaHandle"
-                                        placeholder="e.g. 9876543210@finvu" required>
-                                </div>
-                                <div class="form-text">
-                                    Usually your mobile number followed by @finvu, @onemoney, etc.
-                                </div>
-                            </div>
-
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary btn-lg" ng-disabled="loading">
-                                    <span ng-if="!loading">Send Consent Request <i
-                                            class="fas fa-arrow-right ms-2"></i></span>
-                                    <span ng-if="loading"><i class="fas fa-spinner fa-spin me-2"></i>
-                                        Initiating...</span>
-                                </button>
-                            </div>
-                        </form>
-
-                        <div class="text-center mt-4">
-                            <img src="https://sahamati.net.in/wp-content/uploads/2021/04/Account-Aggregator-Eco-system.png"
-                                alt="AA" class="img-fluid opacity-50" style="max-height: 40px;">
-                        </div>
-                    </div>
-
-                    <!-- Step 2: Waiting for Approval -->
-                    <div ng-if="step === 2" class="text-center animate__animated animate__fadeIn">
-                        <div class="mb-4">
-                            <div class="spinner-grow text-primary" role="status" style="width: 3rem; height: 3rem;">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-
-                        <h4 class="mb-3">Check your phone!</h4>
-                        <p class="text-muted mb-4">
-                            We've sent a consent request to <strong>{{aaHandle}}</strong>.<br>
-                            Please verify the request in your FinVu/AA app or SMS link.
-                        </p>
-
-                        <div class="alert alert-warning d-inline-block text-start">
-                            <small>
-                                <i class="fas fa-info-circle me-1"></i> <strong>Demo Mode Instructions:</strong><br>
-                                Since this is a test environment, you can simulate approval instantly.
-                            </small>
-                        </div>
-
-                        <div class="d-grid mt-4">
-                            <button class="btn btn-outline-success" ng-click="simulateApproval()" ng-disabled="loading">
-                                <span ng-if="!loading"><i class="fas fa-check-double me-2"></i> Simulate
-                                    "Approved"</span>
-                                <span ng-if="loading"><i class="fas fa-spinner fa-spin me-2"></i> Syncing Data...</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Step 3: Success -->
-                    <div ng-if="step === 3" class="text-center animate__animated animate__fadeIn">
-                        <div class="success-animation mb-4" style="transform: scale(0.8);">
-                            <div class="success-checkmark">
-                                <div class="check-icon">
-                                    <span class="icon-line line-tip"></span>
-                                    <span class="icon-line line-long"></span>
-                                    <div class="icon-circle"></div>
-                                    <div class="icon-fix"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <h3 class="fw-bold text-success mb-3">Sync Successful!</h3>
-                        <p class="text-muted mb-4">
-                            Your bank accounts have been securely linked.<br>
-                            We are now analyzing your financial health.
-                        </p>
-
-                        <div class="d-grid gap-3">
-                            <button class="btn btn-primary btn-lg" ng-click="goToDashboard()">
-                                Go to Financial Hub
-                            </button>
-                        </div>
-                    </div>
-
+                <div class="col-md-4 text-md-end">
+                    <span class="finvu-badge" ng-class="{'sandbox': serviceStatus.mode === 'sandbox'}">
+                        <i class="fas fa-flask" ng-if="serviceStatus.mode === 'sandbox'"></i>
+                        <i class="fas fa-shield-alt" ng-if="serviceStatus.mode !== 'sandbox'"></i>
+                        {{serviceStatus.mode === 'sandbox' ? 'Sandbox Mode' : 'RBI Regulated'}}
+                    </span>
                 </div>
+            </div>
+        </div>
+
+        <!-- Connection Status -->
+        <div class="row g-4" ng-if="!isConnected">
+            <!-- Step 1: Consent Initiation -->
+            <div class="col-lg-6">
+                <div class="finvu-card consent-card">
+                    <div class="consent-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <h3>Step 1: Give Consent</h3>
+                    <p>Authorize ASTROCRED to securely fetch your financial data from banks</p>
+                    
+                    <div class="consent-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>View account balances</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Analyze transaction history</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Track investments & FDs</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Get personalized insights</span>
+                        </div>
+                    </div>
+
+                    <button class="finvu-btn primary" 
+                            ng-click="initiateConsent()" 
+                            ng-disabled="isInitiating || consentStatus === 'PENDING'">
+                        <span ng-if="!isInitiating && consentStatus !== 'PENDING'">
+                            <i class="fas fa-link"></i> Connect Bank Accounts
+                        </span>
+                        <span ng-if="isInitiating">
+                            <div class="astro-spinner"></div> Initiating...
+                        </span>
+                        <span ng-if="consentStatus === 'PENDING'">
+                            <i class="fas fa-clock"></i> Consent Pending
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Select Banks -->
+            <div class="col-lg-6">
+                <div class="finvu-card banks-card" ng-class="{'disabled': !consentInitiated}">
+                    <div class="consent-icon">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <h3>Step 2: Select Banks</h3>
+                    <p>Choose which bank accounts to link</p>
+                    
+                    <div class="banks-grid">
+                        <div class="bank-option" ng-repeat="bank in supportedBanks" 
+                             ng-click="toggleBank(bank)" 
+                             ng-class="{'selected': bank.selected, 'disabled': !consentInitiated}">
+                            <div class="bank-logo">{{bank.code}}</div>
+                            <span class="bank-name">{{bank.name}}</span>
+                            <i class="fas fa-check-circle" ng-if="bank.selected"></i>
+                        </div>
+                    </div>
+
+                    <button class="finvu-btn secondary" 
+                            ng-click="proceedWithBanks()" 
+                            ng-disabled="!consentInitiated || selectedBanks.length === 0">
+                        <i class="fas fa-arrow-right"></i> Proceed with Selected Banks
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Connected State -->
+        <div ng-if="isConnected">
+            <!-- Summary Cards -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="finvu-stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="stat-value">₹{{financialData.summary.totalBalance | number}}</div>
+                        <div class="stat-label">Total Balance</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="finvu-stat-card">
+                        <div class="stat-icon income">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <div class="stat-value success">₹{{financialData.summary.avgMonthlyIncome | number}}</div>
+                        <div class="stat-label">Avg. Monthly Income</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="finvu-stat-card">
+                        <div class="stat-icon expense">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                        <div class="stat-value warning">₹{{financialData.summary.avgMonthlyExpense | number}}</div>
+                        <div class="stat-label">Avg. Monthly Expense</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="finvu-stat-card">
+                        <div class="stat-icon savings">
+                            <i class="fas fa-piggy-bank"></i>
+                        </div>
+                        <div class="stat-value accent">{{financialData.summary.savingsRate}}%</div>
+                        <div class="stat-label">Savings Rate</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Linked Accounts -->
+            <div class="finvu-card mb-4">
+                <div class="card-header-custom">
+                    <h3><i class="fas fa-credit-card"></i> Linked Accounts</h3>
+                    <button class="refresh-btn" ng-click="refreshData()" ng-disabled="isRefreshing">
+                        <i class="fas fa-sync" ng-class="{'fa-spin': isRefreshing}"></i>
+                        {{isRefreshing ? 'Refreshing...' : 'Refresh'}}
+                    </button>
+                </div>
+                
+                <div class="accounts-list">
+                    <div class="account-item" ng-repeat="account in financialData.accounts">
+                        <div class="account-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="account-details">
+                            <span class="account-bank">{{account.bank_name || account.bankName}}</span>
+                            <span class="account-number">{{account.masked_account_number || account.accountNumber}}</span>
+                        </div>
+                        <div class="account-type">{{account.type}}</div>
+                        <div class="account-balance">
+                            ₹{{account.balance | number}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="finvu-card mb-4">
+                <div class="card-header-custom">
+                    <h3><i class="fas fa-history"></i> Recent Transactions</h3>
+                </div>
+                
+                <div class="transactions-list">
+                    <div class="transaction-item" ng-repeat="txn in financialData.transactions | limitTo:10">
+                        <div class="txn-icon" ng-class="txn.type === 'CREDIT' ? 'credit' : 'debit'">
+                            <i ng-class="txn.type === 'CREDIT' ? 'fas fa-arrow-down' : 'fas fa-arrow-up'"></i>
+                        </div>
+                        <div class="txn-details">
+                            <span class="txn-description">{{txn.description || txn.category}}</span>
+                            <span class="txn-date">{{txn.date | date:'dd MMM yyyy'}}</span>
+                        </div>
+                        <div class="txn-category">{{txn.category}}</div>
+                        <div class="txn-amount" ng-class="txn.type === 'CREDIT' ? 'credit' : 'debit'">
+                            {{txn.type === 'CREDIT' ? '+' : '-'}}₹{{txn.amount | number}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Insights -->
+            <div class="finvu-card ai-insights">
+                <div class="card-header-custom">
+                    <h3><i class="fas fa-brain"></i> AI Financial Insights</h3>
+                </div>
+                
+                <div class="insights-grid">
+                    <div class="insight-item" ng-if="financialData.summary.savingsRate > 20">
+                        <div class="insight-icon good">
+                            <i class="fas fa-thumbs-up"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h4>Great Savings!</h4>
+                            <p>You're saving {{financialData.summary.savingsRate}}% of your income. Keep it up!</p>
+                        </div>
+                    </div>
+                    <div class="insight-item" ng-if="financialData.summary.savingsRate <= 20">
+                        <div class="insight-icon warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h4>Improve Savings</h4>
+                            <p>Consider increasing your savings rate. Aim for at least 20% of income.</p>
+                        </div>
+                    </div>
+                    <div class="insight-item">
+                        <div class="insight-icon info">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h4>Track Spending</h4>
+                            <p>Review your spending patterns to identify areas for optimization.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trust Footer -->
+        <div class="finvu-footer mt-5">
+            <div class="trust-info">
+                <i class="fas fa-shield-alt"></i>
+                <p>Your data is protected with bank-grade encryption. We never store your credentials.</p>
+            </div>
+            <div class="powered-by">
+                <span>Powered by</span>
+                <strong>FinVu Account Aggregator</strong>
+                <span class="rbi-tag">RBI Licensed</span>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+/* FinVu Connect Page Styles */
+.finvu-connect-page {
+    min-height: 100vh;
+    padding: var(--astro-space-lg) 0;
+}
+
+.finvu-header {
+    margin-bottom: var(--astro-space-xl);
+}
+
+.finvu-title {
+    font-family: var(--astro-font-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--astro-text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-sm);
+    margin: 0;
+}
+
+.finvu-title i {
+    color: var(--astro-accent);
+}
+
+.finvu-subtitle {
+    color: var(--astro-text-muted);
+    margin: var(--astro-space-xs) 0 0;
+}
+
+.finvu-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astro-space-xs);
+    background: var(--astro-success);
+    color: white;
+    padding: var(--astro-space-xs) var(--astro-space-md);
+    border-radius: var(--astro-radius-full);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.finvu-badge.sandbox {
+    background: var(--astro-warning);
+    color: var(--astro-primary);
+}
+
+/* Cards */
+.finvu-card {
+    background: var(--astro-gradient-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--astro-border);
+    border-radius: var(--astro-radius-xl);
+    padding: var(--astro-space-xl);
+    transition: var(--astro-transition-normal);
+}
+
+.finvu-card:hover {
+    border-color: rgba(0, 217, 255, 0.3);
+}
+
+.finvu-card.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.consent-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--astro-gradient-primary);
+    border-radius: var(--astro-radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--astro-space-md);
+    font-size: 32px;
+    color: white;
+}
+
+.finvu-card h3 {
+    font-family: var(--astro-font-display);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--astro-text-primary);
+    text-align: center;
+    margin: 0 0 var(--astro-space-sm);
+}
+
+.finvu-card > p {
+    font-size: 14px;
+    color: var(--astro-text-muted);
+    text-align: center;
+    margin: 0 0 var(--astro-space-lg);
+}
+
+/* Consent Features */
+.consent-features {
+    margin-bottom: var(--astro-space-lg);
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-sm);
+    padding: var(--astro-space-xs) 0;
+    font-size: 14px;
+    color: var(--astro-text-secondary);
+}
+
+.feature-item i {
+    color: var(--astro-success);
+}
+
+/* Banks Grid */
+.banks-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--astro-space-sm);
+    margin-bottom: var(--astro-space-lg);
+}
+
+.bank-option {
+    background: var(--astro-surface-light);
+    border: 1px solid var(--astro-border);
+    border-radius: var(--astro-radius-md);
+    padding: var(--astro-space-md);
+    text-align: center;
+    cursor: pointer;
+    transition: var(--astro-transition-fast);
+    position: relative;
+}
+
+.bank-option:hover {
+    border-color: var(--astro-accent);
+}
+
+.bank-option.selected {
+    border-color: var(--astro-success);
+    background: rgba(0, 196, 140, 0.1);
+}
+
+.bank-option .fa-check-circle {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: var(--astro-success);
+    font-size: 14px;
+}
+
+.bank-logo {
+    font-weight: 700;
+    color: var(--astro-accent);
+    margin-bottom: 4px;
+}
+
+.bank-name {
+    font-size: 11px;
+    color: var(--astro-text-muted);
+}
+
+/* Buttons */
+.finvu-btn {
+    width: 100%;
+    padding: var(--astro-space-md) var(--astro-space-lg);
+    border: none;
+    border-radius: var(--astro-radius-md);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: var(--astro-transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--astro-space-sm);
+}
+
+.finvu-btn.primary {
+    background: var(--astro-gradient-accent);
+    color: var(--astro-primary);
+}
+
+.finvu-btn.secondary {
+    background: var(--astro-gradient-primary);
+    color: white;
+}
+
+.finvu-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px var(--astro-accent-glow);
+}
+
+.finvu-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Stat Cards */
+.finvu-stat-card {
+    background: var(--astro-gradient-card);
+    border: 1px solid var(--astro-border);
+    border-radius: var(--astro-radius-lg);
+    padding: var(--astro-space-lg);
+    text-align: center;
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--astro-accent-soft);
+    border-radius: var(--astro-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--astro-space-sm);
+    color: var(--astro-accent);
+    font-size: 20px;
+}
+
+.stat-icon.income { background: rgba(0, 196, 140, 0.2); color: var(--astro-success); }
+.stat-icon.expense { background: rgba(255, 184, 0, 0.2); color: var(--astro-warning); }
+.stat-icon.savings { background: rgba(102, 126, 234, 0.2); color: var(--astro-info); }
+
+.stat-value {
+    font-family: var(--astro-font-display);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--astro-text-primary);
+}
+
+.stat-value.success { color: var(--astro-success); }
+.stat-value.warning { color: var(--astro-warning); }
+.stat-value.accent { color: var(--astro-accent); }
+
+.stat-label {
+    font-size: 12px;
+    color: var(--astro-text-muted);
+    margin-top: var(--astro-space-xs);
+}
+
+/* Card Header */
+.card-header-custom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--astro-space-lg);
+    padding-bottom: var(--astro-space-md);
+    border-bottom: 1px solid var(--astro-border);
+}
+
+.card-header-custom h3 {
+    font-size: 16px;
+    margin: 0;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-sm);
+}
+
+.card-header-custom h3 i {
+    color: var(--astro-accent);
+}
+
+.refresh-btn {
+    padding: var(--astro-space-xs) var(--astro-space-md);
+    background: var(--astro-surface-light);
+    border: 1px solid var(--astro-border);
+    border-radius: var(--astro-radius-sm);
+    color: var(--astro-text-secondary);
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-xs);
+}
+
+.refresh-btn:hover {
+    border-color: var(--astro-accent);
+    color: var(--astro-accent);
+}
+
+/* Accounts List */
+.account-item {
+    display: flex;
+    align-items: center;
+    padding: var(--astro-space-md);
+    background: var(--astro-surface-light);
+    border-radius: var(--astro-radius-md);
+    margin-bottom: var(--astro-space-sm);
+    gap: var(--astro-space-md);
+}
+
+.account-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--astro-gradient-primary);
+    border-radius: var(--astro-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.account-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.account-bank {
+    font-weight: 600;
+    color: var(--astro-text-primary);
+    font-size: 14px;
+}
+
+.account-number {
+    font-family: var(--astro-font-mono);
+    font-size: 12px;
+    color: var(--astro-text-muted);
+}
+
+.account-type {
+    font-size: 11px;
+    background: var(--astro-accent-soft);
+    color: var(--astro-accent);
+    padding: 2px 8px;
+    border-radius: var(--astro-radius-full);
+}
+
+.account-balance {
+    font-family: var(--astro-font-display);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--astro-success);
+}
+
+/* Transactions */
+.transaction-item {
+    display: flex;
+    align-items: center;
+    padding: var(--astro-space-sm) 0;
+    border-bottom: 1px solid var(--astro-border-light);
+    gap: var(--astro-space-md);
+}
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+.txn-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.txn-icon.credit {
+    background: rgba(0, 196, 140, 0.2);
+    color: var(--astro-success);
+}
+
+.txn-icon.debit {
+    background: rgba(255, 71, 87, 0.2);
+    color: var(--astro-danger);
+}
+
+.txn-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.txn-description {
+    font-size: 13px;
+    color: var(--astro-text-primary);
+}
+
+.txn-date {
+    font-size: 11px;
+    color: var(--astro-text-muted);
+}
+
+.txn-category {
+    font-size: 10px;
+    background: var(--astro-surface-light);
+    padding: 2px 6px;
+    border-radius: var(--astro-radius-sm);
+    color: var(--astro-text-muted);
+}
+
+.txn-amount {
+    font-family: var(--astro-font-mono);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.txn-amount.credit { color: var(--astro-success); }
+.txn-amount.debit { color: var(--astro-danger); }
+
+/* AI Insights */
+.insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--astro-space-md);
+}
+
+.insight-item {
+    display: flex;
+    gap: var(--astro-space-md);
+    background: var(--astro-surface-light);
+    padding: var(--astro-space-md);
+    border-radius: var(--astro-radius-md);
+}
+
+.insight-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--astro-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.insight-icon.good { background: rgba(0, 196, 140, 0.2); color: var(--astro-success); }
+.insight-icon.warning { background: rgba(255, 184, 0, 0.2); color: var(--astro-warning); }
+.insight-icon.info { background: rgba(0, 217, 255, 0.2); color: var(--astro-accent); }
+
+.insight-content h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--astro-text-primary);
+    margin: 0 0 4px;
+}
+
+.insight-content p {
+    font-size: 12px;
+    color: var(--astro-text-muted);
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Footer */
+.finvu-footer {
+    text-align: center;
+}
+
+.trust-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--astro-space-sm);
+    margin-bottom: var(--astro-space-md);
+    color: var(--astro-text-muted);
+    font-size: 12px;
+}
+
+.trust-info i {
+    color: var(--astro-success);
+}
+
+.powered-by {
+    font-size: 12px;
+    color: var(--astro-text-muted);
+}
+
+.powered-by strong {
+    color: var(--astro-text-secondary);
+    margin: 0 4px;
+}
+
+.rbi-tag {
+    background: var(--astro-success);
+    color: white;
+    padding: 2px 6px;
+    border-radius: var(--astro-radius-sm);
+    font-size: 10px;
+    margin-left: var(--astro-space-xs);
+}
+
+@media (max-width: 768px) {
+    .banks-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .insights-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>

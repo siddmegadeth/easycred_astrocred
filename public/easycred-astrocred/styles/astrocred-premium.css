@@ -1,0 +1,1233 @@
+/* =====================================================
+   ASTROCRED Premium Design System
+   CRED-Inspired Modern Fintech UI
+   ===================================================== */
+
+/* =====================================================
+   CSS Variables - Design Tokens
+   ===================================================== */
+:root {
+    /* Primary Colors */
+    --astro-primary: #1A1A2E;
+    --astro-primary-light: #16213E;
+    --astro-primary-dark: #0F0F1A;
+    
+    /* Accent Colors */
+    --astro-accent: #00D9FF;
+    --astro-accent-glow: rgba(0, 217, 255, 0.3);
+    --astro-accent-soft: rgba(0, 217, 255, 0.1);
+    
+    /* Status Colors */
+    --astro-success: #00C48C;
+    --astro-success-glow: rgba(0, 196, 140, 0.3);
+    --astro-warning: #FFB800;
+    --astro-warning-glow: rgba(255, 184, 0, 0.3);
+    --astro-danger: #FF4757;
+    --astro-danger-glow: rgba(255, 71, 87, 0.3);
+    --astro-info: #667eea;
+    
+    /* Gradients */
+    --astro-gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --astro-gradient-accent: linear-gradient(135deg, #00D9FF 0%, #00C48C 100%);
+    --astro-gradient-dark: linear-gradient(180deg, #1A1A2E 0%, #0F0F1A 100%);
+    --astro-gradient-card: linear-gradient(145deg, rgba(22, 33, 62, 0.9) 0%, rgba(15, 15, 26, 0.95) 100%);
+    --astro-gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    
+    /* Text Colors - HIGH CONTRAST FOR VISIBILITY */
+    --astro-text-primary: #FFFFFF;
+    --astro-text-secondary: rgba(255, 255, 255, 0.95);
+    --astro-text-muted: rgba(255, 255, 255, 0.85);
+    --astro-text-dark: #1A1A2E;
+    
+    /* Surface Colors */
+    --astro-surface: #16213E;
+    --astro-surface-light: rgba(255, 255, 255, 0.05);
+    --astro-surface-hover: rgba(255, 255, 255, 0.1);
+    
+    /* Border */
+    --astro-border: rgba(255, 255, 255, 0.1);
+    --astro-border-light: rgba(255, 255, 255, 0.05);
+    
+    /* Shadows */
+    --astro-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --astro-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.3);
+    --astro-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
+    --astro-shadow-glow: 0 0 40px var(--astro-accent-glow);
+    
+    /* Typography */
+    --astro-font-primary: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --astro-font-display: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+    --astro-font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    
+    /* Spacing */
+    --astro-space-xs: 4px;
+    --astro-space-sm: 8px;
+    --astro-space-md: 16px;
+    --astro-space-lg: 24px;
+    --astro-space-xl: 32px;
+    --astro-space-2xl: 48px;
+    
+    /* Border Radius */
+    --astro-radius-sm: 8px;
+    --astro-radius-md: 12px;
+    --astro-radius-lg: 16px;
+    --astro-radius-xl: 24px;
+    --astro-radius-full: 9999px;
+    
+    /* Transitions */
+    --astro-transition-fast: 0.15s ease;
+    --astro-transition-normal: 0.25s ease;
+    --astro-transition-slow: 0.4s ease;
+}
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* =====================================================
+   Global Dark Theme Application
+   ===================================================== */
+body {
+    min-height: 100vh;
+    background: var(--astro-gradient-dark) !important;
+    color: var(--astro-text-primary);
+    font-family: var(--astro-font-primary);
+}
+
+html {
+    background: var(--astro-primary-dark);
+}
+
+/* =====================================================
+   Login Page Styles
+   ===================================================== */
+.astro-login-page {
+    min-height: 100vh;
+    background: var(--astro-gradient-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--astro-space-lg);
+    position: relative;
+    overflow: hidden;
+    font-family: var(--astro-font-primary);
+}
+
+/* Animated Background Pattern */
+.astro-bg-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.astro-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    animation: orbFloat 20s ease-in-out infinite;
+}
+
+.astro-orb-1 {
+    width: 600px;
+    height: 600px;
+    background: var(--astro-gradient-primary);
+    top: -200px;
+    right: -200px;
+    animation-delay: 0s;
+}
+
+.astro-orb-2 {
+    width: 400px;
+    height: 400px;
+    background: var(--astro-accent);
+    bottom: -150px;
+    left: -100px;
+    animation-delay: -7s;
+}
+
+.astro-orb-3 {
+    width: 300px;
+    height: 300px;
+    background: var(--astro-success);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -14s;
+    opacity: 0.3;
+}
+
+@keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(30px, -30px) scale(1.05); }
+    50% { transform: translate(-20px, 20px) scale(0.95); }
+    75% { transform: translate(20px, 30px) scale(1.02); }
+}
+
+/* Login Wrapper */
+.astro-login-wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 440px;
+}
+
+/* Logo Section */
+.astro-logo-section {
+    text-align: center;
+    margin-bottom: var(--astro-space-xl);
+}
+
+.astro-logo-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--astro-gradient-primary);
+    border-radius: var(--astro-radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--astro-space-md);
+    box-shadow: var(--astro-shadow-lg);
+}
+
+.astro-logo-icon i {
+    font-size: 36px;
+    color: white;
+}
+
+.astro-brand {
+    font-family: var(--astro-font-display);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--astro-text-primary);
+    margin: 0;
+    letter-spacing: 2px;
+}
+
+.astro-tagline {
+    color: var(--astro-text-muted);
+    font-size: 14px;
+    margin-top: var(--astro-space-xs);
+}
+
+/* Login Card */
+.astro-login-card {
+    background: var(--astro-gradient-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--astro-border);
+    border-radius: var(--astro-radius-xl);
+    padding: var(--astro-space-xl);
+    box-shadow: var(--astro-shadow-lg);
+}
+
+.astro-card-header {
+    text-align: center;
+    margin-bottom: var(--astro-space-lg);
+}
+
+.astro-card-header h2 {
+    font-family: var(--astro-font-display);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--astro-text-primary);
+    margin: 0 0 var(--astro-space-xs);
+}
+
+.astro-card-header p {
+    color: var(--astro-text-secondary);
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Progress Steps */
+.astro-progress-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--astro-space-xl);
+}
+
+.astro-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--astro-space-xs);
+}
+
+.astro-step-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--astro-surface-light);
+    border: 2px solid var(--astro-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--astro-text-muted);
+    transition: var(--astro-transition-normal);
+}
+
+.astro-step span {
+    font-size: 11px;
+    color: var(--astro-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.astro-step.active .astro-step-dot {
+    background: var(--astro-accent);
+    border-color: var(--astro-accent);
+    color: var(--astro-primary);
+    box-shadow: 0 0 20px var(--astro-accent-glow);
+}
+
+.astro-step.active span {
+    color: var(--astro-accent);
+}
+
+.astro-step.completed .astro-step-dot {
+    background: var(--astro-success);
+    border-color: var(--astro-success);
+    color: white;
+}
+
+.astro-step.completed span {
+    color: var(--astro-success);
+}
+
+.astro-step-line {
+    width: 40px;
+    height: 2px;
+    background: var(--astro-border);
+    margin: 0 var(--astro-space-sm);
+    margin-bottom: 20px;
+}
+
+/* Phone Input Group */
+.astro-input-group {
+    display: flex;
+    align-items: center;
+    background: var(--astro-surface-light);
+    border: 2px solid var(--astro-border);
+    border-radius: var(--astro-radius-md);
+    padding: var(--astro-space-sm) var(--astro-space-md);
+    transition: var(--astro-transition-normal);
+    margin-bottom: var(--astro-space-sm);
+}
+
+.astro-input-group:focus-within {
+    border-color: var(--astro-accent);
+    box-shadow: 0 0 0 4px var(--astro-accent-soft);
+}
+
+.astro-input-group.shake {
+    animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-10px); }
+    40% { transform: translateX(10px); }
+    60% { transform: translateX(-10px); }
+    80% { transform: translateX(10px); }
+}
+
+.astro-input-icon {
+    color: var(--astro-text-muted);
+    font-size: 18px;
+    margin-right: var(--astro-space-sm);
+}
+
+.astro-country-code {
+    color: var(--astro-text-secondary);
+    font-weight: 600;
+    padding-right: var(--astro-space-sm);
+    border-right: 1px solid var(--astro-border);
+    margin-right: var(--astro-space-sm);
+    font-family: var(--astro-font-mono);
+}
+
+.astro-phone-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--astro-text-primary);
+    font-size: 16px;
+    font-family: var(--astro-font-mono);
+    letter-spacing: 2px;
+}
+
+.astro-phone-input::placeholder {
+    color: var(--astro-text-muted);
+    letter-spacing: 0;
+}
+
+.astro-input-check {
+    color: var(--astro-success);
+    font-size: 18px;
+    animation: checkPop 0.3s ease;
+}
+
+@keyframes checkPop {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+.astro-input-hint {
+    font-size: 12px;
+    color: var(--astro-text-muted);
+    margin-bottom: var(--astro-space-lg);
+}
+
+/* Submit Button */
+.astro-submit-btn {
+    width: 100%;
+    padding: var(--astro-space-md) var(--astro-space-lg);
+    background: var(--astro-gradient-primary);
+    border: none;
+    border-radius: var(--astro-radius-md);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--astro-transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--astro-space-sm);
+}
+
+.astro-submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--astro-shadow-lg);
+}
+
+.astro-submit-btn:active {
+    transform: translateY(0);
+}
+
+.astro-submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Loading Spinner */
+.astro-loading {
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-sm);
+}
+
+.astro-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Features List */
+.astro-features {
+    display: flex;
+    justify-content: center;
+    gap: var(--astro-space-lg);
+    margin: var(--astro-space-xl) 0;
+    padding-top: var(--astro-space-lg);
+    border-top: 1px solid var(--astro-border);
+}
+
+.astro-feature {
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-xs);
+    font-size: 12px;
+    color: var(--astro-text-muted);
+}
+
+.astro-feature i {
+    color: var(--astro-accent);
+    font-size: 14px;
+}
+
+/* Terms */
+.astro-terms {
+    text-align: center;
+    font-size: 11px;
+    color: var(--astro-text-muted);
+}
+
+.astro-terms a {
+    color: var(--astro-accent);
+    text-decoration: none;
+}
+
+.astro-terms a:hover {
+    text-decoration: underline;
+}
+
+/* Trust Badges */
+.astro-trust-badges {
+    display: flex;
+    justify-content: center;
+    gap: var(--astro-space-lg);
+    margin-top: var(--astro-space-xl);
+}
+
+.astro-badge {
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-xs);
+    font-size: 11px;
+    color: var(--astro-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.astro-badge i {
+    color: var(--astro-success);
+}
+
+/* =====================================================
+   OTP Modal Styles
+   ===================================================== */
+.astro-modal .modal-content {
+    background: transparent;
+    border: none;
+}
+
+.astro-modal-content {
+    background: var(--astro-gradient-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--astro-border);
+    border-radius: var(--astro-radius-xl);
+    padding: var(--astro-space-xl);
+    text-align: center;
+    position: relative;
+}
+
+.astro-modal-close {
+    position: absolute;
+    top: var(--astro-space-md);
+    right: var(--astro-space-md);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--astro-surface-light);
+    border: 1px solid var(--astro-border);
+    color: var(--astro-text-muted);
+    cursor: pointer;
+    transition: var(--astro-transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.astro-modal-close:hover {
+    background: var(--astro-surface-hover);
+    color: var(--astro-text-primary);
+}
+
+.astro-modal-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--astro-space-md);
+    font-size: 28px;
+}
+
+.astro-modal-icon.info {
+    background: var(--astro-accent-soft);
+    color: var(--astro-accent);
+}
+
+.astro-modal-icon.success {
+    background: rgba(0, 196, 140, 0.2);
+    color: var(--astro-success);
+}
+
+.astro-modal-icon.error {
+    background: rgba(255, 71, 87, 0.2);
+    color: var(--astro-danger);
+}
+
+.astro-modal-title {
+    font-family: var(--astro-font-display);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--astro-text-primary);
+    margin: 0 0 var(--astro-space-xs);
+}
+
+.astro-modal-text {
+    color: var(--astro-text-secondary);
+    font-size: 14px;
+    margin: 0 0 var(--astro-space-lg);
+}
+
+.astro-modal-btn {
+    padding: var(--astro-space-md) var(--astro-space-xl);
+    background: var(--astro-gradient-primary);
+    border: none;
+    border-radius: var(--astro-radius-md);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--astro-transition-normal);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astro-space-sm);
+}
+
+.astro-modal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--astro-shadow-md);
+}
+
+/* OTP Specific Styles */
+.astro-otp-modal {
+    max-width: 400px;
+}
+
+.astro-otp-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--astro-gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--astro-space-lg);
+    font-size: 32px;
+    color: white;
+    position: relative;
+}
+
+.astro-otp-icon.success {
+    background: var(--astro-success);
+}
+
+.astro-otp-pulse {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid var(--astro-accent);
+    animation: pulse 2s ease-out infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+.astro-phone-display {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astro-space-sm);
+    background: var(--astro-surface-light);
+    padding: var(--astro-space-sm) var(--astro-space-md);
+    border-radius: var(--astro-radius-full);
+    font-family: var(--astro-font-mono);
+    font-size: 14px;
+    color: var(--astro-text-secondary);
+    margin-bottom: var(--astro-space-lg);
+}
+
+/* OTP Inputs */
+.astro-otp-inputs {
+    display: flex;
+    justify-content: center;
+    gap: var(--astro-space-sm);
+    margin-bottom: var(--astro-space-lg);
+}
+
+.astro-otp-inputs.shake {
+    animation: shake 0.5s ease;
+}
+
+.astro-otp-inputs.error .astro-otp-digit {
+    border-color: var(--astro-danger);
+}
+
+.astro-otp-digit {
+    width: 48px;
+    height: 56px;
+    background: var(--astro-surface-light);
+    border: 2px solid var(--astro-border);
+    border-radius: var(--astro-radius-md);
+    text-align: center;
+    font-size: 24px;
+    font-family: var(--astro-font-mono);
+    font-weight: 600;
+    color: var(--astro-text-primary);
+    outline: none;
+    transition: var(--astro-transition-fast);
+}
+
+.astro-otp-digit:focus {
+    border-color: var(--astro-accent);
+    box-shadow: 0 0 0 4px var(--astro-accent-soft);
+}
+
+.astro-otp-digit.filled {
+    border-color: var(--astro-accent);
+    background: var(--astro-accent-soft);
+}
+
+/* Verify Button */
+.astro-verify-btn {
+    width: 100%;
+    padding: var(--astro-space-md) var(--astro-space-lg);
+    background: var(--astro-gradient-accent);
+    border: none;
+    border-radius: var(--astro-radius-md);
+    color: var(--astro-primary);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--astro-transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--astro-space-sm);
+}
+
+.astro-verify-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px var(--astro-accent-glow);
+}
+
+.astro-verify-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Resend Section */
+.astro-resend-section {
+    margin-top: var(--astro-space-lg);
+}
+
+.astro-resend-text {
+    font-size: 13px;
+    color: var(--astro-text-muted);
+}
+
+.astro-resend-link {
+    color: var(--astro-accent);
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astro-space-xs);
+    cursor: pointer;
+}
+
+.astro-resend-link:hover {
+    text-decoration: underline;
+}
+
+.astro-cancel-link {
+    margin-top: var(--astro-space-md);
+    background: transparent;
+    border: none;
+    color: var(--astro-text-muted);
+    font-size: 13px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astro-space-xs);
+    transition: var(--astro-transition-fast);
+}
+
+.astro-cancel-link:hover {
+    color: var(--astro-text-secondary);
+}
+
+/* =====================================================
+   Toast Notifications
+   ===================================================== */
+.astro-toast {
+    position: fixed;
+    top: var(--astro-space-lg);
+    right: var(--astro-space-lg);
+    background: var(--astro-gradient-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--astro-border);
+    border-radius: var(--astro-radius-md);
+    padding: var(--astro-space-md) var(--astro-space-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-md);
+    transform: translateX(calc(100% + var(--astro-space-lg)));
+    opacity: 0;
+    transition: var(--astro-transition-normal);
+    z-index: 9999;
+    max-width: 320px;
+}
+
+.astro-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.astro-toast-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.astro-toast-icon.success {
+    background: rgba(0, 196, 140, 0.2);
+    color: var(--astro-success);
+}
+
+.astro-toast-icon.error {
+    background: rgba(255, 71, 87, 0.2);
+    color: var(--astro-danger);
+}
+
+.astro-toast-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.astro-toast-content strong {
+    color: var(--astro-text-primary);
+    font-size: 14px;
+}
+
+.astro-toast-content span {
+    color: var(--astro-text-secondary);
+    font-size: 12px;
+}
+
+/* =====================================================
+   Responsive Design
+   ===================================================== */
+@media (max-width: 480px) {
+    .astro-login-page {
+        padding: var(--astro-space-md);
+    }
+    
+    .astro-login-card {
+        padding: var(--astro-space-lg);
+    }
+    
+    .astro-features {
+        flex-direction: column;
+        gap: var(--astro-space-sm);
+    }
+    
+    .astro-trust-badges {
+        flex-direction: column;
+        gap: var(--astro-space-sm);
+    }
+    
+    .astro-otp-digit {
+        width: 42px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    .astro-toast {
+        left: var(--astro-space-md);
+        right: var(--astro-space-md);
+        max-width: none;
+    }
+}
+
+/* =====================================================
+   Glass Card Component
+   ===================================================== */
+.astro-glass-card {
+    background: var(--astro-gradient-glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--astro-border);
+    border-radius: var(--astro-radius-lg);
+    padding: var(--astro-space-lg);
+    transition: var(--astro-transition-normal);
+}
+
+.astro-glass-card:hover {
+    border-color: var(--astro-accent);
+    box-shadow: var(--astro-shadow-glow);
+}
+
+/* =====================================================
+   Score Ring Component
+   ===================================================== */
+.astro-score-ring {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}
+
+.astro-score-ring svg {
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+}
+
+.astro-score-ring-bg {
+    fill: none;
+    stroke: var(--astro-surface-light);
+    stroke-width: 12;
+}
+
+.astro-score-ring-fill {
+    fill: none;
+    stroke: url(#scoreGradient);
+    stroke-width: 12;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s ease;
+}
+
+.astro-score-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.astro-score-number {
+    font-family: var(--astro-font-display);
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--astro-text-primary);
+    line-height: 1;
+}
+
+.astro-score-label {
+    font-size: 14px;
+    color: var(--astro-text-muted);
+    margin-top: var(--astro-space-xs);
+}
+
+/* =====================================================
+   Grade Badge Component
+   ===================================================== */
+.astro-grade-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: var(--astro-radius-lg);
+    font-family: var(--astro-font-display);
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.astro-grade-badge.grade-a-plus {
+    background: linear-gradient(135deg, #00C48C 0%, #00E5A0 100%);
+    color: white;
+    box-shadow: 0 0 30px rgba(0, 196, 140, 0.4);
+}
+
+.astro-grade-badge.grade-a {
+    background: linear-gradient(135deg, #00D9FF 0%, #00B8D9 100%);
+    color: white;
+    box-shadow: 0 0 30px rgba(0, 217, 255, 0.4);
+}
+
+.astro-grade-badge.grade-b {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 0 30px rgba(102, 126, 234, 0.4);
+}
+
+.astro-grade-badge.grade-c {
+    background: linear-gradient(135deg, #FFB800 0%, #FF9500 100%);
+    color: white;
+    box-shadow: 0 0 30px rgba(255, 184, 0, 0.4);
+}
+
+.astro-grade-badge.grade-d {
+    background: linear-gradient(135deg, #FF4757 0%, #FF6B7A 100%);
+    color: white;
+    box-shadow: 0 0 30px rgba(255, 71, 87, 0.4);
+}
+
+/* =====================================================
+   Utility Classes
+   ===================================================== */
+.astro-text-gradient {
+    background: var(--astro-gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.astro-glow {
+    box-shadow: var(--astro-shadow-glow);
+}
+
+.astro-fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* =====================================================
+   Global Dark Theme Overrides for Dashboard
+   ===================================================== */
+
+/* Cards */
+.card {
+    background: var(--astro-gradient-card) !important;
+    border: 1px solid var(--astro-border) !important;
+    color: var(--astro-text-primary) !important;
+    box-shadow: var(--astro-shadow-md) !important;
+}
+
+.astrocred-card,
+.glassmorphism-card {
+    background: var(--astro-gradient-card) !important;
+    border: 1px solid var(--astro-border) !important;
+    backdrop-filter: blur(10px);
+    color: var(--astro-text-primary) !important;
+}
+
+/* Text Colors */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--astro-text-primary) !important;
+}
+
+p, span, div {
+    color: var(--astro-text-secondary);
+}
+
+.text-muted {
+    color: var(--astro-text-muted) !important;
+}
+
+/* Navbar */
+.navbar {
+    background: var(--astro-primary-light) !important;
+    border-bottom: 1px solid var(--astro-border);
+}
+
+.navbar-brand,
+.nav-link {
+    color: var(--astro-text-primary) !important;
+}
+
+.nav-link:hover {
+    color: var(--astro-accent) !important;
+}
+
+/* Buttons */
+.btn-primary {
+    background: var(--astro-gradient-accent) !important;
+    border: none !important;
+    color: white !important;
+    box-shadow: 0 4px 15px var(--astro-accent-glow) !important;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--astro-accent-glow) !important;
+}
+
+.btn-success {
+    background: var(--astro-success) !important;
+    border: none !important;
+    box-shadow: 0 4px 15px var(--astro-success-glow) !important;
+}
+
+.btn-warning {
+    background: var(--astro-warning) !important;
+    border: none !important;
+    color: var(--astro-primary-dark) !important;
+    box-shadow: 0 4px 15px var(--astro-warning-glow) !important;
+}
+
+.btn-danger {
+    background: var(--astro-danger) !important;
+    border: none !important;
+    box-shadow: 0 4px 15px var(--astro-danger-glow) !important;
+}
+
+/* Tabs */
+.nav-tabs {
+    border-bottom: 1px solid var(--astro-border) !important;
+}
+
+.nav-tabs .nav-link {
+    color: var(--astro-text-secondary) !important;
+    border: none !important;
+}
+
+.nav-tabs .nav-link.active {
+    background: transparent !important;
+    color: var(--astro-accent) !important;
+    border-bottom: 2px solid var(--astro-accent) !important;
+}
+
+/* Badges */
+.badge {
+    font-weight: 600;
+    padding: 0.5em 1em;
+    border-radius: var(--astro-radius-full);
+}
+
+.badge-success,
+.bg-success {
+    background: var(--astro-success) !important;
+}
+
+.badge-warning,
+.bg-warning {
+    background: var(--astro-warning) !important;
+    color: var(--astro-primary-dark) !important;
+}
+
+.badge-danger,
+.bg-danger {
+    background: var(--astro-danger) !important;
+}
+
+/* Table */
+.table {
+    color: var(--astro-text-primary) !important;
+}
+
+.table thead th {
+    border-bottom: 1px solid var(--astro-border) !important;
+    color: var(--astro-text-primary) !important;
+}
+
+.table tbody tr {
+    border-bottom: 1px solid var(--astro-border-light) !important;
+}
+
+.table tbody tr:hover {
+    background: var(--astro-surface-hover) !important;
+}
+
+/* Forms */
+.form-control {
+    background: var(--astro-surface) !important;
+    border: 1px solid var(--astro-border) !important;
+    color: var(--astro-text-primary) !important;
+}
+
+.form-control:focus {
+    background: var(--astro-surface-light) !important;
+    border-color: var(--astro-accent) !important;
+    box-shadow: 0 0 0 0.2rem var(--astro-accent-soft) !important;
+    color: var(--astro-text-primary) !important;
+}
+
+.form-label {
+    color: #FFFFFF !important;
+    font-weight: 500 !important;
+}
+
+/* Ensure card text is highly visible */
+.card p, .card span, .card div, .card label, .card td, .card th, .card li {
+    color: #FFFFFF !important;
+}
+
+.card .text-muted {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Body text visibility */
+body p, body span, body div:not(.astro-orb) {
+    color: #FFFFFF !important;
+}
+
+.text-muted {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Modal */
+.modal-content {
+    background: var(--astro-gradient-card) !important;
+    border: 1px solid var(--astro-border) !important;
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--astro-border) !important;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--astro-border) !important;
+}
+
+/* Progress bars */
+.progress {
+    background: var(--astro-surface) !important;
+}
+
+.progress-bar {
+    background: var(--astro-gradient-accent) !important;
+}
+
+/* Alert */
+.alert {
+    border: 1px solid var(--astro-border) !important;
+}
+
+.alert-success {
+    background: rgba(0, 196, 140, 0.1) !important;
+    color: var(--astro-success) !important;
+    border-color: var(--astro-success) !important;
+}
+
+.alert-warning {
+    background: rgba(255, 184, 0, 0.1) !important;
+    color: var(--astro-warning) !important;
+    border-color: var(--astro-warning) !important;
+}
+
+.alert-danger {
+    background: rgba(255, 71, 87, 0.1) !important;
+    color: var(--astro-danger) !important;
+    border-color: var(--astro-danger) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--astro-primary-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--astro-surface);
+    border-radius: var(--astro-radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--astro-accent);
+}
+

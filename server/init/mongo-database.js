@@ -35,10 +35,24 @@
             serverSelectionTimeoutMS: 5000,
             connectTimeoutMS: 10000
         })
-            .then(function(errDb, dbConnection) {
+            .then(async function(errDb, dbConnection) {
                 console.log('Connection to the online.com DEV DB/ Atlas Cluster is successful!');
                 log("Database Name DEV : " + process.env.MONGODB_NAME_DEVELOPMENT);
                 log("MONGODB CLUSTER URI DEV: " + mongoDbURI);
+                
+                // 🔧 AUTO-FIX: Drop orphaned cibil_client_id index if it exists
+                try {
+                    const collection = mongoose.connection.db.collection('profilemodels');
+                    await collection.dropIndex('cibil_client_id_1');
+                    log('✅ Dropped orphaned cibil_client_id_1 index (DEV)');
+                } catch (indexErr) {
+                    if (indexErr.code === 27) {
+                        // Index doesn't exist - that's fine
+                        log('✅ No orphaned index to clean (DEV)');
+                    } else {
+                        log('⚠️ Could not drop index (DEV):', indexErr.message);
+                    }
+                }
             })
             .catch((err) => {
                 console.error('Mongoose Connection Error (DEV):', err.message);
@@ -88,10 +102,24 @@
             serverSelectionTimeoutMS: 5000,
             connectTimeoutMS: 10000
         })
-            .then(function(errDb, dbConnection) {
+            .then(async function(errDb, dbConnection) {
                 console.log('Connection to the online.com PROD DB/ Atlas Cluster is successful!');
                 log("Database Name PROD : " + process.env.MONGODB_NAME_PRODUCTION);
                 log("MONGODB CLUSTER URI PROD: " + mongoDbURI);
+                
+                // 🔧 AUTO-FIX: Drop orphaned cibil_client_id index if it exists
+                try {
+                    const collection = mongoose.connection.db.collection('profilemodels');
+                    await collection.dropIndex('cibil_client_id_1');
+                    log('✅ Dropped orphaned cibil_client_id_1 index (PROD)');
+                } catch (indexErr) {
+                    if (indexErr.code === 27) {
+                        // Index doesn't exist - that's fine
+                        log('✅ No orphaned index to clean (PROD)');
+                    } else {
+                        log('⚠️ Could not drop index (PROD):', indexErr.message);
+                    }
+                }
             })
             .catch((err) => {
                 console.error('Mongoose Connection Error (PROD):', err.message);

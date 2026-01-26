@@ -1,4 +1,4 @@
-app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'stateManager', '$rootScope', 'profileOperations', 'utility', 'surePass', function($location, $timeout, $scope, stateManager, $rootScope, profileOperations, utility, surePass) {
+app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'stateManager', '$rootScope', 'profileOperations', 'utility', 'surePass', 'cibilCore', function($location, $timeout, $scope, stateManager, $rootScope, profileOperations, utility, surePass, cibilCore) {
 
     $timeout(function() {
         warn('Init profileCompletionCtrl Ready');
@@ -275,10 +275,11 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
         }
     };
 
-    // Final submission
+    // Final submission with CIBIL fetch
     $scope.submitProfile = function() {
         $scope.errors = {};
         log($scope.profile.consent);
+        
         if (!$scope.profile.consent.terms) {
             $scope.errors.terms = 'You must accept the Terms of Service';
         }
@@ -293,34 +294,137 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
 
         if (Object.keys($scope.errors).length > 0) {
             return;
-        } else {
+        }
+        
             warn('Final Profile :');
             log($scope.profile);
-            //Simulate API call
-            if ($scope.validateEmail($scope.profile.profile_info.email) && $scope.validateMobile($scope.profile.profile_info.mobile) && $scope.validateDOB($scope.profile.profile_info.date_of_birth) && $scope.validatePincode($scope.profile.props.pincode)) {
+        
+        // Validate basic fields
+        if (!$scope.validateEmail($scope.profile.profile_info.email) || 
+            !$scope.validateMobile($scope.profile.profile_info.mobile) || 
+            !$scope.validateDOB($scope.profile.profile_info.date_of_birth) || 
+            !$scope.validatePincode($scope.profile.props.pincode)) {
+            alert('Profile validation failed. Please check Email/Mobile/Address.');
+            return;
+        }
+
                 $scope.profile.profile_info.isProfileCompleted = true;
                 $scope.profile.isOnboardingComplete = true;
-
                 $scope.isSubmitting = true;
                 $scope.isComplete = false;
+        $scope.isFetchingCIBIL = false;
+        $scope.cibilFetchError = null;
+
+        // Step 1: Complete profile onboarding
                 profileOperations.completeOnboarding($scope.profile)
                     .then(function(resp) {
-                        warn('completeOnboarding :');
+                warn('completeOnboarding Success:');
                         log(resp);
                         stateManager.saveProfile(resp.data.data);
+                $scope.profile = resp.data.data;
+                
+                // Step 2: Fetch CIBIL score (if consent given)
+                if ($scope.profile.consent.pan && $scope.profile.consent.aadhaar) {
+                    $scope.isFetchingCIBIL = true;
+                    $scope.cibilStatus = 'Fetching your credit score...';
+                    
+                    return $scope.fetchCIBILScore();
+                } else {
                         $scope.isSubmitting = false;
                         $scope.isComplete = true;
-                        log('Profile submitted:', $scope.isComplete);
-                        $scope.profile = resp.data.data;
+                    return Promise.resolve({ skipped: true });
+                }
+            })
+            .then(function(cibilResult) {
+                $scope.isSubmitting = false;
+                $scope.isFetchingCIBIL = false;
+                $scope.isComplete = true;
+                
+                if (cibilResult && !cibilResult.skipped) {
+                    $scope.cibilFetched = true;
+                    $scope.cibilScore = cibilResult.credit_score;
+                    $scope.cibilGrade = cibilResult.overallGrade?.grade || 'N/A';
+                }
+                
+                log('Profile and CIBIL completed:', $scope.isComplete);
+            })
+            .catch(function(err) {
+                $scope.isSubmitting = false;
+                $scope.isFetchingCIBIL = false;
+                $scope.cibilFetchError = err.message || 'Failed to fetch credit score';
+                warn('Error in profile completion:', err);
+                
+                // Still mark as complete - user can retry CIBIL fetch later
+                $scope.isComplete = true;
+            });
+    };
 
-
+    // Fetch CIBIL score using SurePass
+    $scope.fetchCIBILScore = function() {
+        return new Promise(function(resolve, reject) {
+            // Use the CIBIL service to fetch from SurePass
+            var params = {
+                mobile: $scope.profile.profile_info.mobile || $scope.profile.mobile,
+                fullname: $scope.profile.profile_info.fullname,
+                pan: $scope.profile.kyc.pan_number
+            };
+            
+            warn('Fetching CIBIL with params:', params);
+            
+            // First try the new POST endpoint
+            cibilCore.fetchFromSurePass(params)
+                .then(function(response) {
+                    log('CIBIL Fetch Response:', response);
+                    
+                    if (response.data.status) {
+                        // Success - store the data
+                        var cibilData = response.data.data;
+                        $scope.profile.cibil = {
+                            credit_score: cibilData.credit_score,
+                            fetchedAt: new Date().toISOString(),
+                            mode: response.data.mode || 'production'
+                        };
+                        
+                        // Update profile with CIBIL data
+                        stateManager.saveProfile($scope.profile);
+                        
+                        // Now run analysis
+                        return cibilCore.getAnalysis({
+                            pan: params.pan,
+                            mobile: params.mobile
                     });
             } else {
-                alert('Profile Such Email/Mobile/Address Is Not Valid');
-            }
+                        throw new Error(response.data.message || 'CIBIL fetch failed');
+                    }
+                })
+                .then(function(analysisResp) {
+                    log('CIBIL Analysis:', analysisResp);
+                    resolve(analysisResp.data.data || { credit_score: $scope.profile.cibil?.credit_score });
+                })
+                .catch(function(err) {
+                    warn('CIBIL Fetch Error:', err);
+                    reject(err);
+                });
+        });
+    };
 
-
-        }
+    // Retry CIBIL fetch (for error recovery)
+    $scope.retryCIBILFetch = function() {
+        $scope.cibilFetchError = null;
+        $scope.isFetchingCIBIL = true;
+        $scope.cibilStatus = 'Retrying credit score fetch...';
+        
+        $scope.fetchCIBILScore()
+            .then(function(result) {
+                $scope.isFetchingCIBIL = false;
+                $scope.cibilFetched = true;
+                $scope.cibilScore = result.credit_score;
+                $scope.cibilGrade = result.overallGrade?.grade || 'N/A';
+            })
+            .catch(function(err) {
+                $scope.isFetchingCIBIL = false;
+                $scope.cibilFetchError = err.message || 'Failed to fetch credit score. Please try again.';
+            });
     };
 
     $scope.goToDashboard = function() {

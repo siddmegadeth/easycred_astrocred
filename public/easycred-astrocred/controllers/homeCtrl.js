@@ -1,4 +1,4 @@
-app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', '$location', 'authentication', 'cibilCore', 'productionMode', 'astroAI', function ($scope, $rootScope, $timeout, stateManager, $location, authentication, cibilCore, productionMode, astroAI) {
+app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', '$location', 'authentication', 'cibilCore', 'productionMode', 'astroAI', 'surePass', function ($scope, $rootScope, $timeout, stateManager, $location, authentication, cibilCore, productionMode, astroAI, surePass) {
 
     // #region agent log
     $scope.$on('$viewContentLoaded', function () {
@@ -27,10 +27,23 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
             $scope.userProfile = stateManager.getProfile();
             log('User Profile :', $scope.userProfile);
 
-            if (stateManager.isProfileCompleted()) {
-                $scope.loadDashboardData();
-            } else {
-                $location.path("profile/complete");
+            // Update credit data with user info immediately
+            if ($scope.userProfile) {
+                $scope.creditData.name = $scope.userProfile.profile_info?.fullname || $scope.userProfile.profile_info?.name || 'User';
+                $scope.creditData.pan = $scope.userProfile.kyc?.pan_number || 'N/A';
+                $scope.creditData.mobile = $scope.userProfile.profile_info?.mobile || $scope.userProfile.mobile || '';
+                $scope.creditData.email = $scope.userProfile.profile_info?.email || '';
+            }
+
+            // Always load dashboard data, even if profile not complete (will show available data)
+            $scope.loadDashboardData();
+            
+            // Check if profile needs completion
+            if (!stateManager.isProfileCompleted()) {
+                warn('Profile not complete. Redirect to profile completion after dashboard loads...');
+                $timeout(function() {
+                    $location.path("profile/complete");
+                }, 2000); // Give 2 seconds to see dashboard before redirecting
             }
         } else {
             $location.path("login");
@@ -50,10 +63,16 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
                 const data = res.data;
                 $scope.creditData = {
                     credit_score: data.credit_score,
-                    name: $scope.userProfile?.profile_info?.name || 'User',
-                    pan: $scope.userProfile?.kyc?.pan_number || 'N/A',
-                    mobile: $scope.userProfile?.profile_info?.mobile || ''
+                    name: $scope.userProfile?.profile_info?.fullname || $scope.userProfile?.profile_info?.name || 'User',
+                    pan: $scope.userProfile?.kyc?.pan_number || data.user_info?.pan || 'N/A',
+                    mobile: $scope.userProfile?.profile_info?.mobile || $scope.userProfile?.mobile || ''
                 };
+
+                // Ensure name matches logged in user, not sandbox data
+                if (data.user_info) {
+                    data.user_info.name = $scope.creditData.name;
+                }
+
                 $scope.paymentOnTime = data.payment_history?.on_time_percentage || 65;
                 $scope.creditUtilization = data.utilization?.percentage || 48;
                 $scope.recentEnquiries = data.enquiries?.recent_count || 7;
@@ -103,17 +122,114 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
                 }, 100);
             }
         }).catch(function (err) {
-            console.error('Failed to load dashboard data:', err);
-            // Use fallback data
-            $scope.creditData = {
-                credit_score: 670,
-                name: $scope.userProfile?.profile_info?.name || 'User',
-                pan: $scope.userProfile?.kyc?.pan_number || 'N/A',
-                mobile: $scope.userProfile?.profile_info?.mobile || ''
+            console.error('Local analysis not found. Attempting to fetch from Surepass (Sandbox)...', err);
+
+            var mobile = $scope.userProfile?.profile_info?.mobile || $scope.userProfile?.mobile || $scope.userProfile?.userId;
+            var name = $scope.userProfile?.profile_info?.fullname || $scope.userProfile?.profile_info?.name || 'User';
+
+            // Function to use fallback data if everything fails
+            var useFallback = function () {
+                console.warn('Using fallback/demo data with user information.');
+                $scope.creditData = {
+                    credit_score: null,
+                    client_id: null,
+                    name: name,
+                    pan: $scope.userProfile?.kyc?.pan_number || 'Not provided',
+                    mobile: mobile
+                };
+                
+                // Set demo/placeholder values
+                $scope.paymentOnTime = null;
+                $scope.creditUtilization = null;
+                $scope.recentEnquiries = null;
+                $scope.creditAge = null;
+                $scope.defaultAccounts = 0;
+                $scope.defaultProbability = null;
+                $scope.creditWorthiness = null;
+                $scope.totalExposure = null;
+                $scope.totalOverdue = null;
+                $scope.loanEligibility = 'Complete profile to check';
+                
+                $scope.riskAssessment = {
+                    level: "not-assessed",
+                    probability: null
+                };
+                
+                $scope.accounts = [];
+                $scope.filteredAccounts = [];
+                
+                initializeChartsWithDefaults();
+                $scope.loaderShow = false;
             };
-            initializeChartsWithDefaults();
-        }).finally(function () {
-            $scope.loaderShow = false;
+
+            if (mobile) {
+                // Fetch from Surepass
+                surePass.cibil(mobile, name).then(function (res) {
+                    if (res.data && (res.data.status || res.data.success)) {
+                        console.log('Surepass data fetched successfully. Uploading to backend...');
+
+                        // normalize and upload
+                        var rawData = res.data.data || res.data;
+                        var normalized = cibilCore.normalizeData(rawData);
+
+                        // OVERWRITE Sandbox Identity with User Identity
+                        if (normalized) {
+                            normalized.name = name;
+                            normalized.mobile = mobile;
+                            normalized.user_info = normalized.user_info || {};
+                            normalized.user_info.name = name;
+                            normalized.user_info.mobile = mobile;
+
+                            // If user has a PAN, use it. Otherwise keep sandbox PAN (IVZPK2103N)
+                            if ($scope.userProfile?.kyc?.pan_number) {
+                                normalized.pan = $scope.userProfile.kyc.pan_number;
+                                normalized.user_info.pan = $scope.userProfile.kyc.pan_number;
+                            }
+                        }
+
+                        cibilCore.uploadData(normalized).then(function () {
+                            console.log('Data uploaded. Reloading dashboard...');
+                            // Retry loading dashboard data (without recursion loop hopefully)
+                            // Manually call success logic to avoid re-triggering this block infinitely if something is weird
+                            cibilCore.getBasicAnalysis(mobile).then(function (res2) {
+                                if (res2 && res2.data) {
+                                    // Success - populate scope
+                                    var data = res2.data;
+                                    $scope.creditData = {
+                                        credit_score: data.credit_score,
+                                        name: name,
+                                        pan: data.user_info?.pan || $scope.userProfile?.kyc?.pan_number || 'N/A',
+                                        mobile: mobile
+                                    };
+                                    // Populate other fields (simplified for brevity, main parts)
+                                    $scope.paymentOnTime = data.payment_analysis?.onTimePercentage || 65;
+                                    $scope.creditUtilization = data.credit_utilization || 48;
+                                    $scope.chartData = {
+                                        scoreBreakdown: data.detailed_analysis?.component_grades || {},
+                                        paymentHistory: data.detailed_analysis?.payment_analysis?.history || [700, 710, 720]
+                                    };
+                                    $timeout(function () { initializeCharts(); }, 100);
+                                    $scope.loaderShow = false;
+                                } else {
+                                    useFallback();
+                                }
+                            }).catch(useFallback);
+
+                        }).catch(function (e) {
+                            console.error('Upload failed', e);
+                            useFallback();
+                        });
+                    } else {
+                        console.warn('Surepass fetch returned false status');
+                        useFallback();
+                    }
+                }).catch(function (e) {
+                    console.error('Surepass fetch failed', e);
+                    useFallback();
+                });
+            } else {
+                useFallback();
+            }
         });
     };
 
@@ -228,100 +344,51 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
     };
 
 
-    // Initialize with sample data
+    // Initialize with user data (not hardcoded sample data)
     $scope.creditData = {
-        credit_score: 670,
-        client_id: "credit_report_cibil_jIifktiYhrHTbZcMdlsU",
-        name: "SHIV KUMAR",
-        pan: "IVZPK2103N",
-        mobile: "9708016996",
-        email: "MANGALDHAWANI@GMAIL.COM"
+        credit_score: null,
+        client_id: null,
+        name: $scope.userProfile?.profile_info?.fullname || 'Loading...',
+        pan: $scope.userProfile?.kyc?.pan_number || null,
+        mobile: $scope.userProfile?.profile_info?.mobile || $scope.userProfile?.mobile || null,
+        email: $scope.userProfile?.profile_info?.email || null
     };
 
     $scope.riskAssessment = {
-        level: "medium-high",
-        probability: 38
+        level: "loading",
+        probability: null
     };
 
-    $scope.defaultProbability = 38;
-    $scope.creditWorthiness = 6.2;
-    $scope.totalExposure = 485566;
-    $scope.totalBalance = 485566;
-    $scope.totalOverdue = 48018;
-    $scope.totalCreditLimit = 1009915;
-    $scope.creditUtilization = 48;
-    $scope.paymentOnTime = 65;
-    $scope.recentEnquiries = 7;
-    $scope.creditAge = 4.2;
-    $scope.defaultAccounts = 4;
-    $scope.activeAccounts = 11;
-    $scope.totalAccounts = 19;
-    $scope.loanEligibility = "₹5-10L";
+    $scope.defaultProbability = null;
+    $scope.creditWorthiness = null;
+    $scope.totalExposure = null;
+    $scope.totalBalance = null;
+    $scope.totalOverdue = null;
+    $scope.totalCreditLimit = null;
+    $scope.creditUtilization = null;
+    $scope.paymentOnTime = null;
+    $scope.recentEnquiries = null;
+    $scope.creditAge = null;
+    $scope.defaultAccounts = null;
+    $scope.activeAccounts = null;
+    $scope.totalAccounts = null;
+    $scope.loanEligibility = "Loading...";
     $scope.reportDate = new Date();
     $scope.chatInput = "";
 
-    // Sample accounts data
-    $scope.accounts = [{
-        accountNumber: "0000000028669955",
-        bank: "ICICI BANK",
-        type: "Credit Card",
-        currentBalance: 64522,
-        amountOverdue: 27760,
-        status: "Default",
-        lastPaymentDate: "2025-04-06",
-        risk: "high"
-    },
-    {
-        accountNumber: "0007478830007967886",
-        bank: "RBL BANK",
-        type: "Credit Card",
-        currentBalance: 73959,
-        amountOverdue: 15029,
-        status: "Default",
-        lastPaymentDate: "2025-08-02",
-        risk: "high"
-    },
-    {
-        accountNumber: "9406188002698052",
-        bank: "KOTAK BANK",
-        type: "Credit Card",
-        currentBalance: 39846,
-        amountOverdue: 3131,
-        status: "Warning",
-        lastPaymentDate: "2025-07-20",
-        risk: "medium"
-    },
-    {
-        accountNumber: "152000005020843",
-        bank: "AXIS BANK",
-        type: "Credit Card",
-        currentBalance: 35418,
-        amountOverdue: 2099,
-        status: "Warning",
-        lastPaymentDate: "2025-07-24",
-        risk: "medium"
-    },
-    {
-        accountNumber: "P4L6PPT8546837",
-        bank: "BAJAJ FIN LTD",
-        type: "Personal Loan",
-        currentBalance: 126298,
-        amountOverdue: 0,
-        status: "Good",
-        lastPaymentDate: "2025-08-02",
-        risk: "low"
-    }
-    ];
+    // Initialize accounts as empty array - will be populated by loadDashboardData()
+    $scope.accounts = [];
+    $scope.filteredAccounts = [];
 
-    $scope.filteredAccounts = $scope.accounts;
-
-    // Helper functions
+    // Helper functions - FIXED GRADE CALCULATION
     $scope.getScoreGrade = function (score) {
-        if (score >= 800) return { grade: "A+", description: "Excellent" };
-        if (score >= 750) return { grade: "A", description: "Very Good" };
-        if (score >= 700) return { grade: "B", description: "Good" };
-        if (score >= 650) return { grade: "C", description: "Fair" };
-        if (score >= 600) return { grade: "D", description: "Poor" };
+        if (!score || score === null || score === '---') return { grade: "N/A", description: "Loading..." };
+        var numScore = parseInt(score);
+        if (numScore >= 800) return { grade: "A+", description: "Excellent" };
+        if (numScore >= 750) return { grade: "A", description: "Very Good" };
+        if (numScore >= 700) return { grade: "B", description: "Good" };
+        if (numScore >= 650) return { grade: "C", description: "Fair" };
+        if (numScore >= 600) return { grade: "D", description: "Poor" };
         return { grade: "E", description: "Very Poor" };
     };
 

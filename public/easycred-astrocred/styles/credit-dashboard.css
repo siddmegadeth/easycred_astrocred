@@ -1,0 +1,899 @@
+/* =====================================================
+   ASTROCRED Premium Credit Dashboard Styles
+   ===================================================== */
+
+/* Dashboard Container */
+.credit-dashboard {
+    min-height: 100vh;
+    background: var(--astro-gradient-dark);
+    padding-bottom: var(--astro-space-2xl);
+    font-family: var(--astro-font-primary);
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 15, 26, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    text-align: center;
+}
+
+.loading-spinner .spinner-border {
+    width: 60px;
+    height: 60px;
+    border-width: 4px;
+    border-color: var(--astro-accent);
+    border-right-color: transparent;
+}
+
+.loading-spinner p {
+    color: var(--astro-text-secondary);
+    margin-top: var(--astro-space-md);
+    font-size: 14px;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    background: var(--astro-gradient-primary);
+    padding: var(--astro-space-xl) 0;
+    margin-bottom: var(--astro-space-xl);
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    filter: blur(60px);
+}
+
+.dashboard-title {
+    font-family: var(--astro-font-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-sm);
+}
+
+.dashboard-title i {
+    color: var(--astro-accent);
+}
+
+.dashboard-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    margin: var(--astro-space-xs) 0 0;
+}
+
+/* Upload Toast */
+.upload-toast {
+    position: fixed;
+    top: var(--astro-space-lg);
+    right: var(--astro-space-lg);
+    background: var(--astro-success);
+    color: white;
+    padding: var(--astro-space-sm) var(--astro-space-md);
+    border-radius: var(--astro-radius-full);
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-sm);
+    font-size: 13px;
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Dashboard Cards */
+.dashboard-card {
+    background: var(--astro-gradient-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--astro-border);
+    border-radius: var(--astro-radius-lg);
+    overflow: hidden;
+    transition: var(--astro-transition-normal);
+    height: 100%;
+}
+
+.dashboard-card:hover {
+    border-color: rgba(0, 217, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-card .card-header {
+    padding: var(--astro-space-md) var(--astro-space-lg);
+    border-bottom: 1px solid var(--astro-border);
+    background: transparent;
+}
+
+.dashboard-card .card-header h5 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--astro-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-sm);
+}
+
+.dashboard-card .card-header h5 i {
+    color: var(--astro-accent);
+}
+
+.dashboard-card .card-body {
+    padding: var(--astro-space-lg);
+}
+
+/* Score Card */
+.score-card .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--astro-space-xl);
+}
+
+.score-gauge {
+    width: 180px;
+    height: 100px;
+    margin-bottom: var(--astro-space-md);
+}
+
+.gauge-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.gauge-arc-bg {
+    fill: none;
+    stroke: var(--astro-surface-light);
+    stroke-width: 14;
+    stroke-linecap: round;
+}
+
+.gauge-arc-fill {
+    fill: none;
+    stroke: url(#scoreGradient);
+    stroke-width: 14;
+    stroke-linecap: round;
+    transition: stroke-dasharray 1.5s ease;
+}
+
+.score-value {
+    font-family: var(--astro-font-display);
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--astro-text-primary);
+    line-height: 1;
+}
+
+.score-max {
+    font-size: 20px;
+    color: var(--astro-text-muted);
+    font-weight: 400;
+}
+
+.score-label {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: var(--astro-space-xs) var(--astro-space-md);
+    border-radius: var(--astro-radius-full);
+    margin-top: var(--astro-space-sm);
+}
+
+.score-label.excellent {
+    background: rgba(0, 196, 140, 0.2);
+    color: var(--astro-success);
+}
+
+.score-label.good {
+    background: rgba(0, 217, 255, 0.2);
+    color: var(--astro-accent);
+}
+
+.score-label.fair {
+    background: rgba(255, 184, 0, 0.2);
+    color: var(--astro-warning);
+}
+
+.score-label.poor {
+    background: rgba(255, 71, 87, 0.2);
+    color: var(--astro-danger);
+}
+
+/* Grade Card */
+.grade-card .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--astro-space-xl);
+}
+
+.grade-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--astro-gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--astro-font-display);
+    font-size: 42px;
+    font-weight: 700;
+    color: white;
+    box-shadow: 0 0 40px rgba(102, 126, 234, 0.4);
+    margin-bottom: var(--astro-space-md);
+    animation: gradeGlow 3s ease-in-out infinite;
+}
+
+@keyframes gradeGlow {
+    0%, 100% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.4); }
+    50% { box-shadow: 0 0 60px rgba(102, 126, 234, 0.6); }
+}
+
+.grade-description {
+    font-size: 14px;
+    color: var(--astro-text-secondary);
+    text-align: center;
+}
+
+/* Risk Card */
+.risk-card .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--astro-space-xl);
+}
+
+.risk-indicator {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin-bottom: var(--astro-space-md);
+}
+
+.risk-indicator.low {
+    background: rgba(0, 196, 140, 0.2);
+    color: var(--astro-success);
+}
+
+.risk-indicator.medium {
+    background: rgba(255, 184, 0, 0.2);
+    color: var(--astro-warning);
+}
+
+.risk-indicator.high {
+    background: rgba(255, 71, 87, 0.2);
+    color: var(--astro-danger);
+}
+
+.risk-label {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.risk-label.low { color: var(--astro-success); }
+.risk-label.medium { color: var(--astro-warning); }
+.risk-label.high { color: var(--astro-danger); }
+
+.risk-probability {
+    font-family: var(--astro-font-display);
+    font-size: 32px;
+    font-weight: 700;
+    margin-top: var(--astro-space-sm);
+}
+
+.risk-probability.low { color: var(--astro-success); }
+.risk-probability.medium { color: var(--astro-warning); }
+.risk-probability.high { color: var(--astro-danger); }
+
+/* Info Rows */
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--astro-space-sm) 0;
+    border-bottom: 1px solid var(--astro-border-light);
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    color: var(--astro-text-muted);
+    font-size: 13px;
+}
+
+.info-value {
+    color: var(--astro-text-primary);
+    font-weight: 500;
+    font-size: 14px;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--astro-space-md);
+}
+
+.stat-item {
+    background: var(--astro-surface-light);
+    border-radius: var(--astro-radius-md);
+    padding: var(--astro-space-md);
+    text-align: center;
+}
+
+.stat-value {
+    font-family: var(--astro-font-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--astro-text-primary);
+    display: block;
+}
+
+.stat-value.warning { color: var(--astro-warning); }
+.stat-value.danger { color: var(--astro-danger); }
+.stat-value.success { color: var(--astro-success); }
+
+.stat-label {
+    font-size: 11px;
+    color: var(--astro-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: var(--astro-space-xs);
+    display: block;
+}
+
+/* Payment History Bar */
+.payment-history-bar {
+    height: 24px;
+    background: var(--astro-surface-light);
+    border-radius: var(--astro-radius-full);
+    display: flex;
+    overflow: hidden;
+}
+
+.payment-bar-segment {
+    height: 100%;
+    transition: width 1s ease;
+}
+
+.payment-bar-segment.ontime {
+    background: var(--astro-success);
+}
+
+.payment-bar-segment.delayed {
+    background: var(--astro-warning);
+}
+
+.payment-bar-segment.missed {
+    background: var(--astro-danger);
+}
+
+.payment-legend {
+    display: flex;
+    justify-content: center;
+    gap: var(--astro-space-xl);
+    margin-top: var(--astro-space-md);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-xs);
+    font-size: 12px;
+    color: var(--astro-text-secondary);
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.legend-dot.ontime { background: var(--astro-success); }
+.legend-dot.delayed { background: var(--astro-warning); }
+.legend-dot.missed { background: var(--astro-danger); }
+
+/* ML Section */
+.ml-section {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+.prediction-timeline {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--astro-space-md) 0;
+}
+
+.prediction-month {
+    text-align: center;
+    flex: 1;
+}
+
+.month-label {
+    font-size: 11px;
+    color: var(--astro-text-muted);
+    text-transform: uppercase;
+}
+
+.predicted-score {
+    font-family: var(--astro-font-display);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--astro-text-primary);
+    margin: var(--astro-space-xs) 0;
+}
+
+.score-change {
+    font-size: 12px;
+    color: var(--astro-success);
+    margin-left: 4px;
+}
+
+.confidence {
+    font-size: 10px;
+    color: var(--astro-text-muted);
+}
+
+.final-prediction {
+    text-align: center;
+    padding: var(--astro-space-lg);
+    background: var(--astro-gradient-primary);
+    border-radius: var(--astro-radius-md);
+    margin-top: var(--astro-space-md);
+}
+
+.final-score {
+    font-family: var(--astro-font-display);
+    font-size: 48px;
+    font-weight: 700;
+    color: white;
+}
+
+.final-label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* AI Recommendations */
+.ai-recommendations {
+    display: flex;
+    flex-direction: column;
+    gap: var(--astro-space-md);
+}
+
+.ai-tip {
+    display: flex;
+    gap: var(--astro-space-md);
+    background: var(--astro-surface-light);
+    padding: var(--astro-space-md);
+    border-radius: var(--astro-radius-md);
+}
+
+.ai-tip-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--astro-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ai-tip-icon.high {
+    background: rgba(0, 196, 140, 0.2);
+    color: var(--astro-success);
+}
+
+.ai-tip-icon.medium {
+    background: rgba(0, 217, 255, 0.2);
+    color: var(--astro-accent);
+}
+
+.ai-tip-icon.low {
+    background: rgba(255, 184, 0, 0.2);
+    color: var(--astro-warning);
+}
+
+.ai-tip-content h6 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--astro-text-primary);
+    margin: 0 0 4px;
+}
+
+.ai-tip-content p {
+    font-size: 12px;
+    color: var(--astro-text-muted);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.ai-tip-impact {
+    font-size: 11px;
+    color: var(--astro-success);
+    margin-top: 4px;
+}
+
+/* Bank Suggestions Grid */
+.bank-suggestions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: var(--astro-space-md);
+}
+
+.bank-card {
+    background: var(--astro-surface-light);
+    border: 1px solid var(--astro-border);
+    border-radius: var(--astro-radius-md);
+    padding: var(--astro-space-md);
+    text-align: center;
+    transition: var(--astro-transition-normal);
+    cursor: pointer;
+}
+
+.bank-card:hover {
+    border-color: var(--astro-accent);
+    transform: translateY(-2px);
+}
+
+.bank-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--astro-gradient-primary);
+    border-radius: var(--astro-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--astro-space-sm);
+    font-size: 20px;
+    color: white;
+}
+
+.bank-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--astro-text-primary);
+    margin-bottom: var(--astro-space-xs);
+}
+
+.bank-products {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: center;
+    margin-bottom: var(--astro-space-xs);
+}
+
+.product-tag {
+    font-size: 10px;
+    background: var(--astro-accent-soft);
+    color: var(--astro-accent);
+    padding: 2px 6px;
+    border-radius: var(--astro-radius-sm);
+}
+
+.bank-approval {
+    font-size: 11px;
+    color: var(--astro-success);
+    font-weight: 500;
+}
+
+/* Accounts Table */
+.accounts-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.accounts-table th,
+.accounts-table td {
+    padding: var(--astro-space-md);
+    text-align: left;
+    border-bottom: 1px solid var(--astro-border);
+}
+
+.accounts-table th {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--astro-text-muted);
+    background: var(--astro-surface-light);
+}
+
+.accounts-table td {
+    font-size: 13px;
+    color: var(--astro-text-primary);
+}
+
+.accounts-table tbody tr:hover {
+    background: var(--astro-surface-light);
+}
+
+.utilization-bar {
+    width: 80px;
+    height: 8px;
+    background: var(--astro-surface-light);
+    border-radius: var(--astro-radius-full);
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.utilization-fill {
+    height: 100%;
+    border-radius: var(--astro-radius-full);
+    transition: width 0.5s ease;
+}
+
+.utilization-fill.low { background: var(--astro-success); }
+.utilization-fill.medium { background: var(--astro-warning); }
+.utilization-fill.high { background: var(--astro-danger); }
+
+/* Improvement Timeline */
+.improvement-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--astro-space-sm);
+}
+
+.timeline-item {
+    display: flex;
+    gap: var(--astro-space-md);
+    padding: var(--astro-space-sm);
+    border-left: 2px solid var(--astro-accent);
+    padding-left: var(--astro-space-md);
+}
+
+.timeline-month {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--astro-accent);
+    text-transform: uppercase;
+    min-width: 60px;
+}
+
+.timeline-action {
+    font-size: 13px;
+    color: var(--astro-text-secondary);
+}
+
+/* Loan Calculator */
+.loan-calculator .loan-form-row {
+    display: flex;
+    gap: var(--astro-space-md);
+    flex-wrap: wrap;
+}
+
+.loan-form-group {
+    flex: 1;
+    min-width: 150px;
+}
+
+.loan-form-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--astro-text-muted);
+    text-transform: uppercase;
+    margin-bottom: var(--astro-space-xs);
+}
+
+.loan-form-group select,
+.loan-form-group input {
+    width: 100%;
+    padding: var(--astro-space-sm) var(--astro-space-md);
+    background: var(--astro-surface-light);
+    border: 1px solid var(--astro-border);
+    border-radius: var(--astro-radius-sm);
+    color: var(--astro-text-primary);
+    font-size: 14px;
+}
+
+.loan-form-group select:focus,
+.loan-form-group input:focus {
+    outline: none;
+    border-color: var(--astro-accent);
+}
+
+.btn-calculate {
+    padding: var(--astro-space-sm) var(--astro-space-lg);
+    background: var(--astro-gradient-accent);
+    border: none;
+    border-radius: var(--astro-radius-sm);
+    color: var(--astro-primary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--astro-transition-fast);
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-xs);
+}
+
+.btn-calculate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px var(--astro-accent-glow);
+}
+
+.loan-result {
+    display: flex;
+    gap: var(--astro-space-lg);
+    margin-top: var(--astro-space-lg);
+    padding-top: var(--astro-space-lg);
+    border-top: 1px solid var(--astro-border);
+}
+
+.result-item {
+    flex: 1;
+    text-align: center;
+}
+
+.result-value {
+    font-family: var(--astro-font-display);
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.result-value.approval {
+    color: var(--astro-success);
+}
+
+.result-label {
+    font-size: 11px;
+    color: var(--astro-text-muted);
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+
+/* Economic Grid */
+.economic-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--astro-space-md);
+}
+
+.economic-item {
+    text-align: center;
+    padding: var(--astro-space-md);
+    background: var(--astro-surface-light);
+    border-radius: var(--astro-radius-md);
+}
+
+.economic-value {
+    font-family: var(--astro-font-display);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--astro-text-primary);
+}
+
+.economic-label {
+    font-size: 11px;
+    color: var(--astro-text-muted);
+    text-transform: uppercase;
+    margin-top: var(--astro-space-xs);
+}
+
+/* No Data State */
+.no-data-state {
+    text-align: center;
+    padding: var(--astro-space-2xl);
+}
+
+.no-data-state .icon-wrapper {
+    width: 120px;
+    height: 120px;
+    background: var(--astro-gradient-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--astro-space-lg);
+    font-size: 48px;
+    color: white;
+    opacity: 0.8;
+}
+
+.no-data-state h3 {
+    font-family: var(--astro-font-display);
+    font-size: 24px;
+    color: var(--astro-text-primary);
+    margin: 0 0 var(--astro-space-sm);
+}
+
+.no-data-state p {
+    color: var(--astro-text-muted);
+    margin: 0 0 var(--astro-space-xl);
+}
+
+.sample-files-section {
+    background: var(--astro-surface-light);
+    padding: var(--astro-space-lg);
+    border-radius: var(--astro-radius-lg);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.sample-files-section h5 {
+    font-size: 14px;
+    color: var(--astro-text-secondary);
+    margin: 0 0 var(--astro-space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-sm);
+}
+
+.sample-files-section h5 i {
+    color: var(--astro-accent);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dashboard-header {
+        padding: var(--astro-space-lg) 0;
+    }
+    
+    .dashboard-title {
+        font-size: 20px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .prediction-timeline {
+        flex-wrap: wrap;
+    }
+    
+    .prediction-month {
+        min-width: 50%;
+        margin-bottom: var(--astro-space-md);
+    }
+    
+    .economic-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .loan-result {
+        flex-direction: column;
+        gap: var(--astro-space-md);
+    }
+    
+    .bank-suggestions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+

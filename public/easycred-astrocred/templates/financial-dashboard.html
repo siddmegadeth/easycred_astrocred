@@ -1,95 +1,228 @@
-<div class="container-fluid py-4 fade-in">
-    <!-- Header Section -->
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h1 class="display-5 fw-bold text-astrocred-primary">Your Financial Universe</h1>
-            <p class="lead text-muted">A unified view of your credit, liquidity, and assets.</p>
-        </div>
-        <div class="col-md-4 text-end">
-            <div class="astrocred-badge astrocred-badge-premium clickable" ng-if="user.isPremium">
-                <i class="fas fa-crown"></i> PREMIUM MEMBER
-            </div>
-            <div class="astrocred-badge astrocred-badge-info" ng-if="!user.isPremium">
-                <i class="fas fa-user"></i> FREE PLAN
-            </div>
-        </div>
+<!-- Financial Intelligence Dashboard -->
+<div class="financial-dashboard astro-login-page">
+    <!-- Background -->
+    <div class="astro-bg-pattern">
+        <div class="astro-orb astro-orb-1"></div>
+        <div class="astro-orb astro-orb-2"></div>
     </div>
 
-    <!-- Top Summary Row -->
-    <div class="row g-4 mb-4 text-center">
-        <!-- Credit Score -->
-        <div class="col-md-4">
-            <div class="astrocred-card h-100">
-                <div class="stat-label">Credit Score</div>
-                <div class="stat-value" ng-class="getScoreColor(financialData.creditScore)">
-                    {{financialData.creditScore || '---'}}
+    <div class="container py-4">
+        <!-- Header Section -->
+        <div class="dashboard-header-section mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="dashboard-main-title">
+                        <i class="fas fa-brain"></i> Financial Intelligence
+                    </h1>
+                    <p class="dashboard-subtitle">AI-powered insights for smarter financial decisions</p>
                 </div>
-                <div class="stat-change positive">
-                    Grade: {{financialData.creditGrade || 'N/A'}}
+                <div class="col-md-4 text-md-end">
+                    <div class="user-badge" ng-class="user.isPremium ? 'premium' : 'free'">
+                        <i ng-class="user.isPremium ? 'fas fa-crown' : 'fas fa-user'"></i>
+                        {{user.isPremium ? 'PREMIUM' : 'FREE PLAN'}}
+                    </div>
                 </div>
-                <div class="mt-3">
-                    <div class="astrocred-progress">
-                        <div class="astrocred-progress-bar"
-                            ng-style="{width: (financialData.creditScore/900)*100 + '%'}">
+            </div>
+        </div>
+
+        <!-- Financial Health Score -->
+        <div class="row g-4 mb-4">
+            <div class="col-lg-4">
+                <div class="health-score-card">
+                    <div class="health-ring">
+                        <svg viewBox="0 0 120 120">
+                            <defs>
+                                <linearGradient id="healthGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#00D9FF" />
+                                    <stop offset="100%" style="stop-color:#00C48C" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="health-ring-bg" cx="60" cy="60" r="50"/>
+                            <circle class="health-ring-fill" cx="60" cy="60" r="50" 
+                                    ng-style="{'stroke-dasharray': getHealthRingDash(financialData.healthScore)}"/>
+                        </svg>
+                        <div class="health-score-value">
+                            <span class="score-number">{{financialData.healthScore || 72}}</span>
+                            <span class="score-max">/100</span>
+                        </div>
+                    </div>
+                    <h3 class="health-label">Financial Health Score</h3>
+                    <p class="health-status" ng-class="getHealthClass(financialData.healthScore)">
+                        {{getHealthStatus(financialData.healthScore)}}
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="row g-3">
+                    <!-- Credit Score -->
+                    <div class="col-md-4">
+                        <div class="metric-card credit">
+                            <div class="metric-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="metric-value" ng-class="getScoreColor(financialData.creditScore)">
+                                {{financialData.creditScore || '---'}}
+                            </div>
+                            <div class="metric-label">Credit Score</div>
+                            <div class="metric-grade">Grade: {{financialData.creditGrade || 'N/A'}}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bank Balance -->
+                    <div class="col-md-4">
+                        <div class="metric-card balance">
+                            <div class="metric-icon">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="metric-value">
+                                ₹{{financialData.bankBalance | number:0}}
+                            </div>
+                            <div class="metric-label">Total Balance</div>
+                            <div class="metric-sub">{{financialData.linkedAccounts.length}} accounts linked</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Debt-to-Income -->
+                    <div class="col-md-4">
+                        <div class="metric-card dti">
+                            <div class="metric-icon">
+                                <i class="fas fa-balance-scale"></i>
+                            </div>
+                            <div class="metric-value" ng-class="getDTIClass(financialData.dti)">
+                                {{financialData.dti || 28}}%
+                            </div>
+                            <div class="metric-label">Debt-to-Income</div>
+                            <div class="metric-sub">{{getDTIStatus(financialData.dti)}}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Savings Rate -->
+                    <div class="col-md-4">
+                        <div class="metric-card savings">
+                            <div class="metric-icon">
+                                <i class="fas fa-piggy-bank"></i>
+                            </div>
+                            <div class="metric-value success">{{financialData.savingsRate || 22}}%</div>
+                            <div class="metric-label">Savings Rate</div>
+                            <div class="metric-sub">Monthly average</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Monthly Income -->
+                    <div class="col-md-4">
+                        <div class="metric-card income">
+                            <div class="metric-icon">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                            <div class="metric-value">₹{{financialData.monthlyIncome | number:0}}</div>
+                            <div class="metric-label">Monthly Income</div>
+                            <div class="metric-sub">Avg. last 3 months</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Monthly Expenses -->
+                    <div class="col-md-4">
+                        <div class="metric-card expense">
+                            <div class="metric-icon">
+                                <i class="fas fa-arrow-up"></i>
+                            </div>
+                            <div class="metric-value warning">₹{{financialData.monthlyExpense | number:0}}</div>
+                            <div class="metric-label">Monthly Expenses</div>
+                            <div class="metric-sub">Avg. last 3 months</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bank Balance -->
-        <div class="col-md-4">
-            <div class="astrocred-card h-100">
-                <div class="stat-label">Total Bank Balance</div>
-                <div class="stat-value text-primary">
-                    ₹{{financialData.bankBalance | number:2}}
-                </div>
-                <div class="stat-change text-muted" ng-if="financialData.linkedAccounts.length > 0">
-                    Linked across {{financialData.linkedAccounts.length}} accounts
-                </div>
-                <div class="stat-change text-danger" ng-if="financialData.linkedAccounts.length == 0">
-                    No accounts linked
-                </div>
-                <button class="btn-astrocred btn-sm mt-3" ng-click="linkBank()">
-                    <i class="fas fa-link"></i> Link Bank
-                </button>
-            </div>
-        </div>
-
-        <!-- Verified Assets -->
-        <div class="col-md-4">
-            <div class="astrocred-card h-100">
-                <div class="stat-label">Verified Assets</div>
-                <div class="stat-value text-success">
-                    {{financialData.verifiedAssets.length}}
-                </div>
-                <div class="stat-change">
-                    <span ng-repeat="asset in financialData.verifiedAssets"
-                        class="badge bg-secondary me-1">{{asset}}</span>
-                </div>
-                <button class="btn-astrocred btn-astrocred-secondary btn-sm mt-3" ng-click="verifyAsset()">
-                    <i class="fas fa-shield-alt"></i> Verify More
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- AI Insights & Recommendations -->
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <div class="ai-assistant-card">
-                <div class="ai-assistant-content">
-                    <h4 class="fw-bold mb-3"><i class="fas fa-robot text-primary"></i> Astro Intelligence (AI)</h4>
-                    <div class="ai-message" ng-repeat="rec in financialData.recommendations | limitTo: 2">
-                        <strong>{{rec.area}}:</strong> {{rec.message}}
+        <!-- AI Decision Making Tools -->
+        <div class="row g-4 mb-4">
+            <!-- Should I Take This Loan? -->
+            <div class="col-lg-6">
+                <div class="decision-card">
+                    <div class="decision-header">
+                        <div class="decision-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <h3>Should I Take This Loan?</h3>
                     </div>
-                    <div class="ai-message text-muted" ng-if="financialData.recommendations.length == 0">
-                        Analyzing your financial universe... Link more data for deeper insights.
+                    <div class="loan-calculator">
+                        <div class="calc-row">
+                            <label>Loan Amount</label>
+                            <input type="number" ng-model="loanCalc.amount" placeholder="₹ 500000" class="calc-input">
+                        </div>
+                        <div class="calc-row">
+                            <label>Interest Rate (%)</label>
+                            <input type="number" ng-model="loanCalc.rate" placeholder="12" class="calc-input">
+                        </div>
+                        <div class="calc-row">
+                            <label>Tenure (months)</label>
+                            <input type="number" ng-model="loanCalc.tenure" placeholder="36" class="calc-input">
+                        </div>
+                        <button class="decision-btn" ng-click="analyzeLoan()">
+                            <i class="fas fa-brain"></i> Analyze Impact
+                        </button>
+                    </div>
+                    <div class="loan-result" ng-if="loanAnalysis">
+                        <div class="result-item">
+                            <span class="result-label">Monthly EMI</span>
+                            <span class="result-value">₹{{loanAnalysis.emi | number:0}}</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">New DTI Ratio</span>
+                            <span class="result-value" ng-class="getDTIClass(loanAnalysis.newDTI)">{{loanAnalysis.newDTI}}%</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Recommendation</span>
+                            <span class="result-value" ng-class="loanAnalysis.recommend ? 'success' : 'danger'">
+                                {{loanAnalysis.recommend ? 'Manageable' : 'Too Risky'}}
+                            </span>
+                        </div>
+                        <div class="ai-verdict" ng-class="loanAnalysis.recommend ? 'positive' : 'negative'">
+                            <i ng-class="loanAnalysis.recommend ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle'"></i>
+                            {{loanAnalysis.verdict}}
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- AI Recommendations -->
+            <div class="col-lg-6">
+                <div class="decision-card ai-recommendations-card">
+                    <div class="decision-header">
+                        <div class="decision-icon ai">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>AI Financial Advisor</h3>
+                    </div>
+                    <div class="ai-advice-list">
+                        <div class="ai-advice-item" ng-repeat="rec in financialData.recommendations | limitTo:4" ng-class="rec.priority">
+                            <div class="advice-icon">
+                                <i ng-class="getRecommendationIcon(rec.area)"></i>
+                            </div>
+                            <div class="advice-content">
+                                <h4>{{rec.area}}</h4>
+                                <p>{{rec.message}}</p>
+                                <span class="advice-impact">Impact: {{rec.impact}}</span>
+                            </div>
+                        </div>
+                        <div class="ai-advice-item info" ng-if="!financialData.recommendations || financialData.recommendations.length === 0">
+                            <div class="advice-icon">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="advice-content">
+                                <h4>Link More Data</h4>
+                                <p>Connect your bank accounts to get personalized AI recommendations.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="ai-chat-btn" ng-click="openAIChat()">
+                        <i class="fas fa-comments"></i> Ask AI Advisor
+                    </button>
+                </div>
+            </div>
         </div>
-    </div>
 
     <!-- Detailed Sections -->
     <div class="row g-4">
@@ -132,49 +265,671 @@
             </div>
         </div>
 
-        <!-- Asset Progress -->
-        <div class="col-md-4">
-            <div class="astrocred-card h-100">
-                <h5 class="astrocred-card-title mb-4"><i class="fas fa-tasks"></i> Asset Verification</h5>
-                <div class="mb-4">
-                    <div class="d-flex justify-content-between mb-1">
-                        <span>Driving License</span>
-                        <span class="badge bg-success"
-                            ng-if="financialData.verifiedAssets.includes('DL')">Verified</span>
-                        <a href="" ng-if="!financialData.verifiedAssets.includes('DL')" ng-click="openSetu('DL')">Verify
-                            Now</a>
-                    </div>
-                    <div class="astrocred-progress">
-                        <div class="astrocred-progress-bar"
-                            ng-style="{width: financialData.verifiedAssets.includes('DL') ? '100%' : '0%'}"></div>
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <div class="d-flex justify-content-between mb-1">
-                        <span>Vehicle RC</span>
-                        <span class="badge bg-success"
-                            ng-if="financialData.verifiedAssets.includes('RC')">Verified</span>
-                        <a href="" ng-if="!financialData.verifiedAssets.includes('RC')" ng-click="openSetu('RC')">Verify
-                            Now</a>
-                    </div>
-                    <div class="astrocred-progress">
-                        <div class="astrocred-progress-bar"
-                            ng-style="{width: financialData.verifiedAssets.includes('RC') ? '100%' : '0%'}"></div>
+        <!-- Quick Actions & Goals -->
+        <div class="row g-4 mb-4">
+            <!-- Quick Actions -->
+            <div class="col-lg-4">
+                <div class="quick-actions-card">
+                    <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                    <div class="action-grid">
+                        <a href="#!/finvu-connect" class="action-item">
+                            <i class="fas fa-link"></i>
+                            <span>Link Bank</span>
+                        </a>
+                        <a href="#!/utility-hub" class="action-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Verify Docs</span>
+                        </a>
+                        <a href="#!/home" class="action-item">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>Credit Report</span>
+                        </a>
+                        <a href="#!/pricing" class="action-item">
+                            <i class="fas fa-crown"></i>
+                            <span>Upgrade</span>
+                        </a>
                     </div>
                 </div>
-                <div class="mb-4">
-                    <div class="d-flex justify-content-between mb-1">
-                        <span>Insurance Policy</span>
-                        <span class="badge bg-success"
-                            ng-if="financialData.verifiedAssets.includes('INS')">Verified</span>
-                        <a href="" ng-if="!financialData.verifiedAssets.includes('INS')" class="text-muted">Coming
-                            Soon</a>
+            </div>
+
+            <!-- Financial Goals -->
+            <div class="col-lg-8">
+                <div class="goals-card">
+                    <div class="goals-header">
+                        <h3><i class="fas fa-bullseye"></i> Financial Goals</h3>
+                        <button class="add-goal-btn" ng-click="addGoal()">
+                            <i class="fas fa-plus"></i> Add Goal
+                        </button>
                     </div>
-                    <div class="astrocred-progress">
-                        <div class="astrocred-progress-bar" style="width: 0%"></div>
+                    <div class="goals-list">
+                        <div class="goal-item" ng-repeat="goal in financialData.goals">
+                            <div class="goal-icon" ng-class="goal.type">
+                                <i ng-class="getGoalIcon(goal.type)"></i>
+                            </div>
+                            <div class="goal-details">
+                                <h4>{{goal.name}}</h4>
+                                <div class="goal-progress-bar">
+                                    <div class="goal-progress-fill" ng-style="{width: goal.progress + '%'}"></div>
+                                </div>
+                                <div class="goal-stats">
+                                    <span>₹{{goal.current | number:0}} / ₹{{goal.target | number:0}}</span>
+                                    <span class="goal-eta">{{goal.eta}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="goal-item default" ng-if="!financialData.goals || financialData.goals.length === 0">
+                            <div class="goal-icon">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <div class="goal-details">
+                                <h4>Set Your First Goal</h4>
+                                <p>Create financial goals to track your progress</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Linked Accounts Table -->
+        <div class="row g-4">
+            <div class="col-12">
+                <div class="accounts-card">
+                    <div class="accounts-header">
+                        <h3><i class="fas fa-university"></i> Linked Bank Accounts</h3>
+                        <button class="refresh-btn" ng-click="refreshAccounts()" ng-disabled="isRefreshing">
+                            <i class="fas fa-sync" ng-class="{'fa-spin': isRefreshing}"></i>
+                            Refresh
+                        </button>
+                    </div>
+                    <div class="accounts-table-wrapper" ng-if="financialData.linkedAccounts.length > 0">
+                        <table class="accounts-table">
+                            <thead>
+                                <tr>
+                                    <th>Bank</th>
+                                    <th>Account</th>
+                                    <th>Type</th>
+                                    <th>Balance</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="acc in financialData.linkedAccounts">
+                                    <td>
+                                        <div class="bank-cell">
+                                            <div class="bank-icon"><i class="fas fa-university"></i></div>
+                                            <strong>{{acc.bankName}}</strong>
+                                        </div>
+                                    </td>
+                                    <td class="mono">{{acc.accountNumber}}</td>
+                                    <td><span class="type-badge">{{acc.accountType}}</span></td>
+                                    <td class="balance-cell">₹{{acc.currentBalance | number:0}}</td>
+                                    <td><span class="status-badge active"><i class="fas fa-check"></i> Active</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="no-accounts" ng-if="financialData.linkedAccounts.length === 0">
+                        <div class="no-accounts-icon">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <h4>No Bank Accounts Linked</h4>
+                        <p>Connect your bank accounts via FinVu to see balances and transactions</p>
+                        <a href="#!/finvu-connect" class="link-btn">
+                            <i class="fas fa-plus"></i> Link Bank Account
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+/* Financial Dashboard Premium Styles */
+.financial-dashboard {
+    min-height: 100vh;
+    padding-bottom: var(--astro-space-2xl);
+}
+
+.dashboard-header-section {
+    margin-bottom: var(--astro-space-xl);
+}
+
+.dashboard-main-title {
+    font-family: var(--astro-font-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--astro-text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-sm);
+    margin: 0;
+}
+
+.dashboard-main-title i {
+    color: var(--astro-accent);
+}
+
+.dashboard-subtitle {
+    color: var(--astro-text-muted);
+    margin: var(--astro-space-xs) 0 0;
+}
+
+.user-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astro-space-xs);
+    padding: var(--astro-space-xs) var(--astro-space-md);
+    border-radius: var(--astro-radius-full);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.user-badge.premium {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #1A1A2E;
+}
+
+.user-badge.free {
+    background: var(--astro-surface-light);
+    color: var(--astro-text-secondary);
+    border: 1px solid var(--astro-border);
+}
+
+/* Health Score Card */
+.health-score-card {
+    background: var(--astro-gradient-card);
+    border: 1px solid var(--astro-border);
+    border-radius: var(--astro-radius-xl);
+    padding: var(--astro-space-xl);
+    text-align: center;
+    height: 100%;
+}
+
+.health-ring {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin: 0 auto var(--astro-space-md);
+}
+
+.health-ring svg {
+    transform: rotate(-90deg);
+}
+
+.health-ring-bg {
+    fill: none;
+    stroke: var(--astro-surface-light);
+    stroke-width: 10;
+}
+
+.health-ring-fill {
+    fill: none;
+    stroke: url(#healthGradient);
+    stroke-width: 10;
+    stroke-linecap: round;
+    transition: stroke-dasharray 1s ease;
+}
+
+.health-score-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.health-score-value .score-number {
+    font-family: var(--astro-font-display);
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--astro-text-primary);
+}
+
+.health-score-value .score-max {
+    font-size: 16px;
+    color: var(--astro-text-muted);
+}
+
+.health-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--astro-text-primary);
+    margin: 0 0 var(--astro-space-xs);
+}
+
+.health-status {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.health-status.excellent { color: var(--astro-success); }
+.health-status.good { color: var(--astro-accent); }
+.health-status.fair { color: var(--astro-warning); }
+.health-status.poor { color: var(--astro-danger); }
+
+/* Metric Cards */
+.metric-card {
+    background: var(--astro-gradient-card);
+    border: 1px solid var(--astro-border);
+    border-radius: var(--astro-radius-lg);
+    padding: var(--astro-space-lg);
+    text-align: center;
+    height: 100%;
+}
+
+.metric-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--astro-accent-soft);
+    border-radius: var(--astro-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--astro-space-sm);
+    color: var(--astro-accent);
+}
+
+.metric-card.income .metric-icon { background: rgba(0,196,140,0.2); color: var(--astro-success); }
+.metric-card.expense .metric-icon { background: rgba(255,184,0,0.2); color: var(--astro-warning); }
+.metric-card.savings .metric-icon { background: rgba(102,126,234,0.2); color: var(--astro-info); }
+
+.metric-value {
+    font-family: var(--astro-font-display);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--astro-text-primary);
+}
+
+.metric-value.success { color: var(--astro-success); }
+.metric-value.warning { color: var(--astro-warning); }
+.metric-value.danger { color: var(--astro-danger); }
+
+.metric-label {
+    font-size: 12px;
+    color: var(--astro-text-muted);
+    margin-top: var(--astro-space-xs);
+}
+
+.metric-sub, .metric-grade {
+    font-size: 11px;
+    color: var(--astro-text-muted);
+}
+
+/* Decision Cards */
+.decision-card {
+    background: var(--astro-gradient-card);
+    border: 1px solid var(--astro-border);
+    border-radius: var(--astro-radius-xl);
+    padding: var(--astro-space-xl);
+    height: 100%;
+}
+
+.decision-header {
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-md);
+    margin-bottom: var(--astro-space-lg);
+}
+
+.decision-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--astro-gradient-primary);
+    border-radius: var(--astro-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+}
+
+.decision-icon.ai {
+    background: var(--astro-gradient-accent);
+    color: var(--astro-primary);
+}
+
+.decision-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--astro-text-primary);
+    margin: 0;
+}
+
+/* Loan Calculator */
+.calc-row {
+    margin-bottom: var(--astro-space-md);
+}
+
+.calc-row label {
+    display: block;
+    font-size: 12px;
+    color: var(--astro-text-muted);
+    margin-bottom: var(--astro-space-xs);
+}
+
+.calc-input {
+    width: 100%;
+    padding: var(--astro-space-sm) var(--astro-space-md);
+    background: var(--astro-surface-light);
+    border: 1px solid var(--astro-border);
+    border-radius: var(--astro-radius-sm);
+    color: var(--astro-text-primary);
+    font-size: 14px;
+}
+
+.calc-input:focus {
+    outline: none;
+    border-color: var(--astro-accent);
+}
+
+.decision-btn {
+    width: 100%;
+    padding: var(--astro-space-sm) var(--astro-space-md);
+    background: var(--astro-gradient-accent);
+    border: none;
+    border-radius: var(--astro-radius-md);
+    color: var(--astro-primary);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--astro-space-xs);
+}
+
+.loan-result {
+    margin-top: var(--astro-space-lg);
+    padding-top: var(--astro-space-lg);
+    border-top: 1px solid var(--astro-border);
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--astro-space-xs) 0;
+}
+
+.result-label { color: var(--astro-text-muted); font-size: 13px; }
+.result-value { font-weight: 600; color: var(--astro-text-primary); }
+.result-value.success { color: var(--astro-success); }
+.result-value.danger { color: var(--astro-danger); }
+
+.ai-verdict {
+    margin-top: var(--astro-space-md);
+    padding: var(--astro-space-md);
+    border-radius: var(--astro-radius-md);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-sm);
+}
+
+.ai-verdict.positive { background: rgba(0,196,140,0.2); color: var(--astro-success); }
+.ai-verdict.negative { background: rgba(255,71,87,0.2); color: var(--astro-danger); }
+
+/* AI Advice */
+.ai-advice-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--astro-space-sm);
+    margin-bottom: var(--astro-space-lg);
+}
+
+.ai-advice-item {
+    display: flex;
+    gap: var(--astro-space-md);
+    padding: var(--astro-space-md);
+    background: var(--astro-surface-light);
+    border-radius: var(--astro-radius-md);
+}
+
+.ai-advice-item.high .advice-icon { background: rgba(0,196,140,0.2); color: var(--astro-success); }
+.ai-advice-item.medium .advice-icon { background: rgba(0,217,255,0.2); color: var(--astro-accent); }
+.ai-advice-item.low .advice-icon { background: rgba(255,184,0,0.2); color: var(--astro-warning); }
+
+.advice-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--astro-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.advice-content h4 { font-size: 13px; font-weight: 600; color: var(--astro-text-primary); margin: 0 0 4px; }
+.advice-content p { font-size: 12px; color: var(--astro-text-muted); margin: 0; }
+.advice-impact { font-size: 10px; color: var(--astro-accent); }
+
+.ai-chat-btn {
+    width: 100%;
+    padding: var(--astro-space-sm);
+    background: var(--astro-gradient-primary);
+    border: none;
+    border-radius: var(--astro-radius-md);
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Quick Actions */
+.quick-actions-card, .goals-card, .accounts-card {
+    background: var(--astro-gradient-card);
+    border: 1px solid var(--astro-border);
+    border-radius: var(--astro-radius-xl);
+    padding: var(--astro-space-lg);
+    height: 100%;
+}
+
+.quick-actions-card h3, .goals-card h3, .accounts-card h3 {
+    font-size: 16px;
+    color: var(--astro-text-primary);
+    margin: 0 0 var(--astro-space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-sm);
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--astro-space-sm);
+}
+
+.action-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--astro-space-md);
+    background: var(--astro-surface-light);
+    border-radius: var(--astro-radius-md);
+    text-decoration: none;
+    color: var(--astro-text-secondary);
+    transition: var(--astro-transition-fast);
+}
+
+.action-item:hover {
+    background: var(--astro-accent-soft);
+    color: var(--astro-accent);
+}
+
+.action-item i { font-size: 20px; margin-bottom: var(--astro-space-xs); }
+.action-item span { font-size: 11px; }
+
+/* Goals */
+.goals-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--astro-space-md);
+}
+
+.add-goal-btn {
+    padding: var(--astro-space-xs) var(--astro-space-md);
+    background: var(--astro-accent-soft);
+    border: none;
+    border-radius: var(--astro-radius-sm);
+    color: var(--astro-accent);
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.goal-item {
+    display: flex;
+    gap: var(--astro-space-md);
+    padding: var(--astro-space-md);
+    background: var(--astro-surface-light);
+    border-radius: var(--astro-radius-md);
+    margin-bottom: var(--astro-space-sm);
+}
+
+.goal-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--astro-gradient-primary);
+    border-radius: var(--astro-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.goal-details { flex: 1; }
+.goal-details h4 { font-size: 14px; color: var(--astro-text-primary); margin: 0 0 var(--astro-space-xs); }
+.goal-details p { font-size: 12px; color: var(--astro-text-muted); margin: 0; }
+
+.goal-progress-bar {
+    height: 6px;
+    background: var(--astro-surface-light);
+    border-radius: var(--astro-radius-full);
+    margin: var(--astro-space-xs) 0;
+}
+
+.goal-progress-fill {
+    height: 100%;
+    background: var(--astro-gradient-accent);
+    border-radius: var(--astro-radius-full);
+}
+
+.goal-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--astro-text-muted);
+}
+
+/* Accounts Table */
+.accounts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--astro-space-lg);
+}
+
+.accounts-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.accounts-table th, .accounts-table td {
+    padding: var(--astro-space-md);
+    text-align: left;
+    border-bottom: 1px solid var(--astro-border);
+}
+
+.accounts-table th {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--astro-text-muted);
+}
+
+.bank-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--astro-space-sm);
+}
+
+.bank-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--astro-gradient-primary);
+    border-radius: var(--astro-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+}
+
+.mono { font-family: var(--astro-font-mono); }
+
+.type-badge {
+    font-size: 10px;
+    background: var(--astro-accent-soft);
+    color: var(--astro-accent);
+    padding: 2px 8px;
+    border-radius: var(--astro-radius-full);
+}
+
+.balance-cell {
+    font-family: var(--astro-font-display);
+    font-weight: 600;
+    color: var(--astro-success);
+}
+
+.status-badge {
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: var(--astro-radius-full);
+}
+
+.status-badge.active {
+    background: rgba(0,196,140,0.2);
+    color: var(--astro-success);
+}
+
+.no-accounts {
+    text-align: center;
+    padding: var(--astro-space-2xl);
+}
+
+.no-accounts-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--astro-surface-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--astro-space-md);
+    font-size: 32px;
+    color: var(--astro-text-muted);
+}
+
+.no-accounts h4 { color: var(--astro-text-primary); margin: 0 0 var(--astro-space-xs); }
+.no-accounts p { color: var(--astro-text-muted); margin: 0 0 var(--astro-space-lg); font-size: 14px; }
+
+.link-btn {
+    padding: var(--astro-space-sm) var(--astro-space-lg);
+    background: var(--astro-gradient-accent);
+    border: none;
+    border-radius: var(--astro-radius-md);
+    color: var(--astro-primary);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astro-space-xs);
+}
+
+.refresh-btn {
+    padding: var(--astro-space-xs) var(--astro-space-md);
+    background: var(--astro-surface-light);
+    border: 1px solid var(--astro-border);
+    border-radius: var(--astro-radius-sm);
+    color: var(--astro-text-secondary);
+    font-size: 12px;
+    cursor: pointer;
+}
+</style>

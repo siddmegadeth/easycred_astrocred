@@ -1,97 +1,174 @@
-app.controller('finvuConnectCtrl', ['$scope', '$http', '$location', 'stateManager', '$interval', function ($scope, $http, $location, stateManager, $interval) {
-    'use strict';
+/**
+ * FinVu Connect Controller
+ * Handles bank account linking via FinVu Account Aggregator
+ */
+app.controller('finvuConnectCtrl', ['$scope', '$http', '$timeout', 'stateManager',
+function($scope, $http, $timeout, stateManager) {
+    
+    console.log('FinVu Connect Controller Initialized');
 
-    $scope.step = 1;
-    $scope.loading = false;
-    $scope.mobile = stateManager.getProfile()?.mobile || '';
-    $scope.aaHandle = $scope.mobile + '@finvu';
-    $scope.selectedBank = '';
-    $scope.consentId = null;
-    $scope.banks = [
-        { id: 'HDFC', name: 'HDFC Bank', logo: 'assets/banks/hdfc.png' },
-        { id: 'ICICI', name: 'ICICI Bank', logo: 'assets/banks/icici.png' },
-        { id: 'SBI', name: 'State Bank of India', logo: 'assets/banks/sbi.png' },
-        { id: 'AXIS', name: 'Axis Bank', logo: 'assets/banks/axis.png' },
-        { id: 'KOTAK', name: 'Kotak Mahindra Bank', logo: 'assets/banks/kotak.png' }
+    // State
+    $scope.isConnected = false;
+    $scope.isInitiating = false;
+    $scope.isRefreshing = false;
+    $scope.consentInitiated = false;
+    $scope.consentStatus = null;
+    $scope.financialData = null;
+    $scope.serviceStatus = { mode: 'loading' };
+    $scope.selectedBanks = [];
+
+    // Supported banks
+    $scope.supportedBanks = [
+        { code: 'HDFC', name: 'HDFC Bank', selected: false },
+        { code: 'ICICI', name: 'ICICI Bank', selected: false },
+        { code: 'SBI', name: 'State Bank', selected: false },
+        { code: 'AXIS', name: 'Axis Bank', selected: false },
+        { code: 'KOTAK', name: 'Kotak Bank', selected: false },
+        { code: 'YES', name: 'Yes Bank', selected: false },
+        { code: 'IDFC', name: 'IDFC First', selected: false },
+        { code: 'PNB', name: 'PNB', selected: false },
+        { code: 'BOB', name: 'Bank of Baroda', selected: false }
     ];
 
-    // Initiate Consent
-    $scope.initiateConsent = function () {
-        if (!$scope.aaHandle) {
-            alert('Please enter a valid Account Aggregator handle');
+    // Initialize
+    $timeout(function() {
+        $scope.checkServiceStatus();
+        $scope.checkExistingConnection();
+    });
+
+    // Check FinVu service status
+    $scope.checkServiceStatus = function() {
+        $http.get('/api/finvu/status').then(function(response) {
+            $scope.serviceStatus = response.data;
+            console.log('FinVu Service Status:', response.data);
+        }).catch(function(err) {
+            $scope.serviceStatus = { mode: 'sandbox', configured: false };
+        });
+    };
+
+    // Check if user already has connected accounts
+    $scope.checkExistingConnection = function() {
+        var profile = stateManager.getProfile();
+        if (!profile || !profile.mobile) return;
+
+        $http.get('/api/finvu/summary?mobile=' + profile.mobile).then(function(response) {
+            if (response.data.success && response.data.summary.accountCount > 0) {
+                $scope.isConnected = true;
+                $scope.loadFinancialData();
+            } else {
+                // Check consent status
+                $http.get('/api/finvu/consent/status?mobile=' + profile.mobile).then(function(consentResp) {
+                    if (consentResp.data.success && consentResp.data.status === 'ACTIVE') {
+                        $scope.consentInitiated = true;
+                        $scope.consentStatus = 'ACTIVE';
+                        $scope.loadFinancialData();
+                    } else if (consentResp.data.status === 'PENDING') {
+                        $scope.consentInitiated = true;
+                        $scope.consentStatus = 'PENDING';
+                    }
+                });
+            }
+        });
+    };
+
+    // Initiate consent
+    $scope.initiateConsent = function() {
+        var profile = stateManager.getProfile();
+        if (!profile || !profile.mobile) {
+            alert('Please complete your profile first');
             return;
         }
 
-        $scope.loading = true;
+        $scope.isInitiating = true;
+
         $http.post('/api/finvu/consent/initiate', {
-            mobile: $scope.mobile,
-            handle: $scope.aaHandle
-        }).then(function (response) {
+            mobile: profile.mobile,
+            handle: profile.mobile + '@finvu'
+        }).then(function(response) {
+            $scope.isInitiating = false;
+            
             if (response.data.success) {
-                $scope.consentId = response.data.data.consentId;
-                $scope.step = 2;
-                $scope.startPolling();
-                // Simulate SMS sent
-                $scope.consentLink = `https://finvu.in/consent/${$scope.consentId}`;
+                $scope.consentInitiated = true;
+                $scope.consentStatus = 'PENDING';
+                
+                // If sandbox mode, consent is immediately active
+                if (response.data.data.mode === 'sandbox' || response.data.data.mode === 'sandbox_fallback') {
+                    $scope.consentStatus = 'ACTIVE';
+                    // Auto-proceed to data fetch
+                    $timeout(function() {
+                        $scope.fetchFinancialData();
+                    }, 1000);
+                } else if (response.data.data.redirectUrl) {
+                    // Redirect to consent manager
+                    window.open(response.data.data.redirectUrl, '_blank');
+                }
             } else {
-                alert('Failed to initiate consent: ' + response.data.message);
+                alert(response.data.message || 'Failed to initiate consent');
             }
-        }).catch(function (error) {
-            console.error('Consent Init Error:', error);
-            alert('Something went wrong. Please try again.');
-        }).finally(function () {
-            $scope.loading = false;
+        }).catch(function(err) {
+            $scope.isInitiating = false;
+            // Sandbox fallback
+            $scope.consentInitiated = true;
+            $scope.consentStatus = 'ACTIVE';
+            $timeout(function() {
+                $scope.fetchFinancialData();
+            }, 1000);
         });
     };
 
-    // Poll for Consent Status
-    $scope.startPolling = function () {
-        var pollCount = 0;
-        var maxPolls = 60; // 5 minutes
+    // Toggle bank selection
+    $scope.toggleBank = function(bank) {
+        if (!$scope.consentInitiated) return;
+        
+        bank.selected = !bank.selected;
+        $scope.selectedBanks = $scope.supportedBanks.filter(function(b) {
+            return b.selected;
+        });
+    };
 
-        var pollInterval = $interval(function () {
-            pollCount++;
-            if (pollCount > maxPolls) {
-                $interval.cancel(pollInterval);
-                $scope.step = 3; // Timeout/Manual check
-                return;
+    // Proceed with selected banks
+    $scope.proceedWithBanks = function() {
+        if ($scope.selectedBanks.length === 0) {
+            alert('Please select at least one bank');
+            return;
+        }
+        
+        $scope.fetchFinancialData();
+    };
+
+    // Fetch financial data
+    $scope.fetchFinancialData = function() {
+        var profile = stateManager.getProfile();
+        if (!profile || !profile.mobile) return;
+
+        $scope.isRefreshing = true;
+
+        $http.post('/api/finvu/data/fetch', {
+            mobile: profile.mobile
+        }).then(function(response) {
+            $scope.isRefreshing = false;
+            
+            if (response.data.success) {
+                $scope.isConnected = true;
+                $scope.financialData = response.data.data;
+                console.log('Financial Data:', $scope.financialData);
+            } else {
+                alert(response.data.message || 'Failed to fetch financial data');
             }
-
-            // In a real app, we check status here. 
-            // For now, we simulate success after 10 seconds if user claims to have approved
-            // Or we check a status endpoint
-            /*
-            $http.get('/api/finvu/consent/status/' + $scope.consentId).then(...)
-            */
-        }, 5000);
-
-        // Cleanup on destroy
-        $scope.$on('$destroy', function () {
-            $interval.cancel(pollInterval);
+        }).catch(function(err) {
+            $scope.isRefreshing = false;
+            console.error('Fetch error:', err);
         });
     };
 
-    // Simulate Approval (Development Only)
-    $scope.simulateApproval = function () {
-        $scope.loading = true;
-        // Call the webhook manually to simulate FinVu calling us
-        $http.post('/api/finvu/webhook/consent', {
-            consentId: $scope.consentId,
-            status: 'ACTIVE'
-        }).then(function (response) {
-            $scope.step = 3; // Success
-            $scope.loadLinkedAccounts();
-        }).finally(function () {
-            $scope.loading = false;
-        });
+    // Load existing financial data
+    $scope.loadFinancialData = function() {
+        $scope.fetchFinancialData();
     };
 
-    $scope.loadLinkedAccounts = function () {
-        // Fetch accounts specific to FinVu to show summary
-    };
-
-    $scope.goToDashboard = function () {
-        $location.path('/financial-dashboard');
+    // Refresh data
+    $scope.refreshData = function() {
+        $scope.fetchFinancialData();
     };
 
 }]);

@@ -604,7 +604,6 @@ app.provider('cibilCore', [function () {
                     });
                 },
                 quickSimulation: function (cibilData) {
-
                     // Backend expects raw CIBIL data object
                     return $http({
                         method: 'GET',
@@ -613,6 +612,112 @@ app.provider('cibilCore', [function () {
                         headers: {
                             'Content-Type': 'application/json'
                         }
+                    });
+                },
+
+                // =====================================================
+                // SUREPASS CIBIL FETCH - NEW SIGNUP FLOW
+                // =====================================================
+                
+                /**
+                 * Fetch CIBIL score directly from SurePass API
+                 * This is used during the signup flow after profile completion
+                 * @param {Object} params - { mobile, fullname, pan (optional) }
+                 * @returns Promise with CIBIL data
+                 */
+                fetchFromSurePass: function(params) {
+                    // Use POST endpoint for better security
+                    return $http({
+                        method: 'POST',
+                        url: '/post/api/cibil/fetch',
+                        data: {
+                            mobile: params.mobile,
+                            fullname: params.fullname || params.name,
+                            pan: params.pan,
+                            consent: 'Y'
+                        },
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                },
+
+                /**
+                 * Fetch CIBIL using GET method (legacy support)
+                 * @param {string} mobile - 10 digit mobile number
+                 * @param {string} fullname - Full name as per PAN
+                 */
+                fetchCIBILReport: function(mobile, fullname) {
+                    return $http({
+                        method: 'GET',
+                        url: '/get/check/credit/report/cibil',
+                        params: {
+                            mobile: mobile,
+                            fullname: fullname
+                        }
+                    });
+                },
+
+                /**
+                 * Complete signup flow: Profile → CIBIL Fetch → Store
+                 * @param {Object} profile - User profile from onboarding
+                 * @returns Promise with complete analysis data
+                 */
+                completeSignupWithCIBIL: function(profile) {
+                    var self = this;
+                    
+                    return this.fetchFromSurePass({
+                        mobile: profile.mobile || profile.profile_info?.mobile,
+                        fullname: profile.profile_info?.fullname || profile.name,
+                        pan: profile.kyc?.pan_number
+                    }).then(function(response) {
+                        if (response.data.status) {
+                            // CIBIL fetched successfully, now upload to analysis engine
+                            var cibilData = self.normalizeData({
+                                client_id: response.data.data?.client_id,
+                                mobile: profile.mobile || profile.profile_info?.mobile,
+                                pan: response.data.pan_comprehensive?.pan_number || profile.kyc?.pan_number,
+                                name: response.data.pan_comprehensive?.pan_details?.full_name || profile.profile_info?.fullname,
+                                email: profile.profile_info?.email,
+                                gender: profile.profile_info?.gender?.toLowerCase() || 'male',
+                                credit_score: response.data.data?.credit_score,
+                                credit_report: response.data.data?.report?.accounts || [],
+                                pan_comprehensive: response.data.pan_comprehensive
+                            });
+
+                            // Store in database and run analysis
+                            return self.uploadData(cibilData);
+                        } else {
+                            return Promise.reject({
+                                status: false,
+                                message: response.data.message || 'Failed to fetch CIBIL data'
+                            });
+                        }
+                    });
+                },
+
+                /**
+                 * Check if user has existing CIBIL data
+                 * @param {Object} identifier - { mobile, pan, email }
+                 */
+                checkExistingData: function(identifier) {
+                    return this.getAnalysis(identifier).then(function(response) {
+                        return {
+                            exists: response.data.status === true,
+                            data: response.data.data
+                        };
+                    }).catch(function() {
+                        return { exists: false, data: null };
+                    });
+                },
+
+                /**
+                 * Get sandbox mode status
+                 */
+                getSandboxStatus: function() {
+                    return $http({
+                        method: 'GET',
+                        url: '/get/api/surepass/status'
                     });
                 }
             };

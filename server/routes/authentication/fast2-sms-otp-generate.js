@@ -115,8 +115,37 @@
                                 .catch(function(errSave) {
                                     log('Error saving profile:');
                                     log(errSave);
-                                    approve({ message: 'OTP Not Sent .profile save failed', status: true, isOTPSuccess: false });
-
+                                    
+                                    // Check if this is a duplicate key error (E11000)
+                                    if (errSave.code === 11000) {
+                                        log('⚠️ Duplicate key error detected. Attempting to update existing profile with OTP...');
+                                        // Try to update the existing profile with the new OTP
+                                        ProfileModel.updateOne({ "mobile": mobile }, { "fast2sms.otp": generated_otp })
+                                            .exec(function(errUpdate, updated) {
+                                                if (!errUpdate) {
+                                                    log('✅ Updated existing profile with new OTP');
+                                                    // Send OTP
+                                                    axios({
+                                                            url: url,
+                                                            method: 'GET'
+                                                        })
+                                                        .then(function(respAxios) {
+                                                            log('OTP Response :');
+                                                            log(respAxios.data);
+                                                            approve({ message: 'OTP Sent Successfully', status: true, isOTPSuccess: true });
+                                                        })
+                                                        .catch(function(errAxios) {
+                                                            log('Error Axios :');
+                                                            reject({ message: 'Error Axios', data: errAxios, isOTPSuccess: false });
+                                                        });
+                                                } else {
+                                                    log('❌ Failed to update existing profile');
+                                                    reject({ message: 'Profile save failed', status: false, isOTPSuccess: false });
+                                                }
+                                            });
+                                    } else {
+                                        reject({ message: 'OTP Not Sent. Profile save failed', status: false, isOTPSuccess: false });
+                                    }
                                 });
 
                         }

@@ -174,6 +174,24 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
                 showNavLink: true
             }
         })
+        .when('/utility-hub', {
+            templateUrl: 'templates/utility-hub.html',
+            controller: 'utilityHubCtrl',
+            config: {
+                requireLogin: true,
+                isPrivate: true,
+                showNavLink: true
+            },
+            resolve: {
+                authenticated: function ($q, stateManager, $location) {
+                    if (stateManager.isUserLogggedIn()) {
+                        return $q.when(true);
+                    } else {
+                        $location.path("login");
+                    }
+                }
+            }
+        })
         .when('/login', {
             templateUrl: 'templates/login.html',
             controller: 'loginCtrl',
@@ -206,12 +224,8 @@ app.config(['productionModeProvider', 'utilityProvider', 'geoIPServicesProvider'
             },
             resolve: {
                 authenticated: function ($q, stateManager, $location) {
-
-                    if (stateManager.isUserLogggedIn()) {
-                        $location.path("/home");
-                    } else {
-                        $location.path("login");
-                    }
+                    // Always resolve to true to let the controller handle logic
+                    return $q.when(true);
                 }
             }
         })

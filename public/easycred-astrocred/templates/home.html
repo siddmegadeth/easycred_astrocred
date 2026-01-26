@@ -1,47 +1,263 @@
 <style>
-    /* ASTROCRED - EasyCred Brand Theme - Enhanced AI Finance UI */
+    /* ===================================================================
+       ASTROCRED DARK THEME OVERRIDE - FORCES DARK MODE
+       ===================================================================*/
+    
+    /* Global Dark Theme Force - HIGH CONTRAST TEXT */
     body {
-        background: linear-gradient(135deg, #f5f5ff 0%, #e8eaff 50%, #ffffff 100%) !important;
-        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont;
-        min-height: 100vh;
+        background: linear-gradient(180deg, #1A1A2E 0%, #0F0F1A 100%) !important;
+        color: #FFFFFF !important;
+        font-family: var(--astro-font-primary) !important;
     }
 
+    /* Base text color for all elements */
+    body, html {
+        color: #FFFFFF !important;
+    }
+
+    /* Override low-contrast text in main content */
+    .container-fluid p, .container-fluid span, .container-fluid div:not(.astro-orb),
+    .container-fluid li, .container-fluid td, .container-fluid th, 
+    .container-fluid label, .container-fluid small {
+        color: #FFFFFF !important;
+    }
+
+    /* Links should be visible but distinct */
+    a {
+        color: #00D9FF !important;
+    }
+
+    a:hover {
+        color: #00C48C !important;
+    }
+
+    /* Premium Dashboard Page (Same as Login) */
+    .astro-dashboard-page {
+        min-height: 100vh;
+        background: var(--astro-gradient-dark);
+        position: relative;
+        overflow-x: hidden;
+        font-family: var(--astro-font-primary);
+    }
+
+    .astro-dashboard-wrapper {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+    }
+
+    /* Premium Glassmorphism Cards (Matching Login) - HIGH CONTRAST */
+    .card {
+        background: linear-gradient(145deg, rgba(22, 33, 62, 0.95) 0%, rgba(15, 15, 26, 0.98) 100%) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-radius: var(--astro-radius-xl) !important;
+        color: #FFFFFF !important;
+        box-shadow: var(--astro-shadow-lg) !important;
+        transition: var(--astro-transition-normal) !important;
+    }
+
+    /* Ensure card body has proper contrast */
+    .card-body {
+        color: #FFFFFF !important;
+        background: transparent !important;
+    }
+
+    .card:hover {
+        transform: translateY(-4px) !important;
+        box-shadow: var(--astro-shadow-glow) !important;
+        border-color: var(--astro-accent) !important;
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(0, 196, 140, 0.1) 100%) !important;
+        color: var(--astro-accent) !important;
+        border-bottom: 1px solid var(--astro-border) !important;
+        border-radius: var(--astro-radius-xl) var(--astro-radius-xl) 0 0 !important;
+        padding: var(--astro-space-lg) !important;
+        font-weight: 600 !important;
+    }
+
+    /* Premium Text Colors - HIGH CONTRAST FOR VISIBILITY */
+    h1, h2, h3, h4, h5, h6 {
+        color: #FFFFFF !important;
+        font-family: var(--astro-font-display) !important;
+        font-weight: 600 !important;
+    }
+
+    /* Body text - High contrast white */
+    p, span, div:not(.score-ring span):not(.astro-orb), label, .metric {
+        color: #FFFFFF !important;
+        opacity: 0.95 !important;
+    }
+
+    /* Secondary text - Still visible but slightly muted */
+    .text-muted, .text-secondary {
+        color: rgba(255, 255, 255, 0.85) !important;
+    }
+
+    /* Card body text - Ensure visibility */
+    .card-body, .card-body * {
+        color: #FFFFFF !important;
+    }
+
+    .card-body p, .card-body span, .card-body div {
+        color: rgba(255, 255, 255, 0.95) !important;
+    }
+
+    /* Table text */
+    .table, .table td, .table th {
+        color: #FFFFFF !important;
+    }
+
+    /* List items */
+    li, ul, ol {
+        color: #FFFFFF !important;
+    }
+
+    /* Small text - Still readable */
+    small, .small {
+        color: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    /* Premium Navigation Tabs (Matching Login Progress Steps) */
+    .nav-tabs {
+        border-bottom: 2px solid var(--astro-border) !important;
+        margin-bottom: var(--astro-space-xl) !important;
+    }
+
+    .nav-tabs .nav-link {
+        border: none !important;
+        color: var(--astro-text-secondary) !important;
+        font-weight: 500 !important;
+        padding: 12px 20px !important;
+        border-radius: var(--astro-radius-md) var(--astro-radius-md) 0 0 !important;
+        transition: var(--astro-transition-normal) !important;
+        background: transparent !important;
+    }
+
+    .nav-tabs .nav-link:hover {
+        background: var(--astro-surface-light) !important;
+        color: var(--astro-accent) !important;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: var(--astro-accent) !important;
+        background: transparent !important;
+        border-bottom: 3px solid var(--astro-accent) !important;
+        font-weight: 600 !important;
+    }
+
+    /* Premium Score Ring (Matching Login Style) */
+    .score-ring {
+        background: var(--astro-gradient-accent) !important;
+        box-shadow: var(--astro-shadow-glow) !important;
+        border-radius: 50% !important;
+        width: 160px !important;
+        height: 160px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 auto !important;
+        position: relative !important;
+    }
+
+    .score-ring::before {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        background: var(--astro-gradient-accent);
+        opacity: 0.3;
+        filter: blur(12px);
+        z-index: -1;
+    }
+
+    .score-ring span {
+        background: var(--astro-surface) !important;
+        color: var(--astro-accent) !important;
+        width: 130px !important;
+        height: 130px !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 48px !important;
+        font-weight: 800 !important;
+        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    /* Premium Buttons (Matching Login) */
+    .btn-astro,
+    .btn-primary {
+        background: var(--astro-gradient-accent) !important;
+        border: none !important;
+        color: white !important;
+        padding: 12px 24px !important;
+        border-radius: var(--astro-radius-md) !important;
+        font-weight: 600 !important;
+        box-shadow: 0 4px 15px var(--astro-accent-glow) !important;
+        transition: var(--astro-transition-normal) !important;
+    }
+
+    .btn-astro:hover,
+    .btn-primary:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px var(--astro-accent-glow) !important;
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #00C48C 0%, #00A876 100%) !important;
+        box-shadow: 0 4px 15px rgba(0, 196, 140, 0.3) !important;
+    }
+
+    .btn-warning {
+        background: linear-gradient(135deg, #FFB800 0%, #FF9500 100%) !important;
+        color: #1A1A2E !important;
+        box-shadow: 0 4px 15px rgba(255, 184, 0, 0.3) !important;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #FF4757 0%, #FF6B7A 100%) !important;
+        box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3) !important;
+    }
+
+    /* Chat */
+    .chat-ai {
+        background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(0, 196, 140, 0.1) 100%) !important;
+        border-left: 4px solid #00D9FF !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    .chat-user {
+        background: linear-gradient(135deg, #00D9FF 0%, #00C48C 100%) !important;
+        color: #ffffff !important;
+    }
+
+    /* Badges */
+    .badge-ai,
+    .badge.badge-ai {
+        background: linear-gradient(135deg, #00D9FF 0%, #00C48C 100%) !important;
+        color: #fff !important;
+        padding: 0.5rem 1rem !important;
+        border-radius: 20px !important;
+        font-weight: 600 !important;
+        box-shadow: 0 4px 12px rgba(0, 217, 255, 0.3) !important;
+    }
+
+    /* Utility */
     .blur-text {
         filter: blur(6px);
         pointer-events: none;
         user-select: none;
     }
 
-    .card {
-        border-radius: 16px !important;
-        border: none !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        height: 100%;
-        box-shadow: 0 4px 12px rgba(28, 31, 190, 0.08) !important;
-        background: #ffffff !important;
-    }
-
-    .card:hover {
-        transform: translateY(-8px) !important;
-        box-shadow: 0 12px 32px rgba(28, 31, 190, 0.15) !important;
-    }
-
-    .card-header {
-        background: linear-gradient(135deg, rgba(28, 31, 190, 0.05) 0%, rgba(51, 201, 211, 0.05) 100%) !important;
-        font-weight: 600 !important;
-        border-bottom: 2px solid rgba(28, 31, 190, 0.1) !important;
-        padding: 1rem 1.25rem;
-        color: #1c1fbe !important;
-    }
-
-    .badge-ai,
-    .badge.badge-ai {
-        background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%) !important;
-        color: #fff !important;
-        padding: 0.5rem 1rem !important;
-        border-radius: 20px !important;
-        font-weight: 600 !important;
-        box-shadow: 0 4px 12px rgba(28, 31, 190, 0.2) !important;
+    /* Assistant Tip */
+    .assistant-tip {
+        background: linear-gradient(135deg, rgba(255, 184, 0, 0.1) 0%, rgba(255, 149, 0, 0.1) 100%) !important;
+        border-left: 4px solid #FFB800 !important;
+        color: rgba(255, 255, 255, 0.9) !important;
     }
 
     .chat-window {
@@ -462,9 +678,120 @@
         height: 300px;
         width: 100%;
         margin-bottom: 1rem;
+        background: var(--astro-surface) !important;
+        border-radius: var(--astro-radius-md) !important;
+        padding: 1rem !important;
+    }
+
+    /* Premium Badges (Matching Login Features) */
+    .badge-ai,
+    .badge.badge-ai {
+        background: var(--astro-gradient-accent) !important;
+        color: white !important;
+        padding: 8px 16px !important;
+        border-radius: var(--astro-radius-full) !important;
+        font-weight: 600 !important;
+        box-shadow: 0 4px 12px var(--astro-accent-glow) !important;
+    }
+
+    /* Premium Alerts */
+    .alert {
+        background: var(--astro-gradient-card) !important;
+        border: 1px solid var(--astro-border) !important;
+        border-radius: var(--astro-radius-md) !important;
+        color: var(--astro-text-primary) !important;
+        backdrop-filter: blur(10px) !important;
+    }
+
+    .alert-warning {
+        border-left: 4px solid var(--astro-warning) !important;
+        background: linear-gradient(135deg, rgba(255, 184, 0, 0.1) 0%, rgba(255, 149, 0, 0.1) 100%) !important;
+    }
+
+    .alert-success {
+        border-left: 4px solid var(--astro-success) !important;
+        background: linear-gradient(135deg, rgba(0, 196, 140, 0.1) 0%, rgba(0, 169, 120, 0.1) 100%) !important;
+    }
+
+    /* Premium Header Section */
+    .astro-dashboard-wrapper h2 {
+        font-family: var(--astro-font-display) !important;
+        font-size: 28px !important;
+        font-weight: 700 !important;
+        color: var(--astro-text-primary) !important;
+        letter-spacing: 1px !important;
+    }
+
+    .astro-dashboard-wrapper .text-primary {
+        color: var(--astro-accent) !important;
+    }
+
+    /* Premium Metrics - HIGH CONTRAST */
+    .metric {
+        padding: 12px 0 !important;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.2) !important;
+        transition: var(--astro-transition-fast) !important;
+        color: #FFFFFF !important;
+    }
+
+    .metric:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+        padding-left: 12px !important;
+        border-radius: var(--astro-radius-sm) !important;
+    }
+
+    .metric:last-child {
+        border-bottom: none !important;
+    }
+
+    /* Additional Text Visibility Fixes */
+    .badge {
+        color: #FFFFFF !important;
+    }
+
+    .alert {
+        color: #FFFFFF !important;
+    }
+
+    .alert p, .alert span, .alert div {
+        color: #FFFFFF !important;
+    }
+
+    /* Form labels and inputs */
+    .form-label, label {
+        color: #FFFFFF !important;
+        font-weight: 500 !important;
+    }
+
+    /* All text inside cards */
+    .card * {
+        color: inherit !important;
+    }
+
+    /* Override any low-contrast text */
+    .text-dark, .text-black {
+        color: #FFFFFF !important;
+    }
+
+    /* Ensure headings are always visible */
+    .card-header h1, .card-header h2, .card-header h3,
+    .card-header h4, .card-header h5, .card-header h6 {
+        color: #FFFFFF !important;
     }
 </style>
-<div class="container-fluid py-4">
+
+<!-- Premium Dark Theme Dashboard - Matching Login Page -->
+<div class="astro-dashboard-page">
+    <!-- Animated Background Pattern (Same as Login) -->
+    <div class="astro-bg-pattern">
+        <div class="astro-orb astro-orb-1"></div>
+        <div class="astro-orb astro-orb-2"></div>
+        <div class="astro-orb astro-orb-3"></div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="astro-dashboard-wrapper">
+        <div class="container-fluid py-4" style="position: relative; z-index: 1;">
     <!-- HEADER -->
     <div class="row mb-4 align-items-center">
         <div class="col-md-8">
@@ -1380,9 +1707,11 @@
             </div>
         </div>
     </div>
-    <!-- FOOTER -->
-    <div class="text-center footer-note mt-4">
-        <p>ASTROCRED v1.0 • Real CIBIL Data Integration </p>
-        <p>Data Source: CIBIL TransUnion • Report Generated: {{reportDate | date:'fullDate'}}</p>
+            <!-- FOOTER -->
+            <div class="text-center footer-note mt-4" style="color: rgba(255, 255, 255, 0.6);">
+                <p>ASTROCRED v1.0 • Real CIBIL Data Integration </p>
+                <p>Data Source: CIBIL TransUnion • Report Generated: {{reportDate | date:'fullDate'}}</p>
+            </div>
+        </div>
     </div>
 </div>

@@ -1,23 +1,24 @@
-app.provider('surePass', [function() {
+app.provider('surePass', [function () {
     var mmtcURL;
     return {
-        config: function(url) {
+        config: function (url) {
 
             creditURL = url.surepass || url;
         },
-        $get: ['$http', function($http) {
+        $get: ['$http', function ($http) {
             return {
 
-                cibil: function(profile) {
+                cibil: function (mobile, fullname) {
                     return $http({
                         method: 'GET',
                         url: creditURL.cibil,
                         params: {
-                            profile: profile
+                            mobile: mobile,
+                            fullname: fullname
                         }
                     })
                 },
-                equifax: function(profile) {
+                equifax: function (profile) {
                     return $http({
                         method: 'GET',
                         url: creditURL.equifax,
@@ -26,7 +27,7 @@ app.provider('surePass', [function() {
                         }
                     })
                 },
-                experion: function(profile) {
+                experion: function (profile) {
                     return $http({
                         method: 'GET',
                         url: creditURL.experion,
@@ -35,7 +36,7 @@ app.provider('surePass', [function() {
                         }
                     })
                 },
-                getPanFromMobile: function(mobile, fullname) {
+                getPanFromMobile: function (mobile, fullname) {
                     return $http({
                         method: 'GET',
                         url: creditURL.getPanFromMobile,
@@ -45,7 +46,7 @@ app.provider('surePass', [function() {
                         }
                     })
                 },
-                kycPanPlus: function(profile, pan_number) {
+                kycPanPlus: function (profile, pan_number) {
                     return $http({
                         method: 'GET',
                         url: creditURL.kycPanPlus,
@@ -55,7 +56,7 @@ app.provider('surePass', [function() {
                         }
                     })
                 },
-                panComprehensive: function(pan_number) {
+                panComprehensive: function (pan_number) {
                     return $http({
                         method: 'GET',
                         url: creditURL.panComprehensive,
@@ -64,7 +65,7 @@ app.provider('surePass', [function() {
                         }
                     })
                 },
-                KYCPanToAadhar: function(profile, pan_number) {
+                KYCPanToAadhar: function (profile, pan_number) {
                     return $http({
                         method: 'GET',
                         url: creditURL.KYCPanToAadhar,
@@ -74,7 +75,7 @@ app.provider('surePass', [function() {
                         }
                     })
                 },
-                KYCAllFromMobile: function(profile, mobile, fullname) {
+                KYCAllFromMobile: function (profile, mobile, fullname) {
                     return $http({
                         method: 'GET',
                         url: creditURL.KYCAllFromMobile,
@@ -85,7 +86,7 @@ app.provider('surePass', [function() {
                         }
                     })
                 },
-                mobileToMultipleUPI: function(mobile) {
+                mobileToMultipleUPI: function (mobile) {
                     return $http({
                         method: 'GET',
                         url: creditURL.mobileToMultipleUPI,

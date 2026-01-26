@@ -1,224 +1,320 @@
-<div class="page-container">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="login-container">
-                    <div class="login-header">
-                        <h2>Login with OTP</h2>
-                        <p class="text-muted">Enter your Indian mobile number to receive OTP</p>
+<!-- Modern Fintech Login - CRED Inspired -->
+<div class="astro-login-page">
+    <!-- Animated Background -->
+    <div class="astro-bg-pattern">
+        <div class="astro-orb astro-orb-1"></div>
+        <div class="astro-orb astro-orb-2"></div>
+        <div class="astro-orb astro-orb-3"></div>
+    </div>
+
+    <div class="astro-login-wrapper">
+        <!-- Logo Section -->
+        <div class="astro-logo-section">
+            <div class="astro-logo-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h1 class="astro-brand">ASTROCRED</h1>
+            <p class="astro-tagline">Your Credit Score Universe</p>
+        </div>
+
+        <!-- Login Card -->
+        <div class="astro-login-card">
+            <div class="astro-card-header">
+                <h2>Welcome Back</h2>
+                <p>Enter your mobile number to continue</p>
+            </div>
+
+            <!-- Progress Indicator -->
+            <div class="astro-progress-steps">
+                <div class="astro-step active">
+                    <div class="astro-step-dot">1</div>
+                    <span>Mobile</span>
+                </div>
+                <div class="astro-step-line"></div>
+                <div class="astro-step">
+                    <div class="astro-step-dot">2</div>
+                    <span>OTP</span>
+                </div>
+                <div class="astro-step-line"></div>
+                <div class="astro-step">
+                    <div class="astro-step-dot">3</div>
+                    <span>Dashboard</span>
+                </div>
+            </div>
+
+            <form id="loginForm" class="astro-login-form">
+                <!-- Phone Input -->
+                <div class="astro-input-group">
+                    <div class="astro-input-icon">
+                        <i class="fas fa-mobile-alt"></i>
                     </div>
-                    <div class="success-alert alert alert-success" role="alert">
-                        <i class="bi bi-check-circle-fill"></i> Login successful! Redirecting...
+                    <div class="astro-country-code">+91</div>
+                    <input type="tel" 
+                           class="astro-phone-input" 
+                           id="loginMobileNumber" 
+                           placeholder="Enter 10-digit mobile number"
+                           maxlength="10"
+                           autofocus>
+                    <div class="astro-input-check" ng-if="isValidPhone">
+                        <i class="fas fa-check-circle"></i>
                     </div>
-                    <form id="loginForm">
-                        <div class="mb-3 flag-container">
-                            <input class="form-control" id="loginMobileNumber" autofocus>
-                            <div class="invalid-feedback">Please enter a valid 10-digit Indian mobile number</div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 mb-3" ng-click="generateOTP()">
-                            Send OTP
+                <div class="astro-input-hint">We'll send you a 6-digit OTP for verification</div>
+
+                <!-- Submit Button -->
+                <button type="submit" 
+                        class="astro-submit-btn" 
+                        ng-click="generateOTP()"
+                        ng-disabled="isLoading">
+                    <span ng-if="!isLoading">
+                        <i class="fas fa-paper-plane"></i> Send OTP
+                    </span>
+                    <span ng-if="isLoading" class="astro-loading">
+                        <div class="astro-spinner"></div> Sending...
+                    </span>
                         </button>
                     </form>
-                    <div class="mt-3 text-center">
-                        <p class="text-muted">By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></p>
-                    </div>
+
+            <!-- Features List -->
+            <div class="astro-features">
+                <div class="astro-feature">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Bank-grade Security</span>
                 </div>
+                <div class="astro-feature">
+                    <i class="fas fa-bolt"></i>
+                    <span>Instant Score Access</span>
+                    </div>
+                <div class="astro-feature">
+                    <i class="fas fa-lock"></i>
+                    <span>100% Private</span>
+                </div>
+            </div>
+
+            <!-- Terms -->
+            <div class="astro-terms">
+                By continuing, you agree to our 
+                <a href="/terms">Terms of Service</a> and 
+                <a href="/privacy">Privacy Policy</a>
+            </div>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="astro-trust-badges">
+            <div class="astro-badge">
+                <i class="fas fa-check-circle"></i>
+                <span>RBI Compliant</span>
+            </div>
+            <div class="astro-badge">
+                <i class="fas fa-user-shield"></i>
+                <span>256-bit SSL</span>
+            </div>
+            <div class="astro-badge">
+                <i class="fas fa-database"></i>
+                <span>Data Protected</span>
             </div>
         </div>
     </div>
 </div>
-<!-- Message Modal -->
-<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-otp modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="messageModalLabel">{{message.header}}</h5>
+<!-- Message Modal - Premium Design -->
+<div class="modal fade astro-modal" id="messageModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content astro-modal-content">
+            <div class="astro-modal-icon info">
+                <i class="fas fa-info-circle"></i>
             </div>
-            <div class="modal-body text-center">
-                <div class="text-center mb-4">
-                    <i class="bi bi-shield-check success-check"></i>
-                    <p class="text-muted">{{message.content}}</p>
-                </div>
-                <button class="btn btn-primary" ng-click="gotoOnboarding()">Goto Onboarding</button>
-            </div>
+            <h4 class="astro-modal-title">{{message.header}}</h4>
+            <p class="astro-modal-text">{{message.content}}</p>
+            <button class="astro-modal-btn" ng-click="gotoOnboarding()">
+                <i class="fas fa-arrow-right"></i> Continue to Onboarding
+            </button>
         </div>
     </div>
 </div>
-<!-- OTP Modal -->
-<div class="modal fade" id="otpModal" aria-labelledby="otpModalLabel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-otp modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="otpModalLabel">Verification Required</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+<!-- OTP Modal - Premium Design -->
+<div class="modal fade astro-modal" id="otpModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content astro-modal-content astro-otp-modal">
+            <!-- Close Button -->
+            <button type="button" class="astro-modal-close" data-bs-dismiss="modal">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <!-- OTP Icon -->
+            <div class="astro-otp-icon">
+                <i class="fas fa-shield-alt"></i>
+                <div class="astro-otp-pulse"></div>
             </div>
-            <div class="modal-body">
-                <div class="text-center mb-4">
-                    <i class="bi bi-shield-check success-check"></i>
-                    <h4>Enter Verification Code</h4>
-                    <p class="text-muted">We've sent a 6-digit code to your Mobile Number</p>
+
+            <h4 class="astro-modal-title">Verify Your Number</h4>
+            <p class="astro-modal-text">Enter the 6-digit code sent to your mobile</p>
+            
+            <!-- Phone Display -->
+            <div class="astro-phone-display">
+                <i class="fas fa-mobile-alt"></i>
+                <span>+91 ******{{phoneLastDigits}}</span>
+            </div>
+
+            <!-- OTP Input -->
+            <form id="otpForm" class="astro-otp-form">
+                <div class="astro-otp-inputs">
+                    <input type="text" class="astro-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" ng-model="otp1" id="otp-1">
+                    <input type="text" class="astro-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]*" ng-model="otp2" id="otp-2">
+                    <input type="text" class="astro-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]*" ng-model="otp3" id="otp-3">
+                    <input type="text" class="astro-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]*" ng-model="otp4" id="otp-4">
+                    <input type="text" class="astro-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]*" ng-model="otp5" id="otp-5">
+                    <input type="text" class="astro-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]*" ng-model="otp6" id="otp-6">
                 </div>
-                <form id="otpForm">
-                    <div class="otp-container">
-                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" required ng-model="otp1">
-                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required ng-model="otp2">
-                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required ng-model="otp3">
-                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required ng-model="otp4">
-                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required ng-model="otp5">
-                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required ng-model="otp6">
-                    </div>
-                    <button type="submit" class="btn btn-primary verify-btn w-100" ng-click="validateOTP(otp1,otp2,otp3,otp4,otp5,otp6)">
-                        <i class="bi bi-check-circle me-2"></i>Verify & Continue
-                    </button>
-                    <br>
-                    <button type="submit" class="btn btn-primary verify-btn w-100" ng-click="otpModal.hide()" style="margin-top: 20px;">
-                        Cancel
+
+                <!-- Verify Button -->
+                <button type="submit" class="astro-verify-btn" ng-click="validateOTP(otp1,otp2,otp3,otp4,otp5,otp6)" ng-disabled="isVerifying">
+                    <span ng-if="!isVerifying">
+                        <i class="fas fa-check-circle"></i> Verify & Continue
+                    </span>
+                    <span ng-if="isVerifying" class="astro-loading">
+                        <div class="astro-spinner"></div> Verifying...
+                    </span>
                     </button>
                 </form>
-                <div class="resend-text">
-                    <p>Didn't receive the code? <a href="#" id="resendLink">Resend</a> <span id="countdown" class="countdown">(60s)</span></p>
-                </div>
+
+            <!-- Resend Section -->
+            <div class="astro-resend-section">
+                <p class="astro-resend-text">
+                    <span id="resendTimer">Resend OTP in <strong id="countdown">60</strong>s</span>
+                    <a href="#" id="resendLink" class="astro-resend-link" ng-click="resendOTP()" style="display: none;">
+                        <i class="fas fa-redo"></i> Resend OTP
+                    </a>
+                </p>
             </div>
+
+            <!-- Cancel Link -->
+            <button class="astro-cancel-link" ng-click="otpModal.hide()">
+                <i class="fas fa-arrow-left"></i> Change Number
+            </button>
         </div>
     </div>
 </div>
-<!-- Success Toast (hidden by default) -->
-<div class="toast align-items-center text-white bg-success position-fixed top-50 start-50 translate-middle" role="alert" aria-live="assertive" aria-atomic="true" id="successToast">
-    <div class="d-flex">
-        <div class="toast-body">
-            <i class="bi bi-check-circle-fill me-2"></i> Verification successful!
-        </div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+
+<!-- Success Toast -->
+<div class="astro-toast" id="successToast" role="alert">
+    <div class="astro-toast-icon success">
+        <i class="fas fa-check"></i>
+    </div>
+    <div class="astro-toast-content">
+        <strong>Success!</strong>
+        <span>Verification complete. Redirecting...</span>
     </div>
 </div>
+
+<!-- Error Toast -->
+<div class="astro-toast" id="errorToast" role="alert">
+    <div class="astro-toast-icon error">
+        <i class="fas fa-exclamation"></i>
+        </div>
+    <div class="astro-toast-content">
+        <strong>Error</strong>
+        <span id="errorMessage">Something went wrong</span>
+    </div>
+</div>
+
 <script>
 $(document).ready(function() {
-    // OTP Input navigation
-    $('.otp-input').keyup(function(e) {
-        if (this.value.length === this.maxLength) {
-            $(this).addClass('filled');
-            $(this).next('.otp-input').focus();
-        } else if (this.value.length === 0 && e.keyCode === 8) {
-            $(this).removeClass('filled');
-            $(this).prev('.otp-input').focus();
+    // OTP Input navigation with premium feel
+    $('.astro-otp-digit').on('input', function(e) {
+        const $this = $(this);
+        const val = $this.val();
+        
+        // Only allow numbers
+        if (!/^\d*$/.test(val)) {
+            $this.val('');
+            return;
         }
+        
+        if (val.length === 1) {
+            $this.addClass('filled');
+            // Move to next input
+            $this.next('.astro-otp-digit').focus();
+        }
+    });
 
-        // Check if all fields are filled
-        checkOTPCompletion();
+    // Handle backspace
+    $('.astro-otp-digit').on('keydown', function(e) {
+        if (e.keyCode === 8 && $(this).val() === '') {
+            $(this).removeClass('filled').prev('.astro-otp-digit').focus().select();
+        }
     });
 
     // Paste OTP from clipboard
-    $('.otp-input').on('paste', function(e) {
-        const clipboardData = e.originalEvent.clipboardData || window.clipboardData;
-        const pastedData = clipboardData.getData('text');
-
-        if (/^\d{6}$/.test(pastedData)) {
-            e.preventDefault();
-            const inputs = $('.otp-input');
-            for (let i = 0; i < 6; i++) {
-                $(inputs[i]).val(pastedData[i]).addClass('filled');
-            }
-            inputs.last().focus();
-            checkOTPCompletion();
-        }
-    });
-
-    // Form submission
-    $('#otpForm').on('submit', function(e) {
+    $('.astro-otp-digit').first().on('paste', function(e) {
         e.preventDefault();
+        const clipboardData = e.originalEvent.clipboardData || window.clipboardData;
+        const pastedData = clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
 
-        // Get OTP value
-        let otp = '';
-        $('.otp-input').each(function() {
-            otp += $(this).val();
-        });
-
-        // Validate OTP (simple demo validation)
-        if (otp === '123456') { // Demo code
-            // Show success toast
-            const toast = new bootstrap.Toast(document.getElementById('successToast'));
-            toast.show();
-
-            // Close modal after 2 seconds
-            setTimeout(function() {
-                $('#otpModal').modal('hide');
-            }, 2000);
-        } else {
-            // Shake effect for wrong OTP
-            $('.otp-container').addClass('animate__animated animate__headShake');
-            setTimeout(function() {
-                $('.otp-container').removeClass('animate__animated animate__headShake');
-            }, 1000);
-
-            // Clear inputs
-            $('.otp-input').val('').removeClass('filled').first().focus();
+        if (pastedData.length === 6) {
+            $('.astro-otp-digit').each(function(i) {
+                $(this).val(pastedData[i]).addClass('filled');
+                // Update Angular model
+                angular.element(this).scope()['otp' + (i + 1)] = pastedData[i];
+            });
+            angular.element($('.astro-otp-digit').first()).scope().$apply();
+            $('.astro-otp-digit').last().focus();
         }
     });
 
     // Resend OTP countdown
     let timeLeft = 60;
-    const countdownElement = $('#countdown');
-    const resendLink = $('#resendLink');
+    let countdownTimer;
 
-    resendLink.hide();
-
-    const downloadTimer = setInterval(function() {
-        if (timeLeft <= 0) {
-            clearInterval(downloadTimer);
-            countdownElement.hide();
-            resendLink.show();
-        } else {
-            countdownElement.text('(' + timeLeft + 's)');
-        }
-        timeLeft -= 1;
-    }, 1000);
-
-    // Resend OTP functionality
-    resendLink.on('click', function(e) {
-        e.preventDefault();
+    function startCountdown() {
         timeLeft = 60;
-        resendLink.hide();
-        countdownElement.show();
+        $('#countdown').text(timeLeft);
+        $('#resendTimer').show();
+        $('#resendLink').hide();
 
-        // Restart the timer
-        const newTimer = setInterval(function() {
+        countdownTimer = setInterval(function() {
+            timeLeft--;
+            $('#countdown').text(timeLeft);
+            
             if (timeLeft <= 0) {
-                clearInterval(newTimer);
-                countdownElement.hide();
-                resendLink.show();
-            } else {
-                countdownElement.text('(' + timeLeft + 's)');
+                clearInterval(countdownTimer);
+                $('#resendTimer').hide();
+                $('#resendLink').fadeIn();
             }
-            timeLeft -= 1;
         }, 1000);
+    }
 
-        // Show message (in a real app, this would resend the OTP)
-        alert('A new OTP has been sent to your email.');
-    });
-
-    // Focus first input when modal is shown
+    // Start countdown when OTP modal opens
     $('#otpModal').on('shown.bs.modal', function() {
-        $('.otp-input').first().focus();
+        $('.astro-otp-digit').first().focus();
+        startCountdown();
     });
 
-    // Clear inputs when modal is hidden
+    // Clear inputs when modal closes
     $('#otpModal').on('hidden.bs.modal', function() {
-        $('.otp-input').val('').removeClass('filled');
+        clearInterval(countdownTimer);
+        $('.astro-otp-digit').val('').removeClass('filled');
     });
 
-    // Check if all OTP fields are filled
-    function checkOTPCompletion() {
-        let allFilled = true;
-        $('.otp-input').each(function() {
-            if ($(this).val() === '') {
-                allFilled = false;
-                return false;
+    // Phone input validation
+    $('#loginMobileNumber').on('input', function() {
+        const val = $(this).val().replace(/\D/g, '');
+        $(this).val(val);
+        
+        if (val.length === 10) {
+            $(this).addClass('valid');
+            angular.element(this).scope().isValidPhone = true;
+            angular.element(this).scope().$apply();
+        } else {
+            $(this).removeClass('valid');
+            angular.element(this).scope().isValidPhone = false;
+            angular.element(this).scope().$apply();
             }
         });
 
-        if (allFilled) {
-            $('#otpForm button[type="submit"]').focus();
-        }
-    }
+    // Prevent form submission on enter in OTP inputs
+    $('#otpForm').on('submit', function(e) {
+        e.preventDefault();
+    });
 });
 </script>
