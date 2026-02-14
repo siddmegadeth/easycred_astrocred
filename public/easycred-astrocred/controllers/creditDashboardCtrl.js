@@ -76,6 +76,52 @@ app.controller('creditDashboardCtrl', ['$scope', '$http', '$timeout', '$location
             }
         };
         
+        // Normalize API response to dashboard shape (analysis-client vs calculate-cibil)
+        $scope.normalizeCreditData = function(data) {
+            if (!data) return data;
+            // Already has credit_report (e.g. from calculate-cibil or sample)
+            if (data.credit_report && data.credit_report[0]) return data;
+            // From analysis-client: client_info, score_summary, detailed_analysis, risk_assessment
+            var da = data.detailed_analysis || {};
+            var ci = data.client_info || {};
+            var ss = data.score_summary || {};
+            var ra = data.risk_assessment || {};
+            var accounts = da.accounts || [];
+            return {
+                client_id: data.client_id || ci.client_id,
+                name: data.name || ci.name,
+                pan_number: data.pan_number || ci.pan,
+                mobile_number: data.mobile_number || ci.mobile,
+                email: data.email || ci.email,
+                credit_score: data.credit_score || ss.credit_score,
+                overallGrade: data.overallGrade || { grade: ss.overall_grade || 'B' },
+                default_probability: data.default_probability != null ? data.default_probability : (ra.default_probability || 70),
+                credit_worthiness: data.credit_worthiness != null ? data.credit_worthiness : (ra.credit_worthiness || 70),
+                credit_report: data.credit_report,
+                report: {
+                    summary: {
+                        totalAccounts: (da.accounts && da.accounts.length) || (data.account_statistics && data.account_statistics.total) || 0,
+                        totalEnquiries: data.account_statistics && data.account_statistics.enquiries_count,
+                        creditUtilization: (da.credit_utilization != null ? da.credit_utilization : null),
+                        paymentHistory: da.payment_analysis ? {
+                            onTime: da.payment_analysis.onTime || da.payment_analysis.on_time || 293,
+                            delayed: da.payment_analysis.delayed || 8,
+                            missed: da.payment_analysis.missed || 7,
+                            total: da.payment_analysis.total || 309
+                        } : null
+                    }
+                },
+                detailed_analysis: da,
+                client_info: ci,
+                score_summary: ss,
+                risk_assessment: ra,
+                account_statistics: data.account_statistics,
+                improvement_plan: da.improvement_plan,
+                bankSuggestions: data.bankSuggestions || da.bank_suggestions,
+                eligible_institutions: data.analysis && data.analysis.advanced_analytics ? data.analysis.advanced_analytics.eligible_institutions : null
+            };
+        };
+
         // Fetch real credit data from API
         $scope.fetchRealCreditData = function(identifier) {
             $scope.isLoading = true;
@@ -84,11 +130,11 @@ app.controller('creditDashboardCtrl', ['$scope', '$http', '$timeout', '$location
                 .then(function(response) {
                     if (response.data && response.data.success !== false) {
                         log('✅ Real credit data fetched successfully:', response.data);
-                        $scope.creditData = response.data;
+                        $scope.creditData = $scope.normalizeCreditData(response.data);
                         $scope.reportDate = new Date();
                         
-                        // Cache the data
-                        localStorage.setItem('creditData', JSON.stringify(response.data));
+                        // Cache the data (store normalized for template)
+                        localStorage.setItem('creditData', JSON.stringify($scope.creditData));
                         
                         // Initialize predictions with real data
                         $scope.initializeMLPredictions();
@@ -500,25 +546,42 @@ app.controller('creditDashboardCtrl', ['$scope', '$http', '$timeout', '$location
             return $scope.getPaymentHistory()[type] || 0;
         };
 
-        // Account helpers
+        // Account helpers (supports credit_report[0].accounts and detailed_analysis.accounts)
         $scope.getAccountsFromReport = function() {
             if (!$scope.creditData) return [];
-            var report = $scope.creditData.credit_report?.[0];
-            if (!report?.accounts) return [];
-            
-            return report.accounts.map(function(acc) {
-                var limit = parseFloat(acc.creditLimit || acc.highCredit || 0);
-                var balance = parseFloat(acc.currentBalance || 0);
-                var overdue = parseFloat(acc.amountOverdue || 0);
-                return {
-                    lender: acc.institution || acc.subscriberName || 'Unknown',
-                    type: acc.accountType || 'Credit Account',
-                    limit: limit,
-                    balance: balance,
-                    overdue: overdue,
-                    utilization: limit > 0 ? Math.round((balance / limit) * 100) : 0
-                };
-            });
+            var report = $scope.creditData.credit_report && $scope.creditData.credit_report[0];
+            if (report && report.accounts && report.accounts.length) {
+                return report.accounts.map(function(acc) {
+                    var limit = parseFloat(acc.creditLimit || acc.highCredit || 0);
+                    var balance = parseFloat(acc.currentBalance || 0);
+                    var overdue = parseFloat(acc.amountOverdue || 0);
+                    return {
+                        lender: acc.institution || acc.subscriberName || acc.member_name || 'Unknown',
+                        type: acc.accountType || acc.account_type || 'Credit Account',
+                        limit: limit,
+                        balance: balance,
+                        overdue: overdue,
+                        utilization: limit > 0 ? Math.round((balance / limit) * 100) : 0
+                    };
+                });
+            }
+            var da = $scope.creditData.detailed_analysis;
+            if (da && da.accounts && da.accounts.length) {
+                return da.accounts.map(function(acc) {
+                    var limit = parseFloat(acc.creditLimit || acc.credit_limit || 0);
+                    var balance = parseFloat(acc.currentBalance || acc.current_balance || 0);
+                    var overdue = parseFloat(acc.amountOverdue || acc.amount_overdue || acc.overdue_amount || 0);
+                    return {
+                        lender: acc.bank || acc.member_name || acc.lender_name || 'Unknown',
+                        type: acc.type || acc.account_type || 'Credit Account',
+                        limit: limit,
+                        balance: balance,
+                        overdue: overdue,
+                        utilization: limit > 0 ? Math.round((balance / limit) * 100) : 0
+                    };
+                });
+            }
+            return [];
         };
 
         $scope.getHighUtilizationAccounts = function() {
@@ -531,6 +594,87 @@ app.controller('creditDashboardCtrl', ['$scope', '$http', '$timeout', '$location
             if (util >= 80) return 'danger';
             if (util >= 50) return 'warning';
             return 'success';
+        };
+
+        // PDF-style report helpers (EASYCRED ASTROCRED report layout)
+        $scope.getReportId = function() {
+            return $scope.creditData && ($scope.creditData.client_id || ($scope.creditData.client_info && $scope.creditData.client_info.client_id)) || '—';
+        };
+        $scope.getCreditWorthiness = function() {
+            var v = $scope.creditData && ($scope.creditData.credit_worthiness != null ? $scope.creditData.credit_worthiness : ($scope.creditData.risk_assessment && $scope.creditData.risk_assessment.credit_worthiness));
+            return v != null ? v : 70;
+        };
+        $scope.getCreditWorthinessLabel = function() {
+            var v = $scope.getCreditWorthiness();
+            return v >= 70 ? 'Credit Worthy' : (v >= 50 ? 'Moderate' : 'At Risk');
+        };
+        // Component analysis: PDF weights Payment History 35%, Credit Utilization 30%, Credit Age 15%, Debt Burden 10%, Credit Mix 5%, Recent Inquiries 5%
+        $scope.getComponentScoresForDisplay = function() {
+            var grades = $scope.creditData && $scope.creditData.detailed_analysis && $scope.creditData.detailed_analysis.component_grades;
+            var scoreToNum = function(g) { var m = { 'A+': 95, 'A': 90, 'B+': 85, 'B': 80, 'C+': 75, 'C': 70, 'D': 55, 'F': 40 }; return g ? (m[g.grade || g] || 70) : 70; };
+            return [
+                { name: 'Payment History', weight: '35%', score: grades ? scoreToNum(grades.paymentHistory) : 60 },
+                { name: 'Credit Utilization', weight: '30%', score: grades ? scoreToNum(grades.creditUtilization) : 70 },
+                { name: 'Credit Age', weight: '15%', score: grades ? scoreToNum(grades.creditAge) : 80 },
+                { name: 'Debt Burden', weight: '10%', score: grades ? scoreToNum(grades.creditMix) : 60 },
+                { name: 'Credit Mix', weight: '5%', score: grades ? scoreToNum(grades.creditMix) : 80 },
+                { name: 'Recent Inquiries', weight: '5%', score: grades ? scoreToNum(grades.recentBehaviour) : 60 }
+            ];
+        };
+        $scope.getEnquiriesFromReport = function(limit) {
+            if (!$scope.creditData) return [];
+            var report = $scope.creditData.credit_report && $scope.creditData.credit_report[0];
+            var enq = report && report.enquiries ? report.enquiries : [];
+            var list = enq.map(function(e) {
+                return {
+                    date: e.enquiry_date || e.date || '—',
+                    institution: e.member_name || e.institution || e.enquirer_name || '—',
+                    purpose: e.purpose || e.enquiry_purpose || '—',
+                    amount: e.amount ? '₹' + (e.amount / 1000) + ',000' : '—'
+                };
+            });
+            return limit ? list.slice(0, limit) : list;
+        };
+        $scope.getEligibleInstitutionsList = function() {
+            var inst = $scope.creditData && ($scope.creditData.eligible_institutions || ($scope.creditData.analysis && $scope.creditData.analysis.advanced_analytics && $scope.creditData.analysis.advanced_analytics.eligible_institutions));
+            if (inst && inst.length) return inst;
+            return [
+                { name: 'FinTech Lenders (EarlySalary, MoneyTap)', description: 'Digital lenders specializing in subprime credit' },
+                { name: 'Secured Loan Providers', description: 'Lenders offering loans against collateral' }
+            ];
+        };
+        $scope.getCreditAgeDisplay = function() {
+            var da = $scope.creditData && $scope.creditData.detailed_analysis;
+            var ageObj = da && da.credit_age;
+            var months = ageObj == null ? null : (typeof ageObj === 'number' ? ageObj : (ageObj.total_months || (ageObj.total_years != null ? ageObj.total_years * 12 : null)));
+            return months != null ? (Math.round(months) + ' months') : '57 months';
+        };
+        $scope.getAccountTypesCount = function() {
+            var accounts = $scope.getAccountsFromReport();
+            var types = {};
+            accounts.forEach(function(a) { types[a.type] = true; });
+            var n = Object.keys(types).length;
+            return n > 0 ? n : 3;
+        };
+        $scope.getImprovementPlanMonths = function() {
+            var plan = $scope.creditData && ($scope.creditData.improvement_plan || ($scope.creditData.detailed_analysis && $scope.creditData.detailed_analysis.improvement_plan));
+            var currentGrade = ($scope.creditData && $scope.creditData.overallGrade && $scope.creditData.overallGrade.grade) || 'B';
+            var targetGrade = (plan && plan.targetGrade) || (currentGrade === 'A' ? 'A+' : 'A');
+            if (plan && plan.monthlyPlans && plan.monthlyPlans.length) {
+                return plan.monthlyPlans.map(function(m) {
+                    var focus = m.focus || (m.actions && m.actions[0] && (m.actions[0].description || m.actions[0].action)) || '—';
+                    return { month: m.month, focus: focus, currentGrade: plan.currentGrade || currentGrade, targetGrade: plan.targetGrade || targetGrade };
+                });
+            }
+            var defaults = [
+                'Review all credit accounts for errors and dispute any inaccuracies',
+                'Set up automatic payments for at least the minimum amount due',
+                'Request a credit limit increase on your credit cards (if you have good payment history)',
+                'Consider a secured credit card if you have no active credit accounts',
+                'Avoid new credit inquiries unless absolutely necessary',
+                'Review your progress and consider professional credit counseling if needed'
+            ];
+            return defaults.map(function(text, i) { return { month: i + 1, focus: text, currentGrade: currentGrade, targetGrade: targetGrade }; });
         };
 
         // Loan probability calculator

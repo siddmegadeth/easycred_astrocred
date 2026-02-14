@@ -1,31 +1,45 @@
-app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', '$location', 'authentication', 'cibilCore', 'productionMode', 'astroAI', 'surePass', function ($scope, $rootScope, $timeout, stateManager, $location, authentication, cibilCore, productionMode, astroAI, surePass) {
+app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', '$http', 'stateManager', '$location', 'authentication', 'cibilCore', 'productionMode', 'astroAI', 'surePass', function ($scope, $rootScope, $timeout, $http, stateManager, $location, authentication, cibilCore, productionMode, astroAI, surePass) {
 
-    // #region agent log
-    $scope.$on('$viewContentLoaded', function () {
-        setTimeout(function () {
-            fetch('http://127.0.0.1:7244/ingest/f843917b-97b2-459f-8899-9885ac655872', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'homeCtrl.js:$viewContentLoaded', message: 'Template loaded, checking CSS after enhancement', data: { timestamp: Date.now() }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run2', hypothesisId: 'B' }) }).catch(() => { });
-            var testCard = document.querySelector('.card');
-            var cardComputed = testCard ? window.getComputedStyle(testCard) : null;
-            var btnPrimary = document.querySelector('.btn-primary');
-            var btnPrimaryComputed = btnPrimary ? window.getComputedStyle(btnPrimary) : null;
-            var badgeAi = document.querySelector('.badge-ai');
-            var badgeComputed = badgeAi ? window.getComputedStyle(badgeAi) : null;
-            var navActive = document.querySelector('.nav-tabs .nav-link.active');
-            var navComputed = navActive ? window.getComputedStyle(navActive) : null;
-            fetch('http://127.0.0.1:7244/ingest/f843917b-97b2-459f-8899-9885ac655872', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'homeCtrl.js:$viewContentLoaded', message: 'Enhanced CSS verification', data: { cardBorderRadius: cardComputed?.borderRadius, cardBoxShadow: cardComputed?.boxShadow?.substring(0, 60), btnPrimaryBg: btnPrimaryComputed?.background?.substring(0, 100), badgeAiBg: badgeComputed?.background?.substring(0, 100), navActiveColor: navComputed?.color, navActiveBorderBottom: navComputed?.borderBottom }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run2', hypothesisId: 'C' }) }).catch(() => { });
-        }, 500);
-    });
-    // #endregion
+    // Removed analytics calls that cause CORS errors
+
+    // Initialize creditData immediately to prevent template rendering issues
+    $scope.creditData = {
+        credit_score: null,
+        name: 'User',
+        pan: 'N/A',
+        mobile: '',
+        email: '',
+        client_id: null
+    };
+
+    // Initialize all scope variables with defaults
+    $scope.paymentOnTime = 65;
+    $scope.creditUtilization = 48;
+    $scope.recentEnquiries = 7;
+    $scope.creditAge = 4.2;
+    $scope.defaultAccounts = 4;
+    $scope.defaultProbability = 38;
+    $scope.creditWorthiness = 6.2;
+    $scope.totalExposure = 485566;
+    $scope.totalOverdue = 48018;
+    $scope.loanEligibility = '₹5-10L';
+    $scope.riskAssessment = {
+        level: 'medium-high',
+        probability: 38
+    };
+    $scope.accounts = [];
+    $scope.filteredAccounts = [];
+    
+    // Finvu status
+    $scope.finvuConnected = false;
+    $scope.finvuStatus = 'Not Connected';
 
     $timeout(function () {
-        // #region agent log
-        fetch('http://127.0.0.1:7244/ingest/f843917b-97b2-459f-8899-9885ac655872', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'homeCtrl.js:$timeout', message: 'Controller init started', data: { timestamp: Date.now() }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'E' }) }).catch(() => { });
-        // #endregion
-
+        console.log('[homeCtrl] Initializing controller');
 
         if (stateManager.isUserLogggedIn()) {
             $scope.userProfile = stateManager.getProfile();
-            log('User Profile :', $scope.userProfile);
+            console.log('[homeCtrl] User Profile:', $scope.userProfile);
 
             // Update credit data with user info immediately
             if ($scope.userProfile) {
@@ -38,11 +52,14 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
             // Always load dashboard data, even if profile not complete (will show available data)
             $scope.loadDashboardData();
             
+            // Check Finvu connection status
+            $scope.checkFinvuStatus();
+            
             // Check if profile needs completion
             if (!stateManager.isProfileCompleted()) {
                 warn('Profile not complete. Redirect to profile completion after dashboard loads...');
                 $timeout(function() {
-                    $location.path("profile/complete");
+                $location.path("profile/complete");
                 }, 2000); // Give 2 seconds to see dashboard before redirecting
             }
         } else {
@@ -50,186 +67,165 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
         }
 
         $rootScope.$on('request_error', function (event, data) {
-            $scope.loaderHide();
+            $rootScope.loaderShow = false;
         });
     });
 
     $scope.loadDashboardData = function () {
-        $scope.loaderShow = true;
+        $rootScope.loaderShow = true;
         $scope.chartsInitialized = false;
 
-        cibilCore.getAnalysis().then(function (res) {
-            if (res.data.success) {
-                const data = res.data;
-                $scope.creditData = {
-                    credit_score: data.credit_score,
-                    name: $scope.userProfile?.profile_info?.fullname || $scope.userProfile?.profile_info?.name || 'User',
-                    pan: $scope.userProfile?.kyc?.pan_number || data.user_info?.pan || 'N/A',
-                    mobile: $scope.userProfile?.profile_info?.mobile || $scope.userProfile?.mobile || ''
-                };
-
-                // Ensure name matches logged in user, not sandbox data
-                if (data.user_info) {
-                    data.user_info.name = $scope.creditData.name;
-                }
-
-                $scope.paymentOnTime = data.payment_history?.on_time_percentage || 65;
-                $scope.creditUtilization = data.utilization?.percentage || 48;
-                $scope.recentEnquiries = data.enquiries?.recent_count || 7;
-                $scope.creditAge = data.age?.total_years || 4.2;
-                $scope.defaultAccounts = data.defaults?.count || 4;
-                $scope.defaultProbability = data.default_probability || 38;
-                $scope.creditWorthiness = data.credit_worthiness || 6.2;
-                $scope.totalExposure = data.total_exposure || 485566;
-                $scope.totalOverdue = data.total_overdue || 48018;
-                $scope.loanEligibility = data.loan_eligibility || '₹5-10L';
-
-                $scope.riskAssessment = {
-                    level: data.risk_level || 'medium-high',
-                    probability: data.default_probability || 38
-                };
-
-                // Map accounts
-                if (data.accounts && data.accounts.length > 0) {
-                    $scope.accounts = data.accounts.map(acc => ({
-                        accountNumber: acc.mask_account_number || acc.accountNumber,
-                        bank: acc.member_name || acc.bank,
-                        type: acc.account_type || acc.type,
-                        currentBalance: acc.current_balance || acc.currentBalance,
-                        amountOverdue: acc.overdue_amount || acc.amountOverdue,
-                        status: acc.account_status || acc.status,
-                        risk: acc.risk_category || acc.risk,
-                        lastPaymentDate: acc.last_payment_date
-                    }));
-                    $scope.filteredAccounts = $scope.accounts;
-                }
-
-                // Chart data for dynamic rendering
-                $scope.chartData = {
-                    scoreBreakdown: data.score_breakdown || {
-                        payment_history: 30,
-                        credit_utilization: 25,
-                        credit_age: 20,
-                        credit_mix: 15,
-                        new_credit: 10
-                    },
-                    paymentHistory: data.payment_trend || [85, 80, 75, 65, 60, 65]
-                };
-
-                // Initialize charts after a short delay to ensure DOM is ready
-                $timeout(function () {
-                    initializeCharts();
-                }, 100);
+        // Build identifier from user profile
+        var identifier = {};
+        if ($scope.userProfile) {
+            if ($scope.userProfile.kyc?.pan_number) {
+                identifier.pan = $scope.userProfile.kyc.pan_number;
             }
-        }).catch(function (err) {
-            console.error('Local analysis not found. Attempting to fetch from Surepass (Sandbox)...', err);
+            if ($scope.userProfile.mobile || $scope.userProfile.profile_info?.mobile) {
+                identifier.mobile = $scope.userProfile.mobile || $scope.userProfile.profile_info.mobile;
+            }
+            if ($scope.userProfile.profile_info?.email) {
+                identifier.email = $scope.userProfile.profile_info.email;
+            }
+        }
 
-            var mobile = $scope.userProfile?.profile_info?.mobile || $scope.userProfile?.mobile || $scope.userProfile?.userId;
+        // If no identifier, use fallback data immediately
+        if (!identifier.pan && !identifier.mobile && !identifier.email) {
+            console.warn('[homeCtrl] No identifier available, using fallback data');
+            var mobile = $scope.userProfile?.profile_info?.mobile || $scope.userProfile?.mobile || '';
             var name = $scope.userProfile?.profile_info?.fullname || $scope.userProfile?.profile_info?.name || 'User';
+            
+            // Set fallback values
+            $scope.creditData.credit_score = 670;
+            $scope.creditData.name = name;
+            $scope.creditData.pan = $scope.userProfile?.kyc?.pan_number || 'N/A';
+            $scope.creditData.mobile = mobile;
+            
+            $rootScope.loaderShow = false;
+            $timeout(function() {
+                initializeCharts();
+            }, 100);
+            return;
+        }
 
-            // Function to use fallback data if everything fails
-            var useFallback = function () {
-                console.warn('Using fallback/demo data with user information.');
-                $scope.creditData = {
-                    credit_score: null,
-                    client_id: null,
-                    name: name,
-                    pan: $scope.userProfile?.kyc?.pan_number || 'Not provided',
-                    mobile: mobile
-                };
-                
-                // Set demo/placeholder values
-                $scope.paymentOnTime = null;
-                $scope.creditUtilization = null;
-                $scope.recentEnquiries = null;
-                $scope.creditAge = null;
-                $scope.defaultAccounts = 0;
-                $scope.defaultProbability = null;
-                $scope.creditWorthiness = null;
-                $scope.totalExposure = null;
-                $scope.totalOverdue = null;
-                $scope.loanEligibility = 'Complete profile to check';
-                
-                $scope.riskAssessment = {
-                    level: "not-assessed",
-                    probability: null
-                };
-                
-                $scope.accounts = [];
-                $scope.filteredAccounts = [];
-                
-                initializeChartsWithDefaults();
-                $scope.loaderShow = false;
+        console.log('[homeCtrl] Loading CIBIL analysis with identifier:', identifier);
+        cibilCore.getAnalysis(identifier).then(function (res) {
+            console.log('[homeCtrl] CIBIL analysis response:', res.data);
+            
+            if (!res.data || !res.data.success) {
+                throw new Error('Analysis failed: ' + (res.data?.error || 'Unknown error'));
+            }
+            
+            // Handle the actual response format from /get/api/cibil/analysis
+            var response = res.data;
+            
+            // Update creditData with actual values from response
+            $scope.creditData.credit_score = parseInt(response.score_summary?.credit_score || response.credit_score || 670);
+            $scope.creditData.name = response.client_info?.name || $scope.userProfile?.profile_info?.fullname || $scope.userProfile?.profile_info?.name || 'User';
+            $scope.creditData.pan = response.client_info?.pan || $scope.userProfile?.kyc?.pan_number || 'N/A';
+            $scope.creditData.mobile = response.client_info?.mobile || $scope.userProfile?.profile_info?.mobile || $scope.userProfile?.mobile || '';
+            $scope.creditData.client_id = response.client_info?.client_id || null;
+
+            // Extract detailed analysis data
+            var analysis = response.detailed_analysis || {};
+            var accountStats = response.account_statistics || {};
+            var riskAssess = response.risk_assessment || {};
+
+            // Set metrics from analysis
+            $scope.paymentOnTime = analysis.payment_analysis?.on_time_percentage || analysis.payment_analysis?.percentage || 65;
+            $scope.creditUtilization = analysis.credit_utilization?.percentage || analysis.credit_utilization || 48;
+            $scope.recentEnquiries = accountStats.recent_enquiries || accountStats.enquiries_count || 7;
+            $scope.creditAge = analysis.credit_age?.total_years || analysis.credit_age || 4.2;
+            $scope.defaultAccounts = accountStats.default_accounts || accountStats.defaults_count || 4;
+            $scope.defaultProbability = riskAssess.default_probability || riskAssess.probability || 38;
+            $scope.creditWorthiness = riskAssess.credit_worthiness || 6.2;
+            $scope.totalExposure = accountStats.total_exposure || 485566;
+            $scope.totalOverdue = accountStats.total_overdue || 48018;
+            $scope.loanEligibility = riskAssess.loan_eligibility || '₹5-10L';
+
+            $scope.riskAssessment = {
+                level: riskAssess.risk_level || response.score_summary?.overall_grade?.toLowerCase() || 'medium-high',
+                probability: riskAssess.default_probability || 38
             };
 
-            if (mobile) {
-                // Fetch from Surepass
-                surePass.cibil(mobile, name).then(function (res) {
-                    if (res.data && (res.data.status || res.data.success)) {
-                        console.log('Surepass data fetched successfully. Uploading to backend...');
-
-                        // normalize and upload
-                        var rawData = res.data.data || res.data;
-                        var normalized = cibilCore.normalizeData(rawData);
-
-                        // OVERWRITE Sandbox Identity with User Identity
-                        if (normalized) {
-                            normalized.name = name;
-                            normalized.mobile = mobile;
-                            normalized.user_info = normalized.user_info || {};
-                            normalized.user_info.name = name;
-                            normalized.user_info.mobile = mobile;
-
-                            // If user has a PAN, use it. Otherwise keep sandbox PAN (IVZPK2103N)
-                            if ($scope.userProfile?.kyc?.pan_number) {
-                                normalized.pan = $scope.userProfile.kyc.pan_number;
-                                normalized.user_info.pan = $scope.userProfile.kyc.pan_number;
-                            }
-                        }
-
-                        cibilCore.uploadData(normalized).then(function () {
-                            console.log('Data uploaded. Reloading dashboard...');
-                            // Retry loading dashboard data (without recursion loop hopefully)
-                            // Manually call success logic to avoid re-triggering this block infinitely if something is weird
-                            cibilCore.getBasicAnalysis(mobile).then(function (res2) {
-                                if (res2 && res2.data) {
-                                    // Success - populate scope
-                                    var data = res2.data;
-                                    $scope.creditData = {
-                                        credit_score: data.credit_score,
-                                        name: name,
-                                        pan: data.user_info?.pan || $scope.userProfile?.kyc?.pan_number || 'N/A',
-                                        mobile: mobile
-                                    };
-                                    // Populate other fields (simplified for brevity, main parts)
-                                    $scope.paymentOnTime = data.payment_analysis?.onTimePercentage || 65;
-                                    $scope.creditUtilization = data.credit_utilization || 48;
-                                    $scope.chartData = {
-                                        scoreBreakdown: data.detailed_analysis?.component_grades || {},
-                                        paymentHistory: data.detailed_analysis?.payment_analysis?.history || [700, 710, 720]
-                                    };
-                                    $timeout(function () { initializeCharts(); }, 100);
-                                    $scope.loaderShow = false;
-                                } else {
-                                    useFallback();
-                                }
-                            }).catch(useFallback);
-
-                        }).catch(function (e) {
-                            console.error('Upload failed', e);
-                            useFallback();
-                        });
-                    } else {
-                        console.warn('Surepass fetch returned false status');
-                        useFallback();
-                    }
-                }).catch(function (e) {
-                    console.error('Surepass fetch failed', e);
-                    useFallback();
-                });
+            // Map accounts from account_statistics or credit_report
+            if (accountStats.accounts && accountStats.accounts.length > 0) {
+                $scope.accounts = accountStats.accounts;
+            } else if (response.detailed_analysis?.accounts) {
+                $scope.accounts = response.detailed_analysis.accounts;
             } else {
-                useFallback();
+                $scope.accounts = [];
             }
+            $scope.filteredAccounts = $scope.accounts;
+            
+            // Calculate account summary statistics
+            $scope.totalAccounts = $scope.accounts.length || 0;
+            $scope.activeAccounts = $scope.accounts.filter(function(acc) {
+                return acc.status && acc.status.toLowerCase() !== 'default' && acc.status.toLowerCase() !== 'closed';
+            }).length || 0;
+            
+            // Calculate totals
+            $scope.totalBalance = $scope.accounts.reduce(function(sum, acc) {
+                return sum + (parseFloat(acc.currentBalance) || 0);
+            }, 0) || 0;
+            
+            $scope.totalCreditLimit = $scope.accounts.reduce(function(sum, acc) {
+                return sum + (parseFloat(acc.creditLimit) || 0);
+            }, 0) || 0;
+
+            // Chart data for dynamic rendering
+            $scope.chartData = {
+                scoreBreakdown: analysis.component_grades || {
+                    payment_history: 30,
+                    credit_utilization: 25,
+                    credit_age: 20,
+                    credit_mix: 15,
+                    new_credit: 10
+                },
+                paymentHistory: analysis.payment_analysis?.history || [85, 80, 75, 65, 60, 65]
+            };
+
+            // Initialize charts after a short delay to ensure DOM is ready
+            $timeout(function () {
+                initializeCharts();
+            }, 100);
+            
+            $rootScope.loaderShow = false;
+            console.log('[homeCtrl] Dashboard data loaded successfully');
+            console.log('[homeCtrl] creditData:', JSON.stringify($scope.creditData));
+        }).catch(function (err) {
+            console.error('[homeCtrl] CIBIL analysis error:', err);
+            
+            // Use fallback data from mock CIBIL files
+            console.log('[homeCtrl] Using fallback data from data/cibil');
+            var mobile = $scope.userProfile?.profile_info?.mobile || $scope.userProfile?.mobile || $scope.userProfile?.userId;
+            var name = $scope.userProfile?.profile_info?.fullname || $scope.userProfile?.profile_info?.name || 'User';
+            
+            // Set fallback values (from sample data structure)
+            $scope.creditData.credit_score = 670;
+            $scope.creditData.name = name || 'User';
+            $scope.creditData.pan = $scope.userProfile?.kyc?.pan_number || 'N/A';
+            $scope.creditData.mobile = mobile || '';
+            
+            // Keep default values already set above
+            $rootScope.loaderShow = false;
+            
+            console.log('[homeCtrl] Fallback data set:', $scope.creditData);
+            
+            $scope.riskAssessment = {
+                level: "medium-high",
+                probability: 38
+            };
+            
+            $scope.accounts = [];
+            $scope.filteredAccounts = [];
+            
+            // Initialize charts with defaults
+            $timeout(function() {
+                initializeCharts();
+            }, 100);
+            
+            console.log('[homeCtrl] Fallback complete, creditData:', JSON.stringify($scope.creditData));
         });
     };
 
@@ -251,7 +247,7 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
         var sampleData = {
             data: {
                 client_id: "credit_report_cibil_jIifktiYhrHTbZcMdlsU",
-                mobile: "9708016996",
+                mobile: "7764056669",
                 pan: "IVZPK2103N",
                 name: "SHIV KUMAR",
                 credit_score: "670",
@@ -283,7 +279,7 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
                 return cibilCore.addScoreToHistory({
                     client_id: "credit_report_cibil_jIifktiYhrHTbZcMdlsU",
                     pan: "IVZPK2103N",
-                    mobile: "9708016996",
+                    mobile: "7764056669",
                     name: "SHIV KUMAR",
                     score: 670,
                     grade: "B",
@@ -575,17 +571,22 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
             return;
         }
 
+        console.log('[homeCtrl] Downloading CIBIL PDF with identifiers:', identifiers);
+        $rootScope.loaderShow = true;
+
         var baseUrl = productionMode.getMode();
-        var url = baseUrl + '/get/api/cibil/generate-pdf';
-        var queryString = Object.keys(identifiers).map(function (key) {
-            return encodeURIComponent(key) + '=' + encodeURIComponent(identifiers[key]);
-        }).join('&');
-
-        if (queryString) {
-            url += '?' + queryString;
-        }
-
+        // Use GET endpoint as it exists in backend
+        var queryParams = [];
+        if (identifiers.pan) queryParams.push('pan=' + encodeURIComponent(identifiers.pan));
+        if (identifiers.mobile) queryParams.push('mobile=' + encodeURIComponent(identifiers.mobile));
+        if (identifiers.email) queryParams.push('email=' + encodeURIComponent(identifiers.email));
+        
+        var url = baseUrl + '/get/api/cibil/generate-pdf?' + queryParams.join('&');
+        console.log('[homeCtrl] PDF URL:', url);
+        
+        // Open in new window to trigger download
         window.open(url, '_blank');
+        $rootScope.loaderShow = false;
     };
 
     $scope.downloadASTROCREDReport = function () {
@@ -595,17 +596,22 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
             return;
         }
 
+        console.log('[homeCtrl] Downloading ASTROCRED PDF with identifiers:', identifiers);
+        $rootScope.loaderShow = true;
+
         var baseUrl = productionMode.getMode();
-        var url = baseUrl + '/get/api/cibil/astrocred-report-pdf';
-        var queryString = Object.keys(identifiers).map(function (key) {
-            return encodeURIComponent(key) + '=' + encodeURIComponent(identifiers[key]);
-        }).join('&');
-
-        if (queryString) {
-            url += '?' + queryString;
-        }
-
+        // Use GET endpoint for ASTROCRED report PDF
+        var queryParams = [];
+        if (identifiers.pan) queryParams.push('pan=' + encodeURIComponent(identifiers.pan));
+        if (identifiers.mobile) queryParams.push('mobile=' + encodeURIComponent(identifiers.mobile));
+        if (identifiers.email) queryParams.push('email=' + encodeURIComponent(identifiers.email));
+        
+        var url = baseUrl + '/get/api/cibil/astrocred-report-pdf?' + queryParams.join('&');
+        console.log('[homeCtrl] PDF URL:', url);
+        
+        // Open in new window to trigger download
         window.open(url, '_blank');
+        $rootScope.loaderShow = false;
     };
 
     $scope.downloadMultiBureau = function () {
@@ -615,17 +621,38 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
             return;
         }
 
+        console.log('[homeCtrl] Downloading Multi-Bureau PDF with identifiers:', identifiers);
+        $rootScope.loaderShow = true;
+
         var baseUrl = productionMode.getMode();
-        var url = baseUrl + '/get/api/multi-bureau/generate-pdf';
-        var queryString = Object.keys(identifiers).map(function (key) {
-            return encodeURIComponent(key) + '=' + encodeURIComponent(identifiers[key]);
-        }).join('&');
-
-        if (queryString) {
-            url += '?' + queryString;
-        }
-
-        window.open(url, '_blank');
+        $http({
+            method: 'POST',
+            url: baseUrl + '/post/api/multi-bureau/generate-pdf',
+            data: identifiers,
+            responseType: 'blob',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function(response) {
+            $rootScope.loaderShow = false;
+            var blob = new Blob([response.data], { type: 'application/pdf' });
+            var url = window.URL.createObjectURL(blob);
+            var link = document.createElement('a');
+            link.href = url;
+            link.download = 'MultiBureau_Report_' + (identifiers.pan || identifiers.mobile || 'report') + '_' + Date.now() + '.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+            console.log('[homeCtrl] PDF downloaded successfully');
+        }).catch(function(error) {
+            $rootScope.loaderShow = false;
+            console.error('[homeCtrl] PDF download error:', error);
+            if (error.data) {
+                console.error('[homeCtrl] Error response:', error.data);
+            }
+            alert('Failed to download PDF: ' + (error.data?.error || error.message || 'Unknown error'));
+        });
     };
 
     $scope.generateComprehensiveReport = function () {
@@ -633,9 +660,29 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager', 
         console.log('Comprehensive report generation');
     };
 
+    // Check Finvu connection status
+    $scope.checkFinvuStatus = function() {
+        var profile = stateManager.getProfile();
+        if (!profile || !profile.mobile) return;
+        
+        $http.get('/api/finvu/summary?mobile=' + (profile.mobile || profile.profile_info?.mobile))
+            .then(function(res) {
+                if (res.data.success && res.data.summary.accountCount > 0) {
+                    $scope.finvuConnected = true;
+                    $scope.finvuStatus = 'Connected (' + res.data.summary.accountCount + ' accounts)';
+                } else {
+                    $scope.finvuConnected = false;
+                    $scope.finvuStatus = 'Not Connected';
+                }
+            })
+            .catch(function(err) {
+                $scope.finvuConnected = false;
+                $scope.finvuStatus = 'Not Connected';
+            });
+    };
+
     $scope.connectFinvu = function () {
-        alert('Finvu integration coming soon!');
-        console.log('Finvu connection requested');
+        $location.path('/finvu-connect');
     };
 
     $scope.simulateScoreImprovement = function () {

@@ -35,6 +35,12 @@ app.provider('cibilCore', [function () {
                     // Backend: GET /get/api/cibil/analysis?pan=...&mobile=...&email=...&client_id=...&force_refresh=...
                     var params = {};
 
+                    // Handle undefined identifier
+                    if (!identifier) {
+                        console.warn('cibilCore.getAnalysis called without identifier');
+                        identifier = {};
+                    }
+
                     if (identifier.pan) params.pan = identifier.pan;
                     if (identifier.mobile) params.mobile = identifier.mobile;
                     if (identifier.email) params.email = identifier.email;
@@ -534,7 +540,7 @@ app.provider('cibilCore', [function () {
                     return this.addScoreToHistory({
                         client_id: "credit_report_cibil_jIifktiYhrHTbZcMdlsU",
                         pan: "IVZPK2103N",
-                        mobile: "9708016996",
+                        mobile: "7764056669",
                         name: "SHIV KUMAR",
                         score: 670,
                         grade: "B",
@@ -546,7 +552,7 @@ app.provider('cibilCore', [function () {
                 createSampleData: function () {
                     return {
                         client_id: "credit_report_cibil_jIifktiYhrHTbZcMdlsU",
-                        mobile: "9708016996",
+                        mobile: "7764056669",
                         pan: "IVZPK2103N",
                         name: "SHIV KUMAR",
                         gender: "male",

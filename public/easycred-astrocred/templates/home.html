@@ -106,9 +106,16 @@
         color: rgba(255, 255, 255, 0.95) !important;
     }
 
-    /* Table text */
-    .table, .table td, .table th {
+    /* Table text - Report History & Status and all tables */
+    .table, .table td, .table th,
+    .table-hover tbody tr td, .table-hover tbody tr th,
+    .table-responsive .table td, .table-responsive .table th {
         color: #FFFFFF !important;
+        border-color: rgba(255, 255, 255, 0.2) !important;
+    }
+    .table thead th {
+        color: var(--astro-accent) !important;
+        font-weight: 600 !important;
     }
 
     /* List items */
@@ -266,84 +273,7 @@
         padding: 1rem;
     }
 
-    .chat-ai {
-        background: linear-gradient(135deg, rgba(245, 245, 255, 0.8) 0%, rgba(248, 249, 255, 0.9) 100%) !important;
-        border-left: 4px solid #1c1fbe !important;
-        border-radius: 12px;
-        padding: 1rem;
-        box-shadow: 0 2px 8px rgba(28, 31, 190, 0.1);
-    }
-
-    .chat-user {
-        background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%) !important;
-        color: #fff !important;
-        border-radius: 12px;
-        padding: 0.75rem 1.25rem;
-        box-shadow: 0 4px 12px rgba(28, 31, 190, 0.3);
-    }
-
-    .score-ring {
-        width: 160px;
-        height: 160px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto;
-        background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%) !important;
-        box-shadow: 0 8px 24px rgba(28, 31, 190, 0.3) !important;
-        position: relative;
-    }
-
-    .score-ring::before {
-        content: '';
-        position: absolute;
-        inset: -4px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #1c1fbe, #33c9d3);
-        opacity: 0.3;
-        filter: blur(8px);
-        z-index: -1;
-    }
-
-    .score-ring span {
-        font-size: 48px;
-        font-weight: 800;
-        background: #fff;
-        width: 130px;
-        height: 130px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #1c1fbe;
-        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .metric {
-        padding: 10px 0;
-        border-bottom: 1px dashed rgba(28, 31, 190, 0.2);
-        transition: all 0.2s ease;
-    }
-
-    .metric:hover {
-        background: rgba(28, 31, 190, 0.03);
-        padding-left: 8px;
-        border-radius: 6px;
-    }
-
-    .metric:last-child {
-        border-bottom: none;
-    }
-
-    .assistant-tip {
-        background: linear-gradient(135deg, #fff7e6 0%, #fff 100%);
-        border-left: 4px solid #ffc107;
-        font-size: 0.9rem;
-        padding: 1rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(255, 193, 7, 0.2);
-    }
+    /* Removed duplicate light-theme chat/score-ring/metric/assistant-tip – dark theme above applies */
 
     .footer-note {
         font-size: 0.75rem;
@@ -417,6 +347,30 @@
         background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
         border: 3px solid #fff;
         box-shadow: 0 0 0 3px #1c1fbe, 0 4px 12px rgba(28, 31, 190, 0.3);
+    }
+
+    /* 24-Month Roadmap - force high contrast text (fix invisible content) */
+    #roadmap .card-body,
+    #roadmap .timeline-item,
+    #roadmap .timeline-item h5,
+    #roadmap .timeline-item p,
+    #roadmap .timeline-item .text-muted,
+    #roadmap .timeline-item small {
+        color: #FFFFFF !important;
+    }
+    #roadmap .timeline-item p.text-muted {
+        color: rgba(255, 255, 255, 0.95) !important;
+    }
+    #roadmap .card.shadow-sm {
+        background: linear-gradient(145deg, rgba(22, 33, 62, 0.95) 0%, rgba(15, 15, 26, 0.98) 100%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    }
+
+    /* Credit Reports tab - Report History table row text */
+    #reports .table tbody td,
+    #reports .card-body .table td,
+    #reports .table-hover tbody tr td {
+        color: #FFFFFF !important;
     }
 
     .offer-card {
@@ -799,13 +753,12 @@
                 <i class="fas fa-robot text-primary me-2"></i> ASTROCRED – AI Credit Intelligence Platform
             </h2>
             <p class="text-muted mb-0">
-                Simplified credit reports + AI-powered financial roadmap • Client: {{creditData.name || 'User'}} (PAN:
-                {{creditData.pan || 'N/A'}})
+                Simplified credit reports + AI-powered financial roadmap • Client: <span ng-bind="creditData.name || 'User'"></span> (PAN: <span ng-bind="creditData.pan || 'N/A'"></span>)
             </p>
         </div>
         <div class="col-md-4 text-md-end mt-3 mt-md-0">
             <span class="badge badge-ai px-3 py-2">
-                <i class="fas fa-robot me-1"></i> {{creditData.credit_score ? 'Live Data Connected' : 'No Data Found'}}
+                <i class="fas fa-robot me-1"></i> <span ng-bind="creditData.credit_score ? 'Live Data Connected' : 'No Data Found'"></span>
                 • API v1.0
             </span>
         </div>
@@ -863,10 +816,10 @@
                             <!-- Score Ring with Dynamic Color -->
                             <div class="score-ring mb-3"
                                 ng-style="{'background': getScoreRingGradient(creditData.credit_score)}">
-                                <span>{{creditData.credit_score || 670}}</span>
+                                <span ng-bind="creditData.credit_score || 670"></span>
                             </div>
-                            <h4 class="mb-2">{{getScoreGrade(creditData.credit_score).grade}}</h4>
-                            <p class="text-muted mb-4">{{getScoreGrade(creditData.credit_score).description}}</p>
+                            <h4 class="mb-2" ng-bind="getScoreGrade(creditData.credit_score).grade"></h4>
+                            <p class="text-muted mb-4" ng-bind="getScoreGrade(creditData.credit_score).description"></p>
                             <div class="text-start small mb-4">
                                 <div class="metric">
                                     <i class="fas fa-calendar-check me-2"
@@ -916,8 +869,8 @@
                             <!-- Welcome Message -->
                             <div class="alert chat-ai mb-3">
                                 <i class="fas fa-robot me-2"></i>
-                                <b>Hello {{creditData.name || 'User'}}! I'm ASTRO, your AI credit advisor.</b>
-                                You have a <strong>{{creditData.credit_score || '---'}} credit score</strong> with
+                                <b>Hello <span ng-bind="creditData.name || 'User'"></span>! I'm ASTRO, your AI credit advisor.</b>
+                                You have a <strong><span ng-bind="creditData.credit_score || '---'"></span> credit score</strong> with
                                 <strong>{{defaultAccounts || 0}} default accounts</strong>. Ask me anything about
                                 improving your credit!
                             </div>
@@ -1185,7 +1138,9 @@
                                     <h6>API Integration Status</h6>
                                     <span class="badge bg-success">CIBIL API: Connected</span>
                                     <span class="badge bg-warning">Multi-Bureau: Premium</span>
-                                    <span class="badge bg-secondary">Finvu: Not Connected</span>
+                                    <span class="badge" ng-class="{'bg-success': finvuConnected, 'bg-secondary': !finvuConnected}">
+                                        Finvu: {{finvuStatus}}
+                                    </span>
                                 </div>
                                 <button class="btn btn-astro btn-sm w-100" ng-click="connectFinvu()">
                                     <i class="fas fa-plug me-1"></i> Connect Finvu for Complete Data
@@ -1331,11 +1286,10 @@
                 <div class="col-md-12">
                     <div class="card shadow-sm">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-credit-card me-2"></i> All Credit Accounts ({{totalAccounts ||
-                                19}})</span>
+                            <span><i class="fas fa-credit-card me-2"></i> All Credit Accounts (<span ng-bind="totalAccounts || accounts.length || 0"></span>)</span>
                             <div>
-                                <span class="badge bg-success me-2">Active: {{activeAccounts || 11}}</span>
-                                <span class="badge bg-danger">Default: {{defaultAccounts || 4}}</span>
+                                <span class="badge bg-success me-2">Active: <span ng-bind="activeAccounts || 0"></span></span>
+                                <span class="badge bg-danger">Default: <span ng-bind="defaultAccounts || 0"></span></span>
                             </div>
                         </div>
                         <div class="card-body">
@@ -1356,42 +1310,50 @@
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>
-                                        <tr>
-                                            <th>Account</th>
-                                            <th>Bank</th>
-                                            <th>Type</th>
-                                            <th>Balance</th>
-                                            <th>Overdue</th>
-                                            <th>Status</th>
-                                            <th>Last Payment</th>
-                                            <th>Actions</th>
+                                        <tr style="background-color: #f8f9fa; color: #212529;">
+                                            <th style="color: #212529 !important; font-weight: 600;">Account</th>
+                                            <th style="color: #212529 !important; font-weight: 600;">Bank</th>
+                                            <th style="color: #212529 !important; font-weight: 600;">Type</th>
+                                            <th style="color: #212529 !important; font-weight: 600;">Balance</th>
+                                            <th style="color: #212529 !important; font-weight: 600;">Overdue</th>
+                                            <th style="color: #212529 !important; font-weight: 600;">Status</th>
+                                            <th style="color: #212529 !important; font-weight: 600;">Last Payment</th>
+                                            <th style="color: #212529 !important; font-weight: 600;">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <tr ng-if="filteredAccounts.length === 0">
+                                            <td colspan="8" class="text-center text-muted py-4">
+                                                <i class="fas fa-info-circle me-2"></i>No account data available. Please ensure CIBIL data is loaded.
+                                            </td>
+                                        </tr>
                                         <tr ng-repeat="account in filteredAccounts"
                                             ng-class="{'table-danger': account.amountOverdue > 0, 'table-warning': account.risk === 'high'}">
-                                            <td>{{account.accountNumber | limitTo:12}}...</td>
-                                            <td>{{account.bank}}</td>
+                                            <td>
+                                                <span ng-bind="(account.accountNumber || account.masked_account_number || 'N/A') | limitTo:12"></span>
+                                                <span ng-if="(account.accountNumber || account.masked_account_number || '').length > 12">...</span>
+                                            </td>
+                                            <td ng-bind="account.bank || account.bankName || 'Unknown'"></td>
                                             <td>
                                                 <span class="badge"
-                                                    ng-class="{'bg-primary': account.type === 'Credit Card', 'bg-success': account.type === 'Personal Loan', 'bg-warning': account.type === 'Consumer Loan'}">
-                                                    {{account.type}}
+                                                    ng-class="{'bg-primary': account.type === 'Credit Card', 'bg-success': account.type === 'Personal Loan', 'bg-warning': account.type === 'Consumer Loan', 'bg-info': !account.type || account.type === 'SAVINGS'}">
+                                                    <span ng-bind="account.type || 'SAVINGS'"></span>
                                                 </span>
                                             </td>
-                                            <td>₹{{account.currentBalance | number}}</td>
+                                            <td>₹<span ng-bind="(account.currentBalance || account.balance || 0) | number"></span></td>
                                             <td>
-                                                <span ng-if="account.amountOverdue > 0" class="text-danger">
-                                                    ₹{{account.amountOverdue | number}}
+                                                <span ng-if="(account.amountOverdue || 0) > 0" class="text-danger">
+                                                    ₹<span ng-bind="(account.amountOverdue || 0) | number"></span>
                                                 </span>
-                                                <span ng-if="account.amountOverdue <= 0" class="text-success">-</span>
+                                                <span ng-if="(account.amountOverdue || 0) <= 0" class="text-success">-</span>
                                             </td>
                                             <td>
                                                 <span class="status-badge"
-                                                    ng-class="{'status-good': account.status === 'Good', 'status-warning': account.status === 'Warning', 'status-danger': account.status === 'Default'}">
-                                                    {{account.status}}
+                                                    ng-class="{'status-good': account.status === 'Good' || account.status === 'ACTIVE', 'status-warning': account.status === 'Warning', 'status-danger': account.status === 'Default'}">
+                                                    <span ng-bind="account.status || 'ACTIVE'"></span>
                                                 </span>
                                             </td>
-                                            <td>{{account.lastPaymentDate || 'N/A'}}</td>
+                                            <td ng-bind="account.lastPaymentDate || 'N/A'"></td>
                                             <td>
                                                 <button class="btn btn-sm btn-outline-info"
                                                     ng-click="viewAccountDetails(account)">
@@ -1406,26 +1368,26 @@
                             <div class="row mt-4">
                                 <div class="col-md-3">
                                     <div class="card border p-3 text-center">
-                                        <h5 class="text-info">₹{{totalBalance | number}}</h5>
-                                        <p class="text-muted small">Total Balance</p>
+                                        <h5 class="text-info" style="color: #17a2b8 !important;">₹<span ng-bind="(totalBalance || 0) | number"></span></h5>
+                                        <p class="text-muted small" style="color: #6c757d !important;">Total Balance</p>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="card border p-3 text-center">
-                                        <h5 class="text-danger">₹{{totalOverdue | number}}</h5>
-                                        <p class="text-muted small">Total Overdue</p>
+                                        <h5 class="text-danger" style="color: #dc3545 !important;">₹<span ng-bind="(totalOverdue || 0) | number"></span></h5>
+                                        <p class="text-muted small" style="color: #6c757d !important;">Total Overdue</p>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="card border p-3 text-center">
-                                        <h5 class="text-success">₹{{totalCreditLimit | number}}</h5>
-                                        <p class="text-muted small">Credit Limit</p>
+                                        <h5 class="text-success" style="color: #28a745 !important;">₹<span ng-bind="(totalCreditLimit || 0) | number"></span></h5>
+                                        <p class="text-muted small" style="color: #6c757d !important;">Credit Limit</p>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="card border p-3 text-center">
-                                        <h5 class="text-warning">{{creditUtilization || 48}}%</h5>
-                                        <p class="text-muted small">Utilization</p>
+                                        <h5 class="text-warning" style="color: #ffc107 !important;"><span ng-bind="creditUtilization || 48"></span>%</h5>
+                                        <p class="text-muted small" style="color: #6c757d !important;">Utilization</p>
                                     </div>
                                 </div>
                             </div>
@@ -1443,10 +1405,11 @@
                             <i class="fas fa-plug me-2"></i> Finvu Account Aggregator Integration
                         </div>
                         <div class="card-body">
-                            <div class="alert alert-info">
-                                <i class="fas fa-info-circle me-2"></i>
-                                <b>Launching Soon:</b> Finvu integration will provide complete financial picture by
-                                connecting all your bank accounts, investments, and financial data in one place.
+                            <div class="alert" ng-class="{'alert-success': finvuConnected, 'alert-info': !finvuConnected}">
+                                <i class="fas" ng-class="{'fa-check-circle': finvuConnected, 'fa-info-circle': !finvuConnected}" class="me-2"></i>
+                                <b ng-if="finvuConnected">Connected:</b>
+                                <b ng-if="!finvuConnected">Available Now:</b>
+                                Finvu integration provides complete financial picture by connecting all your bank accounts, investments, and financial data in one place.
                             </div>
                             <div class="row mb-4">
                                 <div class="col-md-6">
@@ -1487,8 +1450,10 @@
                                 </div>
                             </div>
                             <div class="text-center">
-                                <button class="btn btn-astro btn-lg px-5" disabled>
-                                    <i class="fas fa-clock me-2"></i> Coming Soon
+                                <button class="btn btn-astro btn-lg px-5" ng-click="connectFinvu()" ng-disabled="finvuConnected">
+                                    <i class="fas" ng-class="{'fa-link': !finvuConnected, 'fa-check': finvuConnected}" class="me-2"></i>
+                                    <span ng-if="!finvuConnected">Connect Bank Accounts</span>
+                                    <span ng-if="finvuConnected">Already Connected</span>
                                 </button>
                                 <p class="text-muted small mt-2">
                                     RBI-regulated • Bank-level security • Consent-based access
@@ -1707,10 +1672,10 @@
             </div>
         </div>
     </div>
-            <!-- FOOTER -->
+    <!-- FOOTER -->
             <div class="text-center footer-note mt-4" style="color: rgba(255, 255, 255, 0.6);">
-                <p>ASTROCRED v1.0 • Real CIBIL Data Integration </p>
-                <p>Data Source: CIBIL TransUnion • Report Generated: {{reportDate | date:'fullDate'}}</p>
+        <p>ASTROCRED v1.0 • Real CIBIL Data Integration </p>
+        <p>Data Source: CIBIL TransUnion • Report Generated: {{reportDate | date:'fullDate'}}</p>
             </div>
         </div>
     </div>

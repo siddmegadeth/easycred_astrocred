@@ -1,4 +1,15 @@
-<div class="container profile-container">
+<!-- Premium Dark Theme Profile Completion - Matching Login Page -->
+<div class="astro-profile-page">
+    <!-- Animated Background Pattern (Same as Login) -->
+    <div class="astro-bg-pattern">
+        <div class="astro-orb astro-orb-1"></div>
+        <div class="astro-orb astro-orb-2"></div>
+        <div class="astro-orb astro-orb-3"></div>
+    </div>
+
+    <!-- Profile Content -->
+    <div class="astro-profile-wrapper">
+        <div class="container profile-container" style="position: relative; z-index: 1;">
     <!-- Progress Steps -->
     <div class="progress-container">
         <div class="row text-center">
@@ -337,32 +348,49 @@
             </div>
         </div>
     </div>
-    <div class="privacy-text">
+        <div class="privacy-text" style="color: rgba(255, 255, 255, 0.7); text-align: center; margin-top: 30px; padding: 20px;">
         <p>Your information is secured with 256-bit SSL encryption. We comply with RBI's data protection guidelines.</p>
+        </div>
+        </div>
     </div>
 </div>
 <style>
+/* ===================================================================
+   PREMIUM DARK THEME FOR PROFILE COMPLETION PAGE
+   Matching Login & Dashboard Theme
+   ===================================================================*/
+
 .profile-container {
     max-width: 900px;
     margin: 0 auto;
 }
 
 .card {
-    border: none;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    background: var(--astro-gradient-card) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid var(--astro-border) !important;
+    border-radius: var(--astro-radius-xl) !important;
+    color: #FFFFFF !important;
+    box-shadow: var(--astro-shadow-lg) !important;
     margin-bottom: 30px;
 }
 
 .card-header {
-    background: linear-gradient(135deg, var(--astrocred-primary), var(--astrocred-accent));
-    color: white;
-    border-radius: 20px 20px 0 0 !important;
+    background: linear-gradient(135deg, rgba(0, 217, 255, 0.15) 0%, rgba(0, 196, 140, 0.15) 100%) !important;
+    color: var(--astro-accent) !important;
+    border-bottom: 1px solid var(--astro-border) !important;
+    border-radius: var(--astro-radius-xl) var(--astro-radius-xl) 0 0 !important;
     padding: 25px;
 }
 
+.card-header h3,
+.card-header p {
+    color: #FFFFFF !important;
+}
+
 .progress-container {
-    background: white;
+    background: transparent;
     padding: 20px;
     border-radius: 15px;
     margin-bottom: 30px;
@@ -372,31 +400,40 @@
     text-align: center;
     padding: 15px;
     position: relative;
+    color: #FFFFFF !important;
+}
+
+.progress-step .small {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
 }
 
 .step-circle {
     width: 57px;
     height: 57px;
-    border-radius: 25%;
-    background: #e9ecef;
-    color: #6c757d;
+    border-radius: 50% !important;
+    background: var(--astro-surface-light) !important;
+    border: 2px solid var(--astro-border) !important;
+    color: rgba(255, 255, 255, 0.7) !important;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 10px;
     font-weight: 600;
-    transition: all 0.3s;
+    transition: var(--astro-transition-normal);
 }
 
 .step-circle.active {
-    background: linear-gradient(135deg, var(--astrocred-primary), var(--astrocred-accent));
-    color: white;
-    box-shadow: 0 5px 15px rgba(122, 44, 191, 0.3);
+    background: var(--astro-gradient-accent) !important;
+    border-color: var(--astro-accent) !important;
+    color: white !important;
+    box-shadow: 0 0 20px var(--astro-accent-glow) !important;
 }
 
 .step-circle.completed {
-    background: var(--astrocred-success);
-    color: white;
+    background: var(--astro-success) !important;
+    border-color: var(--astro-success) !important;
+    color: white !important;
 }
 
 .form-section {
@@ -422,42 +459,58 @@
 
 .form-label {
     font-weight: 600;
-    color: var(--astrocred-primary);
+    color: #FFFFFF !important;
     margin-bottom: 8px;
 }
 
 .form-control,
 .form-select {
-    border: 2px solid #e9ecef;
-    border-radius: 10px;
+    background: var(--astro-surface) !important;
+    border: 1px solid var(--astro-border) !important;
+    color: #FFFFFF !important;
+    border-radius: var(--astro-radius-md) !important;
     padding: 12px 15px;
-    transition: all 0.3s;
+    transition: var(--astro-transition-normal);
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.form-control:disabled,
+.form-select:disabled {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    cursor: not-allowed;
 }
 
 .form-control:focus,
 .form-select:focus {
-    border-color: var(--astrocred-accent);
-    box-shadow: 0 0 0 0.25rem rgba(123, 44, 191, 0.25);
+    background: var(--astro-surface-light) !important;
+    border-color: var(--astro-accent) !important;
+    box-shadow: 0 0 0 0.2rem var(--astro-accent-soft) !important;
+    color: #FFFFFF !important;
+    outline: none;
 }
 
 .form-control.is-invalid,
 .form-select.is-invalid {
-    border-color: var(--astrocred-danger);
+    border-color: var(--astro-danger) !important;
 }
 
 .form-control.is-valid,
 .form-select.is-valid {
-    border-color: var(--astrocred-success);
+    border-color: var(--astro-success) !important;
 }
 
 .info-text {
     font-size: 0.875rem;
-    color: #6c757d;
+    color: rgba(255, 255, 255, 0.7) !important;
     margin-top: 5px;
 }
 
 .validation-error {
-    color: var(--astrocred-danger);
+    color: var(--astro-danger) !important;
     font-size: 0.875rem;
     margin-top: 5px;
     display: none;
@@ -469,66 +522,85 @@
 
 .required::after {
     content: " *";
-    color: var(--astrocred-danger);
+    color: var(--astro-danger);
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--astrocred-primary), var(--astrocred-accent));
-    border: none;
-    border-radius: 10px;
+    background: var(--astro-gradient-accent) !important;
+    border: none !important;
+    border-radius: var(--astro-radius-md) !important;
     padding: 12px 30px;
     font-weight: 600;
-    transition: all 0.3s;
+    color: white !important;
+    box-shadow: 0 4px 15px var(--astro-accent-glow) !important;
+    transition: var(--astro-transition-normal);
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(122, 44, 191, 0.3);
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px var(--astro-accent-glow) !important;
 }
 
 .btn-outline-primary {
-    border: 2px solid var(--astrocred-primary);
-    color: var(--astrocred-primary);
-    border-radius: 10px;
+    background: transparent !important;
+    border: 2px solid var(--astro-accent) !important;
+    color: var(--astro-accent) !important;
+    border-radius: var(--astro-radius-md) !important;
     padding: 12px 30px;
     font-weight: 600;
 }
 
 .btn-outline-primary:hover {
-    background: var(--astrocred-primary);
-    color: white;
+    background: var(--astro-accent) !important;
+    color: white !important;
+    transform: translateY(-2px) !important;
 }
 
 .document-preview {
-    border: 2px dashed #dee2e6;
-    border-radius: 10px;
+    border: 2px dashed var(--astro-border) !important;
+    border-radius: var(--astro-radius-md) !important;
     padding: 30px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: var(--astro-transition-normal);
     min-height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    background: var(--astro-surface-light) !important;
+    color: #FFFFFF !important;
 }
 
 .document-preview:hover {
-    border-color: var(--astrocred-accent);
-    background: rgba(123, 44, 191, 0.05);
+    border-color: var(--astro-accent) !important;
+    background: rgba(0, 217, 255, 0.1) !important;
 }
 
 .document-preview i {
     font-size: 48px;
-    color: var(--astrocred-accent);
+    color: var(--astro-accent) !important;
     margin-bottom: 15px;
 }
 
+.document-preview p,
+.document-preview span {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
 .terms-checkbox {
-    border: 2px solid #dee2e6;
-    border-radius: 10px;
+    border: 1px solid var(--astro-border) !important;
+    border-radius: var(--astro-radius-md) !important;
     padding: 20px;
-    background: #f8f9fa;
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.terms-checkbox .form-check-label {
+    color: #FFFFFF !important;
+}
+
+.terms-checkbox .form-check-label a {
+    color: var(--astro-accent) !important;
 }
 
 .success-screen {
@@ -536,10 +608,18 @@
     padding: 50px 20px;
 }
 
+.success-screen h3 {
+    color: #FFFFFF !important;
+}
+
+.success-screen p {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
 .success-icon {
     width: 100px;
     height: 100px;
-    background: linear-gradient(135deg, var(--astrocred-success), #27ae60);
+    background: var(--astro-gradient-accent) !important;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -548,6 +628,7 @@
     color: white;
     font-size: 48px;
     animation: pulse 2s infinite;
+    box-shadow: 0 0 40px var(--astro-accent-glow) !important;
 }
 
 @keyframes pulse {
@@ -564,30 +645,79 @@
     }
 }
 
+/* Premium Form Checkboxes & Switches */
+.form-check-input {
+    background-color: var(--astro-surface) !important;
+    border: 2px solid var(--astro-border) !important;
+    width: 1.25em;
+    height: 1.25em;
+}
+
+.form-check-input:checked {
+    background-color: var(--astro-accent) !important;
+    border-color: var(--astro-accent) !important;
+}
+
+.form-check-label {
+    color: #FFFFFF !important;
+    margin-left: 8px;
+}
+
+.form-check-label a {
+    color: var(--astro-accent) !important;
+}
+
+.form-switch .form-check-input {
+    width: 2.5em;
+    height: 1.25em;
+}
+
+/* Premium Text Colors */
+h3, h4, h5, h6 {
+    color: #FFFFFF !important;
+}
+
+p, span, div:not(.astro-orb) {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.text-muted {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.text-primary {
+    color: var(--astro-accent) !important;
+}
+
 .nav-tabs {
-    border-bottom: 2px solid #dee2e6;
+    border-bottom: 2px solid var(--astro-border) !important;
 }
 
 .nav-tabs .nav-link {
     border: none;
-    color: #6c757d;
+    color: rgba(255, 255, 255, 0.7) !important;
     font-weight: 500;
     padding: 12px 25px;
     border-radius: 10px 10px 0 0;
     margin-right: 5px;
+    background: transparent !important;
 }
 
 .nav-tabs .nav-link.active {
-    color: var(--astrocred-primary);
-    background: white;
-    border-bottom: 3px solid var(--astrocred-accent);
+    color: var(--astro-accent) !important;
+    background: transparent !important;
+    border-bottom: 3px solid var(--astro-accent) !important;
 }
 
 .privacy-text {
     font-size: 0.75rem;
-    color: #6c757d;
+    color: rgba(255, 255, 255, 0.7) !important;
     text-align: center;
     margin-top: 20px;
+}
+
+.privacy-text p {
+    color: rgba(255, 255, 255, 0.7) !important;
 }
 
 .loading-spinner {
@@ -613,5 +743,300 @@
 
 .btn:disabled .loading-spinner {
     display: inline-block;
+}
+
+/* ===================================================================
+   PREMIUM DARK THEME FOR PROFILE COMPLETION PAGE
+   Matching Login & Dashboard Theme
+   ===================================================================*/
+
+/* Premium Profile Page Wrapper */
+.astro-profile-page {
+    min-height: 100vh;
+    background: var(--astro-gradient-dark);
+    position: relative;
+    overflow-x: hidden;
+    font-family: var(--astro-font-primary);
+    padding: 40px 20px;
+}
+
+.astro-profile-wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Premium Cards - Glassmorphism */
+.profile-container .card {
+    background: var(--astro-gradient-card) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid var(--astro-border) !important;
+    border-radius: var(--astro-radius-xl) !important;
+    color: #FFFFFF !important;
+    box-shadow: var(--astro-shadow-lg) !important;
+}
+
+.profile-container .card-header {
+    background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(0, 196, 140, 0.1) 100%) !important;
+    color: var(--astro-accent) !important;
+    border-bottom: 1px solid var(--astro-border) !important;
+}
+
+.profile-container .card-header h3,
+.profile-container .card-header p {
+    color: #FFFFFF !important;
+}
+
+/* Premium Progress Steps */
+.progress-container {
+    margin-bottom: 40px;
+}
+
+.progress-step {
+    color: #FFFFFF !important;
+}
+
+.step-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--astro-surface-light) !important;
+    border: 2px solid var(--astro-border) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: var(--astro-text-muted) !important;
+    margin: 0 auto 10px;
+    transition: var(--astro-transition-normal);
+}
+
+.step-circle.active {
+    background: var(--astro-gradient-accent) !important;
+    border-color: var(--astro-accent) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 0 20px var(--astro-accent-glow);
+}
+
+.step-circle.completed {
+    background: var(--astro-success) !important;
+    border-color: var(--astro-success) !important;
+    color: #FFFFFF !important;
+}
+
+.progress-step .small {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+}
+
+/* Premium Form Elements */
+.profile-container .form-label {
+    color: #FFFFFF !important;
+    font-weight: 500 !important;
+    margin-bottom: 8px;
+}
+
+.profile-container .form-control,
+.profile-container .form-select {
+    background: var(--astro-surface) !important;
+    border: 1px solid var(--astro-border) !important;
+    color: #FFFFFF !important;
+    border-radius: var(--astro-radius-md) !important;
+    padding: 12px 16px;
+}
+
+.profile-container .form-control:focus,
+.profile-container .form-select:focus {
+    background: var(--astro-surface-light) !important;
+    border-color: var(--astro-accent) !important;
+    box-shadow: 0 0 0 0.2rem var(--astro-accent-soft) !important;
+    color: #FFFFFF !important;
+}
+
+.profile-container .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.profile-container .form-control:disabled {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    cursor: not-allowed;
+}
+
+/* Premium Buttons */
+.profile-container .btn-primary {
+    background: var(--astro-gradient-accent) !important;
+    border: none !important;
+    color: white !important;
+    padding: 12px 24px !important;
+    border-radius: var(--astro-radius-md) !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 15px var(--astro-accent-glow) !important;
+    transition: var(--astro-transition-normal) !important;
+}
+
+.profile-container .btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px var(--astro-accent-glow) !important;
+}
+
+.profile-container .btn-outline-primary {
+    background: transparent !important;
+    border: 2px solid var(--astro-accent) !important;
+    color: var(--astro-accent) !important;
+    padding: 12px 24px !important;
+    border-radius: var(--astro-radius-md) !important;
+    font-weight: 600 !important;
+    transition: var(--astro-transition-normal) !important;
+}
+
+.profile-container .btn-outline-primary:hover {
+    background: var(--astro-accent) !important;
+    color: white !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Premium Text Colors */
+.profile-container h3,
+.profile-container h4,
+.profile-container h5 {
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+}
+
+.profile-container p,
+.profile-container span,
+.profile-container div:not(.astro-orb) {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.profile-container .text-muted {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Premium Validation Errors */
+.validation-error {
+    color: var(--astro-danger) !important;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+}
+
+.validation-error.show {
+    display: block;
+}
+
+.profile-container .is-invalid {
+    border-color: var(--astro-danger) !important;
+}
+
+.profile-container .is-valid {
+    border-color: var(--astro-success) !important;
+}
+
+/* Premium Checkboxes & Switches */
+.profile-container .form-check-input {
+    background-color: var(--astro-surface) !important;
+    border: 2px solid var(--astro-border) !important;
+}
+
+.profile-container .form-check-input:checked {
+    background-color: var(--astro-accent) !important;
+    border-color: var(--astro-accent) !important;
+}
+
+.profile-container .form-check-label {
+    color: #FFFFFF !important;
+}
+
+.profile-container .form-check-label a {
+    color: var(--astro-accent) !important;
+}
+
+/* Premium Info Text */
+.info-text {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Premium Success Screen */
+.success-screen .success-icon {
+    background: var(--astro-gradient-accent) !important;
+    box-shadow: 0 0 40px var(--astro-accent-glow) !important;
+}
+
+.success-screen h3 {
+    color: #FFFFFF !important;
+}
+
+.success-screen .card {
+    background: var(--astro-gradient-card) !important;
+    border-color: var(--astro-border) !important;
+}
+
+.success-screen .card.border-success {
+    border-color: var(--astro-success) !important;
+}
+
+.success-screen .card.border-primary {
+    border-color: var(--astro-accent) !important;
+}
+
+.success-screen .text-success {
+    color: var(--astro-success) !important;
+}
+
+.success-screen .text-primary {
+    color: var(--astro-accent) !important;
+}
+
+/* Premium Form Sections */
+.form-section {
+    display: none;
+}
+
+.form-section.active {
+    display: block;
+}
+
+/* Premium Required Indicator */
+.form-label.required::after {
+    content: ' *';
+    color: var(--astro-danger);
+}
+
+/* Premium Input Groups */
+.input-group {
+    position: relative;
+}
+
+.input-group .form-control {
+    padding-left: 50px;
+}
+
+/* Premium Select Dropdowns */
+.form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+}
+
+/* Premium Terms Checkbox Section */
+.terms-checkbox {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: var(--astro-radius-md);
+    border: 1px solid var(--astro-border);
+}
+
+/* Premium Privacy Text */
+.privacy-text {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 0.875rem;
+    text-align: center;
+    margin-top: 30px;
+    padding: 20px;
 }
 </style>

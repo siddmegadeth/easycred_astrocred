@@ -44,7 +44,7 @@
         // }
 
 // 2. GET /get/api/cibil/quick-simulation
-// Query Parameters: ?pan=IVZPK2103N or ?mobile=9708016996
+// Query Parameters: ?pan=IVZPK2103N or ?mobile=7764056669
 
 // Response: Quick 3-scenario simulation
 

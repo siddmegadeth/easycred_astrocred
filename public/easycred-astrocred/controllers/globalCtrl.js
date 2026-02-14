@@ -32,15 +32,19 @@ app.controller('globalCtrl', ['$location', '$timeout', '$scope', 'stateManager',
         }, 500);
     });
 
+    // Global loader: use $rootScope so any child view (home, financial dashboard, etc.) can show/hide it
+    $rootScope.loaderShow = false;
+    $scope.loaderShow = false;
+    $scope.$watch(function() { return $rootScope.loaderShow; }, function(v) {
+        $scope.loaderShow = v;
+    });
+
     $rootScope.$on('progress_loader_show', function() {
-        warn('Loader Show :');
-        $scope.loaderShow = true;
+        $rootScope.loaderShow = true;
     });
 
     $rootScope.$on('progress_loader_hide', function() {
-        warn('Loader Hide :');
-        $scope.loaderShow = false;
-
+        $rootScope.loaderShow = false;
     });
 
 

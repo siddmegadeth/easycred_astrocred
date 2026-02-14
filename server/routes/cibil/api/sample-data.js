@@ -1,7 +1,27 @@
-(function() {
+(function () {
 
 
     function generateSampleCIBILData(client_id) {
+        var fs = require('fs');
+        var path = require('path');
+
+        // Try to read from sample-data.json first
+        try {
+            var samplePath = path.join(__dirname, '../../../../data/cibil/sample-data.json');
+            if (fs.existsSync(samplePath)) {
+                var fileContent = fs.readFileSync(samplePath, 'utf8');
+                var jsonData = JSON.parse(fileContent);
+                var data = jsonData.data || jsonData;
+
+                // Add analysis placeholder if needed
+                if (!data.analysis) data.analysis = {};
+
+                return data;
+            }
+        } catch (e) {
+            console.log('Error reading sample-data.json, falling back to random generation:', e);
+        }
+
         var accountTypes = ['01', '02', '03', '04', '05', '06', '07', '08'];
         var lenders = ['HDFC Bank', 'ICICI Bank', 'SBI', 'Axis Bank', 'Kotak Mahindra Bank'];
 
@@ -55,7 +75,7 @@
 
         return {
             client_id: client_id,
-            mobile: "9708016996",
+            mobile: "7764056669",
             pan: "IVZPK2103N",
             name: "SHIV KUMAR",
             gender: "male",

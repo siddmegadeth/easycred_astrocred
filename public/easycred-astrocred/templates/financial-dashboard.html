@@ -1,4 +1,28 @@
 <!-- Financial Intelligence Dashboard -->
+<style>
+/* Text Visibility Fixes for Financial Dashboard */
+.financial-dashboard h1, .financial-dashboard h2, .financial-dashboard h3,
+.financial-dashboard h4, .financial-dashboard h5, .financial-dashboard h6 {
+    color: #FFFFFF !important;
+}
+
+.financial-dashboard p, .financial-dashboard span, .financial-dashboard div,
+.financial-dashboard label {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.financial-dashboard .dashboard-main-title,
+.financial-dashboard .dashboard-subtitle {
+    color: #FFFFFF !important;
+}
+
+.financial-dashboard .metric-label,
+.financial-dashboard .metric-value,
+.financial-dashboard .health-label,
+.financial-dashboard .health-status {
+    color: #FFFFFF !important;
+}
+</style>
 <div class="financial-dashboard astro-login-page">
     <!-- Background -->
     <div class="astro-bg-pattern">
@@ -247,16 +271,17 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="acc in financialData.linkedAccounts">
-                                <td><strong>{{acc.bankName}}</strong></td>
-                                <td>{{acc.accountNumber}}</td>
-                                <td>{{acc.accountType}}</td>
-                                <td>₹{{acc.currentBalance | number:2}}</td>
+                                <td><strong>{{acc.bankName || acc.bank}}</strong></td>
+                                <td>{{acc.accountNumber || acc.masked}}</td>
+                                <td>{{acc.accountType || acc.type}}</td>
+                                <td>₹{{(acc.currentBalance || acc.balance) | number:2}}</td>
                                 <td><span class="astrocred-badge astrocred-badge-success">Active</span></td>
                             </tr>
-                            <tr ng-if="financialData.linkedAccounts.length == 0">
-                                <td colspan="5" class="text-center py-5 text-muted">
-                                    <i class="fas fa-info-circle"></i> No bank accounts linked yet. Use FinVu to connect
-                                    yours.
+                            <tr ng-if="!financialData.linkedAccounts || financialData.linkedAccounts.length === 0">
+                                <td colspan="5" class="text-center py-5">
+                                    <p class="text-muted mb-2"><i class="fas fa-university fa-2x"></i></p>
+                                    <p class="text-muted mb-3">No bank accounts linked yet.</p>
+                                    <a href="#/finvu-connect" class="btn btn-primary"><i class="fas fa-link me-2"></i>Link your bank accounts</a>
                                 </td>
                             </tr>
                         </tbody>
@@ -272,19 +297,19 @@
                 <div class="quick-actions-card">
                     <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
                     <div class="action-grid">
-                        <a href="#!/finvu-connect" class="action-item">
+                        <a href="#/finvu-connect" class="action-item">
                             <i class="fas fa-link"></i>
                             <span>Link Bank</span>
                         </a>
-                        <a href="#!/utility-hub" class="action-item">
+                        <a href="#/utility-hub" class="action-item">
                             <i class="fas fa-shield-alt"></i>
                             <span>Verify Docs</span>
                         </a>
-                        <a href="#!/home" class="action-item">
+                        <a href="#/home" class="action-item">
                             <i class="fas fa-chart-pie"></i>
                             <span>Credit Report</span>
                         </a>
-                        <a href="#!/pricing" class="action-item">
+                        <a href="#/pricing" class="action-item">
                             <i class="fas fa-crown"></i>
                             <span>Upgrade</span>
                         </a>
@@ -375,7 +400,7 @@
                         </div>
                         <h4>No Bank Accounts Linked</h4>
                         <p>Connect your bank accounts via FinVu to see balances and transactions</p>
-                        <a href="#!/finvu-connect" class="link-btn">
+                        <a href="#/finvu-connect" class="link-btn">
                             <i class="fas fa-plus"></i> Link Bank Account
                         </a>
                     </div>

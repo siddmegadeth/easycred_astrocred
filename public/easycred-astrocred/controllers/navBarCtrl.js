@@ -1,4 +1,6 @@
-app.controller('navbarCtrl', ['$location', '$timeout', '$scope', 'stateManager', '$rootScope', 'authentication', function($location, $timeout, $scope, stateManager, $rootScope, authentication) {
+app.controller('navbarCtrl', ['$location', '$timeout', '$scope', '$http', 'stateManager', '$rootScope', 'authentication', function($location, $timeout, $scope, $http, stateManager, $rootScope, authentication) {
+
+    $scope.subscriptionPlan = null;
 
     $timeout(function() {
 
@@ -6,7 +8,15 @@ app.controller('navbarCtrl', ['$location', '$timeout', '$scope', 'stateManager',
             warn('init-navbar');
         });
 
-
+        // Load current subscription for plan badge (demo: shown when logged in)
+        if (stateManager.isUserLogggedIn()) {
+            $http.get('/api/subscription/current').then(function(res) {
+                if (res.data.success && res.data.subscription) {
+                    $scope.subscriptionPlan = res.data.subscription.plan;
+                    $scope.subscriptionPlanName = res.data.subscription.planName || res.data.subscription.plan;
+                }
+            }).catch(function() {});
+        }
     });
 
 

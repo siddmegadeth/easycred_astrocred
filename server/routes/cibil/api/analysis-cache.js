@@ -57,7 +57,14 @@
             var GradingEngine = require('./grading-engine');
             var AdvancedAnalytics = require('./analytics-engine-advance.js');
             var RiskAssessment = require('./risk-assessment.js');
-            var AdvancedRiskAssessment = require('./advanced-risk-assessment.js');
+            // Try to load advanced risk assessment, fallback if not available
+            var AdvancedRiskAssessment = null;
+            try {
+                AdvancedRiskAssessment = require('./advance-risk-assessement.js');
+            } catch (e) {
+                // Use RiskAssessment as fallback
+                AdvancedRiskAssessment = RiskAssessment;
+            }
             
             var analyzer = new GradingEngine(cibilData);
             var overallGrade = analyzer.calculateOverallGrade ? analyzer.calculateOverallGrade() : 'B';
@@ -75,21 +82,75 @@
             try {
                 var advanced = new AdvancedAnalytics(cibilData, analyzer);
                 var risk = new RiskAssessment(cibilData, analyzer);
-                var advancedRisk = new AdvancedRiskAssessment(cibilData, analyzer, risk);
+                var advancedRisk = null;
+                if (AdvancedRiskAssessment) {
+                    try {
+                        advancedRisk = new AdvancedRiskAssessment(cibilData, analyzer, risk);
+                    } catch (e) {
+                        advancedRisk = risk; // Fallback to basic risk assessment
+                    }
+                } else {
+                    advancedRisk = risk; // Fallback to basic risk assessment
+                }
                 
-                comprehensiveReport = advanced.generateComprehensiveReport ? advanced.generateComprehensiveReport() : {};
-                riskReport = risk.generateRiskReport ? risk.generateRiskReport() : {};
-                improvementPlan = advanced.generateImprovementPlan ? advanced.generateImprovementPlan() : {};
-                bankSuggestions = advanced.suggestBanks ? advanced.suggestBanks() : [];
+                try {
+                    comprehensiveReport = advanced.generateComprehensiveReport ? advanced.generateComprehensiveReport() : {};
+                } catch (e) {
+                    log('Error generating comprehensive report:', e.message);
+                    comprehensiveReport = {};
+                }
+                
+                try {
+                    riskReport = risk.generateRiskReport ? risk.generateRiskReport() : {};
+                } catch (e) {
+                    log('Error generating risk report:', e.message);
+                    riskReport = {};
+                }
+                
+                try {
+                    improvementPlan = advanced.generateImprovementPlan ? advanced.generateImprovementPlan() : {};
+                } catch (e) {
+                    log('Error generating improvement plan:', e.message);
+                    improvementPlan = {};
+                }
+                
+                try {
+                    bankSuggestions = advanced.suggestBanks ? advanced.suggestBanks() : [];
+                } catch (e) {
+                    log('Error getting bank suggestions:', e.message);
+                    bankSuggestions = [];
+                }
                 
                 // Get enhanced risk assessment
-                enhancedRiskAssessment = advancedRisk.getEnhancedRiskAssessmentSync ? 
-                    advancedRisk.getEnhancedRiskAssessmentSync() : {};
+                try {
+                    enhancedRiskAssessment = advancedRisk.getEnhancedRiskAssessmentSync ? 
+                        advancedRisk.getEnhancedRiskAssessmentSync() : {};
+                } catch (e) {
+                    log('Error getting enhanced risk assessment:', e.message);
+                    enhancedRiskAssessment = {};
+                }
                 
                 // Get risk details
-                var defaultProbability = risk.calculateDefaultProbability ? risk.calculateDefaultProbability() : {};
-                var creditWorthiness = risk.calculateCreditWorthiness ? risk.calculateCreditWorthiness() : {};
-                var eligibleInstitutions = risk.getEligibleInstitutions ? risk.getEligibleInstitutions() : [];
+                try {
+                    defaultProbability = risk.calculateDefaultProbability ? risk.calculateDefaultProbability() : {};
+                } catch (e) {
+                    log('Error calculating default probability:', e.message);
+                    defaultProbability = {};
+                }
+                
+                try {
+                    creditWorthiness = risk.calculateCreditWorthiness ? risk.calculateCreditWorthiness() : {};
+                } catch (e) {
+                    log('Error calculating credit worthiness:', e.message);
+                    creditWorthiness = {};
+                }
+                
+                try {
+                    eligibleInstitutions = risk.getEligibleInstitutions ? risk.getEligibleInstitutions() : [];
+                } catch (e) {
+                    log('Error getting eligible institutions:', e.message);
+                    eligibleInstitutions = [];
+                }
                 
                 riskDetails = {
                     defaultProbability: defaultProbability,

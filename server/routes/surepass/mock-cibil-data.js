@@ -49,8 +49,8 @@ const MOCK_DATA = {
     },
     
     // Sample User 2 (from sandbox)
-    '9708016996': {
-        mobile: '9708016996',
+    '7764056669': {
+        mobile: '7764056669',
         pan: 'IVZPK2103N',
         fullname: 'SHIV KUMAR',
         gender: 'male',

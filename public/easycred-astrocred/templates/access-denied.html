@@ -1,11 +1,25 @@
+<style>
+/* Text Visibility Fixes for Access Denied */
+.section, .container {
+    color: #FFFFFF !important;
+}
+
+.title, .subtitle, strong {
+    color: #FFFFFF !important;
+}
+
+.has-text-primary {
+    color: var(--astro-accent) !important;
+}
+</style>
 <section class="section">
     <div class="container has-text-centered">
-        <h1 class="title">
+        <h1 class="title" style="color: #FFFFFF !important;">
             Access Denied
         </h1>
-        <p class="subtitle">
-            My first website with
-            <strong class="has-text-primary">Bulma</strong>!
+        <p class="subtitle" style="color: rgba(255, 255, 255, 0.95) !important;">
+            You don't have permission to access this page.
+            <strong class="has-text-primary" style="color: var(--astro-accent) !important;">Please contact support</strong> if you believe this is an error.
         </p>
     </div>
 </section>

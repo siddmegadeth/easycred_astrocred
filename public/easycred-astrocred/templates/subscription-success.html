@@ -1,4 +1,23 @@
-<div class="container py-5">
+<style>
+/* Text Visibility Fixes for Subscription Success */
+.subscription-success h1, .subscription-success h2, .subscription-success h3,
+.subscription-success h4, .subscription-success h5 {
+    color: #FFFFFF !important;
+}
+
+.subscription-success p, .subscription-success span, .subscription-success div {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.subscription-success .card, .subscription-success .card-body {
+    color: #FFFFFF !important;
+}
+
+.subscription-success .text-muted {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+</style>
+<div class="container py-5 subscription-success">
     <div class="row justify-content-center">
         <div class="col-lg-6 text-center">
             <!-- Success Animation -->
@@ -54,10 +73,10 @@
                 <div class="card-body p-4">
                     <h5 class="fw-bold mb-3"><i class="fas fa-rocket text-warning me-2"></i>Get Started</h5>
                     <div class="d-grid gap-2">
-                        <a href="#!/home" class="btn btn-primary btn-lg">
+                        <a href="#/home" class="btn btn-primary btn-lg">
                             <i class="fas fa-tachometer-alt me-2"></i> Go to Dashboard
                         </a>
-                        <a href="#!/financial-dashboard" class="btn btn-outline-primary">
+                        <a href="#/financial-dashboard" class="btn btn-outline-primary">
                             <i class="fas fa-chart-pie me-2"></i> Explore Financial Hub
                         </a>
                     </div>

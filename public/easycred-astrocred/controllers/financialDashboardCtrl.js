@@ -1,11 +1,12 @@
 (function () {
     'use strict';
 
-    app.controller('financialDashboardCtrl', ['$scope', '$http', 'cibilCore', 'stateManager', '$timeout', '$location',
-    function ($scope, $http, cibilCore, stateManager, $timeout, $location) {
+    app.controller('financialDashboardCtrl', ['$scope', '$rootScope', '$http', 'cibilCore', 'stateManager', '$timeout', '$location',
+    function ($scope, $rootScope, $http, cibilCore, stateManager, $timeout, $location) {
         
         console.log('Financial Dashboard Controller Initialized');
         
+        $rootScope.loaderShow = true;
         $scope.loaderShow = true;
         $scope.isRefreshing = false;
         $scope.user = stateManager.getProfile() || {};
@@ -59,21 +60,35 @@
                 email: profile.profile_info?.email
             };
 
+            console.log('[financialDashboardCtrl] Loading credit data with identifier:', identifier);
             cibilCore.getAnalysis(identifier).then(function (res) {
-                if (res.data && res.data.status) {
-                    var data = res.data.data || res.data;
-                    $scope.financialData.creditScore = data.credit_score || data.creditScore || 700;
-                    $scope.financialData.creditGrade = data.overallGrade?.grade || data.creditGrade || 'B';
+                console.log('[financialDashboardCtrl] Credit data response:', res.data);
+                var data = res.data;
+                if (data && (data.success !== false)) {
+                    // API returns: credit_score, overallGrade, score_summary, detailed_analysis, etc.
+                    $scope.financialData.creditScore = data.credit_score || data.score_summary?.credit_score || 700;
+                    $scope.financialData.creditGrade = (data.score_summary && data.score_summary.overall_grade) || (data.overallGrade && data.overallGrade.grade) || data.creditGrade || 'B';
                     
-                    if (data.recommendations) {
-                        $scope.financialData.recommendations = data.recommendations;
+                    if (data.detailed_analysis && data.detailed_analysis.recommendations) {
+                        $scope.financialData.recommendations = Array.isArray(data.detailed_analysis.recommendations)
+                            ? data.detailed_analysis.recommendations
+                            : [data.detailed_analysis.recommendations];
+                    } else if (data.recommendations) {
+                        $scope.financialData.recommendations = Array.isArray(data.recommendations) ? data.recommendations : [data.recommendations];
                     }
                     
-                    // Calculate health score
                     $scope.calculateHealthScore();
+                } else {
+                    console.warn('[financialDashboardCtrl] No credit data found or invalid response');
                 }
             }).catch(function(err) {
-                console.log('Credit data load error:', err);
+                console.error('[financialDashboardCtrl] Credit data load error:', err);
+                if (err.data) {
+                    console.error('[financialDashboardCtrl] Error details:', err.data);
+                }
+                if (err.status === 404) {
+                    console.warn('[financialDashboardCtrl] CIBIL data not found for user');
+                }
             }).finally(function () {
                 $scope.checkLoader();
             });
@@ -234,7 +249,8 @@
         $scope.checkLoader = function () {
             $timeout(function () {
                 $scope.loaderShow = false;
-            }, 1000);
+                $rootScope.loaderShow = false;
+            }, 500);
         };
 
         // UI Helpers

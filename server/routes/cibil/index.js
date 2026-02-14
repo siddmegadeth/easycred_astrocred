@@ -1,4 +1,4 @@
-(function() {
+(function () {
 
     require("./api/index");
     require("./health");
@@ -14,6 +14,8 @@
     require("./ml-prediction");
     require("./score-simulation");
     require("./roadmap-generator");
+    require("./dashboard-data");
+    require("./combined-report"); // Combined CIBIL + FinVu report
 
 })();
 

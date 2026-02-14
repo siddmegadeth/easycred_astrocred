@@ -114,7 +114,7 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
         var telemetric = { country_code: $scope.iti.getSelectedCountryData() };
         
         authentication.generateOTP($scope.iti.getNumber(), telemetric)
-            .then(function(resp) {
+                .then(function(resp) {
                 $scope.isLoading = false;
                 log('Resend OTP Response:', resp);
                 
@@ -132,7 +132,7 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
                             clearInterval(timer);
                             $('#resendTimer').hide();
                             $('#resendLink').fadeIn();
-                        }
+                    }
                     }, 1000);
                 } else {
                     $scope.errorToast.show(resp.data.message || 'Failed to resend OTP');
@@ -159,27 +159,27 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
         }
 
         $scope.isLoading = true;
-        $scope.NavProgress = true;
+            $scope.NavProgress = true;
         
         var telemetric = { country_code: $scope.iti.getSelectedCountryData() };
         
-        authentication.generateOTP($scope.iti.getNumber(), telemetric)
-            .then(function(resp) {
+            authentication.generateOTP($scope.iti.getNumber(), telemetric)
+                .then(function(resp) {
                 $scope.isLoading = false;
-                $scope.NavProgress = false;
+                    $scope.NavProgress = false;
                 log('Generate OTP Response:', resp);
 
-                if (resp.data.status && resp.data.isOTPSuccess) {
+                    if (resp.data.status && resp.data.isOTPSuccess) {
                     // Update progress steps
                     $('.astro-step').eq(0).addClass('completed');
                     $('.astro-step').eq(1).addClass('active');
-                    
+
                     // Show OTP modal
-                    $scope.otpModal.show();
+                        $scope.otpModal.show();
                     log('OTP sent successfully');
-                } else {
+                    } else {
                     $scope.errorToast.show(resp.data.message || 'Failed to send OTP');
-                }
+                    }
             })
             .catch(function(err) {
                 $scope.isLoading = false;
@@ -197,8 +197,8 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
         if ($scope.request_id) {
             authentication.cancelOTPRequestNexmo($scope.request_id).then(function(resp) {
                 log('OTP Cancelled:', resp);
-            });
-        }
+        });
+    }
     };
 
     // Validate OTP with premium feedback
@@ -224,12 +224,12 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
 
         $scope.isVerifying = true;
 
-        authentication.validateOTP($scope.iti.getNumber(), otp)
-            .then(function(resp) {
+            authentication.validateOTP($scope.iti.getNumber(), otp)
+                .then(function(resp) {
                 $scope.isVerifying = false;
                 log('Validate OTP Response:', resp);
 
-                if (resp.data.status && resp.data.otpVerified) {
+                    if (resp.data.status && resp.data.otpVerified) {
                     // Success animation
                     $('.astro-otp-icon i').removeClass('fa-shield-alt').addClass('fa-check');
                     $('.astro-otp-icon').addClass('success');
@@ -239,9 +239,9 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
                     $('.astro-step').eq(2).addClass('active');
                     
                     // Save user data
-                    var userProfile = resp.data.data;
+                        var userProfile = resp.data.data;
                     stateManager.saveProfile(userProfile);
-                    stateManager.saveAccessToken(resp.data.access_token);
+                        stateManager.saveAccessToken(resp.data.access_token);
                     
                     // Show success toast
                     $scope.successToast.show();
@@ -256,7 +256,7 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
                         }
                     }, 1500);
 
-                } else {
+                    } else {
                     // Error animation
                     $('.astro-otp-inputs').addClass('shake error');
                     setTimeout(function() {
@@ -268,7 +268,7 @@ app.controller('loginCtrl', ['$scope', '$rootScope', '$timeout', 'stateManager',
                     $('.astro-otp-digit').first().focus();
                     
                     $scope.errorToast.show(resp.data.message || 'Invalid OTP. Please try again.');
-                }
+                    }
             })
             .catch(function(err) {
                 $scope.isVerifying = false;

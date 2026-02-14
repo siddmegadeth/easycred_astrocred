@@ -37,8 +37,6 @@ app.provider('productionMode', [function() {
                 warn('Socket :');
                 log(window.socket);
                 return runType;
-                // log()
-                return runType;
 
             } else if (mode.type == 'development' || mode.type == 'dev') {
                 // runType = 'http://' + window.location.host;

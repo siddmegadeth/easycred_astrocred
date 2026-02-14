@@ -1231,3 +1231,285 @@ body p, body span, body div:not(.astro-orb) {
     background: var(--astro-accent);
 }
 
+/* =====================================================
+   GLOBAL TEXT VISIBILITY FIXES - ALL TEMPLATES
+   Ensures high contrast text across entire application
+   ===================================================== */
+
+/* Force all text elements to be visible */
+* {
+    color: inherit;
+}
+
+/* All headings - Pure white */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+}
+
+/* All paragraphs and text */
+p, span, div, label, li, td, th {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Labels and form labels */
+label, .form-label, .label, .info-label, .stat-label {
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-weight: 500 !important;
+}
+
+/* Values and data */
+.value, .info-value, .stat-value, .metric-value {
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+}
+
+/* Muted text - still visible */
+.text-muted, .muted, .subtitle, .description {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Small text */
+small, .small, .text-sm {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Links */
+a, .nav-link {
+    color: var(--astro-accent) !important;
+}
+
+a:hover, .nav-link:hover {
+    color: #FFFFFF !important;
+}
+
+/* Buttons - ensure text is visible */
+.btn {
+    color: #FFFFFF !important;
+    font-weight: 500 !important;
+}
+
+.btn-primary, .btn-success, .btn-info {
+    color: #FFFFFF !important;
+}
+
+.btn-outline-primary, .btn-outline-light, .btn-outline-secondary {
+    color: var(--astro-accent) !important;
+    border-color: var(--astro-accent) !important;
+}
+
+.btn-outline-primary:hover, .btn-outline-light:hover {
+    color: #FFFFFF !important;
+    background: var(--astro-accent) !important;
+}
+
+/* Cards - ensure all text inside is visible */
+.card, .dashboard-card, .finvu-card, .verification-card {
+    color: #FFFFFF !important;
+}
+
+.card h1, .card h2, .card h3, .card h4, .card h5, .card h6,
+.dashboard-card h1, .dashboard-card h2, .dashboard-card h3,
+.dashboard-card h4, .dashboard-card h5, .dashboard-card h6 {
+    color: #FFFFFF !important;
+}
+
+.card p, .card span, .card div, .card label,
+.dashboard-card p, .dashboard-card span, .dashboard-card div {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Card headers */
+.card-header, .dashboard-header {
+    color: #FFFFFF !important;
+}
+
+.card-header h1, .card-header h2, .card-header h3,
+.card-header h4, .card-header h5, .card-header h6 {
+    color: #FFFFFF !important;
+}
+
+/* Tables */
+table, .table {
+    color: #FFFFFF !important;
+}
+
+table th, .table th {
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-weight: 600 !important;
+}
+
+table td, .table td {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Badges */
+.badge, .status-badge {
+    color: #FFFFFF !important;
+    font-weight: 500 !important;
+}
+
+/* Inputs and selects */
+input, select, textarea, .form-control, .form-select {
+    color: #FFFFFF !important;
+}
+
+input::placeholder, .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Lists */
+ul, ol, li {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Icons - ensure they're visible */
+i, .fas, .far, .fab, .fa {
+    color: inherit !important;
+}
+
+/* Specific dashboard elements */
+.dashboard-title, .dashboard-subtitle {
+    color: #FFFFFF !important;
+}
+
+.info-row, .stat-item, .metric-card {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Navbar */
+.navbar, .navbar-brand, .navbar-nav {
+    color: #FFFFFF !important;
+}
+
+.navbar .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.navbar .nav-link.active {
+    color: var(--astro-accent) !important;
+}
+
+/* Footer */
+footer, .footer {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Alerts and notifications */
+.alert, .toast, .notification {
+    color: #FFFFFF !important;
+}
+
+/* Progress bars and indicators */
+.progress-label, .progress-text {
+    color: #FFFFFF !important;
+}
+
+/* Tooltips */
+.tooltip, .tooltip-inner {
+    color: #FFFFFF !important;
+}
+
+/* Dropdowns */
+.dropdown-menu {
+    background: var(--astro-surface) !important;
+    color: #FFFFFF !important;
+}
+
+.dropdown-item {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.dropdown-item:hover {
+    background: var(--astro-surface-light) !important;
+    color: #FFFFFF !important;
+}
+
+/* Modals */
+.modal-content {
+    background: var(--astro-gradient-card) !important;
+    color: #FFFFFF !important;
+}
+
+.modal-header, .modal-body, .modal-footer {
+    color: #FFFFFF !important;
+}
+
+.modal-title {
+    color: #FFFFFF !important;
+}
+
+/* Tabs */
+.nav-tabs .nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--astro-accent) !important;
+}
+
+.tab-content {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Override any inline styles that might hide text */
+[style*="color:"] {
+    /* Let important declarations override */
+}
+
+/* Ensure contrast for any remaining elements */
+.credit-dashboard *,
+.financial-dashboard *,
+.finvu-connect-page *,
+.utility-hub *,
+.profile-container * {
+    color: inherit;
+}
+
+/* Specific fixes for credit dashboard */
+.credit-dashboard .dashboard-title,
+.credit-dashboard .dashboard-subtitle,
+.credit-dashboard .card-header h5,
+.credit-dashboard .info-label,
+.credit-dashboard .info-value,
+.credit-dashboard .stat-label,
+.credit-dashboard .stat-value {
+    color: #FFFFFF !important;
+}
+
+/* Specific fixes for financial dashboard */
+.financial-dashboard h1,
+.financial-dashboard h2,
+.financial-dashboard h3,
+.financial-dashboard .metric-label,
+.financial-dashboard .metric-value {
+    color: #FFFFFF !important;
+}
+
+/* Specific fixes for FinVu connect */
+.finvu-connect-page h1,
+.finvu-connect-page h2,
+.finvu-connect-page h3,
+.finvu-connect-page p,
+.finvu-connect-page span {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Specific fixes for utility hub */
+.utility-hub h1,
+.utility-hub h2,
+.utility-hub h3,
+.utility-hub .verification-card h3,
+.utility-hub .verification-card p {
+    color: #FFFFFF !important;
+}
+
+/* Specific fixes for profile page */
+.profile-container h1,
+.profile-container h2,
+.profile-container h3,
+.profile-container .info-label,
+.profile-container .info-value {
+    color: #FFFFFF !important;
+}

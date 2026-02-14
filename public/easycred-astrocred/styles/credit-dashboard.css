@@ -144,6 +144,7 @@
 
 .dashboard-card .card-body {
     padding: var(--astro-space-lg);
+    background: linear-gradient(180deg, #1A1A2E 0%, #0F0F1A 100%) !important
 }
 
 /* Score Card */

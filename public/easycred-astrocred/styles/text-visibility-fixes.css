@@ -1,0 +1,244 @@
+/* ============================================
+   TEXT VISIBILITY FIXES - Enhanced Contrast
+   ============================================ */
+
+/* Ensure all text has sufficient contrast */
+* {
+    text-shadow: none !important; /* Remove blurry shadows */
+}
+
+/* Body and main content areas */
+body, .container, .main-content {
+    color: #212529 !important; /* Dark text for light backgrounds */
+    background-color: #ffffff !important;
+}
+
+/* Cards and panels */
+.astrocred-card, .card, .panel, .dashboard-card {
+    background: #ffffff !important;
+    color: #212529 !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.astrocred-card-title, .card-title, h1, h2, h3, h4, h5, h6 {
+    color: #1c1fbe !important; /* Primary blue */
+    font-weight: 600 !important;
+}
+
+/* Text in cards */
+.astrocred-card p, .astrocred-card span, .astrocred-card div,
+.card p, .card span, .card div {
+    color: #212529 !important;
+}
+
+/* Labels and form text */
+label, .form-label, .input-label {
+    color: #495057 !important;
+    font-weight: 500 !important;
+}
+
+/* Input fields */
+input, textarea, select {
+    color: #212529 !important;
+    background-color: #ffffff !important;
+    border: 1px solid #ced4da !important;
+}
+
+input::placeholder, textarea::placeholder {
+    color: #6c757d !important;
+    opacity: 1 !important;
+}
+
+/* Tables */
+table, .table {
+    color: #212529 !important;
+    background-color: #ffffff !important;
+}
+
+table th, .table th {
+    background-color: #f8f9fa !important;
+    color: #212529 !important;
+    font-weight: 600 !important;
+    border-bottom: 2px solid #dee2e6 !important;
+}
+
+table td, .table td {
+    color: #212529 !important;
+    border-bottom: 1px solid #dee2e6 !important;
+}
+
+/* Badges and status indicators */
+.badge, .astrocred-badge {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    padding: 6px 12px !important;
+}
+
+.astrocred-badge-success {
+    background-color: #28a745 !important;
+    color: #ffffff !important;
+}
+
+.astrocred-badge-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+.astrocred-badge-danger {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+}
+
+.astrocred-badge-info {
+    background-color: #17a2b8 !important;
+    color: #ffffff !important;
+}
+
+/* Buttons */
+.btn, .btn-astrocred {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    text-shadow: none !important;
+}
+
+.btn-outline-primary, .btn-astrocred-outline {
+    color: #1c1fbe !important;
+    border-color: #1c1fbe !important;
+}
+
+.btn-outline-primary:hover, .btn-astrocred-outline:hover {
+    color: #ffffff !important;
+    background-color: #1c1fbe !important;
+}
+
+/* Links */
+a {
+    color: #1c1fbe !important;
+    text-decoration: none !important;
+}
+
+a:hover {
+    color: #1719a5 !important;
+    text-decoration: underline !important;
+}
+
+/* Credit score displays */
+.credit-score, .score-value, .score-display {
+    color: #1c1fbe !important;
+    font-weight: 700 !important;
+}
+
+.score-excellent { color: #28a745 !important; }
+.score-very-good { color: #4CAF50 !important; }
+.score-good { color: #8bc34a !important; }
+.score-fair { color: #ffc107 !important; }
+.score-poor { color: #ff9800 !important; }
+.score-very-poor { color: #dc3545 !important; }
+
+/* Dashboard sections */
+.dashboard-section, .financial-section {
+    background: #ffffff !important;
+    color: #212529 !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border-radius: 12px !important;
+    padding: 24px !important;
+}
+
+.dashboard-section h3, .financial-section h3 {
+    color: #1c1fbe !important;
+    margin-bottom: 16px !important;
+}
+
+/* Lists */
+ul, ol, li {
+    color: #212529 !important;
+}
+
+/* Modals */
+.modal, .modal-content {
+    background-color: #ffffff !important;
+    color: #212529 !important;
+}
+
+.modal-header {
+    border-bottom: 2px solid #dee2e6 !important;
+}
+
+.modal-title {
+    color: #1c1fbe !important;
+    font-weight: 600 !important;
+}
+
+.modal-body {
+    color: #212529 !important;
+}
+
+/* Alerts and notifications */
+.alert, .notification {
+    border: 1px solid !important;
+    font-weight: 500 !important;
+}
+
+.alert-success {
+    background-color: #d4edda !important;
+    color: #155724 !important;
+    border-color: #c3e6cb !important;
+}
+
+.alert-warning {
+    background-color: #fff3cd !important;
+    color: #856404 !important;
+    border-color: #ffeaa7 !important;
+}
+
+.alert-danger {
+    background-color: #f8d7da !important;
+    color: #721c24 !important;
+    border-color: #f5c6cb !important;
+}
+
+.alert-info {
+    background-color: #d1ecf1 !important;
+    color: #0c5460 !important;
+    border-color: #bee5eb !important;
+}
+
+/* Dark mode overrides (if dark mode is used) */
+@media (prefers-color-scheme: dark) {
+    body.dark-mode, .dark-mode {
+        background-color: #1a1a1a !important;
+        color: #ffffff !important;
+    }
+    
+    .dark-mode .astrocred-card, .dark-mode .card {
+        background-color: #2d2d2d !important;
+        color: #ffffff !important;
+    }
+    
+    .dark-mode .astrocred-card-title, .dark-mode h1, .dark-mode h2 {
+        color: #4a6bdf !important;
+    }
+    
+    .dark-mode table, .dark-mode .table {
+        background-color: #2d2d2d !important;
+        color: #ffffff !important;
+    }
+    
+    .dark-mode table th {
+        background-color: #3d3d3d !important;
+        color: #ffffff !important;
+    }
+}
+
+/* Print styles */
+@media print {
+    * {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+    
+    .astrocred-card, .card {
+        border: 1px solid #000000 !important;
+        page-break-inside: avoid !important;
+    }
+}

@@ -1,4 +1,28 @@
 <!-- FinVu Account Aggregator Connect Page -->
+<style>
+/* Text Visibility Fixes for FinVu Connect */
+.finvu-connect-page h1, .finvu-connect-page h2, .finvu-connect-page h3 {
+    color: #FFFFFF !important;
+}
+
+.finvu-connect-page p, .finvu-connect-page span, .finvu-connect-page div {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.finvu-connect-page .finvu-title,
+.finvu-connect-page .finvu-subtitle {
+    color: #FFFFFF !important;
+}
+
+.finvu-connect-page .finvu-card h3,
+.finvu-connect-page .finvu-card p {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.finvu-connect-page .feature-item span {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+</style>
 <div class="finvu-connect-page astro-login-page">
     <!-- Background -->
     <div class="astro-bg-pattern">
@@ -23,6 +47,12 @@
                         {{serviceStatus.mode === 'sandbox' ? 'Sandbox Mode' : 'RBI Regulated'}}
                     </span>
                 </div>
+            </div>
+            <!-- Demo: show subscription context without blocking -->
+            <div class="alert alert-info py-2 mb-0 mt-2" role="alert">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Subscription:</strong> FinVu is a Premium feature. <em>Demo: FinVu is enabled for all users.</em>
+                <a href="#/pricing" class="alert-link ms-1">View plans</a>
             </div>
         </div>
 
@@ -72,30 +102,24 @@
                 </div>
             </div>
 
-            <!-- Step 2: Select Banks -->
-            <div class="col-lg-6">
-                <div class="finvu-card banks-card" ng-class="{'disabled': !consentInitiated}">
-                    <div class="consent-icon">
-                        <i class="fas fa-university"></i>
+            <!-- Step 2: Consent Status (Banks are selected in Finvu consent window) -->
+            <div class="col-lg-6" ng-if="consentStatus || consentInitiated">
+                <div class="finvu-card status-card">
+                    <div class="consent-icon" ng-class="{'pending': consentStatus === 'PENDING', 'active': consentStatus === 'ACTIVE'}">
+                        <i class="fas" ng-class="consentStatus === 'ACTIVE' ? 'fa-check-circle' : 'fa-clock'"></i>
                     </div>
-                    <h3>Step 2: Select Banks</h3>
-                    <p>Choose which bank accounts to link</p>
+                    <h3>Consent Status</h3>
+                    <p ng-if="!consentStatus || consentStatus === 'PENDING'">Waiting for you to complete consent in the Finvu window...</p>
+                    <p ng-if="consentStatus === 'ACTIVE'">Consent approved! Fetching your financial data...</p>
                     
-                    <div class="banks-grid">
-                        <div class="bank-option" ng-repeat="bank in supportedBanks" 
-                             ng-click="toggleBank(bank)" 
-                             ng-class="{'selected': bank.selected, 'disabled': !consentInitiated}">
-                            <div class="bank-logo">{{bank.code}}</div>
-                            <span class="bank-name">{{bank.name}}</span>
-                            <i class="fas fa-check-circle" ng-if="bank.selected"></i>
-                        </div>
+                    <div class="status-indicator" ng-if="consentStatus" ng-class="consentStatus.toLowerCase()">
+                        <div class="status-dot"></div>
+                        <span ng-bind="consentStatus"></span>
                     </div>
-
-                    <button class="finvu-btn secondary" 
-                            ng-click="proceedWithBanks()" 
-                            ng-disabled="!consentInitiated || selectedBanks.length === 0">
-                        <i class="fas fa-arrow-right"></i> Proceed with Selected Banks
-                    </button>
+                    
+                    <div class="consent-info" ng-if="!consentStatus || consentStatus === 'PENDING'">
+                        <p><i class="fas fa-info-circle"></i> Banks will be selected in the Finvu consent window that opens.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -109,7 +133,7 @@
                         <div class="stat-icon">
                             <i class="fas fa-wallet"></i>
                         </div>
-                        <div class="stat-value">₹{{financialData.summary.totalBalance | number}}</div>
+                        <div class="stat-value">₹<span ng-bind="(financialData.summary.totalBalance || 0) | number"></span></div>
                         <div class="stat-label">Total Balance</div>
                     </div>
                 </div>
@@ -118,7 +142,7 @@
                         <div class="stat-icon income">
                             <i class="fas fa-arrow-down"></i>
                         </div>
-                        <div class="stat-value success">₹{{financialData.summary.avgMonthlyIncome | number}}</div>
+                        <div class="stat-value success">₹<span ng-bind="(financialData.summary.avgMonthlyIncome || 0) | number"></span></div>
                         <div class="stat-label">Avg. Monthly Income</div>
                     </div>
                 </div>
@@ -127,7 +151,7 @@
                         <div class="stat-icon expense">
                             <i class="fas fa-arrow-up"></i>
                         </div>
-                        <div class="stat-value warning">₹{{financialData.summary.avgMonthlyExpense | number}}</div>
+                        <div class="stat-value warning">₹<span ng-bind="(financialData.summary.avgMonthlyExpense || 0) | number"></span></div>
                         <div class="stat-label">Avg. Monthly Expense</div>
                     </div>
                 </div>
@@ -136,7 +160,7 @@
                         <div class="stat-icon savings">
                             <i class="fas fa-piggy-bank"></i>
                         </div>
-                        <div class="stat-value accent">{{financialData.summary.savingsRate}}%</div>
+                        <div class="stat-value accent"><span ng-bind="financialData.summary.savingsRate || 0"></span>%</div>
                         <div class="stat-label">Savings Rate</div>
                     </div>
                 </div>
@@ -152,19 +176,24 @@
                     </button>
                 </div>
                 
-                <div class="accounts-list">
+                <div class="accounts-list" ng-if="financialData && financialData.accounts && financialData.accounts.length > 0">
                     <div class="account-item" ng-repeat="account in financialData.accounts">
                         <div class="account-icon">
                             <i class="fas fa-university"></i>
                         </div>
                         <div class="account-details">
-                            <span class="account-bank">{{account.bank_name || account.bankName}}</span>
-                            <span class="account-number">{{account.masked_account_number || account.accountNumber}}</span>
+                            <span class="account-bank" ng-bind="account.bank_name || account.bankName || 'Unknown Bank'"></span>
+                            <span class="account-number" ng-bind="account.masked_account_number || account.accountNumber || 'N/A'"></span>
                         </div>
-                        <div class="account-type">{{account.type}}</div>
+                        <div class="account-type" ng-bind="account.type || account.accountType || 'SAVINGS'"></div>
                         <div class="account-balance">
-                            ₹{{account.balance | number}}
+                            ₹<span ng-bind="(account.balance || account.currentBalance || 0) | number"></span>
                         </div>
+                    </div>
+                </div>
+                <div class="accounts-list" ng-if="!financialData || !financialData.accounts || financialData.accounts.length === 0">
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-info-circle me-2"></i>No accounts found. Please ensure consent is approved and data is fetched.
                     </div>
                 </div>
             </div>
@@ -175,19 +204,24 @@
                     <h3><i class="fas fa-history"></i> Recent Transactions</h3>
                 </div>
                 
-                <div class="transactions-list">
+                <div class="transactions-list" ng-if="financialData && financialData.transactions && financialData.transactions.length > 0">
                     <div class="transaction-item" ng-repeat="txn in financialData.transactions | limitTo:10">
                         <div class="txn-icon" ng-class="txn.type === 'CREDIT' ? 'credit' : 'debit'">
                             <i ng-class="txn.type === 'CREDIT' ? 'fas fa-arrow-down' : 'fas fa-arrow-up'"></i>
                         </div>
                         <div class="txn-details">
-                            <span class="txn-description">{{txn.description || txn.category}}</span>
-                            <span class="txn-date">{{txn.date | date:'dd MMM yyyy'}}</span>
+                            <span class="txn-description" ng-bind="txn.description || txn.narration || txn.category || 'Transaction'"></span>
+                            <span class="txn-date" ng-bind="(txn.date | date:'dd MMM yyyy') || 'N/A'"></span>
                         </div>
-                        <div class="txn-category">{{txn.category}}</div>
+                        <div class="txn-category" ng-bind="txn.category || 'OTHER'"></div>
                         <div class="txn-amount" ng-class="txn.type === 'CREDIT' ? 'credit' : 'debit'">
-                            {{txn.type === 'CREDIT' ? '+' : '-'}}₹{{txn.amount | number}}
+                            <span ng-bind="txn.type === 'CREDIT' ? '+' : '-'"></span>₹<span ng-bind="(txn.amount || 0) | number"></span>
                         </div>
+                    </div>
+                </div>
+                <div class="transactions-list" ng-if="!financialData || !financialData.transactions || financialData.transactions.length === 0">
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-info-circle me-2"></i>No transactions found.
                     </div>
                 </div>
             </div>

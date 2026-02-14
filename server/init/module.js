@@ -42,6 +42,10 @@
     //Cookies = module.exports =require('cookies')
     // mongo
     mongoose = module.exports = require("mongoose");
+    
+    // Fix deprecation warnings
+    mongoose.set('useFindAndModify', false);
+    mongoose.set('useCreateIndex', true);
     // MOngoDB For Atlasg Search Connection
     MongoClient = module.exports = require('mongodb').MongoClient;
     // For Searching

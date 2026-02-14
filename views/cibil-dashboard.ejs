@@ -1,0 +1,574 @@
+<div class="dashboard-container">
+    <!-- Header Section -->
+    <div class="dashboard-header mb-5">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <h1 class="display-5 fw-bold text-gradient">Financial Health Dashboard</h1>
+                <p class="text-muted lead">Welcome back, <span id="user-name">Guest</span>. Here's your credit overview.
+                </p>
+            </div>
+            <div class="actions">
+                <button class="btn btn-primary btn-lg shine-effect" onclick="generateReport('comprehensive')">
+                    <i class="fas fa-file-download me-2"></i> Comprehensive Report
+                </button>
+                <button class="btn btn-outline-primary btn-lg ms-2" onclick="toggleDemoMode()">
+                    <i class="fas fa-magic me-2"></i> Toggle Demo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="row g-4">
+        <!-- Credit Score Card -->
+        <div class="col-lg-4 col-md-6">
+            <div class="card glass-card h-100 p-4 text-center">
+                <h3 class="card-title fw-bold text-secondary mb-4">CIBIL Score</h3>
+                <div class="score-circle-container mx-auto">
+                    <div class="score-circle" id="score-circle">
+                        <span class="score-value display-3 fw-bold" id="score-value">---</span>
+                        <span class="score-label" id="score-label">Loading...</span>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <p class="text-muted"><i class="fas fa-history me-1"></i> Last updated: <span id="last-updated">Just
+                            now</span></p>
+                    <button class="btn btn-sm btn-light rounded-pill px-4" onclick="generateReport('astrocred')">View
+                        Analysis</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FinVu Summary Card -->
+        <div class="col-lg-8 col-md-6">
+            <div class="card glass-card h-100 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="card-title fw-bold text-secondary mb-0">
+                        <img src="https://finvu.in/assets/images/logo.png" alt="FinVu" height="30" class="me-2">
+                        Bank Accounts
+                    </h3>
+                    <span class="badge bg-success rounded-pill px-3" id="finvu-status">Active</span>
+                </div>
+
+                <div class="row text-center mb-4" id="finvu-stats">
+                    <div class="col-4 border-end">
+                        <h4 class="fw-bold mb-1" id="total-balance">₹0</h4>
+                        <small class="text-muted text-uppercase">Total Balance</small>
+                    </div>
+                    <div class="col-4 border-end">
+                        <h4 class="fw-bold mb-1" id="account-count">0</h4>
+                        <small class="text-muted text-uppercase">Linked Accounts</small>
+                    </div>
+                    <div class="col-4">
+                        <h4 class="fw-bold mb-1 text-success">Verified</h4>
+                        <small class="text-muted text-uppercase">KYC Status</small>
+                    </div>
+                </div>
+
+                <div class="account-list-container" id="account-list">
+                    <!-- Accounts will be injected here -->
+                    <div class="text-center py-4 text-muted">
+                        <i class="fas fa-spinner fa-spin fa-2x"></i>
+                        <p class="mt-2">Fetching financial data...</p>
+                    </div>
+                </div>
+
+                <div class="mt-auto text-end">
+                    <button class="btn btn-link text-decoration-none" onclick="initiateFinVu()">
+                        Manage Accounts <i class="fas fa-arrow-right ms-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Grid -->
+        <div class="col-12">
+            <div class="card glass-card p-4">
+                <h4 class="fw-bold text-secondary mb-4">Advanced Tools</h4>
+                <div class="row g-3">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="action-card bg-soft-primary" onclick="generateReport('roadmap')">
+                            <i class="fas fa-route fa-2x mb-3 text-primary"></i>
+                            <h5>Credit Roadmap</h5>
+                            <p class="small text-muted mb-0">6-Month Improvement Plan</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="action-card bg-soft-success" onclick="generateReport('simulation')">
+                            <i class="fas fa-sliders-h fa-2x mb-3 text-success"></i>
+                            <h5>Score Simulator</h5>
+                            <p class="small text-muted mb-0">Project future scores</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="action-card bg-soft-warning" onclick="generateReport('prediction')">
+                            <i class="fas fa-chart-line fa-2x mb-3 text-warning"></i>
+                            <h5>ML Prediction</h5>
+                            <p class="small text-muted mb-0">AI-driven score forecast</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="action-card bg-soft-danger" onclick="generateReport('risk')">
+                            <i class="fas fa-shield-alt fa-2x mb-3 text-danger"></i>
+                            <h5>Risk Assessment</h5>
+                            <p class="small text-muted mb-0">Detailed risk profile</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Premium Styles */
+    :root {
+        --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        --glass-bg: rgba(255, 255, 255, 0.7);
+        --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+        --shadow-soft: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+        background: #f3f4f6;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    .dashboard-container {
+        padding: 40px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .text-gradient {
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Glass Cards */
+    .glass-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        border: var(--glass-border);
+        border-radius: 20px;
+        box-shadow: var(--shadow-soft);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Score Circle Animation */
+    .score-circle-container {
+        width: 200px;
+        height: 200px;
+        position: relative;
+    }
+
+    .score-circle {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 15px solid #e5e7eb;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    .score-circle::before {
+        content: '';
+        position: absolute;
+        top: -15px;
+        left: -15px;
+        right: -15px;
+        bottom: -15px;
+        border-radius: 50%;
+        border: 15px solid transparent;
+        border-top-color: #6366f1;
+        /* Dynamic color via JS */
+        transform: rotate(-45deg);
+        animation: spin-load 2s ease-out forwards;
+    }
+
+    .score-value {
+        color: #1f2937;
+        line-height: 1;
+    }
+
+    .score-label {
+        font-size: 14px;
+        color: #6b7280;
+        margin-top: 5px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    /* Action Cards */
+    .action-card {
+        padding: 25px;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        height: 100%;
+        border: 1px solid transparent;
+    }
+
+    .action-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .bg-soft-primary {
+        background: #e0e7ff;
+        color: #4338ca;
+    }
+
+    .bg-soft-primary:hover {
+        background: #4338ca;
+        color: white;
+    }
+
+    .bg-soft-primary:hover i {
+        color: white !important;
+    }
+
+    .bg-soft-success {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .bg-soft-success:hover {
+        background: #15803d;
+        color: white;
+    }
+
+    .bg-soft-success:hover i {
+        color: white !important;
+    }
+
+    .bg-soft-warning {
+        background: #fef9c3;
+        color: #a16207;
+    }
+
+    .bg-soft-warning:hover {
+        background: #a16207;
+        color: white;
+    }
+
+    .bg-soft-warning:hover i {
+        color: white !important;
+    }
+
+    .bg-soft-danger {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+
+    .bg-soft-danger:hover {
+        background: #b91c1c;
+        color: white;
+    }
+
+    .bg-soft-danger:hover i {
+        color: white !important;
+    }
+
+    /* Shine Effect Button */
+    .shine-effect {
+        position: relative;
+        overflow: hidden;
+        background: var(--primary-gradient);
+        border: none;
+    }
+
+    .shine-effect::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        transition: 0.5s;
+    }
+
+    .shine-effect:hover::after {
+        left: 100%;
+        transition: 0.7s;
+    }
+
+    /* Account List */
+    .account-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .account-item:last-child {
+        border-bottom: none;
+    }
+
+    .account-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        color: #1f2937;
+    }
+
+    @keyframes spin-load {
+        0% {
+            transform: rotate(-135deg);
+        }
+
+        100% {
+            transform: rotate(45deg);
+        }
+    }
+</style>
+
+<script>
+    // Configuration
+    const DEMO_MOBILE = '7764056669'; // Shiv Kumar
+    const endpoints = {
+        pdf: '<%= baseUrl %>/get/api/cibil/generate-pdf',
+        astrocred: '<%= baseUrl %>/get/api/cibil/astrocred-report-pdf',
+        roadmap: '<%= baseUrl %>/get/api/cibil/roadmap-pdf',
+        simulation: '<%= baseUrl %>/get/api/cibil/simulation-pdf',
+        prediction: '<%= baseUrl %>/get/api/cibil/prediction-pdf',
+        risk: '<%= baseUrl %>/get/api/cibil/risk-assessment-pdf',
+        finvu: '<%= baseUrl %>/api/finvu/summary',
+        dashboard: '<%= baseUrl %>/api/dashboard/summary'
+    };
+
+    // Initialize Dashboard
+    document.addEventListener('DOMContentLoaded', () => {
+        loadDashboardData();
+    });
+
+    async function loadDashboardData() {
+        try {
+            // Fetch comprehensive dashboard data from backend
+            const response = await fetch(`${endpoints.dashboard}?mobile=${DEMO_MOBILE}&demo=true`);
+            const result = await response.json();
+
+            if (!result.success) {
+                throw new Error(result.message || 'Failed to load dashboard data');
+            }
+
+            // Update user info
+            if (result.user?.name) {
+                document.getElementById('user-name').textContent = result.user.name;
+            }
+
+            // Update CIBIL score section
+            if (result.cibil) {
+                updateScoreCircle(result.cibil.score);
+                document.getElementById('last-updated').textContent =
+                    new Date(result.cibil.lastUpdated).toLocaleDateString();
+            } else {
+                // No CIBIL data available
+                document.getElementById('score-value').textContent = '---';
+                document.getElementById('score-label').textContent = 'No Data';
+            }
+
+            // Update FinVu section
+            if (result.finvu && result.finvu.linked) {
+                document.getElementById('total-balance').textContent =
+                    '₹' + result.finvu.totalBalance.toLocaleString();
+                document.getElementById('account-count').textContent = result.finvu.accountCount;
+
+                // Render accounts
+                const list = document.getElementById('account-list');
+                list.innerHTML = '';
+
+                result.finvu.accounts.forEach(acc => {
+                    list.innerHTML += `
+                        <div class="account-item">
+                            <div class="account-icon"><i class="fas fa-university"></i></div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0 fw-bold">${acc.bank}</h6>
+                                <small class="text-muted">${acc.type} • ${acc.masked.slice(-4)}</small>
+                            </div>
+                            <div class="text-end fw-bold">₹${acc.balance.toLocaleString()}</div>
+                        </div>
+                    `;
+                });
+            } else {
+                // No FinVu data
+                document.getElementById('account-list').innerHTML = `
+                    <div class="alert alert-light m-3 text-center">
+                        <i class="fas fa-link fa-2x mb-3 text-muted"></i>
+                        <p class="mb-2">No linked accounts</p>
+                        <button class="btn btn-sm btn-primary" onclick="initiateFinVu()">
+                            <i class="fas fa-plus me-1"></i> Link Bank Accounts
+                        </button>
+                    </div>
+                `;
+            }
+
+            // Display insights and alerts
+            if (result.insights && result.insights.length > 0) {
+                console.log('Insights:', result.insights);
+                // Could add insights section to UI
+            }
+
+            if (result.alerts && result.alerts.length > 0) {
+                // Show alerts as toast notifications
+                result.alerts.forEach(alert => {
+                    Toastify({
+                        text: alert.message,
+                        duration: 5000,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: alert.type === 'danger' ? '#dc3545' : '#ffc107',
+                    }).showToast();
+                });
+            }
+
+        } catch (error) {
+            console.error('Failed to load dashboard:', error);
+
+            // Fallback UI
+            Toastify({
+                text: "Could not load some data. Using demo mode.",
+                duration: 3000,
+                backgroundColor: "#6c757d",
+            }).showToast();
+
+            // Show basic demo UI
+            document.getElementById('user-name').textContent = 'Demo User';
+            updateScoreCircle(663);
+        }
+    }
+
+    function updateScoreCircle(score) {
+        const circle = document.getElementById('score-circle');
+        const value = document.getElementById('score-value');
+        const label = document.getElementById('score-label');
+
+        value.textContent = score;
+
+        let color = '#ef4444'; // Red
+        let text = 'Poor';
+        if (score >= 650) { color = '#f59e0b'; text = 'Fair'; } // Orange
+        if (score >= 750) { color = '#10b981'; text = 'Good'; } // Green
+
+        circle.style.borderColor = '#e5e7eb'; // Reset base
+        label.textContent = text;
+        label.style.color = color;
+
+        // Dynamic border color for the pseudo-element would require more complex CSS manipulation
+        // For now, simpler approach:
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .score-circle::before { border-top-color: ${color}; border-right-color: ${color}; }
+        `;
+        document.head.appendChild(style);
+    }
+
+    async function loadFinVuData() {
+        try {
+            // Try to fetch real data or mock data
+            // Since we upgraded the backend to return mock data, we can just call it
+            const response = await fetch(`${endpoints.finvu}?mobile=${DEMO_MOBILE}`);
+            const result = await response.json();
+
+            if (result.success && result.summary) {
+                document.getElementById('total-balance').textContent = '₹' + result.summary.totalBalance.toLocaleString();
+                document.getElementById('account-count').textContent = result.summary.accountCount;
+
+                // Render accounts
+                const list = document.getElementById('account-list');
+                list.innerHTML = '';
+
+                if (result.accounts && result.accounts.length > 0) {
+                    result.accounts.forEach(acc => {
+                        list.innerHTML += `
+                            <div class="account-item">
+                                <div class="account-icon"><i class="fas fa-university"></i></div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0 fw-bold">${acc.bank}</h6>
+                                    <small class="text-muted">${acc.type} • ${acc.masked.slice(-4)}</small>
+                                </div>
+                                <div class="text-end fw-bold">₹${acc.balance.toLocaleString()}</div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    list.innerHTML = '<p class="text-center text-muted py-3">No linked accounts found.</p>';
+                }
+            } else {
+                throw new Error('Failed to load FinVu data');
+            }
+        } catch (e) {
+            console.error(e);
+            // Fallback UI
+            document.getElementById('account-list').innerHTML = `
+                <div class="alert alert-soft-warning m-3">
+                    <small>Could not load live banking data. Demo mode active.</small>
+                    <button class="btn btn-sm btn-link" onclick="loadFinVuData()">Retry</button>
+                </div>
+            `;
+        }
+    }
+
+    function generateReport(type) {
+        const btn = event.currentTarget;
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+        btn.disabled = true;
+
+        let url = endpoints[type] + `?mobile=${DEMO_MOBILE}&pan=IVZPK2103N`; // Default demo params
+
+        // Create an invisible iframe to download
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = url;
+        document.body.appendChild(iframe);
+
+        // Reset button after a delay (since we can't easily detect download finish cross-origin/iframe)
+        setTimeout(() => {
+            btn.innerHTML = originalContent;
+            btn.disabled = false;
+
+            // Show toast using Toastify (available in layout)
+            Toastify({
+                text: "Report generated successfully!",
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+            }).showToast();
+        }, 3000);
+    }
+
+    function toggleDemoMode() {
+        Toastify({
+            text: "Switched to Demo Data (Shiv Kumar)",
+            duration: 3000,
+            backgroundColor: "#4a6bdf",
+        }).showToast();
+        loadDashboardData();
+        loadFinVuData();
+    }
+
+    function initiateFinVu() {
+        Toastify({
+            text: "Redirecting to Account Aggregator...",
+            duration: 2000,
+            backgroundColor: "#333",
+        }).showToast();
+    }
+</script>

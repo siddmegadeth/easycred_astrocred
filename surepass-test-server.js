@@ -206,7 +206,7 @@ app.get('/', (req, res) => {
             </div>
             <div class="form-group">
                 <label>Mobile Number (10 digits):</label>
-                <input type="text" id="pan-mobile" placeholder="e.g., 9708016996" value="9708016996">
+                <input type="text" id="pan-mobile" placeholder="e.g., 7764056669" value="7764056669">
             </div>
             <button onclick="testMobileToPAN()">Test Mobile to PAN</button>
             <div class="loader" id="loader-1"></div>
@@ -234,7 +234,7 @@ app.get('/', (req, res) => {
             </div>
             <div class="form-group">
                 <label>Mobile Number:</label>
-                <input type="text" id="cibil-mobile" placeholder="e.g., 9708016996" value="9708016996">
+                <input type="text" id="cibil-mobile" placeholder="e.g., 7764056669" value="7764056669">
             </div>
             <div class="form-group">
                 <label>PAN Number:</label>

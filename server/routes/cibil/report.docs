@@ -18,7 +18,7 @@ Same data format as GET endpoint
 2. Basic Analysis APIs
 /get/api/cibil/analysis - ✅ FULLY COMPATIBLE
 
-Can query by: pan=IVZPK2103N, mobile=9708016996, or client_id
+Can query by: pan=IVZPK2103N, mobile=7764056669, or client_id
 
 Data includes all necessary fields for analysis
 
@@ -160,7 +160,7 @@ json
     "client_id": "credit_report_cibil_jIifktiYhrHTbZcMdlsU",
     "name": "SHIV KUMAR",
     "pan": "IVZPK2103N",
-    "mobile": "9708016996",
+    "mobile": "7764056669",
     "email": "MANGALDHAWANI@GMAIL.COM"
   },
   "score_summary": {
