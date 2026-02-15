@@ -70,6 +70,7 @@
 }
 
 .card-header {
+
     background-color: white;
     border-bottom: 2px solid #f0f0f0;
     font-weight: 600;
@@ -94,15 +95,15 @@
     padding-bottom: 0;
 }
 
-.info-label {
-    color: var(--astrocred-gray);
+.profile-page .info-label {
+    color: #e0e0e0;
     font-size: 0.9rem;
     font-weight: 500;
     margin-bottom: 5px;
 }
 
-.info-value {
-    color: var(--astrocred-dark);
+.profile-page .info-value {
+    color: #ffffff;
     font-weight: 500;
 }
 
@@ -118,7 +119,7 @@
 }
 
 .status-active {
-    background-color: rgba(46, 204, 113, 0.1);
+    background-color: rgb(46 204 113);
     color: var(--astrocred-success);
 }
 
@@ -128,17 +129,17 @@
 }
 
 .status-pending {
-    background-color: rgba(243, 156, 18, 0.1);
+    background-color: rgb(243 156 18)
     color: var(--astrocred-warning);
 }
 
 .status-completed {
-    background-color: rgba(46, 204, 113, 0.1);
+    background-color: rgb(46 204 113);
     color: var(--astrocred-success);
 }
 
 .status-verified {
-    background-color: rgba(46, 204, 113, 0.1);
+    background-color: rgb(46 204 113);
     color: var(--astrocred-success);
 }
 

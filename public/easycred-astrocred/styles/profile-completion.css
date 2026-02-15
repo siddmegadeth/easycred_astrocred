@@ -20,7 +20,7 @@ margin-bottom: 30px;
 }
 
 .card-header {
-background: linear-gradient(135deg, rgba(0, 217, 255, 0.15) 0%, rgba(0, 196, 140, 0.15) 100%) !important;
+background: linear-gradient(135deg, rgb(0 0 0 / 96%) 0%, rgb(47 185 195 / 41%) 100%) !important;
 color: var(--astro-accent) !important;
 border-bottom: 1px solid var(--astro-border) !important;
 border-radius: var(--astro-radius-xl) var(--astro-radius-xl) 0 0 !important;
@@ -317,7 +317,7 @@ height: 1.25em;
 
 /* Premium Text Colors */
 h3, h4, h5, h6 {
-color: #FFFFFF !important;
+color: #000000 !important;
 }
 
 p, span, div:not(.astro-orb) {

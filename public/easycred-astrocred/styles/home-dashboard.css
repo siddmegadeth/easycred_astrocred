@@ -11,7 +11,7 @@
 .section .astro-dashboard-wrapper .container-fluid th,
 .section .astro-dashboard-wrapper .container-fluid label,
 .section .astro-dashboard-wrapper .container-fluid small {
-    color: #212529 !important;
+    /*color: #212529 !important;*/
 }
 
 .section .astro-dashboard-wrapper a {
@@ -76,7 +76,7 @@
 .astro-dashboard-page h4,
 .astro-dashboard-page h5,
 .astro-dashboard-page h6 {
-    color: #1a1a2e !important;
+    color: #ffffff !important;
     font-family: 'Inter', sans-serif !important;
     font-weight: 600 !important;
 }
@@ -86,13 +86,13 @@
 .astro-dashboard-page div:not(.score-ring span):not(.astro-orb),
 .astro-dashboard-page label,
 .astro-dashboard-page .metric {
-    color: #212529 !important;
+    color: #868686 !important;
     opacity: 1 !important;
 }
 
 .astro-dashboard-page .text-muted,
 .astro-dashboard-page .text-secondary {
-    color: #6c757d !important;
+    color: #697e91 !important;
 }
 
 .astro-dashboard-page .card-body,
@@ -658,7 +658,6 @@ h2.fw-bold i.text-primary {
 
 /* Premium Alerts */
 .alert {
-    background: var(--astro-gradient-card) !important;
     border: 1px solid var(--astro-border) !important;
     border-radius: var(--astro-radius-md) !important;
     color: var(--astro-text-primary) !important;
@@ -730,7 +729,7 @@ label {
 
 /* All text inside cards */
 .card * {
-    color: #212529 !important;
+    color: #a4afba !important;
 }
 
 /* Override any low-contrast text */
