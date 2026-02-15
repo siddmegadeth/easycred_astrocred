@@ -1212,7 +1212,7 @@ p, span, div {
 
 /* Body text visibility */
 body p, body span, body div:not(.astro-orb) {
-    color: #FFFFFF !important;
+    color: #b6b6b6 !important;
 }
 
 .text-muted {

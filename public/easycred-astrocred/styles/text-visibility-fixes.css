@@ -39,7 +39,7 @@ body, .container, .main-content {
 /* Text in cards */
 .astrocred-card p, .astrocred-card span, .astrocred-card div,
 .card p, .card span, .card div {
-    color: #212529 !important;
+    color: #ffffff !important;
 }
 
 /* Labels and form text */

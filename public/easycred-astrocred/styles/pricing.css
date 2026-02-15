@@ -17,21 +17,21 @@
 .pricing-card h2,
 .pricing-card h3,
 .pricing-card h4 {
-    color: #1a1a2e !important;
+    color: #ffffff !important;
 }
 
 .pricing-card p,
 .pricing-card span,
 .pricing-card li {
-    color: #212529 !important;
+    color: #ffffff !important;
 }
 
 .pricing-card .text-muted {
-    color: #6c757d !important;
+    color: #aeacac !important;
 }
 
 .pricing-card .text-astrocred-primary {
-    color: #1c1fbe !important;
+    color: #ffffff !important;
 }
 
 .pricing-card:hover {
@@ -44,8 +44,8 @@
 
 .popular-badge {
     position: absolute;
-    top: 12px;
-    right: -35px;
+    top: 20px;
+    right: -48px;
     background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
     color: white;
     padding: 4px 40px;
