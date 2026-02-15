@@ -29,11 +29,9 @@
     app.get('/cibil-dashboard', function (req, resp) {
         log('/cibil-dashboard');
 
-        // For now, allow demo access without strict auth
-        // In production, uncomment to enforce authentication:
-        // if (!req.session?.mobile && !req.query.mobile) {
-        //     return resp.redirect('/login');
-        // }
+        if (!req.session?.mobile && !req.query.mobile) {
+            return resp.redirect('/login');
+        }
 
         var protocol = req.protocol || 'http';
         var host = req.get('host') || 'localhost:7001';
@@ -43,7 +41,7 @@
         return resp.render('cibil-dashboard', {
             title: 'CIBIL Credit Report Dashboard',
             baseUrl: baseUrl,
-            mobile: req.session?.mobile || req.query.mobile || '7764056669'
+            mobile: req.session?.mobile || req.query.mobile || null
         });
     });
 

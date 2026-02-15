@@ -14,9 +14,9 @@
                 "content-type": 'application/json'
             },
             data: {
-                "mobile": "7764056669",
-                "pan": "IVZPK2103N",
-                "name": "Shiv Kumar",
+                "mobile": "",
+                "pan": "",
+                "name": "User",
                 "gender": "male",
                 "consent": "Y"
             }

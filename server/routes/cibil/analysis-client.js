@@ -1,92 +1,41 @@
 (function() {
 
-    // Import CibilDataModel
     var CibilDataModel = require('../../schema/cibil/cibil-data-schema.js');
+    var getCibilForUser = require('./api/cibil-data-resolver.js').getCibilForUser;
 
-    // Get analysis for a client (uses cached analysis for better performance)
+    // Get analysis for a client. Uses resolver: DB first, then hydrate from CibilFetchCache (no refetch).
     app.get('/get/api/cibil/analysis', async function(req, res) {
         try {
             var { pan, mobile, email, client_id, force_refresh } = req.query;
             
-            // Validate at least one identifier is provided
             if (!pan && !mobile && !email && !client_id) {
                 return res.status(400).json({ 
                     success: false,
                     error: 'Please provide at least one identifier (pan, mobile, email, or client_id)' 
                 });
             }
-            
-            // Build query based on provided identifiers
-            var query = {};
-            if (client_id) query.client_id = client_id;
-            if (pan) query.pan_number = pan;
-            if (mobile) query.mobile_number = mobile;
-            if (email) query.email = email;
 
-            var cibilData = await CibilDataModel.findOne(query)
-                .select('client_id name pan_number mobile_number email credit_score credit_report updatedAt')
-                .lean();
-            
-            // If not found in DB, use mock data from data/cibil folder
-            if (!cibilData) {
-                log('CIBIL data not found in DB, using mock data from data/cibil');
-                try {
-                    var fs = require('fs');
-                    var path = require('path');
-                    var cibilDataPath = path.join(__dirname, '../../../data/cibil');
-                    var sampleFiles = ['sample-data.json', 'sample-data2.json', 'sample-data3.json'];
-                    
-                    // Select file based on mobile hash or use first available
-                    var fileIndex = mobile ? (parseInt(mobile.slice(-1)) % sampleFiles.length) : 0;
-                    var selectedFile = sampleFiles[fileIndex];
-                    var filePath = path.join(cibilDataPath, selectedFile);
-                    
-                    if (fs.existsSync(filePath)) {
-                        var fileContent = fs.readFileSync(filePath, 'utf8');
-                        var mockData = JSON.parse(fileContent);
-                        
-                        // Transform mock data to match DB schema
-                        if (mockData.data) {
-                            cibilData = {
-                                client_id: mockData.data.client_id || 'mock_' + Date.now(),
-                                name: mockData.data.name || 'User',
-                                pan_number: pan ? pan.toUpperCase() : (mockData.data.pan || 'N/A'),
-                                mobile_number: mobile || mockData.data.mobile || '',
-                                email: email || mockData.data.user_email || null,
-                                credit_score: mockData.data.credit_score || '670',
-                                credit_report: mockData.data.credit_report || [],
-                                updatedAt: new Date()
-                            };
-                            
-                            // Update with user's actual details if provided
-                            if (pan) cibilData.pan_number = pan.toUpperCase();
-                            if (mobile) cibilData.mobile_number = mobile;
-                            if (email) cibilData.email = email.toLowerCase();
-                            
-                            log('Using mock CIBIL data from:', selectedFile);
-                        } else {
-                            return res.status(404).json({ 
-                                success: false,
-                                error: 'Mock CIBIL data structure invalid',
-                                identifiers: { pan, mobile, email, client_id }
-                            });
-                        }
-                    } else {
-                        return res.status(404).json({ 
-                            success: false,
-                            error: 'CIBIL data not found and mock data files unavailable',
-                            identifiers: { pan, mobile, email, client_id }
-                        });
-                    }
-                } catch (mockError) {
-                    log('Error loading mock data:', mockError);
-                    return res.status(404).json({ 
-                        success: false,
-                        error: 'CIBIL data not found and failed to load mock data',
-                        details: mockError.message,
-                        identifiers: { pan, mobile, email, client_id }
-                    });
+            var cibilData = null;
+            if (client_id) {
+                cibilData = await CibilDataModel.findOne({ client_id })
+                    .select('client_id name pan_number pan mobile_number mobile email credit_score credit_report updatedAt')
+                    .lean();
+                if (cibilData) {
+                    cibilData.pan_number = cibilData.pan_number || cibilData.pan;
+                    cibilData.mobile_number = cibilData.mobile_number || cibilData.mobile;
                 }
+            } else {
+                cibilData = await getCibilForUser({ pan: pan || '', mobile: mobile || '', email: email || '' });
+            }
+
+            if (!cibilData) {
+                log('CIBIL data not found for identifiers:', { pan: !!pan, mobile: !!mobile, email: !!email, client_id: !!client_id });
+                return res.status(404).json({
+                    success: false,
+                    error: 'No CIBIL report found for this user. Please fetch your CIBIL report first from the dashboard (one-time).',
+                    code: 'NO_CIBIL_DATA',
+                    identifiers: { pan: !!pan, mobile: !!mobile, email: !!email, client_id: !!client_id }
+                });
             }
 
             // Use cached analysis if available
@@ -119,19 +68,24 @@
             var accountStats = calculateAccountStatistics(cibilData);
             var riskMetrics = calculateRiskMetrics(cibilData, analysis);
             
-            // Extract accounts from credit_report for frontend
+            // Extract accounts from credit_report for frontend (support Surepass camelCase and snake_case)
             var accounts = [];
             if (cibilData.credit_report && cibilData.credit_report[0] && cibilData.credit_report[0].accounts) {
                 accounts = cibilData.credit_report[0].accounts.map(function(acc) {
+                    var bal = parseFloat(acc.currentBalance) || parseFloat(acc.current_balance) || 0;
+                    var overdue = parseFloat(acc.amountOverdue) || parseFloat(acc.overdue_amount) || 0;
+                    var limit = parseFloat(acc.highCreditAmount) || parseFloat(acc.high_credit_amount) || parseFloat(acc.credit_limit) || 0;
                     return {
-                        accountNumber: acc.mask_account_number || acc.account_number || 'N/A',
-                        bank: acc.member_name || acc.lender_name || acc.bank_name || 'Unknown',
-                        type: acc.account_type || acc.type || 'Other',
-                        currentBalance: parseFloat(acc.current_balance) || 0,
-                        amountOverdue: parseFloat(acc.overdue_amount) || 0,
-                        status: acc.account_status || acc.status || 'Unknown',
-                        creditLimit: parseFloat(acc.credit_limit) || 0,
-                        lastPaymentDate: acc.last_payment_date || null
+                        accountNumber: acc.accountNumber || acc.account_number || acc.mask_account_number || 'N/A',
+                        bank: acc.memberShortName || acc.member_name || acc.lender_name || acc.bank_name || 'Unknown',
+                        bankName: acc.memberShortName || acc.member_name || acc.lender_name || acc.bank_name || 'Unknown',
+                        type: acc.accountType || acc.account_type || acc.type || 'Other',
+                        currentBalance: bal,
+                        balance: bal,
+                        amountOverdue: overdue,
+                        status: acc.account_status || acc.status || (overdue > 0 ? 'Default' : 'ACTIVE'),
+                        creditLimit: limit,
+                        lastPaymentDate: acc.lastPaymentDate || acc.last_payment_date || null
                     };
                 });
             }
@@ -167,6 +121,7 @@
                 },
                 detailed_analysis: {
                     component_grades: allGrades,
+                    component_scores: analysis.componentScores || {},
                     defaulters: analysis.defaulters,
                     recommendations: analysis.recommendations,
                     credit_utilization: analysis.creditUtilization,
@@ -175,7 +130,7 @@
                     risk_report: analysis.riskReport,
                     improvement_plan: analysis.improvementPlan,
                     bank_suggestions: analysis.bankSuggestions,
-                    accounts: accounts // Include accounts here too
+                    accounts: accounts
                 },
                 account_statistics: accountStats,
                 risk_assessment: riskMetrics,
@@ -371,34 +326,23 @@
                 var defaultCount = 0;
                 
                 accounts.forEach(function(account) {
-                    // Account type
-                    var type = account.account_type || 'Other';
+                    var type = account.accountType || account.account_type || 'Other';
+                    var status = account.account_status || account.status || (account.amountOverdue > 0 || account.overdue_amount > 0 ? 'Default' : 'ACTIVE');
+                    var balance = parseFloat(account.currentBalance) || parseFloat(account.current_balance) || 0;
+                    var overdue = parseFloat(account.amountOverdue) || parseFloat(account.overdue_amount) || 0;
+                    var creditLimit = parseFloat(account.highCreditAmount) || parseFloat(account.high_credit_amount) || parseFloat(account.credit_limit) || 0;
+
                     stats.by_type[type] = (stats.by_type[type] || 0) + 1;
-                    
-                    // Account status
-                    var status = account.account_status || 'Unknown';
                     stats.by_status[status] = (stats.by_status[status] || 0) + 1;
-                    
-                    // Check for defaults
-                    if (status.toLowerCase().includes('default') || status.toLowerCase().includes('written') || status.toLowerCase().includes('settled')) {
+
+                    if (overdue > 0 || (status && (status + '').toLowerCase().includes('default')) || (status + '').toLowerCase().includes('written') || (status + '').toLowerCase().includes('settled')) {
                         defaultCount++;
                     }
-                    
-                    // Balances
-                    var balance = parseFloat(account.current_balance) || 0;
                     if (balance > 0) {
                         stats.balances.total += balance;
                         balances.push(balance);
                     }
-                    
-                    // Overdue amounts
-                    var overdue = parseFloat(account.overdue_amount) || 0;
-                    if (overdue > 0) {
-                        totalOverdue += overdue;
-                    }
-                    
-                    // Credit lines
-                    var creditLimit = parseFloat(account.credit_limit) || 0;
+                    if (overdue > 0) totalOverdue += overdue;
                     if (creditLimit > 0) {
                         stats.credit_lines.total += creditLimit;
                         stats.credit_lines.utilized += balance;
@@ -429,8 +373,9 @@
                 threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
                 
                 var recentCount = report.enquiries.filter(function(enq) {
-                    if (!enq.enquiry_date) return false;
-                    var enqDate = new Date(enq.enquiry_date);
+                    var d = enq.enquiryDate || enq.enquiry_date;
+                    if (!d) return false;
+                    var enqDate = new Date(d);
                     return enqDate >= threeMonthsAgo;
                 }).length;
                 

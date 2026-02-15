@@ -63,6 +63,9 @@
         var allAccounts = Array.isArray(params.allAccounts) ? params.allAccounts : [];
         var accounts = Array.isArray(params.accounts) ? params.accounts : [];
         var enquiries = Array.isArray(params.enquiries) ? params.enquiries : [];
+        var profileFromReport = params.profileFromReport || {};
+        var reasonCodes = Array.isArray(params.reasonCodes) ? params.reasonCodes : [];
+        var consumerSummary = params.consumerSummary || {};
         
         var gradeColor = getGradeColor(grade);
         var reportDate = new Date().toLocaleDateString('en-IN', { 
@@ -229,28 +232,64 @@
                 '            </div>\n' +
                 '        </div>\n';
         
-        // Profile Information
+        // Profile Information (from report when available for full profile)
+        var displayName = profileFromReport.primaryName || data.name || 'N/A';
+        var displayMobile = (profileFromReport.telephones && profileFromReport.telephones[0]) ? (profileFromReport.telephones[0].telephoneNumber || data.mobile) : (data.mobile || 'N/A');
+        var displayPan = data.pan || 'N/A';
+        if (profileFromReport.ids && profileFromReport.ids.length) {
+            for (var pi = 0; pi < profileFromReport.ids.length; pi++) {
+                if (profileFromReport.ids[pi].idType === 'TaxId') {
+                    displayPan = profileFromReport.ids[pi].idNumber || displayPan;
+                    break;
+                }
+            }
+        }
         html += '        <div class="section">\n' +
                 '            <div class="section-title"><span class="section-icon">👤</span> Client Profile</div>\n' +
                 '            <div class="info-grid">\n' +
                 '                <div class="info-card">\n' +
                 '                    <div class="info-label">Full Name</div>\n' +
-                '                    <div class="info-value">' + escapeHtml(String(data.name || 'N/A')) + '</div>\n' +
+                '                    <div class="info-value">' + escapeHtml(String(displayName)) + '</div>\n' +
+                '                </div>\n' +
+                '                <div class="info-card">\n' +
+                '                    <div class="info-label">Date of Birth</div>\n' +
+                '                    <div class="info-value">' + escapeHtml(String(profileFromReport.birthDate || (data.date_of_birth && data.date_of_birth.$date ? data.date_of_birth.$date.split('T')[0] : '') || 'N/A')) + '</div>\n' +
                 '                </div>\n' +
                 '                <div class="info-card">\n' +
                 '                    <div class="info-label">Mobile Number</div>\n' +
-                '                    <div class="info-value">' + escapeHtml(String(data.mobile || 'N/A')) + '</div>\n' +
+                '                    <div class="info-value">' + escapeHtml(String(displayMobile)) + '</div>\n' +
                 '                </div>\n' +
                 '                <div class="info-card">\n' +
                 '                    <div class="info-label">PAN Number</div>\n' +
-                '                    <div class="info-value">' + escapeHtml(String(data.pan || 'N/A')) + '</div>\n' +
+                '                    <div class="info-value">' + escapeHtml(String(displayPan)) + '</div>\n' +
                 '                </div>\n' +
                 '                <div class="info-card">\n' +
-                '                    <div class="info-label">Client ID</div>\n' +
-                '                    <div class="info-value" style="font-size: 12px;">' + escapeHtml(String(data.client_id || 'N/A')) + '</div>\n' +
+                '                    <div class="info-label">Control Number</div>\n' +
+                '                    <div class="info-value" style="font-size: 12px;">' + escapeHtml(String(profileFromReport.controlNumber || data.client_id || 'N/A')) + '</div>\n' +
                 '                </div>\n' +
-                '            </div>\n' +
-                '        </div>\n';
+                '            </div>\n';
+        if (profileFromReport.ids && profileFromReport.ids.length > 0) {
+            html += '            <div style="margin-top: 15px;"><strong style="color: #6b7280; font-size: 12px;">IDs on file</strong><div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px;">';
+            profileFromReport.ids.forEach(function(id) {
+                html += '<span style="background: #f3f4f6; padding: 6px 12px; border-radius: 6px; font-size: 12px;">' + escapeHtml(String(id.idType || '')) + ': ' + escapeHtml(String(id.idNumber || '')) + '</span>';
+            });
+            html += '</div></div>\n';
+        }
+        if (profileFromReport.emails && profileFromReport.emails.length > 0) {
+            html += '            <div style="margin-top: 12px;"><strong style="color: #6b7280; font-size: 12px;">Email addresses</strong><div style="margin-top: 6px; font-size: 13px;">' + profileFromReport.emails.map(function(e) { return escapeHtml(String(e.emailID || '')); }).join(', ') + '</div></div>\n';
+        }
+        if (profileFromReport.employment && profileFromReport.employment.length > 0) {
+            var emp = profileFromReport.employment[0];
+            html += '            <div style="margin-top: 12px;"><strong style="color: #6b7280; font-size: 12px;">Employment</strong><div style="margin-top: 6px;">Reported: ' + escapeHtml(String(emp.dateReported || '')) + ', Occupation code: ' + escapeHtml(String(emp.occupationCode || '')) + '</div></div>\n';
+        }
+        if (profileFromReport.addresses && profileFromReport.addresses.length > 0) {
+            html += '            <div style="margin-top: 15px;"><strong style="color: #6b7280; font-size: 12px;">Addresses on file</strong>';
+            profileFromReport.addresses.forEach(function(addr, i) {
+                html += '<div style="margin-top: 8px; padding: 10px; background: #f9fafb; border-radius: 6px; font-size: 12px;">' + (i + 1) + '. ' + escapeHtml(String(addr.line1 || '')) + (addr.line2 ? ' ' + escapeHtml(String(addr.line2)) : '') + ', PIN ' + escapeHtml(String(addr.pinCode || '')) + '</div>';
+            });
+            html += '</div>\n';
+        }
+        html += '        </div>\n';
         
         // Credit Score Breakdown
         html += '        <div class="section">\n' +
@@ -282,7 +321,46 @@
         
         html += '            </div>\n' +
                 '        </div>\n';
-        
+
+        // Score Reason Codes (from CIBIL report)
+        if (reasonCodes.length > 0) {
+            html += '        <div class="section">\n' +
+                    '            <div class="section-title"><span class="section-icon">📋</span> Score Reason Codes</div>\n' +
+                    '            <div style="font-size: 13px; color: #6b7280; margin-bottom: 12px;">Factors influencing your credit score (CIBIL)</div>\n' +
+                    '            <div style="display: flex; flex-wrap: wrap; gap: 10px;">\n';
+            reasonCodes.forEach(function(rc) {
+                html += '                <div style="background: #f3f4f6; padding: 10px 14px; border-radius: 8px; font-size: 13px;"><strong>' + escapeHtml(String(rc.reasonCodeName || rc.reasonCodeValue || '')) + '</strong></div>\n';
+            });
+            html += '            </div>\n' +
+                    '        </div>\n';
+        }
+
+        // Consumer Summary (accountSummary + inquirySummary from report)
+        var accSum = consumerSummary.accountSummary || {};
+        var inqSum = consumerSummary.inquirySummary || {};
+        if (accSum.totalAccounts !== undefined || inqSum.totalInquiry !== undefined) {
+            html += '        <div class="section">\n' +
+                    '            <div class="section-title"><span class="section-icon">📑</span> Consumer Summary</div>\n' +
+                    '            <div class="info-grid">\n';
+            if (accSum.totalAccounts !== undefined) {
+                html += '                <div class="info-card"><div class="info-label">Total Accounts</div><div class="info-value">' + (accSum.totalAccounts) + '</div></div>\n';
+                html += '                <div class="info-card"><div class="info-label">High Credit (Limit)</div><div class="info-value">' + formatCurrency(Number(accSum.highCreditAmount) || 0) + '</div></div>\n';
+                html += '                <div class="info-card"><div class="info-label">Current Balance</div><div class="info-value">' + formatCurrency(Number(accSum.currentBalance) || 0) + '</div></div>\n';
+                html += '                <div class="info-card"><div class="info-label">Overdue Accounts</div><div class="info-value" style="color: ' + ((accSum.overdueAccounts || 0) > 0 ? '#ef4444' : '#10b981') + ';">' + (accSum.overdueAccounts || 0) + '</div></div>\n';
+                html += '                <div class="info-card"><div class="info-label">Overdue Balance</div><div class="info-value">' + formatCurrency(Number(accSum.overdueBalance) || 0) + '</div></div>\n';
+                html += '                <div class="info-card"><div class="info-label">Zero Balance Accounts</div><div class="info-value">' + (accSum.zeroBalanceAccounts || 0) + '</div></div>\n';
+                if (accSum.recentDateOpened) html += '                <div class="info-card"><div class="info-label">Recent Account Opened</div><div class="info-value">' + escapeHtml(String(accSum.recentDateOpened)) + '</div></div>\n';
+                if (accSum.oldestDateOpened) html += '                <div class="info-card"><div class="info-label">Oldest Account Opened</div><div class="info-value">' + escapeHtml(String(accSum.oldestDateOpened)) + '</div></div>\n';
+            }
+            if (inqSum.totalInquiry !== undefined) {
+                html += '                <div class="info-card"><div class="info-label">Total Enquiries</div><div class="info-value">' + (inqSum.totalInquiry) + '</div></div>\n';
+                if (inqSum.inquiryPast30Days !== undefined && inqSum.inquiryPast30Days !== '') html += '                <div class="info-card"><div class="info-label">Enquiries (30 days)</div><div class="info-value">' + escapeHtml(String(inqSum.inquiryPast30Days)) + '</div></div>\n';
+                if (inqSum.recentInquiryDate) html += '                <div class="info-card"><div class="info-label">Recent Enquiry Date</div><div class="info-value">' + escapeHtml(String(inqSum.recentInquiryDate)) + '</div></div>\n';
+            }
+            html += '            </div>\n' +
+                    '        </div>\n';
+        }
+
         html += '    </div>\n'; // End Page 1
         
         // PAGE 2: Risk Assessment & Payment Analysis
@@ -402,7 +480,7 @@
                     '                </thead>\n' +
                     '                <tbody>\n';
             
-            accounts.slice(0, 15).forEach(function(acc) {
+            accounts.slice(0, 30).forEach(function(acc) {
                 var limit = acc.highCreditAmount || acc.creditLimit || 0;
                 var balance = acc.currentBalance || 0;
                 var overdue = acc.amountOverdue || 0;
@@ -410,8 +488,8 @@
                 var utilColor = util > 80 ? '#ef4444' : util > 50 ? '#f59e0b' : '#10b981';
                 
                 html += '                    <tr>\n' +
-                        '                        <td>' + escapeHtml(String(acc.memberShortName || acc.institution || 'N/A')) + '</td>\n' +
-                        '                        <td>' + escapeHtml(String(acc.accountType || 'N/A')) + '</td>\n' +
+                        '                        <td>' + escapeHtml(String(acc.memberShortName || acc.bank || acc.institution || 'N/A')) + '</td>\n' +
+                        '                        <td>' + escapeHtml(String(acc.accountType || acc.type || 'N/A')) + '</td>\n' +
                         '                        <td>' + formatCurrency(limit) + '</td>\n' +
                         '                        <td>' + formatCurrency(balance) + '</td>\n' +
                         '                        <td style="color: ' + (overdue > 0 ? '#ef4444' : '#10b981') + '; font-weight: 600;">' + formatCurrency(overdue) + '</td>\n' +
@@ -422,8 +500,8 @@
             html += '                </tbody>\n' +
                     '            </table>\n';
             
-            if (accounts.length > 15) {
-                html += '            <div style="margin-top: 15px; text-align: center; color: #6b7280; font-size: 12px;">Showing 15 of ' + accounts.length + ' accounts</div>\n';
+            if (accounts.length > 30) {
+                html += '            <div style="margin-top: 15px; text-align: center; color: #6b7280; font-size: 12px;">Showing 30 of ' + accounts.length + ' accounts</div>\n';
             }
             
             html += '        </div>\n';
@@ -598,7 +676,7 @@
                     '                </thead>\n' +
                     '                <tbody>\n';
             
-            enquiries.slice(0, 10).forEach(function(enq) {
+            enquiries.slice(0, 25).forEach(function(enq) {
                 html += '                    <tr>\n' +
                         '                        <td>' + escapeHtml(String(enq.enquiryDate || 'N/A')) + '</td>\n' +
                         '                        <td>' + escapeHtml(String(enq.memberShortName || 'N/A')) + '</td>\n' +
@@ -610,8 +688,8 @@
             html += '                </tbody>\n' +
                     '            </table>\n';
             
-            if (enquiries.length > 10) {
-                html += '            <div style="margin-top: 15px; text-align: center; color: #6b7280; font-size: 12px;">Showing 10 of ' + enquiries.length + ' enquiries</div>\n';
+            if (enquiries.length > 25) {
+                html += '            <div style="margin-top: 15px; text-align: center; color: #6b7280; font-size: 12px;">Showing 25 of ' + enquiries.length + ' enquiries</div>\n';
             }
             
             html += '        </div>\n';

@@ -4,10 +4,29 @@
      * Handles credit score fetching via SurePass API
      * Supports both Sandbox (FREE) and Production (PAID) modes
      * ⚠️ USES MOCK DATA when SurePass token is expired
+     *
+     * Fetch rules (high priority):
+     * - PAN: fetch only once per user; if we have PAN for mobile (profile.kyc.pan_number), skip getMobileToPAN.
+     * - CIBIL: fetch at most once per month per user; if we have CIBIL for mobile in current month, return cached.
      */
 
-    // Load mock data module
     const mockCibilData = require('./mock-cibil-data');
+    const mongoose = require('mongoose');
+    const ProfileModel = require('../../schema/profile/profile-schema');
+    const CibilDataModel = require('../../schema/cibil/cibil-data-schema.js');
+
+    const CibilFetchCacheSchema = new mongoose.Schema({
+        mobile: { type: String, required: true, index: true },
+        pan: String,
+        name: String,
+        response: mongoose.Schema.Types.Mixed,
+        fetched_at: { type: Date, default: Date.now }
+    });
+    const CibilFetchCache = mongoose.models.CibilFetchCache || mongoose.model('CibilFetchCache', CibilFetchCacheSchema);
+
+    function isSameMonth(d1, d2) {
+        return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth();
+    }
 
     // Helper to get SurePass headers
     function getSurePassHeaders() {
@@ -290,8 +309,8 @@
     app.get("/get/check/credit/report/cibil", async function(req, resp) {
         log("/get/check/credit/report/cibil");
 
-        var mobile = req.params.mobile || req.query.mobile;
-        var fullname = req.params.fullname || req.query.fullname;
+        var mobile = (req.params.mobile || req.query.mobile || '').toString().trim();
+        var fullname = (req.params.fullname || req.query.fullname || '').toString().trim();
 
         if (!mobile || !fullname) {
             return resp.status(400).json({ 
@@ -301,72 +320,102 @@
         }
 
         try {
-            // Step 1: Get PAN from mobile
-            var panMobile = await getMobileToPAN(fullname, mobile);
-            log('getMobileToPAN result:', panMobile.success);
-
-            if (!panMobile.success || panMobile.status_code !== 200) {
-                return resp.json({ 
-                    status: false, 
-                    message: 'Unable to fetch PAN from mobile number',
-                    step: 'getMobileToPAN'
-                });
+            // CIBIL: fetch at most once per month – return cached if we have data for this month
+            var cached = await CibilFetchCache.findOne({ mobile }).sort({ fetched_at: -1 }).lean();
+            if (cached && cached.fetched_at && isSameMonth(new Date(cached.fetched_at), new Date()) && cached.response) {
+                log('✅ CIBIL: returning cached report (same month)');
+                return resp.json({ ...cached.response, cached: true });
             }
 
-            // Step 2: Get comprehensive PAN details
-            var panComp = await getPANComprehensive(panMobile.data.pan_number);
-            log('getPANComprehensive result:', panComp.success);
+            // PAN: fetch only once – use stored PAN from profile if already fetched
+            var panNumber = null;
+            var profile = null;
+            if (ProfileModel) {
+                profile = await ProfileModel.findOne({ mobile }).select('kyc.pan_number kyc.pan_advance').lean();
+                if (profile && profile.kyc && profile.kyc.pan_number) {
+                    panNumber = profile.kyc.pan_number;
+                    log('✅ PAN: using stored PAN for mobile (skip getMobileToPAN)');
+                }
+            }
 
+            if (!panNumber) {
+                var panMobile = await getMobileToPAN(fullname, mobile);
+                log('getMobileToPAN result:', panMobile.success);
+                if (!panMobile.success || panMobile.status_code !== 200) {
+                    return resp.json({ status: false, message: 'Unable to fetch PAN from mobile number', step: 'getMobileToPAN' });
+                }
+                panNumber = panMobile.data.pan_number;
+                if (ProfileModel) {
+                    await ProfileModel.updateOne(
+                        { mobile },
+                        { $set: { 'kyc.pan_number': panNumber, 'kyc.isPanVerified': true } },
+                        { upsert: false }
+                    );
+                    log('✅ PAN: stored for mobile (fetch once)');
+                }
+            }
+
+            // PAN comprehensive – use cached from profile if same PAN (static data, fetch once)
+            var panComp = null;
+            if (profile && profile.kyc && profile.kyc.pan_advance && (profile.kyc.pan_advance.pan_number || profile.kyc.pan_advance.pan_details) && String(profile.kyc.pan_advance.pan_number || '').toUpperCase() === String(panNumber).toUpperCase()) {
+                panComp = { success: true, status_code: 200, data: profile.kyc.pan_advance };
+                log('✅ PAN comprehensive: using cached (skip API)');
+            }
+            if (!panComp || !panComp.success) {
+                panComp = await getPANComprehensive(panNumber);
+                log('getPANComprehensive result:', panComp.success);
+                if (ProfileModel && panComp.success && panComp.data) {
+                    await ProfileModel.updateOne(
+                        { mobile },
+                        { $set: { 'kyc.pan_advance': panComp.data } },
+                        { upsert: false }
+                    );
+                }
+            }
             if (!panComp.success || panComp.status_code !== 200) {
-                return resp.json({ 
-                    status: false, 
-                    message: 'Unable to fetch PAN comprehensive details',
-                    step: 'getPANComprehensive'
-                });
+                return resp.json({ status: false, message: 'Unable to fetch PAN comprehensive details', step: 'getPANComprehensive' });
             }
 
-            // Step 3: Determine gender
-            var gender = 'male';
-            if (panComp.data.pan_details && panComp.data.pan_details.gender) {
-                gender = panComp.data.pan_details.gender === 'F' ? 'female' : 'male';
-                    }
+            var panDetails = panComp.data;
+            var gender = (panDetails.pan_details && panDetails.pan_details.gender === 'F') ? 'female' : 'male';
 
-            // Step 4: Fetch CIBIL report
-                    var cibilParams = {
-                        mobile: mobile,
-                        pan: panComp.data.pan_number,
-                name: panComp.data.pan_details?.full_name || fullname,
-                        gender: gender,
-                        consent: "Y"
-                    };
+            var cibilParams = {
+                mobile: mobile,
+                pan: panDetails.pan_number || panNumber,
+                name: panDetails.pan_details?.full_name || fullname,
+                gender: gender,
+                consent: "Y"
+            };
 
             var cibilResp = await fetchCIBIL(cibilParams);
             log('fetchCIBIL result:', cibilResp.success);
 
             if (cibilResp.success && (cibilResp.status_code === 200 || cibilResp.status === 422)) {
-                resp.json({ 
+                var payload = { 
                     data: cibilResp.data, 
-                    pan_comprehensive: panComp.data, 
+                    pan_comprehensive: panDetails, 
                     status: true,
                     mode: isSandboxMode() ? 'sandbox' : 'production'
-                });
-                    } else {
+                };
+                await CibilFetchCache.updateOne(
+                    { mobile },
+                    { $set: { mobile, pan: panNumber, name: fullname, response: payload, fetched_at: new Date() } },
+                    { upsert: true }
+                );
+                resp.json(payload);
+            } else {
                 resp.json({ 
                     status: false, 
                     message: 'Unable to fetch CIBIL report',
                     step: 'fetchCIBIL',
-                    pan_comprehensive: panComp.data,
+                    pan_comprehensive: panDetails,
                     params: cibilParams
                 });
             }
 
         } catch (error) {
             log('❌ CIBIL fetch error:', error);
-            resp.status(500).json({ 
-                status: false, 
-                message: 'Internal server error',
-                error: error.message
-            });
+            resp.status(500).json({ status: false, message: 'Internal server error', error: error.message });
         }
     });
 
@@ -375,7 +424,8 @@
         log("/post/api/cibil/fetch");
 
         var { mobile, fullname, name, pan, consent } = req.body;
-        fullname = fullname || name;
+        fullname = (fullname || name || '').toString().trim();
+        mobile = (mobile || '').toString().trim();
 
         if (!mobile || !fullname) {
             return resp.status(400).json({ 
@@ -385,9 +435,26 @@
         }
 
         try {
-            // If PAN provided directly, skip mobile-to-PAN step
-            var panNumber = pan;
-            var panDetails = null;
+            // CIBIL: at most once per month – return cached if we have data for this month
+            var cachedPost = await CibilFetchCache.findOne({ mobile }).sort({ fetched_at: -1 }).lean();
+            if (cachedPost && cachedPost.fetched_at && isSameMonth(new Date(cachedPost.fetched_at), new Date()) && cachedPost.response) {
+                log('✅ CIBIL POST: returning cached report (same month)');
+                var hydrateFromCache = require('../cibil/api/cibil-data-resolver.js').hydrateFromCache;
+                var hydrated = await hydrateFromCache(mobile);
+                if (hydrated) log('✅ CIBIL POST: persisted cache to CibilDataModel for mobile', mobile);
+                else log('⚠️ CIBIL POST: hydrate to CibilDataModel failed for mobile', mobile, '- dashboard may show no data until next fetch');
+                return resp.json({ ...cachedPost.response, cached: true });
+            }
+
+            var panNumber = (pan || '').toString().trim() || null;
+            var profilePost = null;
+            if (!panNumber && ProfileModel) {
+                profilePost = await ProfileModel.findOne({ mobile }).select('kyc.pan_number kyc.pan_advance').lean();
+                if (profilePost && profilePost.kyc && profilePost.kyc.pan_number) {
+                    panNumber = profilePost.kyc.pan_number;
+                    log('✅ PAN POST: using stored PAN (skip getMobileToPAN)');
+                }
+            }
 
             if (!panNumber) {
                 var panMobile = await getMobileToPAN(fullname, mobile);
@@ -395,13 +462,35 @@
                     return resp.json({ status: false, message: 'Unable to fetch PAN', step: 'getMobileToPAN' });
                 }
                 panNumber = panMobile.data.pan_number;
+                if (ProfileModel) {
+                    await ProfileModel.updateOne(
+                        { mobile },
+                        { $set: { 'kyc.pan_number': panNumber, 'kyc.isPanVerified': true } },
+                        { upsert: false }
+                    );
+                    log('✅ PAN POST: stored (fetch once)');
+                }
             }
 
-            var panComp = await getPANComprehensive(panNumber);
+            var panComp = null;
+            if (profilePost && profilePost.kyc && profilePost.kyc.pan_advance && String((profilePost.kyc.pan_advance.pan_number || '')).toUpperCase() === String(panNumber).toUpperCase()) {
+                panComp = { success: true, status_code: 200, data: profilePost.kyc.pan_advance };
+                log('✅ PAN comprehensive POST: using cached');
+            }
+            if (!panComp || !panComp.success) {
+                panComp = await getPANComprehensive(panNumber);
+                if (ProfileModel && panComp.success && panComp.data) {
+                    await ProfileModel.updateOne(
+                        { mobile },
+                        { $set: { 'kyc.pan_advance': panComp.data } },
+                        { upsert: false }
+                    );
+                }
+            }
             if (!panComp.success) {
                 return resp.json({ status: false, message: 'Unable to verify PAN', step: 'getPANComprehensive' });
             }
-            panDetails = panComp.data;
+            var panDetails = panComp.data;
 
             var gender = panDetails.pan_details?.gender === 'F' ? 'female' : 'male';
 
@@ -414,12 +503,72 @@
             });
 
             if (cibilResp.success) {
-                resp.json({ 
+                var payload = { 
                     status: true,
                     data: cibilResp.data, 
                     pan_comprehensive: panDetails,
                     mode: isSandboxMode() ? 'sandbox' : 'production'
-                });
+                };
+                await CibilFetchCache.updateOne(
+                    { mobile },
+                    { $set: { mobile, pan: panNumber, name: fullname, response: payload, fetched_at: new Date() } },
+                    { upsert: true }
+                );
+
+                // Always persist to CibilDataModel after a successful (paid) fetch so dashboard/PDF never show wrong user
+                var profileForEmail = await ProfileModel.findOne({ mobile }).select('profile_info.email profile_info.date_of_birth').lean();
+                var userEmail = profileForEmail && (profileForEmail.profile_info || {}).email;
+                if (!userEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userEmail)) {
+                    userEmail = (mobile + '@users.astrocred.in').toLowerCase();
+                    log('CIBIL POST: using synthetic email for persist (no profile email)');
+                }
+                var cibilDataResolver = require('../cibil/api/cibil-data-resolver.js');
+                var raw = cibilResp.data || {};
+                var normalized = cibilDataResolver.normalizeCreditReportAndScore(raw);
+                var creditReport = normalized.credit_report;
+                var creditScore = normalized.credit_score;
+                var genderSchema = (panDetails.pan_details?.gender === 'F') ? 'Female' : 'Male';
+                var dob = new Date('1990-01-01');
+                if (profileForEmail && profileForEmail.profile_info && profileForEmail.profile_info.date_of_birth) {
+                    var d = new Date(profileForEmail.profile_info.date_of_birth);
+                    if (!isNaN(d.getTime())) dob = d;
+                }
+                var dobStr = panDetails.pan_details?.dob || panDetails.pan_details?.input_dob;
+                if (dobStr) {
+                    var d2 = new Date(dobStr);
+                    if (!isNaN(d2.getTime())) dob = d2;
+                }
+                var panUp = (panNumber || '').toString().trim().toUpperCase();
+                if (/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panUp)) {
+                    try {
+                        await CibilDataModel.findOneAndUpdate(
+                            { mobile },
+                            {
+                                $set: {
+                                    mobile,
+                                    email: userEmail,
+                                    pan: panUp,
+                                    name: (panDetails.pan_details?.full_name || fullname || 'User').trim(),
+                                    gender: genderSchema,
+                                    credit_score: creditScore || undefined,
+                                    credit_report: creditReport.length ? creditReport : undefined,
+                                    date_of_birth: dob,
+                                    updatedAt: new Date()
+                                }
+                            },
+                            { upsert: true, runValidators: true }
+                        );
+                        log('✅ CIBIL POST: persisted to CibilDataModel for mobile', mobile);
+                    } catch (dbErr) {
+                        log('⚠️ CIBIL POST: CibilDataModel save failed (cache still ok):', dbErr.message);
+                        if (dbErr.code) log('   DB code:', dbErr.code);
+                        if (dbErr.errors) log('   Validation errors:', Object.keys(dbErr.errors));
+                    }
+                } else {
+                    log('⚠️ CIBIL POST: skip persist - invalid PAN format:', panUp);
+                }
+
+                resp.json(payload);
             } else {
                 resp.json({ status: false, message: 'Unable to fetch CIBIL report', data: cibilResp });
             }

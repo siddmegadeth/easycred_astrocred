@@ -14,7 +14,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #7188ec 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -118,10 +118,6 @@
             <p>Financial Intelligence Platform</p>
         </div>
 
-        <div id="demo-banner">
-            <i class="fas fa-info-circle me-2"></i> Demo Mode: Use <strong>7764056669</strong>
-        </div>
-
         <!-- Step 1: Mobile Number -->
         <div id="mobile-step">
             <h5 class="mb-3 fw-bold">Sign In</h5>
@@ -139,11 +135,6 @@
                 </button>
             </form>
 
-            <div class="mt-4 text-center">
-                <button class="btn btn-link text-decoration-none" onclick="skipToDashboard()">
-                    <i class="fas fa-arrow-right me-1"></i> Skip to Demo Dashboard
-                </button>
-            </div>
         </div>
 
         <!-- Step 2: OTP Verification -->
@@ -179,8 +170,6 @@
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <script>
-        const DEMO_MOBILE = '7764056669';
-        const DEMO_OTP = '123456';
         let currentMobile = '';
 
         // Mobile form submission
@@ -201,20 +190,11 @@
                 // For demo, just switch to OTP screen
                 // In production, call: await fetch('/api/auth/send-otp', { method: 'POST', body: JSON.stringify({mobile}) })
 
-                if (mobile === DEMO_MOBILE) {
-                    setTimeout(() => {
-                        setButtonLoading(btn, false);
-                        showOTPStep();
-                        showToast(`Demo OTP: ${DEMO_OTP}`, 'success');
-                    }, 1000);
-                } else {
-                    // Simulate OTP send for any number
-                    setTimeout(() => {
-                        setButtonLoading(btn, false);
-                        showOTPStep();
-                        showToast('OTP sent successfully!', 'success');
-                    }, 1500);
-                }
+                setTimeout(() => {
+                    setButtonLoading(btn, false);
+                    showOTPStep();
+                    showToast('OTP sent successfully!', 'success');
+                }, 1500);
             } catch (error) {
                 setButtonLoading(btn, false);
                 showToast('Failed to send OTP. Please try again.', 'error');
@@ -237,21 +217,11 @@
 
             try {
                 // For demo mode or actual verification
-                if (currentMobile === DEMO_MOBILE && otp === DEMO_OTP) {
-                    // Demo login
-                    setTimeout(() => {
-                        createDemoSession();
-                        window.location.href = '/cibil-dashboard';
-                    }, 1000);
-                } else {
-                    // Real OTP verification
-                    // In production: const response = await fetch('/api/auth/verify-otp', {...})
-                    setTimeout(() => {
-                        setButtonLoading(btn, false);
-                        showToast('OTP verified!', 'success');
-                        window.location.href = '/cibil-dashboard';
-                    }, 1500);
-                }
+                setTimeout(() => {
+                    setButtonLoading(btn, false);
+                    showToast('OTP verified!', 'success');
+                    window.location.href = '/cibil-dashboard';
+                }, 1500);
             } catch (error) {
                 setButtonLoading(btn, false);
                 showToast('Invalid OTP. Please try again.', 'error');
@@ -284,18 +254,6 @@
             document.getElementById('otp-step').classList.add('d-none');
             document.getElementById('mobile-step').classList.remove('d-none');
             document.querySelectorAll('.otp-digit').forEach(input => input.value = '');
-        }
-
-        function skipToDashboard() {
-            currentMobile = DEMO_MOBILE;
-            createDemoSession();
-            window.location.href = '/cibil-dashboard';
-        }
-
-        function createDemoSession() {
-            // Store demo session in localStorage for client-side demo
-            localStorage.setItem('easycred_demo_mobile', DEMO_MOBILE);
-            localStorage.setItem('easycred_demo_session', 'active');
         }
 
         function setButtonLoading(btn, loading) {

@@ -1,0 +1,7 @@
+/* Common media queries – shared breakpoints */
+@media (max-width: 768px) {
+    .section { padding-left: 0.5rem; padding-right: 0.5rem; }
+}
+@media (max-width: 576px) {
+    .navbar-brand .fs-4 { font-size: 1.1rem !important; }
+}

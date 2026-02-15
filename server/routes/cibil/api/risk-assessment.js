@@ -1281,6 +1281,75 @@
     };
 
     /**
+     * Suggest appropriate loan products based on grade and credit worthiness
+     */
+    RiskAssessment.prototype.suggestLoanProducts = function () {
+        try {
+            var grade = (this.gradingEngine && this.gradingEngine.calculateOverallGrade) ? this.gradingEngine.calculateOverallGrade() : 'C';
+            var creditWorthiness = this.calculateCreditWorthiness();
+            var score = (creditWorthiness && creditWorthiness.score) ? creditWorthiness.score : 60;
+            var defaulters = (this.gradingEngine && this.gradingEngine.identifyDefaulters) ? this.gradingEngine.identifyDefaulters() : [];
+            var hasDefaulters = defaulters.length > 0;
+            var suggestedProducts = [];
+
+            if ((grade === 'A+' || grade === 'A' || grade === 'B+') && score >= 80 && !hasDefaulters) {
+                suggestedProducts.push({ product: 'Unsecured Personal Loan', amountRange: '₹1-25 Lakhs', tenure: '1-5 years', interestRate: '10-14%', features: ['No collateral', 'Quick disbursal'] });
+                suggestedProducts.push({ product: 'Credit Card with High Limit', limitRange: '₹1-10 Lakhs', features: ['Reward points', 'Cashback', 'Travel benefits'] });
+            }
+            if ((grade === 'B+' || grade === 'B' || grade === 'C+') && score >= 65) {
+                suggestedProducts.push({ product: 'Secured Personal Loan', amountRange: '₹50,000-10 Lakhs', tenure: '6 months - 3 years', interestRate: '12-18%', features: ['Lower interest', 'Collateral required'] });
+                if (!hasDefaulters) {
+                    suggestedProducts.push({ product: 'Standard Credit Card', limitRange: '₹50,000-2 Lakhs', features: ['Basic rewards', 'Online protection'] });
+                }
+            }
+            if (grade <= 'C' || hasDefaulters) {
+                suggestedProducts.push({ product: 'Secured Credit Card', depositRange: '₹10,000-1 Lakh', limit: '80-100% of deposit', features: ['Build credit', 'Deposit as collateral'] });
+                suggestedProducts.push({ product: 'Small Personal Loan against Collateral', amountRange: '₹25,000-5 Lakhs', collateral: ['Gold', 'FD', 'Property'], interestRate: '14-24%', features: ['Credit rebuilding'] });
+            }
+            if (suggestedProducts.length === 0) {
+                suggestedProducts.push({ product: 'Secured Credit Card', depositRange: '₹10,000+', features: ['Build/repair credit'] });
+            }
+            return suggestedProducts;
+        } catch (e) {
+            return [{ product: 'Secured Credit Card', depositRange: '₹10,000+', features: ['Build credit'] }];
+        }
+    };
+
+    /**
+     * Determine collateral requirements based on risk
+     */
+    RiskAssessment.prototype.determineCollateralRequirements = function () {
+        var prob = this.cache.defaultProbability != null ? this.cache.defaultProbability : (this.calculateDefaultProbabilitySync && this.calculateDefaultProbabilitySync()) || 30;
+        if (prob > 50) return { required: true, types: ['Gold', 'Fixed Deposit', 'Property'], minCover: '100-120% of loan amount' };
+        if (prob > 25) return { required: 'Optional', types: ['FD', 'Gold'], minCover: 'Up to 100%' };
+        return { required: false, types: [], minCover: 'N/A' };
+    };
+
+    /**
+     * Recommended review frequency (months)
+     */
+    RiskAssessment.prototype.determineReviewFrequency = function (probability) {
+        if (probability > 60) return 'Monthly';
+        if (probability > 40) return 'Quarterly';
+        if (probability > 20) return 'Half-yearly';
+        return 'Annual';
+    };
+
+    /**
+     * Key monitoring metrics for the account
+     */
+    RiskAssessment.prototype.identifyMonitoringMetrics = function () {
+        return ['Credit utilization ratio', 'Days past due (DPD)', 'New enquiries', 'Account mix', 'Payment history', 'Outstanding balance trend'];
+    };
+
+    /**
+     * Early warning signals to watch
+     */
+    RiskAssessment.prototype.identifyEarlyWarningSignals = function () {
+        return ['Rise in DPD', 'Increase in utilization above 50%', 'Multiple new enquiries', 'Missed payment', 'Overdue amount increase'];
+    };
+
+    /**
      * Generate pricing recommendations
      */
     RiskAssessment.prototype.generatePricingRecommendations = function (grade, defaultProbability) {

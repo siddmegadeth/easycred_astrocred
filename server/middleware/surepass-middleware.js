@@ -13,7 +13,7 @@
             name: 'SANDBOX'
         },
         production: {
-            url: 'https://kyc-api.surepass.io',
+            url: process.env.SUREPASS_PRODUCTION_URL || 'https://kyc-api.surepass.app',
             name: 'PRODUCTION'
         }
     };
@@ -22,9 +22,8 @@
     log('    SUREPASS API CONFIGURATION');
     log('===========================================');
 
-    // 🔒 HARDCODED TO SANDBOX MODE FOR TESTING
-    // TODO: Change back to production mode when ready for live API calls
-    const FORCE_SANDBOX = true;  // ⚠️ Set to false for production
+    // Set to false to use production Surepass API (requires SUREPASS_TOKEN_PRODUCTION and charges apply)
+    const FORCE_SANDBOX = process.env.FORCE_SUREPASS_SANDBOX === 'true';
     
     // Determine mode based on SUREPASS_ENV or NODE_ENV
     const surepassEnv = FORCE_SANDBOX ? 'development' : (process.env.SUREPASS_ENV || process.env.NODE_ENV || 'development');
@@ -48,7 +47,8 @@
                                    SUREPASS_CONFIG.production.url;
         
         process.env.SUREPASS_TOKEN = process.env.SUREPASS_TOKEN_PRODUCTION || 
-                                     process.env.SUREPASS_PRODUCTION_TOKEN;
+                                     process.env.SUREPASS_PRODUCTION_TOKEN ||
+                                     process.env.SUREPASS_TOKEN;
         
         process.env.SUREPASS_MODE = 'production';
         
@@ -78,17 +78,17 @@
     log('');
     
     if (FORCE_SANDBOX) {
-        log('⚠️  IMPORTANT: SurePass is HARDCODED to SANDBOX mode');
-        log('   This is for testing only. No charges will apply.');
-        log('   To enable production mode, set FORCE_SANDBOX = false');
-        log('   in server/middleware/surepass-middleware.js');
+        log('⚠️  SurePass is in SANDBOX mode (FORCE_SUREPASS_SANDBOX=true in .env)');
+        log('   To use production API, remove FORCE_SUREPASS_SANDBOX or set it to false');
+        log('   and set SUREPASS_TOKEN_PRODUCTION in .env');
         log('');
     }
 
     // Validation warnings
     if (!process.env.SUREPASS_TOKEN) {
         log('⚠️  WARNING: SUREPASS_TOKEN is not set!');
-        log('   Please configure your SurePass API token in .env file');
+        log('   Sandbox: set SUREPASS_SANDBOX_TOKEN or SUREPASS_TOKEN_DEVELOPMENT in .env');
+        log('   Production: set SUREPASS_TOKEN_PRODUCTION (or SUREPASS_TOKEN) in .env');
         log('');
     }
 

@@ -10,26 +10,24 @@
         this.fontsPath = path.join(__dirname, '../../assets/fonts');
     }
 
-    // Generate CIBIL PDF Report
+    // Generate CIBIL PDF Report - ENTERPRISE LEVEL with ALL ANALYSIS
     PDFGenerator.prototype.generateCIBILPDF = function (cibilData, outputPath, callback) {
         try {
             var doc = new PDFDocument({
                 size: 'A4',
                 margin: 50,
                 info: {
-                    Title: 'CIBIL Credit Report - ' + (cibilData.name || 'Report'),
-                    Author: 'ASTROCRED',
-                    Subject: 'Credit Report Analysis'
+                    Title: 'ASTROCRED Comprehensive Credit Analysis - ' + (cibilData.name || 'Report'),
+                    Author: 'ASTROCRED - AI Credit Intelligence',
+                    Subject: 'Complete Credit Report with Risk Assessment & Recommendations'
                 }
             });
 
             var stream = fs.createWriteStream(outputPath);
             doc.pipe(stream);
 
-            // Header
-            this.addHeader(doc, 'CIBIL Credit Report', cibilData.name);
-
-            // Credit Score Section
+            // PAGE 1: Header & Credit Score
+            this.addHeader(doc, 'COMPREHENSIVE CREDIT ANALYSIS', cibilData.name);
             this.addCreditScoreSection(doc, cibilData);
 
             // Profile Information
@@ -38,11 +36,45 @@
             // Credit Summary
             this.addCreditSummarySection(doc, cibilData);
 
-            // Accounts Section
+            // PAGE 2: Risk Assessment (NEW)
+            doc.addPage();
+            this.addRiskAssessmentSection(doc, cibilData);
+
+            // Component Scores Breakdown (NEW)
+            this.addComponentScoresSection(doc, cibilData);
+
+            // PAGE 3: Payment Analysis (NEW)
+            doc.addPage();
+            this.addPaymentAnalysisSection(doc, cibilData);
+
+            // Credit Utilization Details (NEW)
+            this.addCreditUtilizationSection(doc, cibilData);
+
+            // PAGE 4: Accounts Section
+            doc.addPage();
             this.addAccountsSection(doc, cibilData);
 
-            // Recommendations
+            // PAGE 5: Enquiries Section (NEW)
+            if (doc.y > 600) doc.addPage();
+            this.addEnquiriesSection(doc, cibilData);
+
+            // PAGE 6: Recommendations & Action Plan
+            doc.addPage();
             this.addRecommendationsSection(doc, cibilData);
+
+            // Improvement Roadmap Summary (NEW)
+            this.addImprovementRoadmapSection(doc, cibilData);
+
+            // PAGE 7: Bank Suggestions (NEW)
+            doc.addPage();
+            this.addBankSuggestionsSection(doc, cibilData);
+
+            // FinVu Data Integration (NEW)
+            this.addFinVuDataSection(doc, cibilData);
+
+            // Final Page: Summary & Next Steps
+            doc.addPage();
+            this.addExecutiveSummarySection(doc, cibilData);
 
             // Add footer to current page before ending
             this.addFooterToCurrentPage(doc);
@@ -72,18 +104,42 @@
             var templatePath = path.join(__dirname, './pdf-template-comprehensive.js');
             var generateHTML = require(templatePath);
 
+            // Ensure accounts array for template (from credit_report[0].accounts)
+            var report0 = (cibilData.credit_report && cibilData.credit_report[0]) ? cibilData.credit_report[0] : {};
+            if (!cibilData.accounts && report0.accounts && report0.accounts.length) {
+                cibilData.accounts = report0.accounts.map(function (acc) {
+                    var bal = parseFloat(acc.currentBalance) || parseFloat(acc.current_balance) || 0;
+                    var overdue = parseFloat(acc.amountOverdue) || parseFloat(acc.overdue_amount) || 0;
+                    var status = (acc.account_status || acc.status || (overdue > 0 ? 'Default' : 'ACTIVE'));
+                    return {
+                        accountNumber: acc.accountNumber || acc.account_number || acc.mask_account_number || 'N/A',
+                        bank: acc.memberShortName || acc.member_name || acc.lender_name || acc.bank_name || 'Unknown',
+                        type: acc.accountType || acc.account_type || acc.type || 'Other',
+                        currentBalance: bal,
+                        balance: bal,
+                        amountOverdue: overdue,
+                        overdue_amount: overdue,
+                        status: status,
+                        lastPaymentDate: acc.lastPaymentDate || acc.last_payment_date || null,
+                        highCreditAmount: parseFloat(acc.highCreditAmount) || parseFloat(acc.high_credit_amount) || 0
+                    };
+                });
+            }
+
             // Get analysis data if not present
             if (!cibilData.analysis) {
                 try {
                     var GradingEngine = require('./api/grading-engine');
                     var AdvancedAnalytics = require('./api/analytics-engine-advance.js');
+                    var RiskAssessment = require('./api/risk-assessment.js');
                     var params = new GradingEngine(cibilData);
                     var analytics = new AdvancedAnalytics(cibilData, params);
                     cibilData.analysis = analytics.generateComprehensiveReport();
 
                     // Add other analysis parts that the template might expect
                     cibilData.analysis.overallGrade = params.calculateOverallGrade();
-                    cibilData.analysis.riskReport = require('./api/risk-assessment.js').prototype.generateRiskReport.call({ cibilData: cibilData, gradingEngine: params });
+                    var risk = new RiskAssessment(cibilData, params);
+                    cibilData.analysis.riskReport = risk.generateRiskReport();
                 } catch (e) {
                     console.log('Error generating analysis for PDF:', e);
                     // Proceed with partial data
@@ -91,8 +147,34 @@
             }
 
             var analysis = cibilData.analysis || {};
-            var accounts = cibilData.accounts || (cibilData.cibil_data && cibilData.cibil_data.accounts) || [];
-            var enquiries = cibilData.enquiries || (cibilData.cibil_data && cibilData.cibil_data.enquiries) || [];
+            var accounts = cibilData.accounts || (cibilData.cibil_data && cibilData.cibil_data.accounts) || (report0.accounts || []);
+            var enquiries = cibilData.enquiries || (cibilData.cibil_data && cibilData.cibil_data.enquiries) || (report0.enquiries || []);
+
+            // Extract rich data from credit_report[0] for full PDF report
+            var profileFromReport = {};
+            if (report0.names && report0.names.length) {
+                profileFromReport.names = report0.names;
+                profileFromReport.primaryName = report0.names[0].name;
+                profileFromReport.birthDate = report0.names[0].birthDate;
+                profileFromReport.gender = report0.names[0].gender;
+            }
+            if (report0.ids && report0.ids.length) profileFromReport.ids = report0.ids;
+            if (report0.telephones && report0.telephones.length) profileFromReport.telephones = report0.telephones;
+            if (report0.emails && report0.emails.length) profileFromReport.emails = report0.emails;
+            if (report0.employment && report0.employment.length) profileFromReport.employment = report0.employment;
+            if (report0.addresses && report0.addresses.length) profileFromReport.addresses = report0.addresses;
+            profileFromReport.controlNumber = report0.control_number;
+
+            var reasonCodes = [];
+            if (report0.scores && report0.scores[0] && report0.scores[0].reasonCodes && report0.scores[0].reasonCodes.length) {
+                reasonCodes = report0.scores[0].reasonCodes;
+            }
+
+            var consumerSummary = {};
+            if (report0.response && report0.response.consumerSummaryresp) {
+                consumerSummary.accountSummary = report0.response.consumerSummaryresp.accountSummary || {};
+                consumerSummary.inquirySummary = report0.response.consumerSummaryresp.inquirySummary || {};
+            }
 
             var htmlContent = generateHTML({
                 data: cibilData,
@@ -109,7 +191,10 @@
                 componentScores: analysis.componentScores || {},
                 riskDetails: analysis.riskDetails || {},
                 accounts: accounts,
-                enquiries: enquiries
+                enquiries: enquiries,
+                profileFromReport: profileFromReport,
+                reasonCodes: reasonCodes,
+                consumerSummary: consumerSummary
             });
 
             // Launch Puppeteer
@@ -1552,48 +1637,25 @@
 
     // ============== API ENDPOINTS ==============
 
-    // Get CIBIL PDF Report
+    // Get CIBIL PDF Report – uses resolver (DB + hydrate from cache). No sample data for real users.
     app.get('/get/api/cibil/generate-pdf', async function (req, res) {
         try {
             var fs = require('fs');
             var { pan, mobile, email } = req.query;
-            var CibilDataModel = require('../../schema/cibil/cibil-data-schema.js');
+            var getCibilForUser = require('./api/cibil-data-resolver.js').getCibilForUser;
 
-            var query = {};
-            if (pan) query.pan = pan.toUpperCase();
-            if (mobile) query.mobile = mobile;
-            if (email) query.email = email.toLowerCase();
-
-            // Default query for demo if nothing provided
             if (!pan && !mobile && !email) {
-                query.pan = 'IVZPK2103N';
+                return res.status(400).json({
+                    success: false,
+                    error: 'Provide at least one identifier: pan, mobile, or email'
+                });
             }
 
-            var cibilData = await CibilDataModel.findOne(query).lean();
-
-            // Mock Data Fallback for Demo
-            if (!cibilData) {
-                console.log('Data not found for CIBIL PDF. Loading sample data...');
-                try {
-                    delete require.cache[require.resolve('../../routes/cibil/api/sample-data.js')];
-                    var sampleDataGen = require('../../routes/cibil/api/sample-data.js');
-                    cibilData = sampleDataGen.generateSampleCIBILData('DEMO_CLIENT');
-
-                    // Override with query params if provided
-                    if (pan) cibilData.pan = pan;
-                    if (mobile) cibilData.mobile = mobile;
-                    if (email) cibilData.user_email = email;
-
-                    console.log('Loaded sample data for:', cibilData.name);
-                } catch (e) {
-                    console.error('Error loading sample data:', e);
-                }
-            }
-
+            var cibilData = await getCibilForUser({ pan: pan || '', mobile: mobile || '', email: email || '' });
             if (!cibilData) {
                 return res.status(404).json({
                     success: false,
-                    error: 'CIBIL data not found'
+                    error: 'No CIBIL report found. Fetch your CIBIL report from the dashboard first.'
                 });
             }
 
@@ -1602,7 +1664,7 @@
                 fs.mkdirSync(outputDir, { recursive: true });
             }
 
-            var fileName = 'CIBIL_Report_' + (pan || mobile || email || cibilData.pan || 'DEMO') + '_' + Date.now() + '.pdf';
+            var fileName = 'CIBIL_Report_' + (pan || mobile || email || cibilData.pan || cibilData.pan_number || 'report') + '_' + Date.now() + '.pdf';
             var outputPath = path.join(outputDir, fileName);
 
             // Use Puppeteer Generator for high quality
@@ -1638,50 +1700,27 @@
         }
     });
 
-    // Get ASTROCRED Analysis PDF Report
+    // Get ASTROCRED Analysis PDF Report – uses resolver (DB + hydrate from cache). No sample for real users.
     app.get('/get/api/cibil/astrocred-report-pdf', async function (req, res) {
         try {
             var fs = require('fs');
             var { pan, mobile, email } = req.query;
-            var CibilDataModel = require('../../schema/cibil/cibil-data-schema.js');
+            var getCibilForUser = require('./api/cibil-data-resolver.js').getCibilForUser;
             var AdvancedAnalytics = require('./api/analytics-engine-advance.js');
             var GradingEngine = require('./api/grading-engine.js');
 
-            var query = {};
-            if (pan) query.pan = pan.toUpperCase();
-            if (mobile) query.mobile = mobile;
-            if (email) query.email = email.toLowerCase();
-
-            // Default query for demo if nothing provided
             if (!pan && !mobile && !email) {
-                query.pan = 'IVZPK2103N';
+                return res.status(400).json({
+                    success: false,
+                    error: 'Provide at least one identifier: pan, mobile, or email'
+                });
             }
 
-            var cibilData = await CibilDataModel.findOne(query).lean();
-
-            // Mock Data Fallback for Demo
-            if (!cibilData) {
-                console.log('Data not found for AstroCred Report. Loading sample data...');
-                try {
-                    delete require.cache[require.resolve('../../routes/cibil/api/sample-data.js')];
-                    var sampleDataGen = require('../../routes/cibil/api/sample-data.js');
-                    cibilData = sampleDataGen.generateSampleCIBILData('DEMO_CLIENT');
-
-                    // Override with query params if provided
-                    if (pan) cibilData.pan = pan;
-                    if (mobile) cibilData.mobile = mobile;
-                    if (email) cibilData.user_email = email;
-
-                    console.log('Loaded sample data for:', cibilData.name);
-                } catch (e) {
-                    console.error('Error loading sample data:', e);
-                }
-            }
-
+            var cibilData = await getCibilForUser({ pan: pan || '', mobile: mobile || '', email: email || '' });
             if (!cibilData) {
                 return res.status(404).json({
                     success: false,
-                    error: 'CIBIL data not found'
+                    error: 'No CIBIL report found. Fetch your CIBIL report from the dashboard first.'
                 });
             }
 
@@ -1706,7 +1745,7 @@
                 fs.mkdirSync(outputDir, { recursive: true });
             }
 
-            var fileName = 'ASTROCRED_Analysis_' + (pan || mobile || email || 'DEMO') + '_' + Date.now() + '.pdf';
+            var fileName = 'ASTROCRED_Analysis_' + (pan || mobile || email || cibilData.pan || cibilData.pan_number || 'report') + '_' + Date.now() + '.pdf';
             var outputPath = path.join(outputDir, fileName);
 
             // Use Puppeteer Generator
@@ -1767,28 +1806,12 @@
                 });
             }
 
-            var query = {};
-            if (pan) query.pan = pan.toUpperCase();
-            if (mobile) query.mobile = mobile;
-            if (email) query.email = email.toLowerCase();
-
-            var cibilData = await CibilDataModel.findOne(query).lean();
-
-            // Mock Data Fallback
-            if (!cibilData) {
-                try {
-                    delete require.cache[require.resolve('../../routes/cibil/api/sample-data.js')];
-                    var sampleDataGen = require('../../routes/cibil/api/sample-data.js');
-                    cibilData = sampleDataGen.generateSampleCIBILData('DEMO_CLIENT');
-                    if (pan) cibilData.pan = pan;
-                    if (mobile) cibilData.mobile = mobile;
-                    if (email) cibilData.user_email = email;
-                } catch (e) { console.log('Mock load error', e); }
-            }
+            var getCibilForUser = require('./api/cibil-data-resolver.js').getCibilForUser;
+            var cibilData = await getCibilForUser({ pan: pan || '', mobile: mobile || '', email: email || '' });
             if (!cibilData) {
                 return res.status(404).json({
                     success: false,
-                    error: 'CIBIL data not found'
+                    error: 'No CIBIL report found. Fetch your CIBIL report from the dashboard first.'
                 });
             }
 
@@ -1845,7 +1868,7 @@
         try {
             var fs = require('fs');
             var { pan, mobile, email } = req.query;
-            var CibilDataModel = require('../../schema/cibil/cibil-data-schema.js');
+            var getCibilForUser = require('./api/cibil-data-resolver.js').getCibilForUser;
 
             if (!pan && !mobile && !email) {
                 return res.status(400).json({
@@ -1854,28 +1877,11 @@
                 });
             }
 
-            var query = {};
-            if (pan) query.pan = pan.toUpperCase();
-            if (mobile) query.mobile = mobile;
-            if (email) query.email = email.toLowerCase();
-
-            var cibilData = await CibilDataModel.findOne(query).lean();
-
-            // Mock Data Fallback
-            if (!cibilData) {
-                try {
-                    delete require.cache[require.resolve('../../routes/cibil/api/sample-data.js')];
-                    var sampleDataGen = require('../../routes/cibil/api/sample-data.js');
-                    cibilData = sampleDataGen.generateSampleCIBILData('DEMO_CLIENT');
-                    if (pan) cibilData.pan = pan;
-                    if (mobile) cibilData.mobile = mobile;
-                    if (email) cibilData.user_email = email;
-                } catch (e) { console.log('Mock load error', e); }
-            }
+            var cibilData = await getCibilForUser({ pan: pan || '', mobile: mobile || '', email: email || '' });
             if (!cibilData) {
                 return res.status(404).json({
                     success: false,
-                    error: 'CIBIL data not found'
+                    error: 'No CIBIL report found. Fetch your CIBIL report from the dashboard first.'
                 });
             }
 
@@ -1962,28 +1968,12 @@
                 });
             }
 
-            var query = {};
-            if (pan) query.pan = pan.toUpperCase();
-            if (mobile) query.mobile = mobile;
-            if (email) query.email = email.toLowerCase();
-
-            var cibilData = await CibilDataModel.findOne(query).lean();
-
-            // Mock Data Fallback
-            if (!cibilData) {
-                try {
-                    delete require.cache[require.resolve('../../routes/cibil/api/sample-data.js')];
-                    var sampleDataGen = require('../../routes/cibil/api/sample-data.js');
-                    cibilData = sampleDataGen.generateSampleCIBILData('DEMO_CLIENT');
-                    if (pan) cibilData.pan = pan;
-                    if (mobile) cibilData.mobile = mobile;
-                    if (email) cibilData.user_email = email;
-                } catch (e) { console.log('Mock load error', e); }
-            }
+            var getCibilForUser = require('./api/cibil-data-resolver.js').getCibilForUser;
+            var cibilData = await getCibilForUser({ pan: pan || '', mobile: mobile || '', email: email || '' });
             if (!cibilData) {
                 return res.status(404).json({
                     success: false,
-                    error: 'CIBIL data not found'
+                    error: 'No CIBIL report found. Fetch your CIBIL report from the dashboard first.'
                 });
             }
 
@@ -2063,7 +2053,7 @@
         try {
             var fs = require('fs');
             var { pan, mobile, email } = req.query;
-            var CibilDataModel = require('../../schema/cibil/cibil-data-schema.js');
+            var getCibilForUser = require('./api/cibil-data-resolver.js').getCibilForUser;
 
             if (!pan && !mobile && !email) {
                 return res.status(400).json({
@@ -2072,28 +2062,11 @@
                 });
             }
 
-            var query = {};
-            if (pan) query.pan = pan.toUpperCase();
-            if (mobile) query.mobile = mobile;
-            if (email) query.email = email.toLowerCase();
-
-            var cibilData = await CibilDataModel.findOne(query).lean();
-
-            // Mock Data Fallback
-            if (!cibilData) {
-                try {
-                    delete require.cache[require.resolve('../../routes/cibil/api/sample-data.js')];
-                    var sampleDataGen = require('../../routes/cibil/api/sample-data.js');
-                    cibilData = sampleDataGen.generateSampleCIBILData('DEMO_CLIENT');
-                    if (pan) cibilData.pan = pan;
-                    if (mobile) cibilData.mobile = mobile;
-                    if (email) cibilData.user_email = email;
-                } catch (e) { console.log('Mock load error', e); }
-            }
+            var cibilData = await getCibilForUser({ pan: pan || '', mobile: mobile || '', email: email || '' });
             if (!cibilData) {
                 return res.status(404).json({
                     success: false,
-                    error: 'CIBIL data not found'
+                    error: 'No CIBIL report found. Fetch your CIBIL report from the dashboard first.'
                 });
             }
 
@@ -2173,7 +2146,7 @@
         try {
             var fs = require('fs');
             var { pan, mobile, email, loanType, amount, tenure } = req.body;
-            var CibilDataModel = require('../../schema/cibil/cibil-data-schema.js');
+            var getCibilForUser = require('./api/cibil-data-resolver.js').getCibilForUser;
 
             if (!pan && !mobile && !email) {
                 return res.status(400).json({
@@ -2182,28 +2155,11 @@
                 });
             }
 
-            var query = {};
-            if (pan) query.pan = pan.toUpperCase();
-            if (mobile) query.mobile = mobile;
-            if (email) query.email = email.toLowerCase();
-
-            var cibilData = await CibilDataModel.findOne(query).lean();
-
-            // Mock Data Fallback
-            if (!cibilData) {
-                try {
-                    delete require.cache[require.resolve('../../routes/cibil/api/sample-data.js')];
-                    var sampleDataGen = require('../../routes/cibil/api/sample-data.js');
-                    cibilData = sampleDataGen.generateSampleCIBILData('DEMO_CLIENT');
-                    if (pan) cibilData.pan = pan;
-                    if (mobile) cibilData.mobile = mobile;
-                    if (email) cibilData.user_email = email;
-                } catch (e) { console.log('Mock load error', e); }
-            }
+            var cibilData = await getCibilForUser({ pan: pan || '', mobile: mobile || '', email: email || '' });
             if (!cibilData) {
                 return res.status(404).json({
                     success: false,
-                    error: 'CIBIL data not found'
+                    error: 'No CIBIL report found. Fetch your CIBIL report from the dashboard first.'
                 });
             }
 

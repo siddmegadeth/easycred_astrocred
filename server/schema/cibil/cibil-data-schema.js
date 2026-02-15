@@ -72,83 +72,8 @@
         // Credit score
         credit_score: String,
 
-        // Credit report data
-        credit_report: [{
-            names: [{
-                index: String,
-                name: String,
-                birthDate: String,
-                gender: String
-            }],
-            ids: [{
-                index: String,
-                idType: String,
-                idNumber: String
-            }],
-            telephones: [{
-                index: String,
-                telephoneNumber: String,
-                telephoneType: String,
-                enquiryEnriched: String
-            }],
-            emails: [{
-                index: String,
-                emailID: String
-            }],
-            employment: [{
-                index: String,
-                accountType: String,
-                dateReported: String,
-                occupationCode: String
-            }],
-            scores: [{
-                scoreName: String,
-                scoreCardName: String,
-                scoreCardVersion: String,
-                scoreDate: String,
-                score: String,
-                reasonCodes: [{
-                    reasonCodeName: String,
-                    reasonCodeValue: String
-                }]
-            }],
-            addresses: [{
-                index: String,
-                line1: String,
-                line2: String,
-                line3: String,
-                line5: String,
-                stateCode: String,
-                pinCode: String,
-                addressCategory: String,
-                dateReported: String,
-                enquiryEnriched: String,
-                residenceCode: String
-            }],
-            accounts: [CreditAccountSchema],
-            enquiries: [EnquirySchema],
-            response: {
-                consumerSummaryresp: {
-                    accountSummary: {
-                        totalAccounts: Number,
-                        highCreditAmount: Number,
-                        currentBalance: Number,
-                        overdueAccounts: Number,
-                        overdueBalance: Number,
-                        zeroBalanceAccounts: Number,
-                        recentDateOpened: String,
-                        oldestDateOpened: String
-                    },
-                    inquirySummary: {
-                        totalInquiry: Number,
-                        inquiryPast30Days: String,
-                        inquiryPast12Months: String,
-                        inquiryPast24Months: String,
-                        recentInquiryDate: String
-                    }
-                }
-            }
-        }],
+        // Credit report data – Mixed so Surepass/API response shape is accepted without cast errors
+        credit_report: [{ type: mongoose.Schema.Types.Mixed }],
 
         // PAN comprehensive data
         pan_comprehensive: {

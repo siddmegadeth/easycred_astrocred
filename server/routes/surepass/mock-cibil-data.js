@@ -48,17 +48,17 @@ const MOCK_DATA = {
         }
     },
     
-    // Sample User 2 (from sandbox)
+    // Fallback user (when mock used – dev/sandbox only)
     '7764056669': {
         mobile: '7764056669',
         pan: 'IVZPK2103N',
-        fullname: 'SHIV KUMAR',
+        fullname: 'User',
         gender: 'male',
         dob: '1987-05-17',
         credit_score: 670,
         pan_details: {
             pan_number: 'IVZPK2103N',
-            full_name: 'SHIV KUMAR',
+            full_name: 'User',
             gender: 'M',
             dob: '17/05/1987',
             masked_aadhaar: '****-****-9861',

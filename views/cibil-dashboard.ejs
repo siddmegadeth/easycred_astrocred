@@ -339,8 +339,8 @@
 </style>
 
 <script>
-    // Configuration
-    const DEMO_MOBILE = '7764056669'; // Shiv Kumar
+    // Configuration - use session mobile
+    const userMobile = '<%= (typeof mobile !== "undefined" && mobile) ? mobile : "" %>';
     const endpoints = {
         pdf: '<%= baseUrl %>/get/api/cibil/generate-pdf',
         astrocred: '<%= baseUrl %>/get/api/cibil/astrocred-report-pdf',
@@ -360,7 +360,7 @@
     async function loadDashboardData() {
         try {
             // Fetch comprehensive dashboard data from backend
-            const response = await fetch(`${endpoints.dashboard}?mobile=${DEMO_MOBILE}&demo=true`);
+            const response = await fetch(`${endpoints.dashboard}?mobile=${userMobile || ''}`);
             const result = await response.json();
 
             if (!result.success) {
@@ -482,7 +482,7 @@
         try {
             // Try to fetch real data or mock data
             // Since we upgraded the backend to return mock data, we can just call it
-            const response = await fetch(`${endpoints.finvu}?mobile=${DEMO_MOBILE}`);
+            const response = await fetch(`${endpoints.finvu}?mobile=${userMobile || ''}`);
             const result = await response.json();
 
             if (result.success && result.summary) {
@@ -530,7 +530,7 @@
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
         btn.disabled = true;
 
-        let url = endpoints[type] + `?mobile=${DEMO_MOBILE}&pan=IVZPK2103N`; // Default demo params
+        let url = endpoints[type] + `?mobile=${userMobile || ''}`;
 
         // Create an invisible iframe to download
         const iframe = document.createElement('iframe');
@@ -555,11 +555,6 @@
     }
 
     function toggleDemoMode() {
-        Toastify({
-            text: "Switched to Demo Data (Shiv Kumar)",
-            duration: 3000,
-            backgroundColor: "#4a6bdf",
-        }).showToast();
         loadDashboardData();
         loadFinVuData();
     }

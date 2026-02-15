@@ -30,6 +30,8 @@
     --astro-gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     --astro-gradient-accent: linear-gradient(135deg, #00D9FF 0%, #00C48C 100%);
     --astro-gradient-dark: linear-gradient(180deg, #1A1A2E 0%, #0F0F1A 100%);
+    /* Shared app background: dark blue/purple top → lighter bottom (dashboard + profile completion + all app pages) */
+    --astro-gradient-app-bg: linear-gradient(180deg, #1A1A2E 0%, #16213E 18%, #1f2942 35%, #e8eaff 72%, #f5f5ff 88%, #ffffff 100%);
     --astro-gradient-card: linear-gradient(145deg, rgba(22, 33, 62, 0.9) 0%, rgba(15, 15, 26, 0.95) 100%);
     --astro-gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
     
@@ -84,33 +86,50 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 /* =====================================================
-   Global Dark Theme Application
+   Global – light default so login/verify are readable (dark only where used)
    ===================================================== */
 body {
     min-height: 100vh;
-    background: var(--astro-gradient-dark) !important;
-    color: var(--astro-text-primary);
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%) !important;
+    color: #1a1a2e;
     font-family: var(--astro-font-primary);
 }
 
 html {
-    background: var(--astro-primary-dark);
+    background: #f0f2f5;
+}
+
+/* All app pages (dashboard, profile completion, profile, finvu, etc.) – same background */
+.section {
+    min-height: 100vh;
+    background: var(--astro-gradient-app-bg);
+    position: relative;
 }
 
 /* =====================================================
-   Login Page Styles
+   Login Page Styles – same background as other app pages
    ===================================================== */
 .astro-login-page {
     min-height: 100vh;
-    background: var(--astro-gradient-dark);
+    background: #ffffff !important;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: var(--astro-space-lg);
     position: relative;
-    overflow: hidden;
-    font-family: var(--astro-font-primary);
 }
+/* Keep login page orbs very subtle so background stays clearly white */
+.astro-login-page .astro-orb {
+    opacity: 0.12;
+}
+
+.astro-login-page .astro-brand { color: #1a1a2e !important; }
+.astro-login-page .astro-tagline { color: #5a6578 !important; }
+.astro-login-page .astro-card-header h2 { color: #1a1a2e !important; }
+.astro-login-page .astro-card-header p { color: #5a6578 !important; }
+.astro-login-page .astro-step span { color: #5a6578 !important; }
+.astro-login-page .astro-step.active .astro-step-dot { background: var(--astro-gradient-accent); color: white; }
+.astro-login-page .astro-input-group label { color: #374151 !important; }
 
 /* Animated Background Pattern */
 .astro-bg-pattern {
@@ -215,12 +234,13 @@ html {
 
 /* Login Card */
 .astro-login-card {
-    background: var(--astro-gradient-card);
+    background: #ffffff;
     backdrop-filter: blur(20px);
-    border: 1px solid var(--astro-border);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+    color: #1a1a2e;
+    border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: var(--astro-radius-xl);
     padding: var(--astro-space-xl);
-    box-shadow: var(--astro-shadow-lg);
 }
 
 .astro-card-header {
@@ -515,6 +535,39 @@ html {
     padding: var(--astro-space-xl);
     text-align: center;
     position: relative;
+}
+
+/* Login/OTP modal – light theme for readability */
+.astro-login-page .astro-modal-content {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    color: #1a1a2e;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15);
+}
+
+.astro-login-page .astro-modal-title { color: #1a1a2e !important; }
+.astro-login-page .astro-modal-text { color: #4a5568 !important; }
+.astro-login-page .astro-modal-close {
+    background: #f1f3f5;
+    border-color: #dee2e6;
+    color: #495057;
+}
+.astro-login-page .astro-modal-close:hover {
+    background: #e9ecef;
+    color: #1a1a2e;
+}
+.astro-login-page .astro-phone-display { color: #4a5568; }
+.astro-login-page .astro-resend-text, .astro-login-page .astro-resend-text span { color: #6c757d !important; }
+.astro-login-page .astro-resend-link { color: #0d6efd !important; }
+.astro-login-page .astro-cancel-link { color: #6c757d !important; }
+/* OTP digits: light text in dark modals; dark text on login (white modal) */
+.astro-otp-digit {
+    color: #FFFFFF !important;
+}
+.astro-login-page .astro-otp-digit {
+    background: #f8f9fa !important;
+    border-color: #dee2e6 !important;
+    color: #1a1a2e !important;
 }
 
 .astro-modal-close {
@@ -1411,9 +1464,10 @@ footer, .footer {
     color: #FFFFFF !important;
 }
 
-/* Dropdowns */
+/* Dropdowns – dark background, light text, visible hover (no white flash) */
 .dropdown-menu {
-    background: var(--astro-surface) !important;
+    background: var(--astro-surface, #16213E) !important;
+    border: 1px solid var(--astro-border, rgba(255,255,255,0.1)) !important;
     color: #FFFFFF !important;
 }
 
@@ -1421,12 +1475,18 @@ footer, .footer {
     color: rgba(255, 255, 255, 0.95) !important;
 }
 
-.dropdown-item:hover {
-    background: var(--astro-surface-light) !important;
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background: rgba(255, 255, 255, 0.12) !important;
     color: #FFFFFF !important;
 }
 
-/* Modals */
+.dropdown-item.active {
+    background: var(--astro-accent-soft, rgba(0, 217, 255, 0.2)) !important;
+    color: #FFFFFF !important;
+}
+
+/* Modals – default dark; login page overrides above */
 .modal-content {
     background: var(--astro-gradient-card) !important;
     color: #FFFFFF !important;
@@ -1438,6 +1498,20 @@ footer, .footer {
 
 .modal-title {
     color: #FFFFFF !important;
+}
+
+/* Login page modals stay light (overrides in .astro-login-page .astro-modal-content) */
+.astro-login-page .modal-content {
+    background: #ffffff !important;
+    color: #1a1a2e !important;
+}
+
+.astro-login-page .modal-header, .astro-login-page .modal-body, .astro-login-page .modal-footer {
+    color: #1a1a2e !important;
+}
+
+.astro-login-page .modal-title {
+    color: #1a1a2e !important;
 }
 
 /* Tabs */

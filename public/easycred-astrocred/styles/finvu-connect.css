@@ -1,0 +1,711 @@
+/* =====================================================
+   FinVu Connect – Dashboard theme (same as main dashboard)
+   ===================================================== */
+
+/* Dashboard theme: same background and card style as ASTROCRED dashboard */
+.finvu-connect-page.astro-dashboard-page {
+    min-height: 100vh;
+    background: var(--astro-gradient-app-bg);
+    position: relative;
+    overflow-x: hidden;
+    padding: 0;
+}
+
+.finvu-connect-page.astro-dashboard-page .astro-dashboard-wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+}
+
+/* Header – dark text on gradient (top of page is dark) */
+.finvu-connect-page.astro-dashboard-page .finvu-title,
+.finvu-connect-page.astro-dashboard-page .finvu-subtitle {
+    color: var(--astro-text-primary) !important;
+}
+
+.finvu-connect-page.astro-dashboard-page .finvu-title i {
+    color: var(--astro-accent);
+}
+
+/* Cards – white like dashboard, dark text */
+.finvu-connect-page.astro-dashboard-page .finvu-card {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+    color: #212529 !important;
+}
+
+.finvu-connect-page.astro-dashboard-page .finvu-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(28, 31, 190, 0.15) !important;
+    border-color: rgba(28, 31, 190, 0.2) !important;
+}
+
+.finvu-connect-page.astro-dashboard-page .finvu-card h3,
+.finvu-connect-page.astro-dashboard-page .finvu-card p,
+.finvu-connect-page.astro-dashboard-page .finvu-card span,
+.finvu-connect-page.astro-dashboard-page .finvu-card div,
+.finvu-connect-page.astro-dashboard-page .feature-item span {
+    color: #212529 !important;
+}
+
+.finvu-connect-page.astro-dashboard-page .finvu-card > p,
+.finvu-connect-page.astro-dashboard-page .stat-label {
+    color: #6c757d !important;
+}
+
+/* Stat cards – white with accent icons */
+.finvu-connect-page.astro-dashboard-page .finvu-stat-card {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+    color: #212529 !important;
+}
+
+.finvu-connect-page.astro-dashboard-page .finvu-stat-card .stat-value {
+    color: #1a1a2e !important;
+}
+
+.finvu-connect-page.astro-dashboard-page .finvu-stat-card .stat-value.success { color: #00C48C !important; }
+.finvu-connect-page.astro-dashboard-page .finvu-stat-card .stat-value.warning { color: #FFB800 !important; }
+.finvu-connect-page.astro-dashboard-page .finvu-stat-card .stat-value.accent { color: #1c1fbe !important; }
+
+.finvu-connect-page.astro-dashboard-page .finvu-stat-card .stat-label {
+    color: #6c757d !important;
+}
+
+.finvu-connect-page.astro-dashboard-page .stat-icon {
+    background: rgba(28, 31, 190, 0.08);
+    color: #1c1fbe;
+}
+
+.finvu-connect-page.astro-dashboard-page .stat-icon.income { background: rgba(0, 196, 140, 0.12); color: #00C48C; }
+.finvu-connect-page.astro-dashboard-page .stat-icon.expense { background: rgba(255, 184, 0, 0.12); color: #FFB800; }
+.finvu-connect-page.astro-dashboard-page .stat-icon.savings { background: rgba(102, 126, 234, 0.12); color: #667eea; }
+
+/* Card header (Linked Accounts, etc.) */
+.finvu-connect-page.astro-dashboard-page .card-header-custom {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.finvu-connect-page.astro-dashboard-page .card-header-custom h3 {
+    color: #1a1a2e !important;
+}
+
+.finvu-connect-page.astro-dashboard-page .card-header-custom h3 i {
+    color: #1c1fbe;
+}
+
+.finvu-connect-page.astro-dashboard-page .refresh-btn {
+    background: #f8f9fa;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #212529;
+}
+
+.finvu-connect-page.astro-dashboard-page .refresh-btn:hover {
+    border-color: #1c1fbe;
+    color: #1c1fbe;
+}
+
+/* Consent icon – teal accent */
+.finvu-connect-page.astro-dashboard-page .consent-icon {
+    background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
+    color: white;
+}
+
+.finvu-connect-page.astro-dashboard-page .consent-icon.pending { opacity: 0.9; }
+.finvu-connect-page.astro-dashboard-page .consent-icon.active { background: linear-gradient(135deg, #00C48C 0%, #33c9d3 100%); }
+
+/* Buttons – match dashboard primary */
+.finvu-connect-page.astro-dashboard-page .finvu-btn.primary {
+    background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%) !important;
+    color: white !important;
+}
+
+.finvu-connect-page.astro-dashboard-page .finvu-badge {
+    background: #00C48C;
+    color: white;
+}
+
+.finvu-connect-page.astro-dashboard-page .finvu-badge.sandbox {
+    background: #FFB800;
+    color: #1a1a2e;
+}
+
+/* Alerts – light background */
+.finvu-connect-page.astro-dashboard-page .alert-info {
+    background: rgba(28, 31, 190, 0.08);
+    border-color: rgba(28, 31, 190, 0.2);
+    color: #1a1a2e;
+}
+
+.finvu-connect-page.astro-dashboard-page .alert-success {
+    background: rgba(0, 196, 140, 0.12);
+    border-color: rgba(0, 196, 140, 0.3);
+    color: #1a1a2e;
+}
+
+/* Account items, transactions – light surfaces */
+.finvu-connect-page.astro-dashboard-page .account-item {
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+.finvu-connect-page.astro-dashboard-page .account-bank,
+.finvu-connect-page.astro-dashboard-page .txn-description {
+    color: #212529 !important;
+}
+
+.finvu-connect-page.astro-dashboard-page .account-number,
+.finvu-connect-page.astro-dashboard-page .txn-date,
+.finvu-connect-page.astro-dashboard-page .txn-category {
+    color: #6c757d !important;
+}
+
+.finvu-connect-page.astro-dashboard-page .transaction-item {
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+.finvu-connect-page.astro-dashboard-page .insight-item {
+    background: #f8f9fa;
+}
+
+.finvu-connect-page.astro-dashboard-page .insight-content h4 { color: #1a1a2e !important; }
+.finvu-connect-page.astro-dashboard-page .insight-content p { color: #6c757d !important; }
+
+/* Footer / trust */
+.finvu-connect-page.astro-dashboard-page .trust-info,
+.finvu-connect-page.astro-dashboard-page .powered-by {
+    color: #6c757d !important;
+}
+
+.finvu-connect-page.astro-dashboard-page .powered-by strong { color: #1a1a2e !important; }
+
+.finvu-connect-page.astro-dashboard-page .status-indicator {
+    color: #212529 !important;
+}
+
+.finvu-connect-page.astro-dashboard-page .account-icon {
+    background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
+    color: white;
+}
+
+.finvu-connect-page.astro-dashboard-page .btn-outline-danger {
+    border-color: #FF4757;
+    color: #FF4757;
+}
+
+.finvu-connect-page.astro-dashboard-page .btn-outline-danger:hover {
+    background: #FF4757;
+    color: white;
+}
+
+/* --- Legacy (non-dashboard) FinVu page styles kept for fallback --- */
+
+.finvu-connect-page h1, .finvu-connect-page h2, .finvu-connect-page h3 {
+    color: inherit;
+}
+
+.finvu-connect-page p, .finvu-connect-page span, .finvu-connect-page div {
+    color: inherit;
+}
+
+/* FinVu Connect Page – base layout */
+.finvu-connect-page {
+    min-height: 100vh;
+    padding: var(--astro-space-lg) 0;
+}
+
+.finvu-header {
+margin-bottom: var(--astro-space-xl);
+}
+
+.finvu-title {
+font-family: var(--astro-font-display);
+font-size: 28px;
+font-weight: 700;
+color: var(--astro-text-primary);
+display: flex;
+align-items: center;
+gap: var(--astro-space-sm);
+margin: 0;
+}
+
+.finvu-title i {
+color: var(--astro-accent);
+}
+
+.finvu-subtitle {
+color: var(--astro-text-muted);
+margin: var(--astro-space-xs) 0 0;
+}
+
+.finvu-badge {
+display: inline-flex;
+align-items: center;
+gap: var(--astro-space-xs);
+background: var(--astro-success);
+color: white;
+padding: var(--astro-space-xs) var(--astro-space-md);
+border-radius: var(--astro-radius-full);
+font-size: 12px;
+font-weight: 500;
+}
+
+.finvu-badge.sandbox {
+background: var(--astro-warning);
+color: var(--astro-primary);
+}
+
+/* Cards */
+.finvu-card {
+background: var(--astro-gradient-card);
+backdrop-filter: blur(20px);
+border: 1px solid var(--astro-border);
+border-radius: var(--astro-radius-xl);
+padding: var(--astro-space-xl);
+transition: var(--astro-transition-normal);
+}
+
+.finvu-card:hover {
+border-color: rgba(0, 217, 255, 0.3);
+}
+
+.finvu-card.disabled {
+opacity: 0.5;
+pointer-events: none;
+}
+
+.consent-icon {
+width: 80px;
+height: 80px;
+background: var(--astro-gradient-primary);
+border-radius: var(--astro-radius-lg);
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 0 auto var(--astro-space-md);
+font-size: 32px;
+color: white;
+}
+
+.finvu-card h3 {
+font-family: var(--astro-font-display);
+font-size: 20px;
+font-weight: 600;
+color: var(--astro-text-primary);
+text-align: center;
+margin: 0 0 var(--astro-space-sm);
+}
+
+.finvu-card > p {
+font-size: 14px;
+color: var(--astro-text-muted);
+text-align: center;
+margin: 0 0 var(--astro-space-lg);
+}
+
+/* Consent Features */
+.consent-features {
+margin-bottom: var(--astro-space-lg);
+}
+
+.feature-item {
+display: flex;
+align-items: center;
+gap: var(--astro-space-sm);
+padding: var(--astro-space-xs) 0;
+font-size: 14px;
+color: var(--astro-text-secondary);
+}
+
+.feature-item i {
+color: var(--astro-success);
+}
+
+/* Banks Grid */
+.banks-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: var(--astro-space-sm);
+margin-bottom: var(--astro-space-lg);
+}
+
+.bank-option {
+background: var(--astro-surface-light);
+border: 1px solid var(--astro-border);
+border-radius: var(--astro-radius-md);
+padding: var(--astro-space-md);
+text-align: center;
+cursor: pointer;
+transition: var(--astro-transition-fast);
+position: relative;
+}
+
+.bank-option:hover {
+border-color: var(--astro-accent);
+}
+
+.bank-option.selected {
+border-color: var(--astro-success);
+background: rgba(0, 196, 140, 0.1);
+}
+
+.bank-option .fa-check-circle {
+position: absolute;
+top: 4px;
+right: 4px;
+color: var(--astro-success);
+font-size: 14px;
+}
+
+.bank-logo {
+font-weight: 700;
+color: var(--astro-accent);
+margin-bottom: 4px;
+}
+
+.bank-name {
+font-size: 11px;
+color: var(--astro-text-muted);
+}
+
+/* Buttons */
+.finvu-btn {
+width: 100%;
+padding: var(--astro-space-md) var(--astro-space-lg);
+border: none;
+border-radius: var(--astro-radius-md);
+font-weight: 600;
+font-size: 14px;
+cursor: pointer;
+transition: var(--astro-transition-fast);
+display: flex;
+align-items: center;
+justify-content: center;
+gap: var(--astro-space-sm);
+}
+
+.finvu-btn.primary {
+background: var(--astro-gradient-accent);
+color: var(--astro-primary);
+}
+
+.finvu-btn.secondary {
+background: var(--astro-gradient-primary);
+color: white;
+}
+
+.finvu-btn:hover:not(:disabled) {
+transform: translateY(-2px);
+box-shadow: 0 4px 20px var(--astro-accent-glow);
+}
+
+.finvu-btn:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+}
+
+/* Stat Cards */
+.finvu-stat-card {
+background: var(--astro-gradient-card);
+border: 1px solid var(--astro-border);
+border-radius: var(--astro-radius-lg);
+padding: var(--astro-space-lg);
+text-align: center;
+}
+
+.stat-icon {
+width: 48px;
+height: 48px;
+background: var(--astro-accent-soft);
+border-radius: var(--astro-radius-md);
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 0 auto var(--astro-space-sm);
+color: var(--astro-accent);
+font-size: 20px;
+}
+
+.stat-icon.income { background: rgba(0, 196, 140, 0.2); color: var(--astro-success); }
+.stat-icon.expense { background: rgba(255, 184, 0, 0.2); color: var(--astro-warning); }
+.stat-icon.savings { background: rgba(102, 126, 234, 0.2); color: var(--astro-info); }
+
+.stat-value {
+font-family: var(--astro-font-display);
+font-size: 24px;
+font-weight: 700;
+color: var(--astro-text-primary);
+}
+
+.stat-value.success { color: var(--astro-success); }
+.stat-value.warning { color: var(--astro-warning); }
+.stat-value.accent { color: var(--astro-accent); }
+
+.stat-label {
+font-size: 12px;
+color: var(--astro-text-muted);
+margin-top: var(--astro-space-xs);
+}
+
+/* Card Header */
+.card-header-custom {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: var(--astro-space-lg);
+padding-bottom: var(--astro-space-md);
+border-bottom: 1px solid var(--astro-border);
+}
+
+.card-header-custom h3 {
+font-size: 16px;
+margin: 0;
+text-align: left;
+display: flex;
+align-items: center;
+gap: var(--astro-space-sm);
+}
+
+.card-header-custom h3 i {
+color: var(--astro-accent);
+}
+
+.refresh-btn {
+padding: var(--astro-space-xs) var(--astro-space-md);
+background: var(--astro-surface-light);
+border: 1px solid var(--astro-border);
+border-radius: var(--astro-radius-sm);
+color: var(--astro-text-secondary);
+font-size: 12px;
+cursor: pointer;
+display: flex;
+align-items: center;
+gap: var(--astro-space-xs);
+}
+
+.refresh-btn:hover {
+border-color: var(--astro-accent);
+color: var(--astro-accent);
+}
+
+/* Accounts List */
+.account-item {
+display: flex;
+align-items: center;
+padding: var(--astro-space-md);
+background: var(--astro-surface-light);
+border-radius: var(--astro-radius-md);
+margin-bottom: var(--astro-space-sm);
+gap: var(--astro-space-md);
+}
+
+.account-icon {
+width: 40px;
+height: 40px;
+background: var(--astro-gradient-primary);
+border-radius: var(--astro-radius-sm);
+display: flex;
+align-items: center;
+justify-content: center;
+color: white;
+}
+
+.account-details {
+flex: 1;
+display: flex;
+flex-direction: column;
+}
+
+.account-bank {
+font-weight: 600;
+color: var(--astro-text-primary);
+font-size: 14px;
+}
+
+.account-number {
+font-family: var(--astro-font-mono);
+font-size: 12px;
+color: var(--astro-text-muted);
+}
+
+.account-type {
+font-size: 11px;
+background: var(--astro-accent-soft);
+color: var(--astro-accent);
+padding: 2px 8px;
+border-radius: var(--astro-radius-full);
+}
+
+.account-balance {
+font-family: var(--astro-font-display);
+font-size: 16px;
+font-weight: 600;
+color: var(--astro-success);
+}
+
+/* Transactions */
+.transaction-item {
+display: flex;
+align-items: center;
+padding: var(--astro-space-sm) 0;
+border-bottom: 1px solid var(--astro-border-light);
+gap: var(--astro-space-md);
+}
+
+.transaction-item:last-child {
+border-bottom: none;
+}
+
+.txn-icon {
+width: 32px;
+height: 32px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 12px;
+}
+
+.txn-icon.credit {
+background: rgba(0, 196, 140, 0.2);
+color: var(--astro-success);
+}
+
+.txn-icon.debit {
+background: rgba(255, 71, 87, 0.2);
+color: var(--astro-danger);
+}
+
+.txn-details {
+flex: 1;
+display: flex;
+flex-direction: column;
+}
+
+.txn-description {
+font-size: 13px;
+color: var(--astro-text-primary);
+}
+
+.txn-date {
+font-size: 11px;
+color: var(--astro-text-muted);
+}
+
+.txn-category {
+font-size: 10px;
+background: var(--astro-surface-light);
+padding: 2px 6px;
+border-radius: var(--astro-radius-sm);
+color: var(--astro-text-muted);
+}
+
+.txn-amount {
+font-family: var(--astro-font-mono);
+font-size: 14px;
+font-weight: 600;
+}
+
+.txn-amount.credit { color: var(--astro-success); }
+.txn-amount.debit { color: var(--astro-danger); }
+
+/* AI Insights */
+.insights-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: var(--astro-space-md);
+}
+
+.insight-item {
+display: flex;
+gap: var(--astro-space-md);
+background: var(--astro-surface-light);
+padding: var(--astro-space-md);
+border-radius: var(--astro-radius-md);
+}
+
+.insight-icon {
+width: 40px;
+height: 40px;
+border-radius: var(--astro-radius-sm);
+display: flex;
+align-items: center;
+justify-content: center;
+flex-shrink: 0;
+}
+
+.insight-icon.good { background: rgba(0, 196, 140, 0.2); color: var(--astro-success); }
+.insight-icon.warning { background: rgba(255, 184, 0, 0.2); color: var(--astro-warning); }
+.insight-icon.info { background: rgba(0, 217, 255, 0.2); color: var(--astro-accent); }
+
+.insight-content h4 {
+font-size: 14px;
+font-weight: 600;
+color: var(--astro-text-primary);
+margin: 0 0 4px;
+}
+
+.insight-content p {
+font-size: 12px;
+color: var(--astro-text-muted);
+margin: 0;
+line-height: 1.4;
+}
+
+/* Footer */
+.finvu-footer {
+text-align: center;
+}
+
+.trust-info {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: var(--astro-space-sm);
+margin-bottom: var(--astro-space-md);
+color: var(--astro-text-muted);
+font-size: 12px;
+}
+
+.trust-info i {
+color: var(--astro-success);
+}
+
+.powered-by {
+font-size: 12px;
+color: var(--astro-text-muted);
+}
+
+.powered-by strong {
+color: var(--astro-text-secondary);
+margin: 0 4px;
+}
+
+.rbi-tag {
+background: var(--astro-success);
+color: white;
+padding: 2px 6px;
+border-radius: var(--astro-radius-sm);
+font-size: 10px;
+margin-left: var(--astro-space-xs);
+}
+
+.finvu-connect-page .chart-wrapper {
+min-height: 220px;
+position: relative;
+padding: var(--astro-space-md) 0;
+}
+
+@media (max-width: 768px) {
+.banks-grid {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.insights-grid {
+    grid-template-columns: 1fr;
+}
+}

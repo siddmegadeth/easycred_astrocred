@@ -297,13 +297,7 @@
                     });
                 }
                 
-                // Import model if not already available
-                var CibilDataModel;
-                try {
-                    CibilDataModel = mongoose.model('CibilDataModel');
-                } catch (err) {
-                    CibilDataModel = require('../models/cibil-data-model'); // Adjust path as needed
-                }
+                var CibilDataModel = require('../../../schema/cibil/cibil-data-schema.js');
                 
                 // Save to database using appropriate identifier
                 CibilDataModel.findOneAndUpdate(
@@ -374,15 +368,9 @@
                         return reject(new Error('Invalid identifier type. Use: mobile, email, or pan'));
                 }
                 
-                // Import model
-                var CibilDataModel;
-                try {
-                    CibilDataModel = mongoose.model('CibilDataModel');
-                } catch (err) {
-                    CibilDataModel = require('../models/cibil-data-model'); // Adjust path as needed
-                }
+                var CibilDataModel = require('../../../schema/cibil/cibil-data-schema.js');
                 
-                CibilDataModel.findOne(query, function(err, cibilData) {
+                CibilDataModel.findOne(query).select('credit_report analysis mobile email pan').lean().exec(function(err, cibilData) {
                     if (err) {
                         return reject(err);
                     }
@@ -451,12 +439,7 @@
                         return reject(new Error('Invalid identifier type'));
                 }
                 
-                var CibilDataModel;
-                try {
-                    CibilDataModel = mongoose.model('CibilDataModel');
-                } catch (err) {
-                    CibilDataModel = require('../models/cibil-data-model');
-                }
+                var CibilDataModel = require('../../../schema/cibil/cibil-data-schema.js');
                 
                 CibilDataModel.findOneAndUpdate(
                     query,
@@ -490,14 +473,9 @@
                 var query = {};
                 query[identifierType] = { $in: userIdentifiers };
                 
-                var CibilDataModel;
-                try {
-                    CibilDataModel = mongoose.model('CibilDataModel');
-                } catch (err) {
-                    CibilDataModel = require('../models/cibil-data-model');
-                }
+                var CibilDataModel = require('../../../schema/cibil/cibil-data-schema.js');
                 
-                CibilDataModel.find(query, function(err, cibilDataList) {
+                CibilDataModel.find(query).select('credit_report analysis mobile email pan').lean().exec(function(err, cibilDataList) {
                     if (err) return reject(err);
                     
                     var promises = cibilDataList.map(function(cibilData) {

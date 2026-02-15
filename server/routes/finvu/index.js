@@ -1,17 +1,54 @@
 (function () {
     'use strict';
 
-    const FinVuService = require('./finvu-service');
+    const finvuClient = require('./finvu-client');
+
+    function computeSummaryFromTransactions(transactions, totalBalance) {
+        const summary = {
+            totalBalance: totalBalance || 0,
+            avgMonthlyIncome: 0,
+            avgMonthlyExpense: 0,
+            savingsRate: 0,
+            transactionCount: (transactions && transactions.length) || 0
+        };
+        if (!Array.isArray(transactions) || transactions.length === 0) return summary;
+        const byMonth = {};
+        transactions.forEach(t => {
+            const d = t.date ? new Date(t.date) : new Date();
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            if (!byMonth[key]) byMonth[key] = { income: 0, expense: 0 };
+            const amt = parseFloat(t.amount) || 0;
+            if ((t.type || '').toUpperCase() === 'CREDIT') byMonth[key].income += amt;
+            else byMonth[key].expense += amt;
+        });
+        const months = Object.keys(byMonth);
+        if (months.length === 0) return summary;
+        let totalIncome = 0, totalExpense = 0;
+        months.forEach(k => { totalIncome += byMonth[k].income; totalExpense += byMonth[k].expense; });
+        summary.avgMonthlyIncome = Math.round((totalIncome / months.length) * 100) / 100;
+        summary.avgMonthlyExpense = Math.round((totalExpense / months.length) * 100) / 100;
+        if (summary.avgMonthlyIncome > 0) {
+            summary.savingsRate = Math.round(((summary.avgMonthlyIncome - summary.avgMonthlyExpense) / summary.avgMonthlyIncome) * 10000) / 100;
+        }
+        return summary;
+    }
 
     /**
-     * FinVu Account Aggregator Routes
-     * Handles consent management and financial data fetching
+     * FinVu routes – thin proxy to @easy/finvu_integration.
+     * Profile and linked-account updates stay here.
      */
 
-    // Get FinVu service status
+    // Callback URL after user completes consent on FinVu portal – redirect to SPA so something happens
+    app.get('/finvu-connect/return', function (req, res) {
+        const baseUrl = process.env.APP_URL || (req.protocol + '://' + req.get('host'));
+        const redirectTo = baseUrl.replace(/\/$/, '') + '/#/finvu-connect?return=1';
+        res.redirect(302, redirectTo);
+    });
+
+    // Get FinVu service status (proxies to external service /health)
     app.get('/api/finvu/status', async (req, res) => {
         try {
-            const status = FinVuService.getStatus();
+            const status = await finvuClient.getStatus();
             res.json({ success: true, ...status });
         } catch (error) {
             res.status(500).json({ success: false, error: error.message });
@@ -25,7 +62,7 @@
             if (!mobile) return res.status(400).json({ success: false, message: 'Mobile number is required' });
 
             log('Initiating FinVu consent for:', mobile);
-            const result = await FinVuService.initiateConsent(mobile, handle);
+            const result = await finvuClient.initiateConsent(mobile, handle);
 
             // Update profile with consent info (store consentHandle for local service)
             if (ProfileModel) {
@@ -86,7 +123,7 @@
                 return res.json({ success: false, message: 'No consent found', status: 'NOT_INITIATED' });
             }
 
-            const result = await FinVuService.checkConsentStatus(consent_handle, cust_id);
+            const result = await finvuClient.checkConsentStatus(consent_handle, cust_id);
 
             // Update profile with consent status and date range if available
             if (result.success && mobile && ProfileModel) {
@@ -125,7 +162,12 @@
                 );
             }
 
-            res.json({ success: true, ...result });
+            res.json({
+                success: true,
+                ...result,
+                consentHandleId: consent_handle,
+                consentHandle: consent_handle
+            });
         } catch (error) {
             res.status(500).json({ success: false, error: error.message });
         }
@@ -155,16 +197,9 @@
                 return res.json({ success: false, message: 'Consent not found. Please initiate consent first.' });
             }
 
-            // Call local Finvu service FI request endpoint
-            const FinVuService = require('./finvu-service');
-            const localUrl = FinVuService.localUrl || 'http://localhost:3000';
             const custId = `${mobile}@finvu`;
-
-            // Get consent details to find the date range that was consented
             let consentDateFrom = dateTimeRangeFrom;
             let consentDateTo = dateTimeRangeTo;
-
-            // If date range not provided, try to get from consent details
             if (!consentDateFrom || !consentDateTo) {
                 try {
                     const profile = await ProfileModel.findOne({ mobile: mobile });
@@ -172,42 +207,36 @@
                         consentDateFrom = profile.finvu.consentDateRange.from;
                         consentDateTo = profile.finvu.consentDateRange.to;
                     } else {
-                        // Default: last 12 months (matching typical consent)
                         consentDateFrom = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString();
                         consentDateTo = new Date().toISOString();
                     }
                 } catch (e) {
-                    // Fallback to default range
                     consentDateFrom = dateTimeRangeFrom || new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString();
                     consentDateTo = dateTimeRangeTo || new Date().toISOString();
                 }
             }
 
-            log('Calling local Finvu FI request:', `${localUrl}/fi/request`, 'Date range:', consentDateFrom, 'to', consentDateTo);
-            const axios = require('axios');
-            const response = await axios.post(`${localUrl}/fi/request`, {
-                custId: custId,
+            const response = await finvuClient.fiRequest({
+                custId,
                 consentId: consent_id,
                 consentHandleId: consent_handle_id,
                 dateTimeRangeFrom: consentDateFrom,
                 dateTimeRangeTo: consentDateTo
             });
 
-            if (response.data && response.data.success) {
-                // Store sessionId in profile
+            if (response && response.success) {
                 if (ProfileModel) {
                     await ProfileModel.updateOne(
                         { mobile: mobile },
                         {
                             $set: {
-                                'finvu.sessionId': response.data.sessionId,
+                                'finvu.sessionId': response.sessionId,
                                 'finvu.fiRequestedAt': new Date()
                             }
                         }
                     );
                 }
-
-                res.json({ success: true, data: response.data });
+                res.json({ success: true, data: response });
             } else {
                 res.json({ success: false, message: 'FI request failed' });
             }
@@ -243,22 +272,13 @@
                 return res.json({ success: false, message: 'Missing required parameters. Please trigger FI request first.' });
             }
 
-            // Call local Finvu service FI status endpoint
-            const FinVuService = require('./finvu-service');
-            const localUrl = FinVuService.localUrl || 'http://localhost:3000';
-
-            log('Calling local Finvu FI status:', `${localUrl}/fi/status`);
-            const axios = require('axios');
-            const response = await axios.get(`${localUrl}/fi/status`, {
-                params: {
-                    consentHandleId: consent_handle_id,
-                    custId: cust_id,
-                    consentId: consent_id,
-                    sessionId: session_id
-                }
+            const response = await finvuClient.fiStatus({
+                consentHandleId: consent_handle_id,
+                custId: cust_id,
+                consentId: consent_id,
+                sessionId: session_id
             });
-
-            res.json({ success: true, data: response.data });
+            res.json({ success: true, data: response });
         } catch (error) {
             log('FinVu FI status error:', error.response ? error.response.data : error.message);
             res.status(500).json({ success: false, error: error.message });
@@ -267,6 +287,7 @@
 
     // Fetch financial data
     app.post('/api/finvu/data/fetch', async (req, res) => {
+        const FinvuDashboardCacheModel = require('../../schema/financial-aggregator/finvu-dashboard-cache-schema');
         try {
             const { consentHandle, sessionId, mobile } = req.body;
 
@@ -286,15 +307,19 @@
             }
 
             if (!consent_handle || !session_id) {
+                log('FinVu data/fetch rejected: missing consent or session for mobile', user_mobile, 'hasConsent:', !!consent_handle, 'hasSession:', !!session_id);
+                var msg = !consent_handle
+                    ? 'Missing consentHandle or sessionId. Please complete consent flow first.'
+                    : 'Session expired or not started. Click Refresh to load data.';
                 return res.json({
                     success: false,
-                    message: 'Missing consentHandle or sessionId. Please complete consent flow first.'
+                    code: 'MISSING_SESSION',
+                    message: msg
                 });
             }
 
-            // Fetch data using local service
             log('Fetching Finvu data - consentHandle:', consent_handle, 'sessionId:', session_id);
-            const result = await FinVuService.fetchData(consent_handle, session_id, user_mobile);
+            const result = await finvuClient.fetchData(consent_handle, session_id);
 
             log('Finvu fetch result:', {
                 success: result.success,
@@ -303,8 +328,20 @@
                 transactionCount: result.data?.transactions?.length || 0
             });
 
+            // Normalize in case API returns stringified JSON
+            if (result.success && result.data) {
+                if (typeof result.data.transactions === 'string') {
+                    try { result.data.transactions = JSON.parse(result.data.transactions); } catch (e) { result.data.transactions = []; }
+                }
+                if (!Array.isArray(result.data.transactions)) result.data.transactions = result.data.transactions ? [result.data.transactions] : [];
+                if (typeof result.data.accounts === 'string') {
+                    try { result.data.accounts = JSON.parse(result.data.accounts); } catch (e) { result.data.accounts = []; }
+                }
+                if (!Array.isArray(result.data.accounts)) result.data.accounts = result.data.accounts ? [result.data.accounts] : [];
+            }
+
             // Store linked accounts if data available
-            if (result.success && result.data && result.data.accounts) {
+            if (result.success && result.data && result.data.accounts && result.data.accounts.length > 0) {
                 const LinkedAccountModel = require('../../schema/financial-aggregator/linked-account-schema');
 
                 for (const acc of result.data.accounts) {
@@ -341,15 +378,84 @@
                         }
                     }
                 );
+
+                // Cache dashboard data for GET /api/finvu/dashboard
+                const summary = computeSummaryFromTransactions(result.data.transactions, result.data.totalBalance);
+                const txns = (result.data.transactions || []).map(t => (typeof t === 'object' && t !== null ? {
+                    type: t.type,
+                    amount: t.amount,
+                    date: t.date,
+                    valueDate: t.valueDate,
+                    narration: t.narration,
+                    mode: t.mode,
+                    currentBalance: t.currentBalance,
+                    txnId: t.txnId,
+                    accountRef: t.accountRef
+                } : null)).filter(Boolean);
+                try {
+                    await FinvuDashboardCacheModel.findOneAndUpdate(
+                        { mobile: user_mobile },
+                        {
+                            $set: {
+                                accounts: result.data.accounts,
+                                transactions: txns,
+                                summary,
+                                fetchedAt: new Date()
+                            }
+                        },
+                        { upsert: true, new: true }
+                    );
+                } catch (cacheErr) {
+                    if (cacheErr.name === 'CastError' && cacheErr.path && String(cacheErr.path).indexOf('transactions') !== -1) {
+                        await FinvuDashboardCacheModel.deleteOne({ mobile: user_mobile });
+                        await FinvuDashboardCacheModel.findOneAndUpdate(
+                            { mobile: user_mobile },
+                            { $set: { accounts: result.data.accounts, transactions: txns, summary, fetchedAt: new Date() } },
+                            { upsert: true, new: true }
+                        );
+                    } else {
+                        throw cacheErr;
+                    }
+                }
             }
 
+            const responseData = { ...result.data };
+            if (result.success && result.data) {
+                const cache = await FinvuDashboardCacheModel.findOne({ mobile: user_mobile }).lean();
+                if (cache && cache.fetchedAt) responseData.fetchedAt = cache.fetchedAt;
+                else responseData.fetchedAt = new Date();
+            }
             res.json({
                 success: true,
-                data: result.data,
+                data: responseData,
                 mode: result.mode
             });
         } catch (error) {
             log('FinVu data fetch error:', error);
+            res.status(500).json({ success: false, error: error.message });
+        }
+    });
+
+    // Get dashboard (cached accounts + transactions + summary) for connected user
+    app.get('/api/finvu/dashboard', async (req, res) => {
+        try {
+            const mobile = req.session?.mobile || req.query.mobile;
+            if (!mobile) return res.status(401).json({ success: false, message: 'Unauthorized' });
+            const FinvuDashboardCacheModel = require('../../schema/financial-aggregator/finvu-dashboard-cache-schema');
+            const cache = await FinvuDashboardCacheModel.findOne({ mobile });
+            if (!cache) {
+                return res.json({ success: true, data: null, message: 'No dashboard data. Connect bank and refresh data.' });
+            }
+            res.json({
+                success: true,
+                data: {
+                    accounts: cache.accounts || [],
+                    transactions: cache.transactions || [],
+                    summary: cache.summary || {},
+                    fetchedAt: cache.fetchedAt
+                }
+            });
+        } catch (error) {
             res.status(500).json({ success: false, error: error.message });
         }
     });
@@ -362,15 +468,6 @@
 
             const LinkedAccountModel = require('../../schema/financial-aggregator/linked-account-schema');
             let accounts = await LinkedAccountModel.find({ mobile: mobile, status: 'ACTIVE' });
-
-            // MOCK DATA FALLBACK FOR DEMO
-            if (accounts.length === 0 && (mobile === '7764056669' || req.query.demo === 'true')) {
-                accounts = [
-                    { bankName: 'HDFC Bank', accountType: 'SAVINGS', currentBalance: 45000, accountNumber: 'XXXXXX1234', lastUpdated: new Date() },
-                    { bankName: 'SBI', accountType: 'SALARY', currentBalance: 12500, accountNumber: 'XXXXXX5678', lastUpdated: new Date() },
-                    { bankName: 'Kotak Mahindra', accountType: 'SAVINGS', currentBalance: 8750, accountNumber: 'XXXXXX9012', lastUpdated: new Date() }
-                ];
-            }
 
             const totalBalance = accounts.reduce((sum, acc) => sum + (acc.currentBalance || 0), 0);
 
@@ -395,67 +492,63 @@
         }
     });
 
-    // Webhook for Consent Approval (Mocked for now)
+    // Webhook for consent approval – proxy from finvu_integration; update profile and optionally fetch data
     app.post('/api/finvu/webhook/consent', async (req, res) => {
         const { consentId, status } = req.body;
         log('FinVu Webhook Received:', consentId, status);
 
         if (status === 'ACTIVE') {
             try {
-                // Find user by consentId
                 const userProfile = await ProfileModel.findOne({ 'finvu.consentId': consentId });
                 if (!userProfile) {
                     log('FinVu Webhook: Profile not found for consentId', consentId);
                     return res.sendStatus(404);
                 }
 
-                // Trigger data fetch
-                const rawData = await FinVuService.fetchData(consentId);
-                const analyzed = FinVuService.processFinVuData(rawData);
-                const LinkedAccountModel = require('../../schema/financial-aggregator/linked-account-schema');
-
-                // Save or Update Linked Accounts
-                if (analyzed.accounts && analyzed.accounts.length > 0) {
-                    for (const acc of analyzed.accounts) {
-                        await LinkedAccountModel.findOneAndUpdate(
-                            {
-                                mobile: userProfile.mobile,
-                                accountNumber: acc.accountNumber,
-                                provider: 'FINVU'
-                            },
-                            {
-                                $set: {
-                                    profile: userProfile.profile || userProfile.mobile,
-                                    accountType: acc.type || 'SAVINGS',
-                                    bankName: acc.bankName || 'Unknown Bank',
-                                    currentBalance: acc.balance,
-                                    consentId: consentId,
-                                    lastUpdated: new Date(),
-                                    status: 'ACTIVE',
-                                    raw_data: acc
-                                }
-                            },
-                            { upsert: true, new: true }
-                        );
+                const consentHandle = userProfile.finvu?.consentHandleId || userProfile.finvu?.consentHandle || consentId;
+                const sessionId = userProfile.finvu?.sessionId;
+                if (consentHandle && sessionId) {
+                    const result = await finvuClient.fetchData(consentHandle, sessionId);
+                    const analyzed = result.data || {};
+                    const LinkedAccountModel = require('../../schema/financial-aggregator/linked-account-schema');
+                    if (analyzed.accounts && analyzed.accounts.length > 0) {
+                        for (const acc of analyzed.accounts) {
+                            await LinkedAccountModel.findOneAndUpdate(
+                                {
+                                    mobile: userProfile.mobile,
+                                    accountNumber: acc.accountNumber,
+                                    provider: 'FINVU'
+                                },
+                                {
+                                    $set: {
+                                        profile: userProfile.profile || userProfile.mobile,
+                                        accountType: acc.type || 'SAVINGS',
+                                        bankName: acc.bankName || 'Unknown Bank',
+                                        currentBalance: acc.balance,
+                                        consentId: consentId,
+                                        lastUpdated: new Date(),
+                                        status: 'ACTIVE',
+                                        raw_data: acc
+                                    }
+                                },
+                                { upsert: true, new: true }
+                            );
+                        }
                     }
                 }
 
-                // Update Profile status
                 await ProfileModel.updateOne({ _id: userProfile._id }, {
                     $set: {
                         'finvu.isLinked': true,
                         'finvu.lastSynced': new Date()
                     }
                 });
-
-                log('FinVu Data Synced for user:', userProfile.mobile);
-
+                log('FinVu Webhook processed for user:', userProfile.mobile);
             } catch (err) {
                 console.error('FinVu Webhook Processing Error:', err);
                 return res.sendStatus(500);
             }
         }
-
         res.sendStatus(200);
     });
 
@@ -470,6 +563,54 @@
 
             res.json({ success: true, accounts: accounts });
         } catch (error) {
+            res.status(500).json({ success: false, error: error.message });
+        }
+    });
+
+    // Disconnect FinVu: clear profile.finvu, dashboard cache, and mark linked accounts inactive (start fresh)
+    app.post('/api/finvu/disconnect', async (req, res) => {
+        try {
+            const mobile = req.body.mobile || req.session?.mobile || req.query.mobile;
+            if (!mobile) return res.status(400).json({ success: false, message: 'mobile required' });
+
+            const FinvuDashboardCacheModel = require('../../schema/financial-aggregator/finvu-dashboard-cache-schema');
+            const LinkedAccountModel = require('../../schema/financial-aggregator/linked-account-schema');
+
+            await FinvuDashboardCacheModel.deleteOne({ mobile });
+            await LinkedAccountModel.updateMany(
+                { mobile, provider: 'FINVU' },
+                { $set: { status: 'REVOKED', lastUpdated: new Date() } }
+            );
+            if (ProfileModel) {
+                await ProfileModel.updateOne(
+                    { mobile },
+                    {
+                        $set: {
+                            'finvu.isLinked': false,
+                            'finvu.status': 'DISCONNECTED',
+                            'finvu.disconnectedAt': new Date()
+                        },
+                        $unset: {
+                            'finvu.consentHandle': 1,
+                            'finvu.consentHandleId': 1,
+                            'finvu.consentId': 1,
+                            'finvu.sessionId': 1,
+                            'finvu.lastSynced': 1,
+                            'finvu.accountCount': 1,
+                            'finvu.handle': 1,
+                            'finvu.consentDateRange': 1,
+                            'finvu.fiRequestedAt': 1,
+                            'finvu.redirectUrl': 1,
+                            'finvu.initiatedAt': 1
+                        }
+                    }
+                );
+            }
+
+            log('FinVu disconnected for mobile:', mobile);
+            res.json({ success: true, message: 'FinVu disconnected. You can connect again from scratch.' });
+        } catch (error) {
+            log('FinVu disconnect error:', error);
             res.status(500).json({ success: false, error: error.message });
         }
     });

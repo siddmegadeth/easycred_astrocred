@@ -1,0 +1,226 @@
+/* Profile header (gradient) – keep text light */
+.profile-header h1,
+.profile-header p,
+.profile-header span {
+    color: #FFFFFF !important;
+}
+
+/* Cards use light background and dark text (from .card rules below) */
+/* --- */
+
+:root {
+    --astrocred-primary: #0a2540;
+    --astrocred-secondary: #00b4d8;
+    --astrocred-accent: #7b2cbf;
+    --astrocred-light: #f8f9fa;
+    --astrocred-gray: #6c757d;
+    --astrocred-dark: #212529;
+    --astrocred-success: #2ecc71;
+    --astrocred-warning: #f39c12;
+    --astrocred-danger: #e74c3c;
+}
+
+
+.profile-header {
+    background: linear-gradient(135deg, var(--astrocred-primary), var(--astrocred-accent));
+    color: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: var(--astrocred-accent);
+    margin-bottom: 20px;
+    border: 5px solid white;
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    background-color: white;
+    border-bottom: 2px solid #f0f0f0;
+    font-weight: 600;
+    color: var(--astrocred-primary);
+    padding: 20px;
+    border-radius: 15px 15px 0 0 !important;
+}
+
+.card-body {
+    padding: 25px;
+}
+
+.info-item {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.info-label {
+    color: var(--astrocred-gray);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.info-value {
+    color: var(--astrocred-dark);
+    font-weight: 500;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-right: 8px;
+    margin-bottom: 5px;
+
+}
+
+.status-active {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: var(--astrocred-success);
+}
+
+.status-inactive {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: var(--astrocred-danger);
+}
+
+.status-pending {
+    background-color: rgba(243, 156, 18, 0.1);
+    color: var(--astrocred-warning);
+}
+
+.status-completed {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: var(--astrocred-success);
+}
+
+.status-verified {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: var(--astrocred-success);
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, var(--astrocred-primary), var(--astrocred-accent));
+}
+
+.text-gradient {
+    background: linear-gradient(to right, var(--astrocred-primary), var(--astrocred-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+
+.left-float {
+    width: 310px !important;
+    float: left;
+    overflow: hidden;
+    /* Hides the overflowing content */
+    white-space: nowrap;
+    /* Prevents the text from wrapping to a new line */
+    text-overflow: ellipsis;
+    /* Displays "..." for clipped text */
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .left-float {
+        width: 209px !important;
+        float: left;
+        overflow: hidden;
+        /* Hides the overflowing content */
+        white-space: nowrap;
+        /* Prevents the text from wrapping to a new line */
+        text-overflow: ellipsis;
+        /* Displays "..." for clipped text */
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-right: 8px;
+        margin-bottom: 5px;
+    }
+
+}
+
+@media (min-width: 782px) {
+
+    .left-float {
+        width: 240px !important;
+        float: left;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+}
+
+@media (min-width: 972px) {
+
+    .left-float {
+        width: 202px !important;
+        float: left;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+}
+
+
+@media (min-width: 1070px) {
+
+    .left-float {
+        width: 320px !important;
+        float: left;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+}

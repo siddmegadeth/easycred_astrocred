@@ -14,6 +14,11 @@ app.provider('authentication', [function() {
                         withCredentials: true
                     })
                 },
+                getProfileMe: function() {
+                    return $http.get('/api/profile/me', {
+                        withCredentials: true
+                    });
+                },
                 logout: function() {
                     return $http({
                         method: 'POST',

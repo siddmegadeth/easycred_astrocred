@@ -14,7 +14,6 @@
             log('/api/reports/financial-health');
 
             var mobile = req.query.mobile || req.session?.mobile;
-            var isDemoMode = req.query.demo === 'true' || mobile === '7764056669';
 
             if (!mobile) {
                 return res.status(400).json({
@@ -38,15 +37,9 @@
                 }
             };
 
-            // 1. Fetch and analyze CIBIL data
-            var cibilData = await CibilDataModel.findOne({
-                $or: [{ mobile_number: mobile }, { mobile: mobile }]
-            }).lean();
-
-            if (!cibilData && isDemoMode) {
-                var sampleModule = require('./api/sample-data');
-                cibilData = sampleModule.generateSampleCIBILData(mobile);
-            }
+            // 1. Fetch CIBIL via resolver (DB + hydrate from cache)
+            var getCibilForUser = require('./api/cibil-data-resolver.js').getCibilForUser;
+            var cibilData = await getCibilForUser({ mobile: mobile, email: '', pan: '' });
 
             if (cibilData) {
                 var analyzer = new GradingEngine(cibilData);
@@ -92,31 +85,6 @@
                 mobile: mobile,
                 status: 'ACTIVE'
             }).lean();
-
-            // Mock banking data for demo
-            if (accounts.length === 0 && isDemoMode) {
-                accounts = [
-                    {
-                        bankName: 'HDFC Bank',
-                        accountType: 'SAVINGS',
-                        currentBalance: 45000,
-                        accountNumber: 'XXXXXX1234',
-                        transactions: [
-                            { type: 'DEBIT', amount: -5000, narration: 'SWIGGY FOOD ORDER', date: new Date() },
-                            { type: 'DEBIT', amount: -15000, narration: 'AMAZON SHOPPING', date: new Date() },
-                            { type: 'DEBIT', amount: -8000, narration: 'EMI HDFC LOAN', date: new Date() },
-                            { type: 'CREDIT', amount: 50000, narration: 'SALARY CREDIT', date: new Date() }
-                        ]
-                    },
-                    {
-                        bankName: 'SBI',
-                        accountType: 'SALARY',
-                        currentBalance: 12500,
-                        accountNumber: 'XXXXXX5678',
-                        transactions: []
-                    }
-                ];
-            }
 
             if (accounts.length > 0) {
                 var totalBalance = accounts.reduce(function (sum, acc) {
@@ -233,8 +201,8 @@
     app.get('/api/reports/financial-health-pdf', async function (req, res) {
         try {
             // Fetch the combined report data
-            var mobile = req.query.mobile || '7764056669';
-            var reportUrl = req.protocol + '://' + req.get('host') + '/api/reports/financial-health?mobile=' + mobile + '&demo=true';
+            var mobile = req.query.mobile || req.session?.mobile;
+            var reportUrl = req.protocol + '://' + req.get('host') + '/api/reports/financial-health?mobile=' + mobile;
 
             var axios = require('axios');
             var response = await axios.get(reportUrl);

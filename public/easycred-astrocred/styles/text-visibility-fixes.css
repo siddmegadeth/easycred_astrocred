@@ -10,7 +10,6 @@
 /* Body and main content areas */
 body, .container, .main-content {
     color: #212529 !important; /* Dark text for light backgrounds */
-    background-color: #ffffff !important;
 }
 
 /* Cards and panels */
@@ -18,6 +17,18 @@ body, .container, .main-content {
     background: #ffffff !important;
     color: #212529 !important;
     border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Let dark-theme segments keep their own card styles (home dashboard, finvu, utility-hub, financial-dashboard) */
+.section .astro-dashboard-wrapper .card,
+.finvu-connect-page .finvu-card,
+.utility-hub .card,
+.utility-hub .verification-card,
+.financial-dashboard .card,
+.financial-dashboard .metric-card {
+    background: unset !important;
+    color: unset !important;
+    border: unset !important;
 }
 
 .astrocred-card-title, .card-title, h1, h2, h3, h4, h5, h6 {
@@ -37,10 +48,13 @@ label, .form-label, .input-label {
     font-weight: 500 !important;
 }
 
-/* Input fields */
-input, textarea, select {
+/* Input fields – exclude OTP digits so dark modals keep light text */
+input:not(.astro-otp-digit):not(.otp-input),
+textarea {
     color: #212529 !important;
-    background-color: #ffffff !important;
+    border: 1px solid #ced4da !important;
+}
+select {
     border: 1px solid #ced4da !important;
 }
 
@@ -52,7 +66,7 @@ input::placeholder, textarea::placeholder {
 /* Tables */
 table, .table {
     color: #212529 !important;
-    background-color: #ffffff !important;
+    
 }
 
 table th, .table th {
@@ -154,23 +168,18 @@ ul, ol, li {
     color: #212529 !important;
 }
 
-/* Modals */
-.modal, .modal-content {
-    background-color: #ffffff !important;
+/* Modals – only light-theme modals (e.g. login); dark modals keep theme */
+.astro-login-page .modal-content,
+.astro-login-page .modal-header,
+.astro-login-page .modal-body {
     color: #212529 !important;
 }
-
-.modal-header {
+.astro-login-page .modal-header {
     border-bottom: 2px solid #dee2e6 !important;
 }
-
-.modal-title {
+.astro-login-page .modal-title {
     color: #1c1fbe !important;
     font-weight: 600 !important;
-}
-
-.modal-body {
-    color: #212529 !important;
 }
 
 /* Alerts and notifications */

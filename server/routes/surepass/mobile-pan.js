@@ -34,8 +34,8 @@
                 "content-type": 'application/json'
             },
             data: {
-                "name": fullname,
-                "mobile_no": mobile
+                name: name,
+                mobile_no: mobile_no
             }
         };
         var result = await axios(options)

@@ -515,72 +515,37 @@ app.provider('cibilCore', [function () {
                 },
 
                 // 🧪 TESTING CHECKLIST - Helper methods matching backend tests
-                testUploadWithSample: function () {
-                    // 1. Upload data - Uses sample data structure from backend
-                    return this.uploadData(window.sampleData || this.createSampleData());
+                testUploadWithSample: function (data) {
+                    if (!data) return Promise.reject(new Error('Upload requires real CIBIL data'));
+                    return this.uploadData(this.normalizeData(data));
                 },
 
-                testBasicAnalysis: function (pan) {
-                    // 2. Get analysis - With proper identifier
-                    return this.getAnalysis({ pan: pan || 'IVZPK2103N' });
+                testBasicAnalysis: function (params) {
+                    if (!params || (!params.pan && !params.mobile && !params.email)) return Promise.reject(new Error('pan, mobile, or email required'));
+                    return this.getAnalysis(params);
                 },
 
-                testRiskAssessment: function (pan) {
-                    // 3. Risk Assessment - With proper identifier
-                    return this.getRiskAssessment({ pan: pan || 'IVZPK2103N' });
+                testRiskAssessment: function (params) {
+                    if (!params || (!params.pan && !params.mobile && !params.email)) return Promise.reject(new Error('pan, mobile, or email required'));
+                    return this.getRiskAssessment(params);
                 },
 
-                testGradeCheck: function (pan) {
-                    // 4. Grade Check - With proper identifier
-                    return this.getClientGrade({ pan: pan || 'IVZPK2103N' });
+                testGradeCheck: function (params) {
+                    if (!params || (!params.pan && !params.mobile && !params.email)) return Promise.reject(new Error('pan, mobile, or email required'));
+                    return this.getClientGrade(params);
                 },
 
-                testScoreHistory: function () {
-                    // 5. Score History - Add test score
-                    return this.addScoreToHistory({
-                        client_id: "credit_report_cibil_jIifktiYhrHTbZcMdlsU",
-                        pan: "IVZPK2103N",
-                        mobile: "7764056669",
-                        name: "SHIV KUMAR",
-                        score: 670,
-                        grade: "B",
-                        source: "test"
-                    });
-                },
-
-                // Create sample data matching backend structure
-                createSampleData: function () {
-                    return {
-                        client_id: "credit_report_cibil_jIifktiYhrHTbZcMdlsU",
-                        mobile: "7764056669",
-                        pan: "IVZPK2103N",
-                        name: "SHIV KUMAR",
-                        gender: "male",
-                        user_email: "MANGALDHAWANI@GMAIL.COM",
-                        credit_score: "670",
-                        credit_report: [ /*... full credit report data ...*/]
-                    };
-                },
-
-                runAllTests: function () {
+                runAllTests: function (params) {
                     var tests = [];
 
                     // 🚀 IMMEDIATE ACTION PLAN from backend
                     tests.push(this.checkHealth()); // Health check
 
-                    if (window.sampleData || this.createSampleData()) {
-                        var sampleData = window.sampleData || this.createSampleData();
-
-                        // Upload data
-                        tests.push(this.uploadData(this.normalizeData(sampleData)));
-
-                        // Test analysis endpoints
-                        tests.push(this.testBasicAnalysis(sampleData.pan));
-                        tests.push(this.testRiskAssessment(sampleData.pan));
-                        tests.push(this.testGradeCheck(sampleData.pan));
-                        tests.push(this.testScoreHistory());
+                    if (params && (params.pan || params.mobile || params.email)) {
+                        tests.push(this.testBasicAnalysis(params));
+                        tests.push(this.testRiskAssessment(params));
+                        tests.push(this.testGradeCheck(params));
                     }
-
                     return Promise.all(tests);
                 },
 
@@ -590,10 +555,11 @@ app.provider('cibilCore', [function () {
                 },
 
                 // Quick test commands from backend
-                quickTestCommands: function () {
+                quickTestCommands: function (params) {
+                    var q = params && (params.pan || params.mobile || params.email) ? '?pan=' + (params.pan || '') + '&mobile=' + (params.mobile || '') + '&email=' + (params.email || '') : '';
                     return {
-                        upload: "curl -X POST " + cibilUrls.upload.data + " -H 'Content-Type: application/json' -d @sample-data.json",
-                        analysis: "curl '" + cibilUrls.analysis.basic + "?pan=IVZPK2103N'",
+                        upload: "curl -X POST " + cibilUrls.upload.data + " -H 'Content-Type: application/json' -d @your-cibil-data.json",
+                        analysis: "curl '" + cibilUrls.analysis.basic + q + "'",
                         health: "curl '" + cibilUrls.health.check + "'"
                     };
                 },

@@ -1,0 +1,395 @@
+/* Text Visibility Fixes for Utility Hub */
+.utility-hub h1, .utility-hub h2, .utility-hub h3 {
+color: #FFFFFF !important;
+}
+
+.utility-hub p, .utility-hub span, .utility-hub div {
+color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.utility-hub .utility-title,
+.utility-hub .utility-subtitle {
+color: #FFFFFF !important;
+}
+
+.utility-hub .verification-card h3,
+.utility-hub .verification-card p {
+color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.utility-hub .label,
+.utility-hub .value {
+color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* --- */
+
+/* Utility Hub Styles */
+.utility-hub {
+min-height: 100vh;
+padding: var(--astro-space-lg) 0;
+background: var(--astro-gradient-dark, linear-gradient(180deg, #1A1A2E 0%, #0F0F1A 100%));
+}
+
+.utility-header {
+margin-bottom: var(--astro-space-xl);
+}
+
+.utility-title {
+font-family: var(--astro-font-display);
+font-size: 28px;
+font-weight: 700;
+color: var(--astro-text-primary);
+display: flex;
+align-items: center;
+gap: var(--astro-space-sm);
+margin: 0;
+}
+
+.utility-title i {
+color: var(--astro-accent);
+}
+
+.utility-subtitle {
+color: var(--astro-text-muted);
+margin: var(--astro-space-xs) 0 0;
+}
+
+.utility-badge {
+display: inline-flex;
+align-items: center;
+gap: var(--astro-space-xs);
+background: var(--astro-success);
+color: white;
+padding: var(--astro-space-xs) var(--astro-space-md);
+border-radius: var(--astro-radius-full);
+font-size: 12px;
+font-weight: 500;
+}
+
+/* Verification Card */
+.verification-card {
+background: var(--astro-gradient-card);
+backdrop-filter: blur(20px);
+border: 1px solid var(--astro-border);
+border-radius: var(--astro-radius-xl);
+padding: var(--astro-space-xl);
+text-align: center;
+transition: var(--astro-transition-normal);
+height: 100%;
+}
+
+.verification-card:hover {
+border-color: var(--astro-accent);
+transform: translateY(-4px);
+box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.verification-card.verified {
+border-color: var(--astro-success);
+}
+
+.card-icon {
+width: 80px;
+height: 80px;
+background: var(--astro-gradient-primary);
+border-radius: var(--astro-radius-lg);
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 0 auto var(--astro-space-md);
+font-size: 32px;
+color: white;
+position: relative;
+}
+
+.card-icon.dl-icon { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+.card-icon.rc-icon { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+.card-icon.aadhaar-icon { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); }
+.card-icon.bank-icon { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+.card-icon.gst-icon { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+
+.status-indicator {
+position: absolute;
+bottom: -4px;
+right: -4px;
+width: 24px;
+height: 24px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 12px;
+border: 2px solid var(--astro-primary);
+}
+
+.status-indicator.pending {
+background: var(--astro-surface-light);
+color: var(--astro-text-muted);
+}
+
+.status-indicator.verified {
+background: var(--astro-success);
+color: white;
+}
+
+.status-indicator.failed {
+background: var(--astro-danger);
+color: white;
+}
+
+.verification-card h3 {
+font-family: var(--astro-font-display);
+font-size: 18px;
+font-weight: 600;
+color: var(--astro-text-primary);
+margin: 0 0 var(--astro-space-xs);
+}
+
+.verification-card > p {
+font-size: 13px;
+color: var(--astro-text-muted);
+margin: 0 0 var(--astro-space-lg);
+}
+
+/* Verification Form */
+.verification-form {
+margin-top: var(--astro-space-md);
+}
+
+.verification-form .astro-input-group {
+background: var(--astro-surface-light);
+border: 1px solid var(--astro-border);
+border-radius: var(--astro-radius-md);
+margin-bottom: var(--astro-space-md);
+}
+
+.verification-form .astro-input {
+width: 100%;
+padding: var(--astro-space-sm) var(--astro-space-md);
+background: transparent;
+border: none;
+color: var(--astro-text-primary);
+font-size: 14px;
+}
+
+.verification-form .astro-input:focus {
+outline: none;
+}
+
+.verification-form .astro-input::placeholder {
+color: var(--astro-text-muted);
+}
+
+.verify-btn {
+width: 100%;
+padding: var(--astro-space-sm) var(--astro-space-md);
+background: var(--astro-gradient-accent);
+border: none;
+border-radius: var(--astro-radius-md);
+color: var(--astro-primary);
+font-weight: 600;
+font-size: 14px;
+cursor: pointer;
+transition: var(--astro-transition-fast);
+display: flex;
+align-items: center;
+justify-content: center;
+gap: var(--astro-space-xs);
+}
+
+.verify-btn:hover:not(:disabled) {
+transform: translateY(-2px);
+box-shadow: 0 4px 20px var(--astro-accent-glow);
+}
+
+.verify-btn:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+}
+
+/* Verification Result */
+.verification-result {
+text-align: left;
+background: var(--astro-surface-light);
+border-radius: var(--astro-radius-md);
+padding: var(--astro-space-md);
+margin-top: var(--astro-space-md);
+}
+
+.result-row {
+display: flex;
+justify-content: space-between;
+padding: var(--astro-space-xs) 0;
+border-bottom: 1px solid var(--astro-border-light);
+}
+
+.result-row:last-of-type {
+border-bottom: none;
+}
+
+.result-row .label {
+font-size: 12px;
+color: var(--astro-text-muted);
+}
+
+.result-row .value {
+font-size: 13px;
+color: var(--astro-text-primary);
+font-weight: 500;
+}
+
+.result-row .value.mono {
+font-family: var(--astro-font-mono);
+}
+
+.result-row .value.success {
+color: var(--astro-success);
+}
+
+.result-row .value.warning {
+color: var(--astro-warning);
+}
+
+.reset-btn {
+width: 100%;
+margin-top: var(--astro-space-md);
+padding: var(--astro-space-xs) var(--astro-space-md);
+background: transparent;
+border: 1px solid var(--astro-border);
+border-radius: var(--astro-radius-sm);
+color: var(--astro-text-muted);
+font-size: 12px;
+cursor: pointer;
+transition: var(--astro-transition-fast);
+}
+
+.reset-btn:hover {
+border-color: var(--astro-accent);
+color: var(--astro-accent);
+}
+
+/* History */
+.verification-history h3 {
+font-family: var(--astro-font-display);
+font-size: 18px;
+color: var(--astro-text-primary);
+margin-bottom: var(--astro-space-md);
+display: flex;
+align-items: center;
+gap: var(--astro-space-sm);
+}
+
+.verification-history h3 i {
+color: var(--astro-accent);
+}
+
+.history-list {
+background: var(--astro-gradient-card);
+border: 1px solid var(--astro-border);
+border-radius: var(--astro-radius-lg);
+overflow: hidden;
+}
+
+.history-item {
+display: flex;
+align-items: center;
+padding: var(--astro-space-md);
+border-bottom: 1px solid var(--astro-border);
+gap: var(--astro-space-md);
+}
+
+.history-item:last-child {
+border-bottom: none;
+}
+
+.history-icon {
+width: 40px;
+height: 40px;
+border-radius: var(--astro-radius-sm);
+display: flex;
+align-items: center;
+justify-content: center;
+background: var(--astro-surface-light);
+color: var(--astro-accent);
+}
+
+.history-details {
+flex: 1;
+display: flex;
+flex-direction: column;
+}
+
+.history-type {
+font-size: 12px;
+color: var(--astro-text-muted);
+}
+
+.history-id {
+font-size: 14px;
+color: var(--astro-text-primary);
+font-family: var(--astro-font-mono);
+}
+
+.history-status {
+font-size: 12px;
+padding: 4px 8px;
+border-radius: var(--astro-radius-full);
+display: flex;
+align-items: center;
+gap: 4px;
+}
+
+.history-status.verified {
+background: rgba(0, 196, 140, 0.2);
+color: var(--astro-success);
+}
+
+.history-status.failed {
+background: rgba(255, 71, 87, 0.2);
+color: var(--astro-danger);
+}
+
+.history-time {
+font-size: 12px;
+color: var(--astro-text-muted);
+}
+
+/* Footer */
+.utility-footer {
+text-align: center;
+}
+
+.trust-badges {
+display: flex;
+justify-content: center;
+gap: var(--astro-space-xl);
+flex-wrap: wrap;
+}
+
+.badge-item {
+display: flex;
+align-items: center;
+gap: var(--astro-space-xs);
+color: var(--astro-text-muted);
+font-size: 12px;
+}
+
+.badge-item i {
+color: var(--astro-success);
+}
+
+@media (max-width: 768px) {
+.utility-title {
+    font-size: 22px;
+}
+
+.verification-card {
+    padding: var(--astro-space-lg);
+}
+
+.trust-badges {
+    flex-direction: column;
+    gap: var(--astro-space-sm);
+}
+}

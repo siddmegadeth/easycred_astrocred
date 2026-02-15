@@ -2,6 +2,19 @@
    ASTROCRED Premium Credit Dashboard Styles
    ===================================================== */
 
+/* Text visibility – dark theme */
+.credit-dashboard { color: #FFFFFF !important; }
+.credit-dashboard * { color: inherit; }
+.credit-dashboard h1, .credit-dashboard h2, .credit-dashboard h3,
+.credit-dashboard h4, .credit-dashboard h5, .credit-dashboard h6 { color: #FFFFFF !important; }
+.credit-dashboard p, .credit-dashboard span, .credit-dashboard div,
+.credit-dashboard label, .credit-dashboard td, .credit-dashboard th { color: rgba(255, 255, 255, 0.95) !important; }
+.credit-dashboard .dashboard-title, .credit-dashboard .dashboard-subtitle { color: #FFFFFF !important; }
+.credit-dashboard .card-header h5 { color: #FFFFFF !important; }
+.credit-dashboard .info-label, .credit-dashboard .stat-label { color: rgba(255, 255, 255, 0.9) !important; }
+.credit-dashboard .info-value, .credit-dashboard .stat-value { color: #FFFFFF !important; font-weight: 600 !important; }
+.credit-dashboard .text-muted { color: rgba(255, 255, 255, 0.7) !important; }
+
 /* Dashboard Container */
 .credit-dashboard {
     min-height: 100vh;

@@ -1,739 +1,3 @@
-<style>
-    /* ===================================================================
-       ASTROCRED DARK THEME OVERRIDE - FORCES DARK MODE
-       ===================================================================*/
-    
-    /* Global Dark Theme Force - HIGH CONTRAST TEXT */
-    body {
-        background: linear-gradient(180deg, #1A1A2E 0%, #0F0F1A 100%) !important;
-        color: #FFFFFF !important;
-        font-family: var(--astro-font-primary) !important;
-    }
-
-    /* Base text color for all elements */
-    body, html {
-        color: #FFFFFF !important;
-    }
-
-    /* Override low-contrast text in main content */
-    .container-fluid p, .container-fluid span, .container-fluid div:not(.astro-orb),
-    .container-fluid li, .container-fluid td, .container-fluid th, 
-    .container-fluid label, .container-fluid small {
-        color: #FFFFFF !important;
-    }
-
-    /* Links should be visible but distinct */
-    a {
-        color: #00D9FF !important;
-    }
-
-    a:hover {
-        color: #00C48C !important;
-    }
-
-    /* Premium Dashboard Page (Same as Login) */
-    .astro-dashboard-page {
-        min-height: 100vh;
-        background: var(--astro-gradient-dark);
-        position: relative;
-        overflow-x: hidden;
-        font-family: var(--astro-font-primary);
-    }
-
-    .astro-dashboard-wrapper {
-        position: relative;
-        z-index: 1;
-        width: 100%;
-    }
-
-    /* Premium Glassmorphism Cards (Matching Login) - HIGH CONTRAST */
-    .card {
-        background: linear-gradient(145deg, rgba(22, 33, 62, 0.95) 0%, rgba(15, 15, 26, 0.98) 100%) !important;
-        backdrop-filter: blur(20px) !important;
-        -webkit-backdrop-filter: blur(20px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        border-radius: var(--astro-radius-xl) !important;
-        color: #FFFFFF !important;
-        box-shadow: var(--astro-shadow-lg) !important;
-        transition: var(--astro-transition-normal) !important;
-    }
-
-    /* Ensure card body has proper contrast */
-    .card-body {
-        color: #FFFFFF !important;
-        background: transparent !important;
-    }
-
-    .card:hover {
-        transform: translateY(-4px) !important;
-        box-shadow: var(--astro-shadow-glow) !important;
-        border-color: var(--astro-accent) !important;
-    }
-
-    .card-header {
-        background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(0, 196, 140, 0.1) 100%) !important;
-        color: var(--astro-accent) !important;
-        border-bottom: 1px solid var(--astro-border) !important;
-        border-radius: var(--astro-radius-xl) var(--astro-radius-xl) 0 0 !important;
-        padding: var(--astro-space-lg) !important;
-        font-weight: 600 !important;
-    }
-
-    /* Premium Text Colors - HIGH CONTRAST FOR VISIBILITY */
-    h1, h2, h3, h4, h5, h6 {
-        color: #FFFFFF !important;
-        font-family: var(--astro-font-display) !important;
-        font-weight: 600 !important;
-    }
-
-    /* Body text - High contrast white */
-    p, span, div:not(.score-ring span):not(.astro-orb), label, .metric {
-        color: #FFFFFF !important;
-        opacity: 0.95 !important;
-    }
-
-    /* Secondary text - Still visible but slightly muted */
-    .text-muted, .text-secondary {
-        color: rgba(255, 255, 255, 0.85) !important;
-    }
-
-    /* Card body text - Ensure visibility */
-    .card-body, .card-body * {
-        color: #FFFFFF !important;
-    }
-
-    .card-body p, .card-body span, .card-body div {
-        color: rgba(255, 255, 255, 0.95) !important;
-    }
-
-    /* Table text - Report History & Status and all tables */
-    .table, .table td, .table th,
-    .table-hover tbody tr td, .table-hover tbody tr th,
-    .table-responsive .table td, .table-responsive .table th {
-        color: #FFFFFF !important;
-        border-color: rgba(255, 255, 255, 0.2) !important;
-    }
-    .table thead th {
-        color: var(--astro-accent) !important;
-        font-weight: 600 !important;
-    }
-
-    /* List items */
-    li, ul, ol {
-        color: #FFFFFF !important;
-    }
-
-    /* Small text - Still readable */
-    small, .small {
-        color: rgba(255, 255, 255, 0.9) !important;
-    }
-
-    /* Premium Navigation Tabs (Matching Login Progress Steps) */
-    .nav-tabs {
-        border-bottom: 2px solid var(--astro-border) !important;
-        margin-bottom: var(--astro-space-xl) !important;
-    }
-
-    .nav-tabs .nav-link {
-        border: none !important;
-        color: var(--astro-text-secondary) !important;
-        font-weight: 500 !important;
-        padding: 12px 20px !important;
-        border-radius: var(--astro-radius-md) var(--astro-radius-md) 0 0 !important;
-        transition: var(--astro-transition-normal) !important;
-        background: transparent !important;
-    }
-
-    .nav-tabs .nav-link:hover {
-        background: var(--astro-surface-light) !important;
-        color: var(--astro-accent) !important;
-    }
-
-    .nav-tabs .nav-link.active {
-        color: var(--astro-accent) !important;
-        background: transparent !important;
-        border-bottom: 3px solid var(--astro-accent) !important;
-        font-weight: 600 !important;
-    }
-
-    /* Premium Score Ring (Matching Login Style) */
-    .score-ring {
-        background: var(--astro-gradient-accent) !important;
-        box-shadow: var(--astro-shadow-glow) !important;
-        border-radius: 50% !important;
-        width: 160px !important;
-        height: 160px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        margin: 0 auto !important;
-        position: relative !important;
-    }
-
-    .score-ring::before {
-        content: '';
-        position: absolute;
-        inset: -4px;
-        border-radius: 50%;
-        background: var(--astro-gradient-accent);
-        opacity: 0.3;
-        filter: blur(12px);
-        z-index: -1;
-    }
-
-    .score-ring span {
-        background: var(--astro-surface) !important;
-        color: var(--astro-accent) !important;
-        width: 130px !important;
-        height: 130px !important;
-        border-radius: 50% !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        font-size: 48px !important;
-        font-weight: 800 !important;
-        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2) !important;
-    }
-
-    /* Premium Buttons (Matching Login) */
-    .btn-astro,
-    .btn-primary {
-        background: var(--astro-gradient-accent) !important;
-        border: none !important;
-        color: white !important;
-        padding: 12px 24px !important;
-        border-radius: var(--astro-radius-md) !important;
-        font-weight: 600 !important;
-        box-shadow: 0 4px 15px var(--astro-accent-glow) !important;
-        transition: var(--astro-transition-normal) !important;
-    }
-
-    .btn-astro:hover,
-    .btn-primary:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px var(--astro-accent-glow) !important;
-    }
-
-    .btn-success {
-        background: linear-gradient(135deg, #00C48C 0%, #00A876 100%) !important;
-        box-shadow: 0 4px 15px rgba(0, 196, 140, 0.3) !important;
-    }
-
-    .btn-warning {
-        background: linear-gradient(135deg, #FFB800 0%, #FF9500 100%) !important;
-        color: #1A1A2E !important;
-        box-shadow: 0 4px 15px rgba(255, 184, 0, 0.3) !important;
-    }
-
-    .btn-danger {
-        background: linear-gradient(135deg, #FF4757 0%, #FF6B7A 100%) !important;
-        box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3) !important;
-    }
-
-    /* Chat */
-    .chat-ai {
-        background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(0, 196, 140, 0.1) 100%) !important;
-        border-left: 4px solid #00D9FF !important;
-        color: rgba(255, 255, 255, 0.9) !important;
-    }
-
-    .chat-user {
-        background: linear-gradient(135deg, #00D9FF 0%, #00C48C 100%) !important;
-        color: #ffffff !important;
-    }
-
-    /* Badges */
-    .badge-ai,
-    .badge.badge-ai {
-        background: linear-gradient(135deg, #00D9FF 0%, #00C48C 100%) !important;
-        color: #fff !important;
-        padding: 0.5rem 1rem !important;
-        border-radius: 20px !important;
-        font-weight: 600 !important;
-        box-shadow: 0 4px 12px rgba(0, 217, 255, 0.3) !important;
-    }
-
-    /* Utility */
-    .blur-text {
-        filter: blur(6px);
-        pointer-events: none;
-        user-select: none;
-    }
-
-    /* Assistant Tip */
-    .assistant-tip {
-        background: linear-gradient(135deg, rgba(255, 184, 0, 0.1) 0%, rgba(255, 149, 0, 0.1) 100%) !important;
-        border-left: 4px solid #FFB800 !important;
-        color: rgba(255, 255, 255, 0.9) !important;
-    }
-
-    .chat-window {
-        max-height: 420px;
-        overflow-y: auto;
-        padding: 1rem;
-    }
-
-    /* Removed duplicate light-theme chat/score-ring/metric/assistant-tip – dark theme above applies */
-
-    .footer-note {
-        font-size: 0.75rem;
-        color: #6c757d;
-    }
-
-    .nav-tabs {
-        border-bottom: 2px solid rgba(28, 31, 190, 0.1);
-        margin-bottom: 2rem;
-    }
-
-    .nav-tabs .nav-link {
-        border: none;
-        color: #6c757d;
-        font-weight: 500;
-        padding: 0.875rem 1.5rem;
-        transition: all 0.3s ease;
-        border-radius: 8px 8px 0 0;
-        margin-right: 0.5rem;
-    }
-
-    .nav-tabs .nav-link:hover {
-        background: rgba(28, 31, 190, 0.05);
-        color: #1c1fbe;
-    }
-
-    .nav-tabs .nav-link.active {
-        color: #1c1fbe !important;
-        border-bottom: 3px solid #1c1fbe !important;
-        background: linear-gradient(180deg, rgba(28, 31, 190, 0.05) 0%, transparent 100%) !important;
-        font-weight: 600 !important;
-    }
-
-    .progress-container {
-        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-        border-radius: 12px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    .timeline {
-        position: relative;
-        padding-left: 30px;
-    }
-
-    .timeline:before {
-        content: '';
-        position: absolute;
-        left: 15px;
-        top: 0;
-        bottom: 0;
-        width: 3px;
-        background: linear-gradient(180deg, #1c1fbe 0%, #33c9d3 100%);
-        border-radius: 2px;
-    }
-
-    .timeline-item {
-        position: relative;
-        margin-bottom: 1.5rem;
-    }
-
-    .timeline-item:before {
-        content: '';
-        position: absolute;
-        left: -25px;
-        top: 5px;
-        width: 14px;
-        height: 14px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
-        border: 3px solid #fff;
-        box-shadow: 0 0 0 3px #1c1fbe, 0 4px 12px rgba(28, 31, 190, 0.3);
-    }
-
-    /* 24-Month Roadmap - force high contrast text (fix invisible content) */
-    #roadmap .card-body,
-    #roadmap .timeline-item,
-    #roadmap .timeline-item h5,
-    #roadmap .timeline-item p,
-    #roadmap .timeline-item .text-muted,
-    #roadmap .timeline-item small {
-        color: #FFFFFF !important;
-    }
-    #roadmap .timeline-item p.text-muted {
-        color: rgba(255, 255, 255, 0.95) !important;
-    }
-    #roadmap .card.shadow-sm {
-        background: linear-gradient(145deg, rgba(22, 33, 62, 0.95) 0%, rgba(15, 15, 26, 0.98) 100%) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    }
-
-    /* Credit Reports tab - Report History table row text */
-    #reports .table tbody td,
-    #reports .card-body .table td,
-    #reports .table-hover tbody tr td {
-        color: #FFFFFF !important;
-    }
-
-    .offer-card {
-        border: 2px solid transparent;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        cursor: pointer;
-        border-radius: 12px;
-    }
-
-    .offer-card:hover {
-        border-color: #1c1fbe;
-        transform: scale(1.03) translateY(-4px);
-        box-shadow: 0 8px 24px rgba(28, 31, 190, 0.2);
-    }
-
-    .subscription-card {
-        border: 2px solid #e9ecef;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        border-radius: 12px;
-    }
-
-    .subscription-card.selected {
-        border-color: #1c1fbe;
-        box-shadow: 0 8px 24px rgba(28, 31, 190, 0.2);
-        background: linear-gradient(135deg, rgba(28, 31, 190, 0.02) 0%, rgba(51, 201, 211, 0.02) 100%);
-    }
-
-    .api-badge {
-        background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-weight: 600;
-    }
-
-    .monetization-badge {
-        background: linear-gradient(135deg, #fd7e14 0%, #e83e8c 100%);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-weight: 600;
-    }
-
-    .btn-astro {
-        background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
-        color: white;
-        border: none;
-        padding: 0.625rem 1.5rem;
-        border-radius: 10px;
-        font-weight: 600;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 12px rgba(28, 31, 190, 0.3);
-    }
-
-    .btn-astro:hover {
-        background: linear-gradient(135deg, #15189e 0%, #28a7af 100%);
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(28, 31, 190, 0.4);
-    }
-
-    .btn-astro:active {
-        transform: translateY(0);
-    }
-
-    .chart-container {
-        position: relative;
-        height: 300px;
-        width: 100%;
-        background: #ffffff;
-        border-radius: 12px;
-        padding: 1rem;
-    }
-
-    .risk-indicator {
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
-        display: inline-block;
-        margin-right: 8px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    }
-
-    .risk-low {
-        background: linear-gradient(135deg, #28a745 0%, #4CAF50 100%);
-    }
-
-    .risk-medium {
-        background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
-    }
-
-    .risk-high {
-        background: linear-gradient(135deg, #dc3545 0%, #f44336 100%);
-    }
-
-    .risk-very-high {
-        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-    }
-
-    .account-card {
-        border-left: 4px solid;
-        margin-bottom: 12px;
-        padding: 12px;
-        border-radius: 8px;
-        transition: all 0.2s ease;
-        background: #ffffff;
-    }
-
-    .account-card:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        transform: translateX(4px);
-    }
-
-    .account-credit-card {
-        border-left-color: #1c1fbe;
-    }
-
-    .account-personal-loan {
-        border-left-color: #28a745;
-    }
-
-    .account-consumer-loan {
-        border-left-color: #fd7e14;
-    }
-
-    .status-badge {
-        font-size: 0.7rem;
-        padding: 4px 10px;
-        border-radius: 12px;
-        font-weight: 600;
-    }
-
-    .status-good {
-        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-        color: #155724;
-    }
-
-    .status-warning {
-        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-        color: #856404;
-    }
-
-    .status-danger {
-        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-        color: #721c24;
-    }
-
-    .payment-status {
-        display: inline-block;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        margin-right: 4px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    .payment-ontime {
-        background: #28a745;
-    }
-
-    .payment-late {
-        background: #ffc107;
-    }
-
-    .payment-default {
-        background: #dc3545;
-    }
-
-    .payment-na {
-        background: #6c757d;
-    }
-
-    /* Enhanced Button Styles */
-    .btn-primary {
-        background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%) !important;
-        border: none !important;
-        border-color: #1c1fbe !important;
-        border-radius: 10px;
-        padding: 0.625rem 1.25rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(28, 31, 190, 0.3) !important;
-        color: #ffffff !important;
-    }
-
-    .btn-primary:hover,
-    .btn-primary:focus,
-    .btn-primary:active {
-        background: linear-gradient(135deg, #15189e 0%, #28a7af 100%) !important;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(28, 31, 190, 0.4) !important;
-        border-color: #15189e !important;
-        color: #ffffff !important;
-    }
-
-    .btn-success {
-        background: linear-gradient(135deg, #28a745 0%, #4CAF50 100%);
-        border: none;
-        border-radius: 10px;
-        padding: 0.625rem 1.25rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-
-    .btn-success:hover {
-        background: linear-gradient(135deg, #218838 0%, #45a049 100%);
-        transform: translateY(-2px);
-    }
-
-    .btn-outline-primary {
-        border: 2px solid #1c1fbe;
-        color: #1c1fbe;
-        border-radius: 10px;
-        padding: 0.625rem 1.25rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        background: transparent;
-    }
-
-    .btn-outline-primary:hover {
-        background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(28, 31, 190, 0.3);
-    }
-
-    /* Header Enhancement */
-    h2.fw-bold {
-        color: #1c1fbe !important;
-        text-shadow: 0 2px 4px rgba(28, 31, 190, 0.1);
-    }
-
-    /* Override Bootstrap primary colors with EasyCred brand */
-    .text-primary,
-    i.text-primary,
-    .text-primary * {
-        color: #1c1fbe !important;
-    }
-
-    h2.fw-bold .text-primary,
-    h2.fw-bold i.text-primary {
-        color: #1c1fbe !important;
-    }
-
-    /* Enhanced Shadow for Cards */
-    .shadow-sm {
-        box-shadow: 0 4px 12px rgba(28, 31, 190, 0.08) !important;
-    }
-
-    /* Enhanced Input Fields */
-    .form-control:focus {
-        border-color: #1c1fbe;
-        box-shadow: 0 0 0 0.2rem rgba(28, 31, 190, 0.25);
-    }
-
-    .chart-container {
-        position: relative;
-        height: 300px;
-        width: 100%;
-        margin-bottom: 1rem;
-        background: var(--astro-surface) !important;
-        border-radius: var(--astro-radius-md) !important;
-        padding: 1rem !important;
-    }
-
-    /* Premium Badges (Matching Login Features) */
-    .badge-ai,
-    .badge.badge-ai {
-        background: var(--astro-gradient-accent) !important;
-        color: white !important;
-        padding: 8px 16px !important;
-        border-radius: var(--astro-radius-full) !important;
-        font-weight: 600 !important;
-        box-shadow: 0 4px 12px var(--astro-accent-glow) !important;
-    }
-
-    /* Premium Alerts */
-    .alert {
-        background: var(--astro-gradient-card) !important;
-        border: 1px solid var(--astro-border) !important;
-        border-radius: var(--astro-radius-md) !important;
-        color: var(--astro-text-primary) !important;
-        backdrop-filter: blur(10px) !important;
-    }
-
-    .alert-warning {
-        border-left: 4px solid var(--astro-warning) !important;
-        background: linear-gradient(135deg, rgba(255, 184, 0, 0.1) 0%, rgba(255, 149, 0, 0.1) 100%) !important;
-    }
-
-    .alert-success {
-        border-left: 4px solid var(--astro-success) !important;
-        background: linear-gradient(135deg, rgba(0, 196, 140, 0.1) 0%, rgba(0, 169, 120, 0.1) 100%) !important;
-    }
-
-    /* Premium Header Section */
-    .astro-dashboard-wrapper h2 {
-        font-family: var(--astro-font-display) !important;
-        font-size: 28px !important;
-        font-weight: 700 !important;
-        color: var(--astro-text-primary) !important;
-        letter-spacing: 1px !important;
-    }
-
-    .astro-dashboard-wrapper .text-primary {
-        color: var(--astro-accent) !important;
-    }
-
-    /* Premium Metrics - HIGH CONTRAST */
-    .metric {
-        padding: 12px 0 !important;
-        border-bottom: 1px dashed rgba(255, 255, 255, 0.2) !important;
-        transition: var(--astro-transition-fast) !important;
-        color: #FFFFFF !important;
-    }
-
-    .metric:hover {
-        background: rgba(255, 255, 255, 0.1) !important;
-        padding-left: 12px !important;
-        border-radius: var(--astro-radius-sm) !important;
-    }
-
-    .metric:last-child {
-        border-bottom: none !important;
-    }
-
-    /* Additional Text Visibility Fixes */
-    .badge {
-        color: #FFFFFF !important;
-    }
-
-    .alert {
-        color: #FFFFFF !important;
-    }
-
-    .alert p, .alert span, .alert div {
-        color: #FFFFFF !important;
-    }
-
-    /* Form labels and inputs */
-    .form-label, label {
-        color: #FFFFFF !important;
-        font-weight: 500 !important;
-    }
-
-    /* All text inside cards */
-    .card * {
-        color: inherit !important;
-    }
-
-    /* Override any low-contrast text */
-    .text-dark, .text-black {
-        color: #FFFFFF !important;
-    }
-
-    /* Ensure headings are always visible */
-    .card-header h1, .card-header h2, .card-header h3,
-    .card-header h4, .card-header h5, .card-header h6 {
-        color: #FFFFFF !important;
-    }
-</style>
-
 <!-- Premium Dark Theme Dashboard - Matching Login Page -->
 <div class="astro-dashboard-page">
     <!-- Animated Background Pattern (Same as Login) -->
@@ -776,7 +40,7 @@
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#analysis" type="button">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#analysis" type="button" ng-click="onAnalysisTabClick()">
                 <i class="fas fa-chart-bar me-2"></i>Detailed Analysis
             </button>
         </li>
@@ -816,7 +80,7 @@
                             <!-- Score Ring with Dynamic Color -->
                             <div class="score-ring mb-3"
                                 ng-style="{'background': getScoreRingGradient(creditData.credit_score)}">
-                                <span ng-bind="creditData.credit_score || 670"></span>
+                                <span ng-bind="creditData.credit_score || '—'"></span>
                             </div>
                             <h4 class="mb-2" ng-bind="getScoreGrade(creditData.credit_score).grade"></h4>
                             <p class="text-muted mb-4" ng-bind="getScoreGrade(creditData.credit_score).description"></p>
@@ -1178,11 +442,11 @@
                                     <ul class="list-unstyled">
                                         <li class="mb-2">
                                             <span class="risk-indicator risk-high"></span>
-                                            4 Default Accounts
+                                            {{defaultAccounts || 0}} Default Accounts
                                         </li>
                                         <li class="mb-2">
                                             <span class="risk-indicator risk-high"></span>
-                                            High Credit Utilization (48%)
+                                            High Credit Utilization ({{creditUtilization || 0}}%)
                                         </li>
                                         <li class="mb-2">
                                             <span class="risk-indicator risk-medium"></span>
@@ -1220,20 +484,19 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="text-center p-3">
-                                        <h3 class="{{getRiskColorClass(defaultProbability)}}">{{defaultProbability ||
-                                            38}}%</h3>
+                                        <h3 class="{{getRiskColorClass(defaultProbability)}}">{{defaultProbability != null ? defaultProbability : 38}}%</h3>
                                         <p class="text-muted small">Default Probability</p>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="text-center p-3">
-                                        <h3 class="text-success">{{creditWorthiness || 6.2}}/10</h3>
+                                        <h3 class="text-success">{{creditWorthiness != null ? creditWorthiness : '—'}}/10</h3>
                                         <p class="text-muted small">Credit Worthiness</p>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="text-center p-3">
-                                        <h3 class="text-info">{{loanEligibility || '₹5-10L'}}</h3>
+                                        <h3 class="text-info">{{loanEligibility || '—'}}</h3>
                                         <p class="text-muted small">Loan Eligibility</p>
                                     </div>
                                 </div>
@@ -1259,9 +522,13 @@
                             <i class="fas fa-bullseye me-2"></i> Immediate Actions
                         </div>
                         <div class="card-body">
-                            <div class="alert alert-danger">
+                            <div class="alert alert-danger" ng-if="topPriorityAction">
                                 <i class="fas fa-exclamation-circle me-2"></i>
-                                <strong>Priority 1:</strong> Clear ₹27,760 ICICI Bank overdue
+                                <strong>Priority 1:</strong> {{topPriorityAction}}
+                            </div>
+                            <div class="alert alert-danger" ng-if="!topPriorityAction && totalOverdue">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                <strong>Priority 1:</strong> Clear overdue amount (₹{{totalOverdue | number}})
                             </div>
                             <div class="alert alert-warning">
                                 <i class="fas fa-exclamation-triangle me-2"></i>
@@ -1510,11 +777,11 @@
                                 <div class="timeline-item">
                                     <h5>Months 1-3: Crisis Management</h5>
                                     <p class="text-muted">
-                                        <strong>Actions:</strong> Clear all overdue amounts (₹48,018), set up payment
+                                        <strong>Actions:</strong> Clear all overdue amounts (₹{{totalOverdue | number}}), set up payment
                                         reminders,
                                         no new credit applications, reduce utilization to 40%
                                     </p>
-                                    <p><strong>Target Score:</strong> 670 → 690</p>
+                                    <p><strong>Target Score:</strong> {{creditData.credit_score || '—'}} → 690</p>
                                     <span class="badge bg-danger">Current Phase</span>
                                 </div>
                                 <div class="timeline-item">
@@ -1569,7 +836,7 @@
                                 <div class="progress" style="height: 10px;">
                                     <div class="progress-bar bg-primary" style="width: 0%"></div>
                                 </div>
-                                <small>Current: 670/690</small>
+                                <small>Current: {{creditData.credit_score || '—'}}/690</small>
                             </div>
                             <div class="text-center mb-4">
                                 <h3 class="text-warning">710</h3>
@@ -1577,7 +844,7 @@
                                 <div class="progress" style="height: 10px;">
                                     <div class="progress-bar bg-warning" style="width: 0%"></div>
                                 </div>
-                                <small>Current: 670/710</small>
+                                <small>Current: {{creditData.credit_score || '—'}}/710</small>
                             </div>
                             <div class="text-center mb-4">
                                 <h3 class="text-success">750+</h3>
@@ -1585,7 +852,7 @@
                                 <div class="progress" style="height: 10px;">
                                     <div class="progress-bar bg-success" style="width: 0%"></div>
                                 </div>
-                                <small>Current: 670/750</small>
+                                <small>Current: {{creditData.credit_score || '—'}}/750</small>
                             </div>
                             <button class="btn btn-astro w-100" ng-click="downloadRoadmap()">
                                 <i class="fas fa-download me-2"></i> Download Roadmap PDF
@@ -1600,7 +867,7 @@
             <div class="row mb-4">
                 <div class="col-12">
                     <h5 class="mb-3">Personalized Loan Offers</h5>
-                    <p class="text-muted">Based on your current credit profile (Score: 670, Risk: Medium-High)</p>
+                    <p class="text-muted">Based on your current credit profile (Score: {{creditData.credit_score || '—'}}, Risk: {{riskAssessment.level || '—'}})</p>
                 </div>
             </div>
             <div class="row g-4">

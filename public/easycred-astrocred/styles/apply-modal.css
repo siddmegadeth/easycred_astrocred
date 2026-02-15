@@ -1,0 +1,2 @@
+/* Apply / modal overlay styles – extend as needed */
+.modal-content { border-radius: var(--astro-radius-xl, 12px); }

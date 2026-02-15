@@ -75,15 +75,15 @@
 
         return {
             client_id: client_id,
-            mobile: "7764056669",
-            pan: "IVZPK2103N",
-            name: "SHIV KUMAR",
+            mobile: "",
+            pan: "",
+            name: "User",
             gender: "male",
             credit_score: "663",
             credit_report: [{
                 names: [{
                     index: "N01",
-                    name: "SHIV KUMAR",
+                    name: "User",
                     birthDate: "2010-10-10",
                     gender: "2"
                 }],

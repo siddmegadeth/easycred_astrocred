@@ -347,6 +347,7 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
                 }
                 
                 log('Profile and CIBIL completed:', $scope.isComplete);
+                startDashboardRedirectCountdown();
             })
             .catch(function(err) {
                 $scope.isSubmitting = false;
@@ -354,10 +355,25 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
                 $scope.cibilFetchError = err.message || 'Failed to fetch credit score';
                 warn('Error in profile completion:', err);
                 
-                // Still mark as complete - user can retry CIBIL fetch later
                 $scope.isComplete = true;
+                startDashboardRedirectCountdown();
             });
     };
+
+    var redirectTimeout;
+    function startDashboardRedirectCountdown() {
+        $scope.redirectCountdown = 3;
+        var t = 3;
+        redirectTimeout = $timeout(function tick() {
+            $scope.redirectCountdown = t;
+            if (t <= 0) {
+                $scope.goToDashboard();
+                return;
+            }
+            t--;
+            redirectTimeout = $timeout(tick, 1000);
+        }, 0);
+    }
 
     // Fetch CIBIL score using SurePass
     $scope.fetchCIBILScore = function() {
@@ -428,11 +444,9 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
     };
 
     $scope.goToDashboard = function() {
+        if (redirectTimeout) { $timeout.cancel(redirectTimeout); redirectTimeout = null; }
         log('Redirecting to dashboard...');
-        // In real app: window.location.href = '#/dashboard';
-        $timeout(function() {
-            $location.path("home");
-        }, 500);
+        $location.path('home');
     };
 
 

@@ -3,20 +3,25 @@ app.controller('profileCtrl', ['$location', '$timeout', '$scope', 'stateManager'
     $timeout(function () {
         warn('Init profileCtrl Ready');
         $scope.message = {};
+        $scope.cibilProfile = null;
+        $scope.analysisSummary = null;
         if (stateManager.isUserLogggedIn()) {
 
             // Load initial from local storage
             $scope.profile = stateManager.getProfile();
 
-            // Refresh from server
-            authentication.getMe().then(function (response) {
+            // Fetch full profile (user + CIBIL-derived + analysis summary) from server
+            authentication.getProfileMe().then(function (response) {
                 if (response.data && response.data.success) {
                     $scope.profile = response.data.profile;
+                    $scope.cibilProfile = response.data.cibilProfile || null;
+                    $scope.analysisSummary = response.data.analysisSummary || null;
                     stateManager.saveProfile($scope.profile);
-                    log('Profile Refreshed: ', $scope.profile);
+                    log('Profile Refreshed (with CIBIL): ', $scope.profile);
                 }
             }).catch(function (err) {
                 console.error('Failed to refresh profile:', err);
+                // Keep existing profile from state
             });
 
             log('User Profile :', $scope.profile);

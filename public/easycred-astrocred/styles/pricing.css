@@ -1,0 +1,191 @@
+/* ============================================
+   Pricing page – layout & visibility
+   ============================================ */
+
+/* Cards – light background and dark text for readability */
+.pricing-card {
+    background: #ffffff !important;
+    color: #d2dae2 !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.pricing-card h1,
+.pricing-card h2,
+.pricing-card h3,
+.pricing-card h4 {
+    color: #1a1a2e !important;
+}
+
+.pricing-card p,
+.pricing-card span,
+.pricing-card li {
+    color: #212529 !important;
+}
+
+.pricing-card .text-muted {
+    color: #6c757d !important;
+}
+
+.pricing-card .text-astrocred-primary {
+    color: #1c1fbe !important;
+}
+
+.pricing-card:hover {
+    transform: translateY(-10px);
+}
+
+.pricing-popular {
+    border: 2px solid #1c1fbe !important;
+}
+
+.popular-badge {
+    position: absolute;
+    top: 12px;
+    right: -35px;
+    background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%);
+    color: white;
+    padding: 4px 40px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transform: rotate(45deg);
+}
+
+.plan-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.pricing-amount {
+    min-height: 80px;
+}
+
+.text-astrocred-primary {
+    color: #1c1fbe;
+}
+
+.bg-primary-subtle {
+    background-color: rgba(28, 31, 190, 0.05) !important;
+}
+
+/* CTAs */
+.pricing-cta {
+    margin-top: auto;
+}
+
+.pricing-cta-current {
+    color: #28a745 !important;
+    border-color: #28a745 !important;
+    background: transparent !important;
+    cursor: default;
+}
+
+.pricing-cta-current:hover {
+    color: #28a745 !important;
+    border-color: #28a745 !important;
+    background: transparent !important;
+}
+
+.pricing-cta-label {
+    color: #6c757d !important;
+    border-color: #dee2e6 !important;
+    cursor: default;
+}
+
+.pricing-cta-enterprise {
+    color: #0d6efd !important;
+    border-color: #0d6efd !important;
+    background: transparent !important;
+}
+
+.pricing-cta-enterprise:hover {
+    color: #fff !important;
+    background: #0d6efd !important;
+    border-color: #0d6efd !important;
+}
+
+/* Compare table */
+.pricing-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+}
+
+.pricing-compare-table {
+    min-width: 100%;
+    table-layout: fixed;
+}
+
+.pricing-feature-col {
+    min-width: 160px;
+    width: 28%;
+}
+
+.pricing-plan-col {
+    min-width: 90px;
+    width: 18%;
+}
+
+.pricing-plan-col-last {
+    min-width: 100px;
+    padding-right: 1rem !important;
+}
+
+.pricing-compare-table thead th {
+    color: #fff !important;
+    background: #1c1fbe !important;
+    border-color: rgba(28, 31, 190, 0.2) !important;
+    padding: 0.75rem;
+}
+
+.pricing-compare-table tbody td {
+    color: #212529 !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    background: #ffffff !important;
+}
+
+/* FAQ accordion */
+.accordion-item-pricing {
+    background: #ffffff !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.accordion-button-pricing {
+    background: rgba(28, 31, 190, 0.05) !important;
+    color: #212529 !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.accordion-button-pricing:not(.collapsed) {
+    background: rgba(28, 31, 190, 0.1) !important;
+    color: #212529 !important;
+    box-shadow: none;
+}
+
+.accordion-button-pricing::after {
+    filter: none;
+}
+
+.accordion-body-pricing {
+    background: #ffffff !important;
+    color: #212529 !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Billing toggle */
+.d-inline-flex.bg-light.rounded-pill .btn {
+    color: #333 !important;
+}
+
+.d-inline-flex.bg-light.rounded-pill .btn-primary {
+    color: #fff !important;
+}

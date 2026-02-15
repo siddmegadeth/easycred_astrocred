@@ -11,9 +11,7 @@
         try {
             log('/api/dashboard/summary');
 
-            // Get user from session or query params (demo mode)
             var mobile = req.session?.mobile || req.query.mobile;
-            var isDemoMode = req.query.demo === 'true' || mobile === '7764056669';
 
             if (!mobile) {
                 return res.status(401).json({
@@ -35,20 +33,10 @@
                 alerts: []
             };
 
-            // 1. Fetch CIBIL Data
+            // 1. Fetch CIBIL Data (resolver: DB first, then hydrate from CibilFetchCache – no refetch)
             try {
-                var cibilData = await CibilDataModel.findOne({
-                    $or: [
-                        { mobile_number: mobile },
-                        { mobile: mobile }
-                    ]
-                }).lean();
-
-                // Fallback to sample data for demo
-                if (!cibilData && isDemoMode) {
-                    var sampleModule = require('./api/sample-data');
-                    cibilData = sampleModule.generateSampleCIBILData(mobile);
-                }
+                var getCibilForUser = require('./api/cibil-data-resolver.js').getCibilForUser;
+                var cibilData = await getCibilForUser({ mobile: mobile, email: '', pan: '' });
 
                 if (cibilData) {
                     var analyzer = new GradingEngine(cibilData);
@@ -117,15 +105,6 @@
                     mobile: mobile,
                     status: 'ACTIVE'
                 }).lean();
-
-                // Mock data for demo
-                if (accounts.length === 0 && isDemoMode) {
-                    accounts = [
-                        { bankName: 'HDFC Bank', accountType: 'SAVINGS', currentBalance: 45000, accountNumber: 'XXXXXX1234', lastUpdated: new Date() },
-                        { bankName: 'SBI', accountType: 'SALARY', currentBalance: 12500, accountNumber: 'XXXXXX5678', lastUpdated: new Date() },
-                        { bankName: 'Kotak Mahindra', accountType: 'SAVINGS', currentBalance: 8750, accountNumber: 'XXXXXX9012', lastUpdated: new Date() }
-                    ];
-                }
 
                 if (accounts.length > 0) {
                     var totalBalance = accounts.reduce(function (sum, acc) {
