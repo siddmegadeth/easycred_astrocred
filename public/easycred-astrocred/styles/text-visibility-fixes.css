@@ -85,7 +85,7 @@ table td, .table td {
 .badge, .astrocred-badge {
     color: #ffffff !important;
     font-weight: 600 !important;
-    padding: 40px 12px !important;
+    padding: 20px 12px !important;
 }
 
 .astrocred-badge-success {
