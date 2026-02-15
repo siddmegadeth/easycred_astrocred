@@ -1,33 +1,210 @@
-/* Text Visibility Fixes for Financial Dashboard */
+/* =====================================================
+   Financial Hub – Dashboard theme (same as profile & FinVu)
+   ===================================================== */
+
+.financial-dashboard.astro-dashboard-page {
+    min-height: 100vh;
+    background: var(--astro-gradient-app-bg);
+    position: relative;
+    overflow-x: hidden;
+    padding: 0;
+}
+
+.financial-dashboard.astro-dashboard-page .astro-dashboard-wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+}
+
+.financial-dashboard.astro-dashboard-page .dashboard-main-title,
+.financial-dashboard.astro-dashboard-page .dashboard-subtitle {
+    color: var(--astro-text-primary) !important;
+}
+
+.financial-dashboard.astro-dashboard-page .dashboard-main-title i {
+    color: var(--astro-accent);
+}
+
+/* White cards with dark text */
+.financial-dashboard.astro-dashboard-page .health-score-card,
+.financial-dashboard.astro-dashboard-page .metric-card,
+.financial-dashboard.astro-dashboard-page .decision-card,
+.financial-dashboard.astro-dashboard-page .quick-actions-card,
+.financial-dashboard.astro-dashboard-page .goals-card,
+.financial-dashboard.astro-dashboard-page .accounts-card,
+.financial-dashboard.astro-dashboard-page .astrocred-card {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+    color: #212529 !important;
+}
+
+.financial-dashboard.astro-dashboard-page .health-score-card:hover,
+.financial-dashboard.astro-dashboard-page .metric-card:hover,
+.financial-dashboard.astro-dashboard-page .decision-card:hover,
+.financial-dashboard.astro-dashboard-page .quick-actions-card:hover,
+.financial-dashboard.astro-dashboard-page .goals-card:hover,
+.financial-dashboard.astro-dashboard-page .accounts-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(28, 31, 190, 0.15) !important;
+    border-color: rgba(28, 31, 190, 0.2) !important;
+}
+
+.financial-dashboard.astro-dashboard-page .health-label,
+.financial-dashboard.astro-dashboard-page .health-status,
+.financial-dashboard.astro-dashboard-page .metric-label,
+.financial-dashboard.astro-dashboard-page .metric-value,
+.financial-dashboard.astro-dashboard-page .metric-sub,
+.financial-dashboard.astro-dashboard-page .metric-grade,
+.financial-dashboard.astro-dashboard-page .decision-header h3,
+.financial-dashboard.astro-dashboard-page .calc-row label,
+.financial-dashboard.astro-dashboard-page .result-label,
+.financial-dashboard.astro-dashboard-page .result-value,
+.financial-dashboard.astro-dashboard-page .advice-content h4,
+.financial-dashboard.astro-dashboard-page .advice-content p,
+.financial-dashboard.astro-dashboard-page .goal-details h4,
+.financial-dashboard.astro-dashboard-page .goal-stats {
+    color: #212529 !important;
+}
+
+.financial-dashboard.astro-dashboard-page .health-status.excellent { color: #00C48C !important; }
+.financial-dashboard.astro-dashboard-page .health-status.good { color: #1c1fbe !important; }
+.financial-dashboard.astro-dashboard-page .health-status.fair { color: #FFB800 !important; }
+.financial-dashboard.astro-dashboard-page .health-status.poor { color: #FF4757 !important; }
+
+.financial-dashboard.astro-dashboard-page .metric-value.success { color: #00C48C !important; }
+.financial-dashboard.astro-dashboard-page .metric-value.warning { color: #FFB800 !important; }
+.financial-dashboard.astro-dashboard-page .metric-value.danger { color: #FF4757 !important; }
+
+.financial-dashboard.astro-dashboard-page .metric-sub,
+.financial-dashboard.astro-dashboard-page .metric-grade,
+.financial-dashboard.astro-dashboard-page .calc-row label,
+.financial-dashboard.astro-dashboard-page .result-label,
+.financial-dashboard.astro-dashboard-page .advice-impact,
+.financial-dashboard.astro-dashboard-page .goal-eta {
+    color: #6c757d !important;
+}
+
+.financial-dashboard.astro-dashboard-page .health-score-value .score-number { color: #1a1a2e !important; }
+.financial-dashboard.astro-dashboard-page .health-score-value .score-max { color: #6c757d !important; }
+
+.financial-dashboard.astro-dashboard-page .health-ring-bg { stroke: rgba(0,0,0,0.08); }
+.financial-dashboard.astro-dashboard-page .health-ring-fill { stroke: url(#healthGradient); }
+
+.financial-dashboard.astro-dashboard-page .metric-icon { background: rgba(28,31,190,0.08); color: #1c1fbe; }
+.financial-dashboard.astro-dashboard-page .metric-card.income .metric-icon { background: rgba(0,196,140,0.12); color: #00C48C; }
+.financial-dashboard.astro-dashboard-page .metric-card.expense .metric-icon { background: rgba(255,184,0,0.12); color: #FFB800; }
+.financial-dashboard.astro-dashboard-page .metric-card.savings .metric-icon { background: rgba(102,126,234,0.12); color: #667eea; }
+
+.financial-dashboard.astro-dashboard-page .calc-input {
+    background: #f8f9fa;
+    border: 1px solid rgba(0,0,0,0.1);
+    color: #212529;
+}
+
+.financial-dashboard.astro-dashboard-page .decision-btn {
+    background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%) !important;
+    color: white !important;
+}
+
+.financial-dashboard.astro-dashboard-page .decision-icon { background: linear-gradient(135deg, #1c1fbe 0%, #33c9d3 100%); color: white; }
+.financial-dashboard.astro-dashboard-page .decision-icon.ai { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+
+.financial-dashboard.astro-dashboard-page .ai-chat-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.financial-dashboard.astro-dashboard-page .user-badge.free {
+    background: #f8f9fa;
+    border: 1px solid rgba(0,0,0,0.1);
+    color: #212529;
+}
+
+.financial-dashboard.astro-dashboard-page .user-badge.premium {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #1a1a2e;
+}
+
+.financial-dashboard.astro-dashboard-page .quick-actions-card h3,
+.financial-dashboard.astro-dashboard-page .goals-card h3,
+.financial-dashboard.astro-dashboard-page .accounts-header h3,
+.financial-dashboard.astro-dashboard-page .astrocred-card-title { color: #1a1a2e !important; }
+
+.financial-dashboard.astro-dashboard-page .action-item {
+    background: #f8f9fa;
+    border: 1px solid rgba(0,0,0,0.08);
+    color: #212529;
+}
+
+.financial-dashboard.astro-dashboard-page .action-item:hover {
+    border-color: #1c1fbe;
+    color: #1c1fbe;
+}
+
+.financial-dashboard.astro-dashboard-page .goal-progress-bar { background: rgba(0,0,0,0.1); }
+.financial-dashboard.astro-dashboard-page .goal-progress-fill { background: linear-gradient(90deg, #00C48C, #33c9d3); }
+
+.financial-dashboard.astro-dashboard-page .refresh-btn,
+.financial-dashboard.astro-dashboard-page .add-goal-btn {
+    background: #f8f9fa;
+    border: 1px solid rgba(0,0,0,0.1);
+    color: #212529;
+}
+
+.financial-dashboard.astro-dashboard-page .refresh-btn:hover,
+.financial-dashboard.astro-dashboard-page .add-goal-btn:hover {
+    border-color: #1c1fbe;
+    color: #1c1fbe;
+}
+
+.financial-dashboard.astro-dashboard-page .accounts-table,
+.financial-dashboard.astro-dashboard-page .astrocred-table {
+    color: #212529;
+}
+
+.financial-dashboard.astro-dashboard-page .accounts-table th,
+.financial-dashboard.astro-dashboard-page .astrocred-table th {
+    background: #f8f9fa !important;
+    color: #1a1a2e !important;
+    border-color: rgba(0,0,0,0.08);
+}
+
+.financial-dashboard.astro-dashboard-page .accounts-table td,
+.financial-dashboard.astro-dashboard-page .astrocred-table td {
+    border-color: rgba(0,0,0,0.06);
+    color: #212529;
+}
+
+.financial-dashboard.astro-dashboard-page .no-accounts h4,
+.financial-dashboard.astro-dashboard-page .no-accounts p { color: #212529 !important; }
+.financial-dashboard.astro-dashboard-page .link-btn { color: #1c1fbe; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .financial-dashboard.astro-dashboard-page .dashboard-main-title { font-size: 22px; }
+    .financial-dashboard.astro-dashboard-page .metric-value { font-size: 20px; }
+    .financial-dashboard.astro-dashboard-page .health-score-value .score-number { font-size: 36px; }
+}
+
+/* --- Base (non-dashboard) fallback --- */
+
 .financial-dashboard h1, .financial-dashboard h2, .financial-dashboard h3,
 .financial-dashboard h4, .financial-dashboard h5, .financial-dashboard h6 {
-color: #FFFFFF !important;
+    color: inherit;
 }
 
 .financial-dashboard p, .financial-dashboard span, .financial-dashboard div,
 .financial-dashboard label {
-color: rgba(255, 255, 255, 0.95) !important;
+    color: inherit;
 }
 
-.financial-dashboard .dashboard-main-title,
-.financial-dashboard .dashboard-subtitle {
-color: #FFFFFF !important;
-}
-
-.financial-dashboard .metric-label,
-.financial-dashboard .metric-value,
-.financial-dashboard .health-label,
-.financial-dashboard .health-status {
-color: #FFFFFF !important;
-}
-
-/* --- */
-
-/* Financial Dashboard Premium Styles */
+/* Financial Dashboard – base layout */
 .financial-dashboard {
-min-height: 100vh;
-padding-bottom: var(--astro-space-2xl);
-background: var(--astro-gradient-dark, linear-gradient(180deg, #1A1A2E 0%, #0F0F1A 100%));
+    min-height: 100vh;
+    padding-bottom: var(--astro-space-2xl);
+    background: var(--astro-gradient-dark, linear-gradient(180deg, #1A1A2E 0%, #0F0F1A 100%));
 }
 
 .dashboard-header-section {

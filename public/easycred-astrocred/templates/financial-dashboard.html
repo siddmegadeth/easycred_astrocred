@@ -1,12 +1,13 @@
-<!-- Financial Intelligence Dashboard -->
-<div class="financial-dashboard astro-login-page">
-    <!-- Background -->
+<!-- Financial Hub – same theme as dashboard, profile, FinVu -->
+<div class="financial-dashboard astro-dashboard-page">
     <div class="astro-bg-pattern">
         <div class="astro-orb astro-orb-1"></div>
         <div class="astro-orb astro-orb-2"></div>
+        <div class="astro-orb astro-orb-3"></div>
     </div>
 
-    <div class="container py-4">
+    <div class="astro-dashboard-wrapper">
+    <div class="container-fluid py-4" style="position: relative; z-index: 1;">
         <!-- Header Section -->
         <div class="dashboard-header-section mb-4">
             <div class="row align-items-center">
@@ -359,12 +360,12 @@
                                     <td>
                                         <div class="bank-cell">
                                             <div class="bank-icon"><i class="fas fa-university"></i></div>
-                                            <strong>{{acc.bankName}}</strong>
+                                            <strong>{{acc.bankName || acc.bank}}</strong>
                                         </div>
                                     </td>
-                                    <td class="mono">{{acc.accountNumber}}</td>
-                                    <td><span class="type-badge">{{acc.accountType}}</span></td>
-                                    <td class="balance-cell">₹{{acc.currentBalance | number:0}}</td>
+                                    <td class="mono">{{acc.accountNumber || acc.masked}}</td>
+                                    <td><span class="type-badge">{{acc.accountType || acc.type}}</span></td>
+                                    <td class="balance-cell">₹{{(acc.currentBalance || acc.balance) | number:0}}</td>
                                     <td><span class="status-badge active"><i class="fas fa-check"></i> Active</span></td>
                                 </tr>
                             </tbody>
@@ -383,6 +384,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </div>
 

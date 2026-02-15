@@ -105,18 +105,50 @@
             $http.get('/api/finvu/summary?mobile=' + (profile.mobile || profile.profile_info?.mobile))
                 .then(function (res) {
                     if (res.data.success) {
-                        $scope.financialData.linkedAccounts = res.data.accounts || [];
+                        var raw = res.data.accounts || [];
+                        $scope.financialData.linkedAccounts = raw.map(function(a) {
+                            return {
+                                bank: a.bank,
+                                bankName: a.bankName || a.bank,
+                                type: a.type,
+                                accountType: a.accountType || a.type,
+                                balance: a.balance,
+                                currentBalance: a.currentBalance != null ? a.currentBalance : a.balance,
+                                masked: a.masked,
+                                accountNumber: a.accountNumber || a.masked
+                            };
+                        });
                         $scope.financialData.bankBalance = res.data.summary?.totalBalance || 0;
-                        
-                        // Update monthly income/expense if available
-                        if (res.data.summary?.avgMonthlyIncome) {
-                            $scope.financialData.monthlyIncome = res.data.summary.avgMonthlyIncome;
-                        }
-                        if (res.data.summary?.avgMonthlyExpense) {
-                            $scope.financialData.monthlyExpense = res.data.summary.avgMonthlyExpense;
-                        }
-                        
                         $scope.calculateSavingsRate();
+                    }
+                })
+                .then(function() {
+                    var p = stateManager.getProfile();
+                    var mobile = p && (p.mobile || (p.profile_info && p.profile_info.mobile));
+                    if (!mobile) return;
+                    return $http.get('/api/finvu/dashboard?mobile=' + mobile);
+                })
+                .then(function (res) {
+                    if (res.data && res.data.success && res.data.data) {
+                        var d = res.data.data;
+                        if (d.summary) {
+                            if (d.summary.avgMonthlyIncome != null) $scope.financialData.monthlyIncome = d.summary.avgMonthlyIncome;
+                            if (d.summary.avgMonthlyExpense != null) $scope.financialData.monthlyExpense = d.summary.avgMonthlyExpense;
+                            if (d.summary.savingsRate != null) $scope.financialData.savingsRate = d.summary.savingsRate;
+                        }
+                        if (d.accounts && d.accounts.length && !$scope.financialData.linkedAccounts.length) {
+                            $scope.financialData.linkedAccounts = d.accounts.map(function(a) {
+                                return {
+                                    bankName: a.bankName || a.bank_name,
+                                    accountNumber: a.accountNumber || a.masked_account_number,
+                                    accountType: a.accountType || a.type,
+                                    currentBalance: a.currentBalance != null ? a.currentBalance : a.balance
+                                };
+                            });
+                        }
+                        if (d.summary && d.summary.totalBalance != null) $scope.financialData.bankBalance = d.summary.totalBalance;
+                        $scope.calculateSavingsRate();
+                        $scope.calculateHealthScore();
                     }
                 })
                 .catch(function(err) {
