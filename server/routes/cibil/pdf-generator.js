@@ -36,45 +36,16 @@
             // Credit Summary
             this.addCreditSummarySection(doc, cibilData);
 
-            // PAGE 2: Risk Assessment (NEW)
-            doc.addPage();
-            this.addRiskAssessmentSection(doc, cibilData);
-
-            // Component Scores Breakdown (NEW)
-            this.addComponentScoresSection(doc, cibilData);
-
-            // PAGE 3: Payment Analysis (NEW)
-            doc.addPage();
-            this.addPaymentAnalysisSection(doc, cibilData);
-
-            // Credit Utilization Details (NEW)
-            this.addCreditUtilizationSection(doc, cibilData);
-
-            // PAGE 4: Accounts Section
+            // PAGE 2: Accounts Section
             doc.addPage();
             this.addAccountsSection(doc, cibilData);
 
-            // PAGE 5: Enquiries Section (NEW)
-            if (doc.y > 600) doc.addPage();
-            this.addEnquiriesSection(doc, cibilData);
-
-            // PAGE 6: Recommendations & Action Plan
+            // PAGE 3: Recommendations & Action Plan
             doc.addPage();
             this.addRecommendationsSection(doc, cibilData);
-
-            // Improvement Roadmap Summary (NEW)
-            this.addImprovementRoadmapSection(doc, cibilData);
-
-            // PAGE 7: Bank Suggestions (NEW)
-            doc.addPage();
-            this.addBankSuggestionsSection(doc, cibilData);
-
-            // FinVu Data Integration (NEW)
-            this.addFinVuDataSection(doc, cibilData);
-
-            // Final Page: Summary & Next Steps
-            doc.addPage();
-            this.addExecutiveSummarySection(doc, cibilData);
+            
+            // Note: Advanced sections (Risk Assessment, Component Scores, Payment Analysis, etc.)
+            // are handled by the Puppeteer HTML template. This fallback PDF uses basic sections only.
 
             // Add footer to current page before ending
             this.addFooterToCurrentPage(doc);
