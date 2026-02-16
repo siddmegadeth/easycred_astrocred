@@ -69,28 +69,30 @@
                     </div>
                     <h4 class="fw-bold">Pro</h4>
                     <div class="pricing-amount my-4">
-                        <span class="display-4 fw-bold">₹{{billingInterval === 'yearly' ? '249' : '299'}}</span>
-                        <span class="text-muted">/{{billingInterval === 'yearly' ? 'mo (billed yearly)' :
+                        <span class="display-4 fw-bold">₹{{billingInterval === 'yearly' ? '499' : '599'}}</span>
+                        <span class="text-muted">/{{billingInterval === 'yearly' ? 'month (billed yearly)' :
                             'month'}}</span>
                     </div>
                     <ul class="list-unstyled text-start mb-4">
-                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> 5 Credit Reports/month</li>
-                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>Multi-Bureau
-                                Access</strong></li>
-                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> 100 AI Chats/day</li>
-                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Score Simulations</li>
-                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Loan Marketplace</li>
-                        <li class="mb-2 text-muted"><i class="fas fa-times text-danger me-2"></i> FinVu Connect</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>Unlimited
+                                Reports</strong></li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> All Bureaus </li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>Unlimited AI
+                                Chat</strong></li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>FinVu
+                                Integration</strong></li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Priority Loan Offers</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Priority Support</li>
                     </ul>
-                    <button class="btn btn-primary w-100" ng-click="subscribe('PRO')" ng-disabled="subscribing">
-                        <span ng-if="!subscribing">Upgrade to Pro</span>
+                    <button class="btn btn-warning w-100" ng-click="subscribe('PREMIUM')" ng-disabled="subscribing">
+                        <span ng-if="!subscribing">Go Premium</span>
                         <span ng-if="subscribing"><i class="fas fa-spinner fa-spin me-1"></i> Processing...</span>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Premium Plan -->
+        <!-- Premium Plan 
         <div class="col-lg-3 col-md-6">
             <div class="card h-100 border-0 shadow-sm pricing-card">
                 <div class="card-body text-center p-4">
@@ -121,7 +123,7 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </div>  -->
 
         <!-- Enterprise Plan -->
         <div class="col-lg-3 col-md-6">
@@ -132,8 +134,7 @@
                     </div>
                     <h4 class="fw-bold">Enterprise</h4>
                     <div class="pricing-amount my-4">
-                        <span class="display-4 fw-bold">₹2,999</span>
-                        <span class="text-muted">/month</span>
+                        <span class="fs-3 fw-bold">Contact Sales</span>
                     </div>
                     <ul class="list-unstyled text-start mb-4">
                         <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Everything in Premium</li>
