@@ -39,13 +39,20 @@
         try {
             log('/post/profile/complete/customer/onboarding');
             var profile = req.body.profile || req.query.profile || req.params["profile"];
-            profile = JSON.parse(profile);
+            // Handle both string (JSON) and already-parsed object
+            if (typeof profile === 'string') {
+                profile = JSON.parse(profile);
+            }
+            if (!profile || typeof profile !== 'object') {
+                return resp.status(400).send({ status: false, message: 'Invalid or missing profile data' });
+            }
 
             var onboard = await completeOnboarding(profile);
             resp.send(onboard);
 
         } catch (err) {
-            resp.send(err);
+            log('completeOnboarding route error:', err.message || err);
+            resp.status(500).send({ status: false, message: err.message || 'Server error', data: err });
         }
     });
 

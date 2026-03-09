@@ -119,6 +119,7 @@ async function hydrateFromCache(mobile) {
     }
 
     var doc = {
+        client_id: raw.client_id || 'CLIENT_' + mobile + '_' + Date.now(),
         mobile: mobile,
         email: userEmail.toLowerCase().trim(),
         pan: panNumber,

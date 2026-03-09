@@ -112,49 +112,112 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', '$http', 'stateM
         cibilCore.getAnalysis(identifier).then(function (res) {
             console.log('[homeCtrl] CIBIL analysis response:', res.data);
 
-            if (!res.data || !res.data.success) {
-                throw new Error('Analysis failed: ' + (res.data?.error || 'Unknown error'));
+            // If analysis returns no-data code, trigger a real CIBIL fetch first
+            if (!res.data || !res.data.success || res.data.code === 'NO_CIBIL_DATA') {
+                console.warn('[homeCtrl] No CIBIL data found — triggering SurePass fetch...');
+                return $scope.triggerCIBILFetchAndReload(identifier);
             }
 
-            // Handle the actual response format from /get/api/cibil/analysis
-            var response = res.data;
+            $scope.populateDashboard(res.data);
+        }).catch(function (err) {
+            console.error('[homeCtrl] CIBIL analysis error:', err);
+            var errCode = err && err.data && err.data.code;
+            // 404 means no data yet — trigger a real fetch
+            if ((err && err.status === 404) || errCode === 'NO_CIBIL_DATA') {
+                console.warn('[homeCtrl] 404 — triggering SurePass CIBIL fetch...');
+                $scope.triggerCIBILFetchAndReload(identifier);
+            } else {
+                $scope.showDashboardFallback('Unable to load CIBIL data. Please try again later.');
+            }
+        });
+    };
 
-            // Update creditData with actual values from response
-            $scope.creditData.credit_score = parseInt(response.score_summary?.credit_score || response.credit_score || 670);
+    // Trigger a real SurePass CIBIL fetch, then reload dashboard analysis
+    $scope.triggerCIBILFetchAndReload = function (identifier) {
+        var profile = $scope.userProfile || stateManager.getProfile();
+        if (!profile) {
+            $scope.showDashboardFallback('Profile not found. Please complete your profile.');
+            return;
+        }
+
+        var mobile = (profile.profile_info && profile.profile_info.mobile) || profile.mobile || profile.userId || '';
+        // Strip country code prefix
+        mobile = mobile.toString().replace(/^\+91/, '').replace(/^91/, '').trim();
+        if (mobile.length > 10) mobile = mobile.slice(-10);
+
+        var fullname = (profile.profile_info && profile.profile_info.fullname) || (profile.profile_info && profile.profile_info.name) || 'User';
+
+        if (!mobile || !fullname || fullname === 'User') {
+            console.warn('[homeCtrl] Cannot fetch CIBIL: missing mobile or name');
+            $scope.showDashboardFallback('Complete your profile to view credit data.');
+            return;
+        }
+
+        console.log('[homeCtrl] Fetching real CIBIL from SurePass for mobile:', mobile, 'name:', fullname);
+        $scope.cibilFetchStatus = 'Fetching your credit report...';
+
+        cibilCore.fetchFromSurePass({ mobile: mobile, fullname: fullname })
+            .then(function (fetchRes) {
+                console.log('[homeCtrl] SurePass fetch complete:', fetchRes && fetchRes.data && fetchRes.data.status);
+
+                if (fetchRes && fetchRes.data && fetchRes.data.status === true) {
+                    $scope.cibilFetchStatus = 'Credit report fetched! Loading analysis...';
+                    // Now reload analysis
+                    return cibilCore.getAnalysis(identifier).then(function (res2) {
+                        $scope.cibilFetchStatus = null;
+                        if (res2 && res2.data && res2.data.success) {
+                            $scope.populateDashboard(res2.data);
+                        } else {
+                            $scope.showDashboardFallback('Credit report fetched but analysis is still processing.');
+                        }
+                    });
+                } else {
+                    console.warn('[homeCtrl] SurePass fetch did not return success:', fetchRes && fetchRes.data);
+                    $scope.cibilFetchStatus = null;
+                    $scope.showDashboardFallback('Could not retrieve your credit report. Please try again.');
+                }
+            })
+            .catch(function (fetchErr) {
+                console.error('[homeCtrl] SurePass fetch error:', fetchErr);
+                $scope.cibilFetchStatus = null;
+                var msg = (fetchErr && fetchErr.data && fetchErr.data.message)
+                       || (fetchErr && fetchErr.data && fetchErr.data.error)
+                       || 'Credit report fetch failed. Check your details.';
+                $scope.showDashboardFallback(msg);
+            });
+    };
+
+    // Populate $scope from a successful analysis response
+    $scope.populateDashboard = function (response) {
+            $scope.creditData.credit_score = parseInt(response.score_summary?.credit_score || response.credit_score || 0) || null;
             $scope.creditData.name = response.client_info?.name || $scope.userProfile?.profile_info?.fullname || $scope.userProfile?.profile_info?.name || 'User';
             $scope.creditData.pan = response.client_info?.pan || $scope.userProfile?.kyc?.pan_number || 'N/A';
             $scope.creditData.mobile = response.client_info?.mobile || $scope.userProfile?.profile_info?.mobile || $scope.userProfile?.mobile || '';
             $scope.creditData.client_id = response.client_info?.client_id || null;
 
-            // Extract detailed analysis data
             var analysis = response.detailed_analysis || {};
             var accountStats = response.account_statistics || {};
             var riskAssess = response.risk_assessment || {};
 
-            // Set metrics from analysis
-            $scope.paymentOnTime = analysis.payment_analysis?.on_time_percentage || analysis.payment_analysis?.percentage || 65;
-            $scope.creditUtilization = analysis.credit_utilization?.percentage || analysis.credit_utilization || 48;
-            $scope.recentEnquiries = accountStats.recent_enquiries || accountStats.enquiries_count || 7;
+            $scope.paymentOnTime = analysis.payment_analysis?.on_time_percentage || analysis.payment_analysis?.percentage || null;
+            $scope.creditUtilization = analysis.credit_utilization?.percentage || analysis.credit_utilization || null;
+            $scope.recentEnquiries = accountStats.recent_enquiries || accountStats.enquiries_count || null;
 
-            // Fix credit age - convert months to years if needed
-            var rawCreditAge = analysis.credit_age?.total_years || analysis.credit_age?.total_months || analysis.credit_age || 4.2;
-            // If value is > 100, it's likely in months, convert to years
-            $scope.creditAge = rawCreditAge > 100 ? parseFloat((rawCreditAge / 12).toFixed(1)) : parseFloat(rawCreditAge.toFixed(1));
+            var rawCreditAge = analysis.credit_age?.total_years || analysis.credit_age?.total_months || analysis.credit_age || null;
+            $scope.creditAge = rawCreditAge ? (rawCreditAge > 100 ? parseFloat((rawCreditAge / 12).toFixed(1)) : parseFloat(rawCreditAge.toFixed(1))) : null;
 
-            $scope.defaultAccounts = accountStats.default_accounts || accountStats.defaults_count || 4;
-            $scope.defaultProbability = riskAssess.default_probability || riskAssess.probability || 38;
-            $scope.creditWorthiness = riskAssess.credit_worthiness || 6.2;
-            $scope.totalExposure = accountStats.total_exposure || 485566;
-            $scope.totalOverdue = accountStats.total_overdue || 48018;
-            $scope.loanEligibility = riskAssess.loan_eligibility || '₹5-10L';
-
+            $scope.defaultAccounts = accountStats.default_accounts || accountStats.defaults_count || null;
+            $scope.defaultProbability = riskAssess.default_probability || riskAssess.probability || null;
+            $scope.creditWorthiness = riskAssess.credit_worthiness || null;
+            $scope.totalExposure = accountStats.total_exposure || null;
+            $scope.totalOverdue = accountStats.total_overdue || null;
+            $scope.loanEligibility = riskAssess.loan_eligibility || null;
 
             $scope.riskAssessment = {
-                level: riskAssess.risk_level || response.score_summary?.overall_grade?.toLowerCase() || 'medium-high',
-                probability: riskAssess.default_probability || 38
+                level: riskAssess.risk_level || response.score_summary?.overall_grade?.toLowerCase() || 'medium',
+                probability: riskAssess.default_probability || null
             };
 
-            // Map accounts from account_statistics or credit_report
             if (accountStats.accounts && accountStats.accounts.length > 0) {
                 $scope.accounts = accountStats.accounts;
             } else if (response.detailed_analysis?.accounts) {
@@ -163,31 +226,21 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', '$http', 'stateM
                 $scope.accounts = [];
             }
             $scope.filteredAccounts = $scope.accounts;
-
-            // Calculate account summary statistics
             $scope.totalAccounts = $scope.accounts.length || 0;
             $scope.activeAccounts = $scope.accounts.filter(function (acc) {
                 return acc.status && acc.status.toLowerCase() !== 'default' && acc.status.toLowerCase() !== 'closed';
             }).length || 0;
+            $scope.totalBalance = $scope.accounts.reduce(function (sum, acc) { return sum + (parseFloat(acc.currentBalance) || 0); }, 0);
+            $scope.totalCreditLimit = $scope.accounts.reduce(function (sum, acc) { return sum + (parseFloat(acc.creditLimit) || 0); }, 0);
 
-            // Calculate totals
-            $scope.totalBalance = $scope.accounts.reduce(function (sum, acc) {
-                return sum + (parseFloat(acc.currentBalance) || 0);
-            }, 0) || 0;
-
-            $scope.totalCreditLimit = $scope.accounts.reduce(function (sum, acc) {
-                return sum + (parseFloat(acc.creditLimit) || 0);
-            }, 0) || 0;
-
-            // Chart data from single source (API component_scores = numeric 0-100)
             var comp = analysis.component_scores || {};
             $scope.chartData = {
                 scoreBreakdown: {
-                    payment_history: (comp.paymentHistory != null && comp.paymentHistory !== undefined) ? comp.paymentHistory : 65,
-                    credit_utilization: (comp.creditUtilization != null && comp.creditUtilization !== undefined) ? comp.creditUtilization : 48,
-                    credit_age: (comp.creditAge != null && comp.creditAge !== undefined) ? comp.creditAge : 70,
-                    credit_mix: (comp.creditMix != null && comp.creditMix !== undefined) ? comp.creditMix : 75,
-                    new_credit: (comp.recentBehaviour != null && comp.recentBehaviour !== undefined) ? comp.recentBehaviour : 60
+                    payment_history: comp.paymentHistory != null ? comp.paymentHistory : 65,
+                    credit_utilization: comp.creditUtilization != null ? comp.creditUtilization : 48,
+                    credit_age: comp.creditAge != null ? comp.creditAge : 70,
+                    credit_mix: comp.creditMix != null ? comp.creditMix : 75,
+                    new_credit: comp.recentBehaviour != null ? comp.recentBehaviour : 60
                 },
                 paymentHistory: analysis.payment_analysis?.history || (analysis.payment_analysis?.monthlyScores && analysis.payment_analysis.monthlyScores.slice(-6)) || [85, 80, 75, 65, 60, 65]
             };
@@ -195,55 +248,25 @@ app.controller('homeCtrl', ['$scope', '$rootScope', '$timeout', '$http', 'stateM
             $scope.improvementPlan = analysis.improvement_plan || null;
             var defaulters = analysis.defaulters || [];
             $scope.topPriorityAction = null;
-            if (defaulters.length > 0 && (defaulters[0].amountOverdue > 0 || defaulters[0].overdue_amount > 0 || defaulters[0].overdue > 0)) {
+            if (defaulters.length > 0) {
                 var amt = defaulters[0].amountOverdue || defaulters[0].overdue_amount || defaulters[0].overdue;
-                var bank = defaulters[0].memberShortName || defaulters[0].bank || defaulters[0].lender_name || 'Bank';
-                $scope.topPriorityAction = 'Clear ₹' + (typeof amt === 'number' ? amt.toLocaleString('en-IN') : amt) + ' ' + bank + ' overdue';
-            } else if ($scope.totalOverdue > 0) {
-                $scope.topPriorityAction = 'Clear overdue amount (₹' + $scope.totalOverdue.toLocaleString('en-IN') + ')';
+                var bank = defaulters[0].memberShortName || defaulters[0].bank || 'Bank';
+                if (amt > 0) $scope.topPriorityAction = 'Clear ₹' + (typeof amt === 'number' ? amt.toLocaleString('en-IN') : amt) + ' ' + bank + ' overdue';
             }
 
-            $timeout(function () {
-                initializeCharts();
-            }, 100);
-
+            $timeout(function () { initializeCharts(); }, 100);
             $rootScope.loaderShow = false;
-            console.log('[homeCtrl] Dashboard data loaded successfully');
-            console.log('[homeCtrl] creditData:', JSON.stringify($scope.creditData));
-        }).catch(function (err) {
-            console.error('[homeCtrl] CIBIL analysis error:', err);
+            console.log('[homeCtrl] Dashboard populated successfully. Score:', $scope.creditData.credit_score);
+    };
 
-            // Use fallback data from mock CIBIL files
-            console.log('[homeCtrl] Using fallback data from data/cibil');
-            var mobile = $scope.userProfile?.profile_info?.mobile || $scope.userProfile?.mobile || $scope.userProfile?.userId;
-            var name = $scope.userProfile?.profile_info?.fullname || $scope.userProfile?.profile_info?.name || 'User';
+    // Show a graceful fallback (no fake scores — just show the error)
+    $scope.showDashboardFallback = function (message) {
+        console.error('[homeCtrl] Dashboard fallback:', message);
+        $scope.creditData.credit_score = null;
+        $scope.dashboardError = message || 'Unable to load credit data.';
+        $rootScope.loaderShow = false;
+        $timeout(function () { initializeCharts(); }, 100);
 
-            // Set fallback values when API fails
-            $scope.creditData.credit_score = $scope.creditData.credit_score || null;
-            $scope.creditData.name = name || 'User';
-            $scope.creditData.pan = $scope.userProfile?.kyc?.pan_number || 'N/A';
-            $scope.creditData.mobile = mobile || '';
-
-            // Keep default values already set above
-            $rootScope.loaderShow = false;
-
-            console.log('[homeCtrl] Fallback data set:', $scope.creditData);
-
-            $scope.riskAssessment = {
-                level: "medium-high",
-                probability: 38
-            };
-
-            $scope.accounts = [];
-            $scope.filteredAccounts = [];
-
-            // Initialize charts with defaults
-            $timeout(function () {
-                initializeCharts();
-            }, 100);
-
-            console.log('[homeCtrl] Fallback complete, creditData:', JSON.stringify($scope.creditData));
-        });
     };
 
     // Initialize charts with default/fallback data

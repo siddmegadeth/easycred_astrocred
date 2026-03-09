@@ -11,10 +11,13 @@ app.provider('profileOperations', [function() {
                     return $http({
                         method: 'POST',
                         url: profileURL.completeOnboarding,
-                        params: {
-                            profile: profile
+                        data: {
+                            profile: angular.toJson(profile)
+                        },
+                        headers: {
+                            'Content-Type': 'application/json'
                         }
-                    })
+                    });
                 },
             }
         }]

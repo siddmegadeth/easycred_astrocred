@@ -189,29 +189,48 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
                 .then(function(resp) {
                     warn('getPanFromMobile :');
                     log(resp);
-                    $scope.profile.kyc.pan_number = resp.data.data.pan_number;
-                    $scope.profile.kyc.aadhaar_seeding_status = resp.data.data_advance.aadhaar_seeding_status;
-                    $scope.profile.kyc.pan_advance = resp.data.data_advance;
-                    $scope.profile.kyc.aadhaar_number_masked = resp.data.data_advance.pan_details.masked_aadhaar;
-                    $scope.profile.kyc.aadhaar_linked = resp.data.data_advance.pan_details.aadhaar_linked;
-                    $scope.profile.kyc.father_name = resp.data.data_advance.pan_details.father_name;
-                    $scope.profile.kyc.dob_verified = resp.data.data_advance.pan_details.dob_verified;
-                    //
-                    $scope.profile.account.category = resp.data.data_advance.pan_details.category;
-                    //
-                    $scope.profile.profile_info.date_of_birth = resp.data.data_advance.pan_details.dob;
+                    if (resp && resp.data && resp.data.isSuccess && resp.data.data && resp.data.data.pan_number) {
+                        $scope.profile.kyc = $scope.profile.kyc || {};
+                        $scope.profile.kyc.pan_number = resp.data.data.pan_number;
+                        
+                        if (resp.data.data_advance) {
+                            $scope.profile.kyc.aadhaar_seeding_status = resp.data.data_advance.aadhaar_seeding_status;
+                            $scope.profile.kyc.pan_advance = resp.data.data_advance;
+                            
+                            if (resp.data.data_advance.pan_details) {
+                                $scope.profile.kyc.aadhaar_number_masked = resp.data.data_advance.pan_details.masked_aadhaar;
+                                $scope.profile.kyc.aadhaar_linked = resp.data.data_advance.pan_details.aadhaar_linked;
+                                $scope.profile.kyc.father_name = resp.data.data_advance.pan_details.father_name;
+                                $scope.profile.kyc.dob_verified = resp.data.data_advance.pan_details.dob_verified;
+                                
+                                $scope.profile.account = $scope.profile.account || {};
+                                $scope.profile.account.category = resp.data.data_advance.pan_details.category;
+                                
+                                $scope.profile.profile_info.date_of_birth = resp.data.data_advance.pan_details.dob;
 
-                    if (resp.data.data_advance.pan_details.gender == 'M') {
-                        $scope.profile.profile_info.gender = "MALE";
-                    } else if (resp.data.data_advance.pan_details.gender == 'F') {
-                        $scope.profile.profile_info.gender = "FEMALE";
+                                if (resp.data.data_advance.pan_details.gender == 'M') {
+                                    $scope.profile.profile_info.gender = "MALE";
+                                } else if (resp.data.data_advance.pan_details.gender == 'F') {
+                                    $scope.profile.profile_info.gender = "FEMALE";
+                                } else {
+                                    $scope.profile.profile_info.gender = "OTHER";
+                                }
+                            }
+                        }
+                        $scope.profile.kyc.isPanVerified = true;
                     } else {
-                        $scope.profile.profile_info.gender = "OTHER";
+                        warn('getPanFromMobile returned no valid data');
+                        $scope.profile.kyc = $scope.profile.kyc || {};
+                        $scope.profile.kyc.isPanVerified = false;
                     }
-
-                    $scope.profile.kyc.isPanVerified = true;
                     warn('Final Profile Before Step 2 :');
                     log($scope.profile);
+                    $scope.goToStep(2);
+                })
+                .catch(function(err) {
+                    warn('Error in getPanFromMobile:', err);
+                    $scope.profile.kyc = $scope.profile.kyc || {};
+                    $scope.profile.kyc.isPanVerified = false;
                     $scope.goToStep(2);
                 });
         }
@@ -302,7 +321,6 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
         // Validate basic fields
         if (!$scope.validateEmail($scope.profile.profile_info.email) || 
             !$scope.validateMobile($scope.profile.profile_info.mobile) || 
-            !$scope.validateDOB($scope.profile.profile_info.date_of_birth) || 
             !$scope.validatePincode($scope.profile.props.pincode)) {
             alert('Profile validation failed. Please check Email/Mobile/Address.');
             return;
@@ -378,44 +396,52 @@ app.controller('profileCompletionCtrl', ['$location', '$timeout', '$scope', 'sta
     // Fetch CIBIL score using SurePass
     $scope.fetchCIBILScore = function() {
         return new Promise(function(resolve, reject) {
-            // Use the CIBIL service to fetch from SurePass
+            // Extract and clean mobile (strip +91 or country code prefix)
+            var rawMobile = ($scope.profile.profile_info && $scope.profile.profile_info.mobile) 
+                || $scope.profile.mobile || '';
+            var cleanMobile = rawMobile.toString().trim();
+            if (cleanMobile.charAt(0) === '+') cleanMobile = cleanMobile.replace(/^\+\d{1,3}/, '').trim();
+            if (cleanMobile.length > 10) cleanMobile = cleanMobile.slice(-10);
+
             var params = {
-                mobile: $scope.profile.profile_info.mobile || $scope.profile.mobile,
-                fullname: $scope.profile.profile_info.fullname,
-                pan: $scope.profile.kyc.pan_number
+                mobile: cleanMobile,
+                fullname: ($scope.profile.profile_info && $scope.profile.profile_info.fullname) || '',
+                pan: ($scope.profile.kyc && $scope.profile.kyc.pan_number) || undefined
             };
             
+            if (!params.mobile || !params.fullname) {
+                warn('fetchCIBILScore: missing mobile or fullname', params);
+                return reject(new Error('Mobile or name not available for CIBIL fetch'));
+            }
+
             warn('Fetching CIBIL with params:', params);
             
-            // First try the new POST endpoint
             cibilCore.fetchFromSurePass(params)
                 .then(function(response) {
                     log('CIBIL Fetch Response:', response);
                     
                     if (response.data.status) {
-                        // Success - store the data
                         var cibilData = response.data.data;
                         $scope.profile.cibil = {
-                            credit_score: cibilData.credit_score,
+                            credit_score: cibilData ? cibilData.credit_score : null,
                             fetchedAt: new Date().toISOString(),
                             mode: response.data.mode || 'production'
                         };
                         
-                        // Update profile with CIBIL data
                         stateManager.saveProfile($scope.profile);
                         
-                        // Now run analysis
                         return cibilCore.getAnalysis({
                             pan: params.pan,
                             mobile: params.mobile
-                    });
-            } else {
+                        });
+                    } else {
                         throw new Error(response.data.message || 'CIBIL fetch failed');
                     }
                 })
                 .then(function(analysisResp) {
                     log('CIBIL Analysis:', analysisResp);
-                    resolve(analysisResp.data.data || { credit_score: $scope.profile.cibil?.credit_score });
+                    var d = analysisResp.data && analysisResp.data.data;
+                    resolve(d || { credit_score: $scope.profile.cibil && $scope.profile.cibil.credit_score });
                 })
                 .catch(function(err) {
                     warn('CIBIL Fetch Error:', err);

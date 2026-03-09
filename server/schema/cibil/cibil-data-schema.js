@@ -11,6 +11,11 @@
     });
 
     CibilDataSchema = module.exports = mongoose.Schema({
+        client_id: {
+            type: String,
+            unique: true,
+            sparse: true
+        },
         // Primary identifier - mobile number (India specific)
         mobile: {
             type: String,

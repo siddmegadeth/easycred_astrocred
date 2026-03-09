@@ -172,6 +172,7 @@
 
         /* ================= META ================= */
 
+        cibil: Schema.Types.Mixed,
         props: Schema.Types.Mixed,
         consent: Schema.Types.Mixed,
         communication: Schema.Types.Mixed,

@@ -142,145 +142,95 @@
     }
     
     /**
-     * Fetch CIBIL report - Uses mock data from data/cibil folder
-     * For now, we use sample data instead of calling SurePass API
+     * Fetch CIBIL report — calls the real SurePass API (PRODUCTION)
      */
     async function fetchCIBILReport(params) {
         return new Promise(function(resolve, reject) {
             try {
-                log("fetchCIBILReport called with params (using mock data):", params);
-                
-                // Validate required parameters
+                log('fetchCIBILReport called [PRODUCTION]:', { mobile: params.mobile, pan: params.pan });
+
                 if (!params.mobile || !params.pan || !params.name) {
-                    return reject({ 
-                        status: false, 
-                        error: 'Missing required parameters: mobile, pan, or name' 
+                    return reject({
+                        status: false,
+                        error: 'Missing required parameters: mobile, pan, and name are required'
                     });
                 }
-                
-                // Clean mobile number
+
+                // Clean mobile
                 params.mobile = params.mobile.replace('+91', '');
-                
+
                 if (!validateIndianMobile(params.mobile)) {
-                    return reject({ 
-                        status: false, 
-                        error: 'Invalid Indian mobile number format' 
-                    });
+                    return reject({ status: false, error: 'Invalid Indian mobile number format' });
                 }
-                
+
                 if (!validatePAN(params.pan)) {
-                    return reject({ 
-                        status: false, 
-                        error: 'Invalid PAN format' 
-                    });
+                    return reject({ status: false, error: 'Invalid PAN format' });
                 }
-                
-                // Validate gender (if provided)
-                if (params.gender && !['male', 'female', 'Other'].includes(params.gender)) {
-                    params.gender = 'male'; // Default to male if invalid
+
+                if (!process.env.SUREPASS_TOKEN) {
+                    return reject({ status: false, error: 'SurePass token not configured. Set SUREPASS_TOKEN in .env' });
                 }
-                
-                // Load mock CIBIL data from data/cibil folder
-                var fs = require('fs');
-                var path = require('path');
-                var cibilDataPath = path.join(__dirname, '../../../data/cibil');
-                
-                // Try to load sample data files
-                var sampleFiles = ['sample-data.json', 'sample-data2.json', 'sample-data3.json'];
-                var selectedFile = null;
-                var mockData = null;
-                
-                // Select a sample file based on mobile number hash (for consistency)
-                var fileIndex = parseInt(params.mobile.slice(-1)) % sampleFiles.length;
-                selectedFile = sampleFiles[fileIndex];
-                
-                try {
-                    var filePath = path.join(cibilDataPath, selectedFile);
-                    var fileContent = fs.readFileSync(filePath, 'utf8');
-                    mockData = JSON.parse(fileContent);
-                    log('Loaded mock CIBIL data from:', selectedFile);
-                } catch (fileError) {
-                    log('Error loading mock data file:', fileError.message);
-                    // Fallback to first available file
-                    for (var i = 0; i < sampleFiles.length; i++) {
-                        try {
-                            var fallbackPath = path.join(cibilDataPath, sampleFiles[i]);
-                            var fallbackContent = fs.readFileSync(fallbackPath, 'utf8');
-                            mockData = JSON.parse(fallbackContent);
-                            selectedFile = sampleFiles[i];
-                            log('Loaded fallback mock CIBIL data from:', selectedFile);
-                            break;
-                        } catch (e) {
-                            continue;
-                        }
-                    }
-                }
-                
-                if (!mockData || !mockData.data) {
-                    return reject({ 
-                        status: false, 
-                        error: 'Mock CIBIL data not available' 
-                    });
-                }
-                
-                // Update mock data with user's actual details
-                var updatedMockData = JSON.parse(JSON.stringify(mockData));
-                if (updatedMockData.data) {
-                    updatedMockData.data.mobile = params.mobile;
-                    updatedMockData.data.pan = params.pan.toUpperCase();
-                    updatedMockData.data.name = params.name.toUpperCase();
-                    updatedMockData.data.gender = params.gender || 'male';
-                    
-                    // Update credit report with user details
-                    if (updatedMockData.data.credit_report && updatedMockData.data.credit_report.length > 0) {
-                        var report = updatedMockData.data.credit_report[0];
-                        if (report.names && report.names.length > 0) {
-                            report.names[0].name = params.name.toUpperCase();
-                            report.names[0].gender = params.gender || 'male';
-                        }
-                        if (report.ids && report.ids.length > 0) {
-                            var panId = report.ids.find(function(id) { return id.idType === 'TaxId'; });
-                            if (panId) {
-                                panId.idNumber = params.pan.toUpperCase();
+
+                var URL = process.env.SUREPASS_URL + '/api/v1/credit-report-cibil/fetch-report';
+                log('fetchCIBILReport URL:', URL);
+
+                axios({
+                    method: 'POST',
+                    url: URL,
+                    headers: {
+                        accept: 'application/json',
+                        Authorization: 'Bearer ' + process.env.SUREPASS_TOKEN,
+                        'content-type': 'application/json'
+                    },
+                    data: {
+                        mobile: params.mobile,
+                        pan: params.pan.toUpperCase(),
+                        name: params.name,
+                        gender: params.gender || 'male',
+                        consent: 'Y'
+                    },
+                    timeout: 30000
+                })
+                    .then(function(response) {
+                        log('✅ fetchCIBILReport Success');
+                        var apiData = response.data;
+
+                        var transformedData = transformCIBILData(apiData.data || apiData, params);
+
+                        resolve({
+                            status: true,
+                            data: transformedData,
+                            raw_data: apiData,
+                            metadata: {
+                                source: 'SurePass API',
+                                timestamp: new Date().toISOString(),
+                                api_version: 'v1'
                             }
-                        }
-                        if (report.telephones && report.telephones.length > 0) {
-                            report.telephones[0].telephoneNumber = '91' + params.mobile;
-                            if (report.telephones.length > 1) {
-                                report.telephones[1].telephoneNumber = params.mobile;
-                            }
-                        }
-                    }
-                }
-                
-                // Transform data to match our updated schema
-                var transformedData = transformCIBILData(updatedMockData.data || updatedMockData, params);
-                
-                log('Mock CIBIL data processed successfully');
-                
-                resolve({
-                    status: true,
-                    data: transformedData,
-                    raw_data: updatedMockData.data || updatedMockData, // Keep raw data for reference
-                    metadata: {
-                        source: 'Mock CIBIL Data (' + selectedFile + ')',
-                        timestamp: new Date().toISOString(),
-                        api_version: 'mock',
-                        params_used: params,
-                        note: 'Using mock data from data/cibil folder for development'
-                    }
-                });
-                    
+                        });
+                    })
+                    .catch(function(errorResp) {
+                        var status = errorResp.response && errorResp.response.status;
+                        var errData = errorResp.response && errorResp.response.data;
+                        log('❌ fetchCIBILReport Error:', status || errorResp.message);
+
+                        var errorMsg = 'Failed to fetch CIBIL report';
+                        if (status === 404) errorMsg = 'No CIBIL record found for provided details';
+                        else if (status === 400) errorMsg = 'Invalid request parameters';
+                        else if (status === 401) errorMsg = 'SurePass authentication failed — check SUREPASS_TOKEN';
+                        else if (status === 429) errorMsg = 'SurePass API rate limit exceeded';
+
+                        reject({ status: false, error: errorMsg, details: errData || errorResp.message });
+                    });
+
             } catch (catchError) {
                 log('Exception in fetchCIBILReport:', catchError);
-                reject({ 
-                    status: false, 
-                    error: 'Internal server error in CIBIL report fetch',
-                    details: catchError.message 
-                });
+                reject({ status: false, error: 'Internal server error', details: catchError.message });
             }
         });
     }
+
+
+
     
     /**
      * Transform CIBIL API data to match our updated schema structure

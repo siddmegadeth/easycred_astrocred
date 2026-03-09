@@ -271,80 +271,16 @@
         }
     });
 
-    // Upload and analyze CIBIL data from file
+    // DISABLED: Sample data upload endpoint removed — production only
     app.get('/get/api/cibil/upload', function (req, res) {
-        try {
-            log('/get/api/cibil/upload');
-
-            // Clear require cache to get fresh data
-            delete require.cache[require.resolve("./../../../data/cibil/sample-data.json")];
-            var cibilData = require("./../../../data/cibil/sample-data.json");
-            cibilData = cibilData.data;
-
-            log('-------------CIBIL DATA SAMPLE-------------------');
-            log(cibilData);
-            log('--------------------------------');
-
-            // Validate required fields
-            if (!cibilData.client_id || !cibilData.credit_report) {
-                return res.status(400).json({
-                    error: 'Missing required fields',
-                    required: ['client_id', 'credit_report'],
-                    received: Object.keys(cibilData)
-                });
-            }
-
-            // Normalize identifiers
-            if (!cibilData.pan_number && cibilData.pan) cibilData.pan_number = cibilData.pan;
-            if (!cibilData.mobile_number && cibilData.mobile) cibilData.mobile_number = cibilData.mobile;
-            if (!cibilData.name && cibilData.full_name) cibilData.name = cibilData.full_name;
-
-            // Use findOneAndUpdate with upsert to handle both create and update
-            CibilDataModel.findOneAndUpdate(
-                { client_id: cibilData.client_id },
-                {
-                    $set: {
-                        ...cibilData,
-                        updatedAt: new Date(),
-                        createdAt: { $cond: { if: { $eq: ["$createdAt", null] }, then: new Date(), else: "$createdAt" } }
-                    }
-                },
-                { upsert: true, new: true, setDefaultsOnInsert: true, runValidators: true },
-                function (err, savedData) {
-                    if (err) {
-                        // Check if it's a duplicate key error on profile field
-                        if (err.code === 11000 && err.keyPattern && err.keyPattern.profile) {
-                            console.log('Stale profile index detected.');
-                            return res.status(500).json({
-                                error: 'Database has stale indexes',
-                                fix: 'Please call http://localhost:7001/get/api/cibil/fix-indexes first to fix the database',
-                                details: err.message
-                            });
-                        }
-                        console.error('Error saving CIBIL data:', err);
-                        return res.status(500).json({
-                            error: 'Database error',
-                            details: err.message,
-                            code: err.code
-                        });
-                    }
-
-                    log('CIBIL data saved/updated successfully');
-                    log('Document ID:', savedData._id);
-
-                    // Analyze the data
-                    analyzeCibilData(savedData.toObject ? savedData.toObject() : savedData, res);
-                }
-            );
-        } catch (error) {
-            console.error('Error processing CIBIL data:', error);
-            res.status(500).json({
-                error: 'Internal server error',
-                details: error.message,
-                stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-            });
-        }
+        return res.status(410).json({
+            error: 'This endpoint has been disabled in production.',
+            message: 'Use POST /post/api/cibil/fetch to fetch real CIBIL data via SurePass API.'
+        });
     });
+
+
+
 
     // New endpoint: Upload CIBIL data via API call (for external systems)
     app.post('/post/api/cibil/upload', async function (req, res) {
