@@ -1,0 +1,18 @@
+/* Access Denied page */
+.section.access-denied {
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    padding: 2rem;
+}
+.section.access-denied .container {
+    color: #FFFFFF !important;
+}
+.section.access-denied .title, .section.access-denied .subtitle, .section.access-denied strong {
+    color: #FFFFFF !important;
+}
+.section.access-denied .has-text-primary {
+    color: var(--astro-accent, #00D9FF) !important;
+}

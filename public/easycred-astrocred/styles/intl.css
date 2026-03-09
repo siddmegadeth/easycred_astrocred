@@ -1,0 +1,15 @@
+.intl-style {
+    border-radius: 4px;
+    width: 100%;
+    height: 40px;
+    /* border-radius: 1px; */
+    border: 1px solid #dddada;
+    font-weight: 500;
+    font-size: 18px;
+}
+
+
+
+.iti.iti--allow-dropdown.iti--show-flags {
+    width: 100% !important;
+}

@@ -1,0 +1,124 @@
+/* ============================================
+   TEXT VISIBILITY FIXES
+   Clean + Safe Version
+   ============================================ */
+
+/* Remove blurry shadows */
+*{
+ text-shadow:none;
+}
+
+/* Default text */
+body{
+ color:#212529;
+}
+
+/* Card text */
+
+.card,
+.astrocred-card{
+ background:#ffffff;
+ color:#212529;
+ border:1px solid rgba(0,0,0,0.08);
+}
+
+/* Headings */
+
+h1,h2,h3,h4,h5,h6,
+.card-title,
+.astrocred-card-title{
+ color:#1c1fbe;
+ font-weight:600;
+}
+
+/* Labels */
+
+label,
+.form-label{
+ color:#495057;
+ font-weight:500;
+}
+
+/* Inputs */
+
+input,
+textarea,
+select{
+ color:#212529;
+ border:1px solid #ced4da;
+}
+
+input::placeholder{
+ color:#6c757d;
+}
+
+/* Tables */
+
+.table{
+ color:#212529;
+}
+
+.table th{
+ background:#f8f9fa;
+ font-weight:600;
+}
+
+.table td{
+ border-bottom:1px solid #dee2e6;
+}
+
+/* Links */
+
+a{
+ color:#1c1fbe;
+ text-decoration:none;
+}
+
+a:hover{
+ color:#1719a5;
+ text-decoration:underline;
+}
+
+/* Badges */
+
+.astrocred-badge-success{
+ background:#28a745;
+ color:#fff;
+}
+
+.astrocred-badge-warning{
+ background:#ffc107;
+ color:#212529;
+}
+
+.astrocred-badge-danger{
+ background:#dc3545;
+ color:#fff;
+}
+
+.astrocred-badge-info{
+ background:#17a2b8;
+ color:#fff;
+}
+
+/* Alerts */
+
+.alert-success{
+ background:#d4edda;
+ color:#155724;
+}
+
+.alert-warning{
+ background:#fff3cd;
+ color:#856404;
+}
+
+.alert-danger{
+ background:#f8d7da;
+ color:#721c24;
+}
+
+.alert-info{
+ background:#d1ecf1;
+ color:#0c5460;
+}

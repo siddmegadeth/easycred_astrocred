@@ -1,0 +1,253 @@
+/* =====================================
+PAGE CONTAINER
+===================================== */
+
+.container{
+max-width:1200px;
+margin:auto;
+}
+
+
+/* =====================================
+PROFILE HEADER
+===================================== */
+
+.profile-header{
+background:linear-gradient(135deg,#354868,#7c3aed);
+color:white;
+padding:28px;
+border-radius:18px;
+margin-bottom:25px;
+box-shadow:0 15px 40px rgba(0,0,0,0.15);
+}
+
+.profile-avatar{
+width:90px;
+height:90px;
+border-radius:50%;
+background:rgba(255,255,255,0.15);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:36px;
+color:white;
+margin:auto;
+}
+
+
+/* =====================================
+CARD STYLE
+===================================== */
+
+.card{
+border:none;
+border-radius:16px;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+margin-bottom:22px;
+overflow:hidden;
+height:auto;
+}
+
+.card-header{
+background:linear-gradient(135deg,#3b3fbd,#33c9d3);
+color:white;
+font-weight:600;
+border:none;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.card-body{
+padding:22px;
+word-break:break-word;
+}
+
+.card-body .text-muted{
+color:#6b7280 !important;
+}
+
+
+/* =====================================
+INFO ROW BOXES
+===================================== */
+
+.info-item{
+display:flex;
+flex-wrap:wrap;
+align-items:center;
+
+gap:10px;
+
+padding:14px 16px;
+margin-bottom:10px;
+
+border-radius:10px;
+
+background:#f7f8fc;
+
+border:1px solid rgba(0,0,0,0.05);
+
+transition:.2s ease;
+}
+
+.info-item:hover{
+background:#ffffff;
+box-shadow:0 4px 12px rgba(0,0,0,0.06);
+}
+
+
+/* label */
+
+.info-label{
+font-size:13px;
+color:#6b7280;
+font-weight:500;
+min-width:120px;
+}
+
+
+/* value */
+
+.info-value{
+font-size:14px;
+font-weight:600;
+color:#111827;
+flex:1;
+word-break:break-word;
+}
+
+
+/* =====================================
+STATUS BADGES
+===================================== */
+
+.status-badge{
+font-size:11px;
+padding:4px 8px;
+border-radius:6px;
+font-weight:600;
+white-space:nowrap;
+}
+
+.status-completed{
+background:#22c55e;
+color:white;
+}
+
+.status-verified{
+background:#16a34a;
+color:white;
+}
+
+.status-active{
+background:#2563eb;
+color:white;
+}
+
+.status-inactive{
+background:#ef4444;
+color:white;
+}
+
+.status-pending{
+background:#f59e0b;
+color:white;
+}
+
+
+/* =====================================
+RIGHT SIDE STATS BOX
+===================================== */
+
+.border-primary{
+border:2px solid rgba(37,99,235,0.25) !important;
+border-radius:14px;
+}
+
+
+/* =====================================
+BADGES FROM CIBIL
+===================================== */
+
+.badge.bg-light{
+background:#f3f4f6 !important;
+border:1px solid rgba(0,0,0,0.06);
+color:#374151;
+}
+
+
+/* =====================================
+TEXT BLOCKS (CIBIL DATA)
+===================================== */
+
+.small{
+line-height:1.5;
+word-break:break-word;
+}
+
+
+/* =====================================
+BUTTONS
+===================================== */
+
+.btn-outline-primary{
+border-radius:25px;
+padding:6px 14px;
+font-size:13px;
+}
+
+.btn-primary{
+border-radius:25px;
+padding:6px 14px;
+font-size:13px;
+}
+
+
+/* =====================================
+GRID FIXES
+===================================== */
+
+.row{
+align-items:stretch;
+}
+
+.col-lg-8,
+.col-lg-4{
+display:flex;
+flex-direction:column;
+gap:20px;
+}
+
+
+/* =====================================
+CARD HOVER
+===================================== */
+
+.card:hover{
+transform:translateY(-2px);
+transition:.2s;
+box-shadow:0 15px 30px rgba(0,0,0,0.12);
+}
+
+
+/* =====================================
+RESPONSIVE
+===================================== */
+
+@media (max-width:992px){
+
+.profile-avatar{
+margin-bottom:15px;
+}
+
+.info-item{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.info-label{
+min-width:auto;
+}
+
+}

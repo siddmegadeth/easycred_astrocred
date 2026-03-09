@@ -1,0 +1,27 @@
+Siddharth Chandra
+30/12/2025
+
+Astrocred features
+1. generate simplified PDF report for CIBIL data
+2. generate simplified PDF report for EQUIFAX,CRIF,EXPERION data
+3. show Credit score across all bureau
+4. system ability to connect to https://docs.finvu.in/ via API to fetch financial,investment,spending,account details,mutual fun, digital gold or silver
+5. based on point 4. create more comprehensive assistant like what to do next, how much one should spent, income to debt, should one take more loans, how to conslolidate loans,credit improvement ,what to do to improve credit score, ASTROCRED own internal rating once all data points are connected
+6. roadmap for customers for 6,12,18,24 months 
+7. financial advice based on user spending,spending habits,savings,investment and liability
+8. consider macro and country financial environment
+9. suggest offers from bank for car,personal loan,business loan based on employmenttype and earning (monetize)
+10. Subcrition plan which is not only affordable but shoudl encorage customer to return
+11. bundle plans for monetization
+12. build an eco system of financial offering for customer. a 1 goto place
+13. enable 3rd party dev to consume and build more features independenty (monetize)
+14. identify monetization options
+15. consolidate points for revenue,monetization and business model
+
+front end :
+based on above built the UI using bootstrap 5 and angularjs 1.x (ES5)
+
+backend :
+1. create API
+2. create models for traning
+3. create scalable architecture

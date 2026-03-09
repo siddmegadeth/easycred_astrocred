@@ -1,0 +1,446 @@
+<div class="container" ng-if="!profile" style="padding: 2rem; text-align: center;">
+    <p><i class="fas fa-spinner fa-spin fa-2x text-primary"></i></p>
+    <p class="text-muted">Loading profile...</p>
+</div>
+<div class="container" ng-class="{ 'blur-text': profile && !profile.isOnboardingComplete}" ng-if="profile">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="row align-items-center">
+            <div class="col-md-2 text-center">
+                <div class="profile-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <h1 class="mb-2">{{(profile.profile_info && profile.profile_info.fullname) || 'User'}}</h1>
+                <p class="mb-3">
+                    <i class="fas fa-envelope me-2"></i>{{(profile.profile_info && profile.profile_info.email) || '—'}} |
+                    <i class="fas fa-phone me-2 ms-3"></i>{{(profile.profile_info && profile.profile_info.mobile) || profile.mobile || '—'}}
+                </p>
+                <div class="d-flex flex-wrap">
+                    <span class="status-badge status-completed"
+                        ng-if="profile.profile_info && profile.profile_info.isProfileCompleted">Profile
+                        Completed</span>
+                    <span class="status-badge status-pending"
+                        ng-if="!profile.profile_info || !profile.profile_info.isProfileCompleted">Profile
+                        Not Completed</span>
+                    <span class="status-badge status-verified" ng-if="profile.kyc && profile.kyc.isKYCCompleted">KYC
+                        Verified</span>
+                    <span class="status-badge status-pending" ng-if="!profile.kyc || !profile.kyc.isKYCCompleted">KYC
+                        Not
+                        Verified</span>
+                    <span class="status-badge status-active"
+                        ng-if="profile.account && profile.account.isAccountActive">Account
+                        Active</span>
+                    <span class="status-badge status-inactive"
+                        ng-if="!profile.account || !profile.account.isAccountActive">Account
+                        Inactive</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Personal Information -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-user-circle me-2"></i>Personal Information</h5>
+                    <span class="status-badge status-completed">Complete</span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="info-label">Full Name</div>
+                                <div class="info-value">{{(profile.profile_info && profile.profile_info.fullname) || (cibilProfile && cibilProfile.names && cibilProfile.names[0] && cibilProfile.names[0].name) || '—'}}</div>
+                                <small class="text-muted" ng-if="cibilProfile && cibilProfile.names && cibilProfile.names[0]">Also on CIBIL: {{cibilProfile.names[0].name}}</small>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Email Address</div>
+                                <div class="info-value left-float">{{(profile.profile_info && profile.profile_info.email) || '—'}}</div>
+                                <span class="status-badge status-verified" ng-if="profile.profile_info && profile.profile_info.isEmailAdded">Verified</span>
+                                <div class="mt-1" ng-if="cibilProfile && cibilProfile.emails && cibilProfile.emails.length">
+                                    <small class="text-muted">On CIBIL report:</small>
+                                    <span ng-repeat="e in cibilProfile.emails" class="me-1">{{e.emailID}}{{$last ? '' : ', '}}</span>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Mobile Number</div>
+                                <div class="info-value left-float">{{(profile.profile_info && profile.profile_info.mobile) || profile.mobile || '—'}}</div>
+                                <span class="status-badge status-verified" ng-if="profile.profile_info && profile.profile_info.isMobileAdded">Verified</span>
+                                <div class="mt-1" ng-if="cibilProfile && cibilProfile.telephones && cibilProfile.telephones.length">
+                                    <small class="text-muted">On CIBIL:</small>
+                                    <span ng-repeat="t in cibilProfile.telephones" class="me-1">{{t.telephoneNumber}}{{$last ? '' : ', '}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="info-label">Date of Birth</div>
+                                <div class="info-value">{{(profile.profile_info && profile.profile_info.date_of_birth) ? (profile.profile_info.date_of_birth | date:'short') : (cibilProfile && cibilProfile.names && cibilProfile.names[0] && cibilProfile.names[0].birthDate) || '—'}}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Gender</div>
+                                <div class="info-value">{{(profile.profile_info && profile.profile_info.gender) || (cibilProfile && cibilProfile.names && cibilProfile.names[0] && cibilProfile.names[0].gender) || '—'}}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Marital Status</div>
+                                <div class="info-value">{{(profile.profile_info && profile.profile_info.maritalStatus) || '—'}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Address Information (your signup + CIBIL) -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-home me-2"></i>Address Details</h5>
+                    <span class="status-badge status-completed" ng-if="profile.profile_info && profile.profile_info.isAddressAdded">Verified</span>
+                </div>
+                <div class="card-body">
+                    <div ng-if="profile.props && (profile.props.addressLine1 || profile.props.city)">
+                        <div class="info-label text-muted mb-1">From your profile</div>
+                        <div class="info-item">
+                            <div class="info-label">Address Line 1</div>
+                            <div class="info-value">{{profile.props.addressLine1 || '—'}}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Address Line 2</div>
+                            <div class="info-value">{{profile.props.addressLine2 || '—'}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4"><div class="info-item"><div class="info-label">City</div><div class="info-value">{{profile.props.city || '—'}}</div></div></div>
+                            <div class="col-md-4"><div class="info-item"><div class="info-label">State</div><div class="info-value">{{profile.props.state || '—'}}</div></div></div>
+                            <div class="col-md-4"><div class="info-item"><div class="info-label">Pincode</div><div class="info-value">{{profile.props.pincode || '—'}}</div></div></div>
+                        </div>
+                    </div>
+                    <div ng-if="cibilProfile && cibilProfile.addresses && cibilProfile.addresses.length" class="mt-3 pt-3 border-top">
+                        <div class="info-label text-muted mb-2">Addresses on CIBIL report</div>
+                        <div class="mb-2" ng-repeat="addr in cibilProfile.addresses">
+                            <div class="info-value small">{{addr.line1}}{{addr.line2 ? ' ' + addr.line2 : ''}} — PIN {{addr.pinCode}}</div>
+                        </div>
+                    </div>
+                    <div ng-if="(!profile.props || (!profile.props.addressLine1 && !profile.props.city)) && (!cibilProfile || !cibilProfile.addresses || !cibilProfile.addresses.length)">
+                        <div class="info-value text-muted">No address on file</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Employment & Financial Details (your + CIBIL) -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-briefcase me-2"></i>Employment & Financial Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="info-label">Employment Type</div>
+                                <div class="info-value">{{(profile.profile_info && profile.profile_info.employmentType) || '—'}}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Monthly Income</div>
+                                <div class="info-value">{{(profile.profile_info && profile.profile_info.monthlyIncome) ? (profile.profile_info.monthlyIncome | currency: '₹') : '—'}}</div>
+                            </div>
+                            <div ng-if="cibilProfile && cibilProfile.employment && cibilProfile.employment.length" class="mt-2">
+                                <small class="text-muted">On CIBIL report:</small>
+                                <div class="info-value small">Reported {{cibilProfile.employment[0].dateReported}}, Occupation code {{cibilProfile.employment[0].occupationCode}}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item" ng-if="profile.telemetric && profile.telemetric.currency">
+                                <div class="info-label">Currency</div>
+                                <div class="info-value">{{profile.telemetric.currency.code}} <span ng-if="profile.common && profile.common.currency">({{profile.common.currency.name}})</span></div>
+                            </div>
+                            <div class="info-item" ng-if="profile.telemetric && profile.telemetric.country_code">
+                                <div class="info-label">Country</div>
+                                <div class="info-value">{{profile.telemetric.country_code.name}} ({{profile.telemetric.country_code.iso2}})</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- CIBIL report: IDs, reason codes, consumer summary -->
+            <div class="card" ng-if="cibilProfile">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-file-invoice me-2"></i>Details from CIBIL Report</h5>
+                    <span class="badge bg-secondary" ng-if="cibilProfile.controlNumber">Control # {{cibilProfile.controlNumber}}</span>
+                </div>
+                <div class="card-body">
+                    <div ng-if="cibilProfile.ids && cibilProfile.ids.length" class="mb-3">
+                        <div class="info-label text-muted">IDs on file</div>
+                        <div class="d-flex flex-wrap gap-2 mt-1">
+                            <span class="badge bg-light text-dark border" ng-repeat="id in cibilProfile.ids">{{id.idType}}: {{id.idNumber}}</span>
+                        </div>
+                    </div>
+                    <div ng-if="cibilProfile.reasonCodes && cibilProfile.reasonCodes.length" class="mb-3">
+                        <div class="info-label text-muted">Score reason codes</div>
+                        <div class="d-flex flex-wrap gap-1 mt-1">
+                            <span class="badge bg-light text-dark" ng-repeat="rc in cibilProfile.reasonCodes">{{rc.reasonCodeName}}</span>
+                        </div>
+                    </div>
+                    <div ng-if="cibilProfile.consumerSummary && (cibilProfile.consumerSummary.accountSummary || cibilProfile.consumerSummary.inquirySummary)" class="row small">
+                        <div class="col-md-6" ng-if="cibilProfile.consumerSummary.accountSummary">
+                            <div class="info-label text-muted">Account summary</div>
+                            <div>Total accounts: {{cibilProfile.consumerSummary.accountSummary.totalAccounts}}</div>
+                            <div>High credit: ₹{{cibilProfile.consumerSummary.accountSummary.highCreditAmount | number}}</div>
+                            <div>Current balance: ₹{{cibilProfile.consumerSummary.accountSummary.currentBalance | number}}</div>
+                            <div>Overdue: {{cibilProfile.consumerSummary.accountSummary.overdueAccounts}} accounts, ₹{{cibilProfile.consumerSummary.accountSummary.overdueBalance | number}}</div>
+                        </div>
+                        <div class="col-md-6" ng-if="cibilProfile.consumerSummary.inquirySummary">
+                            <div class="info-label text-muted">Inquiry summary</div>
+                            <div>Total enquiries: {{cibilProfile.consumerSummary.inquirySummary.totalInquiry}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Right Column - Credit summary, KYC & Account Status -->
+        <div class="col-lg-4">
+            <!-- Credit summary (from full CIBIL analysis) -->
+            <div class="card border-primary" ng-if="analysisSummary">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Credit Summary</h5>
+                    <small class="text-muted">From CIBIL analysis</small>
+                </div>
+                <div class="card-body">
+                    <div class="row g-2 mb-2">
+                        <div class="col-6">
+                            <div class="info-label small">Score</div>
+                            <div class="info-value fw-bold">{{analysisSummary.score || '—'}}</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-label small">Grade</div>
+                            <div class="info-value fw-bold">{{analysisSummary.grade || '—'}}</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-label small">Total accounts</div>
+                            <div class="info-value">{{analysisSummary.totalAccounts || 0}}</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-label small">Total enquiries</div>
+                            <div class="info-value">{{analysisSummary.totalEnquiries || 0}}</div>
+                        </div>
+                        <div class="col-6" ng-if="analysisSummary.creditUtilization != null">
+                            <div class="info-label small">Utilization</div>
+                            <div class="info-value">{{analysisSummary.creditUtilization}}%</div>
+                        </div>
+                        <div class="col-6" ng-if="analysisSummary.creditAge != null">
+                            <div class="info-label small">Credit age</div>
+                            <div class="info-value">{{analysisSummary.creditAge}} mo</div>
+                        </div>
+                        <div class="col-12" ng-if="analysisSummary.riskLevel">
+                            <div class="info-label small">Risk level</div>
+                            <div class="info-value">{{analysisSummary.riskLevel}}</div>
+                        </div>
+                    </div>
+                    <a href="#/credit-dashboard" class="btn btn-sm btn-outline-primary">View full report</a>
+                </div>
+            </div>
+            <!-- KYC Verification Status -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-shield-alt me-2"></i>KYC Verification</h5>
+                </div>
+                <div class="card-body">
+                    <div class="info-item">
+                        <div class="info-label">Overall KYC Status</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="info-value">Completed</span>
+                            <span class="status-badge status-completed">Verified</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">PAN Card</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="info-value">{{(profile.kyc && profile.kyc.pan_number) || '—'}}</span>
+                            <span class="status-badge status-verified" ng-if="profile.kyc.isPanVerified">Verified</span>
+                            <span class="status-badge status-verified" ng-if="!profile.kyc.isPanVerified">Not
+                                Verified</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Aadhaar Card</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="info-value">•••• •••• ••••
+                                {{(profile.kyc && profile.kyc.aadhaar_number_masked) ? profile.kyc.aadhaar_number_masked.slice(-4) : '----'}}</span>
+                            <span class="status-badge status-verified"
+                                ng-if="profile.kyc.isAadharVerified">Verified</span>
+                        </div>
+                    </div>
+                    <!-- <div class="info-item">
+                        <div class="info-label">PAN-Aadhaar Linking</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="info-value">{{profile.kyc.pancard.verification.aadhaar_seeding_status === 'y' ? 'Linked' : 'Not Linked'}}</span>
+                            <span class="status-badge {{profile.kyc.pancard.verification.aadhaar_seeding_status === 'y' ? 'status-verified' : 'status-pending'}}">
+                                {{profile.kyc.pancard.verification.aadhaar_seeding_status === 'y' ? 'Linked' : 'Pending'}}
+                            </span>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <!-- Financial Integrations -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-link me-2"></i>Financial Hub Connect</h5>
+                    <a href="#/financial-dashboard" class="btn btn-sm btn-outline-primary"
+                        ng-if="profile.finvu && profile.finvu.isLinked">
+                        <i class="fas fa-chart-pie me-1"></i>View Hub
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="info-item" ng-if="profile.finvu">
+                        <div class="info-label">Account Aggregator (FinVu)</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="info-value">{{profile.finvu.handle || 'Not Linked'}}</span>
+                            <span
+                                class="status-badge {{profile.finvu.isLinked ? 'status-verified' : 'status-pending'}}">
+                                {{profile.finvu.isLinked ? 'Linked' : 'Not Linked'}}
+                            </span>
+                        </div>
+                        <div class="mt-2 small text-muted" ng-if="profile.finvu.isLinked">
+                            <span ng-if="profile.finvu.lastSynced">
+                                <i class="fas fa-sync me-1"></i>Last synced: {{profile.finvu.lastSynced |
+                                date:'mediumDate'}}
+                            </span>
+                            <span ng-if="profile.finvu.accountCount" class="ms-2">
+                                <i class="fas fa-university me-1"></i>{{profile.finvu.accountCount}} account(s)
+                            </span>
+                        </div>
+                        <div class="mt-2" ng-if="profile.finvu.isLinked">
+                            <a href="#/finvu-connect" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-cog me-1"></i>Manage / Refresh
+                            </a>
+                        </div>
+                    </div>
+                    <div class="info-item" ng-if="!profile.finvu">
+                        <div class="info-label">Account Aggregator (FinVu)</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="info-value">Not set up</span>
+                            <span class="status-badge status-pending">Not Linked</span>
+                        </div>
+                        <a href="#/finvu-connect" class="btn btn-sm btn-primary mt-2"><i
+                                class="fas fa-link me-1"></i>Link Bank</a>
+                    </div>
+                    <div class="info-item" ng-if="profile.api_setu">
+                        <div class="info-label">Asset Verification (API Setu)</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex flex-wrap gap-1">
+                                <span ng-repeat="asset in (profile.api_setu.verifiedAssets || [])"
+                                    class="badge bg-light text-dark border">{{asset}}</span>
+                                <span ng-if="!profile.api_setu.verifiedAssets || !profile.api_setu.verifiedAssets.length">None</span>
+                            </div>
+                            <span
+                                class="status-badge {{profile.api_setu.isVerified ? 'status-verified' : 'status-pending'}}">
+                                {{profile.api_setu.isVerified ? 'Verified' : 'Pending'}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Account Information -->
+            <div class="card" ng-if="profile.account || profile.customerId">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Account Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="info-item" ng-if="profile.account">
+                        <div class="info-label">Account Type</div>
+                        <div class="info-value">{{profile.account.account_type || '—'}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Customer ID</div>
+                        <div class="info-value">{{profile.customerId || '—'}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Profile Created</div>
+                        <div class="info-value">{{profile.created_at | date:'mediumDate'}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Last Updated</div>
+                        <div class="info-value">{{profile.updated_at | date:'mediumDate'}}</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Quick Stats -->
+            <!-- <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Profile Completion</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="info-label">Overall Progress</span>
+                            <span class="info-value">95%</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-gradient-primary" role="progressbar" style="width: 95%"></div>
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-6 mb-3">
+                            <div class="p-2 border rounded">
+                                <div class="fs-4 fw-bold text-gradient mb-1">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <small class="text-muted">KYC Verified</small>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="p-2 border rounded">
+                                <div class="fs-4 fw-bold text-gradient mb-1">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <small class="text-muted">Mobile Verified</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 border rounded">
+                                <div class="fs-4 fw-bold text-gradient mb-1">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <small class="text-muted">Email Verified</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 border rounded">
+                                <div class="fs-4 fw-bold text-gradient mb-1">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <small class="text-muted">Address Added</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+</div>
+<!-- OTP Modal -->
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-otp modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="messageModalLabel">{{message.header}}</h5>
+            </div>
+            <div class="modal-body text-center">
+                <div class="text-center mb-4">
+                    <i class="bi bi-shield-check success-check"></i>
+                    <p class="text-muted">{{message.content}}</p>
+                </div>
+                <button class="btn btn-primary" ng-click="gotoOnboarding()">Goto Onboarding</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Success Toast (hidden by default) -->
+<div class="toast align-items-center text-white bg-success position-fixed top-50 start-50 translate-middle" role="alert"
+    aria-live="assertive" aria-atomic="true" id="successToast">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="bi bi-check-circle-fill me-2"></i> Verification successful!
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+            aria-label="Close"></button>
+    </div>
+</div>

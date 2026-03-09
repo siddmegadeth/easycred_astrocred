@@ -1,0 +1,505 @@
+/* ===================================================================
+   PROFILE COMPLETION PAGE ONLY
+   Scoped so it does NOT break other pages
+   ===================================================================*/
+
+.astro-profile-page .profile-container {
+max-width:900px;
+margin:0 auto;
+}
+
+/* CARDS */
+
+.astro-profile-page .card{
+background:var(--astro-gradient-card) !important;
+backdrop-filter:blur(20px);
+border:1px solid var(--astro-border);
+border-radius:var(--astro-radius-xl);
+color:#fff;
+box-shadow:var(--astro-shadow-lg);
+margin-bottom:30px;
+}
+
+.astro-profile-page .card-header{
+background:linear-gradient(135deg,rgb(0 0 0 / 96%) 0%,rgb(47 185 195 / 41%) 100%);
+color:var(--astro-accent);
+border-bottom:1px solid var(--astro-border);
+padding:25px;
+}
+
+.astro-profile-page .card-header h3,
+.astro-profile-page .card-header p{
+color:#fff;
+}
+
+/* TEXT */
+
+.astro-profile-page h3,
+.astro-profile-page h4,
+.astro-profile-page h5,
+.astro-profile-page h6{
+color:#fff;
+}
+
+.astro-profile-page p,
+.astro-profile-page span,
+.astro-profile-page label{color: rgb(0 0 0 / 90%);}
+}
+
+/* FORM */
+
+.astro-profile-page .form-control,
+.astro-profile-page .form-select{
+background:var(--astro-surface);
+border:1px solid var(--astro-border);
+color:#fff;
+border-radius:var(--astro-radius-md);
+padding:12px 15px;
+}
+
+.astro-profile-page .form-control::placeholder{
+color:rgba(255,255,255,.5);
+}
+
+.astro-profile-page .form-control:focus{
+background:var(--astro-surface-light);
+border-color:var(--astro-accent);
+box-shadow:0 0 0 .2rem var(--astro-accent-soft);
+}
+
+/* BUTTONS */
+
+.astro-profile-page .btn-primary{
+background:var(--astro-gradient-accent);
+border:none;
+color:white;
+padding:12px 30px;
+border-radius:var(--astro-radius-md);
+font-weight:600;
+box-shadow:0 4px 15px var(--astro-accent-glow);
+}
+
+.astro-profile-page .btn-outline-primary{
+background:transparent;
+border:2px solid var(--astro-accent);
+color:var(--astro-accent);
+border-radius:var(--astro-radius-md);
+}
+
+/* FORM SECTIONS */
+
+.astro-profile-page .form-section{
+display:none;
+}
+
+.astro-profile-page .form-section.active{
+display:block;
+}
+
+
+
+
+
+/* ======================================================
+ASTROCRED PROFILE PAGE — LIGHT THEME
+====================================================== */
+
+.astro-profile-page{
+min-height:100vh;
+background:linear-gradient(135deg,#f5f7ff,#eaf2ff,#ffffff);
+padding-top:40px;
+padding-bottom:60px;
+}
+
+/* wrapper */
+
+.astro-profile-wrapper{
+max-width:950px;
+margin:auto;
+}
+
+
+
+
+
+
+/* ======================================
+FIX PLACEHOLDER TEXT COLOR
+====================================== */
+
+.form-control::placeholder{
+color:#6b7280 !important;
+opacity:1;
+}
+
+.form-select::placeholder{
+color:#6b7280 !important;
+opacity:1;
+}
+
+/* Safari / older browser support */
+
+.form-control::-webkit-input-placeholder{
+color:#6b7280 !important;
+}
+
+.form-control::-moz-placeholder{
+color:#6b7280 !important;
+}
+
+.form-control:-ms-input-placeholder{
+color:#6b7280 !important;
+}
+/* ======================================================
+PROGRESS STEPS
+====================================================== */
+
+.progress-container{
+
+background:#ffffff;
+
+border-radius:16px;
+
+padding:22px 30px;
+
+box-shadow:0 15px 35px rgba(0,0,0,0.08);
+
+margin-bottom:30px;
+}
+
+.progress-step{
+position:relative;
+text-align:center;
+}
+
+.step-circle{
+
+width:42px;
+height:42px;
+
+border-radius:50%;
+
+background:#e8ecff;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+margin:auto;
+margin-bottom:6px;
+
+font-weight:700;
+color:#1c1fbe;
+
+border:2px solid transparent;
+
+transition:.25s;
+}
+
+.step-circle.active{
+
+background:linear-gradient(135deg,#00D9FF,#00C48C);
+
+color:#ffffff;
+
+box-shadow:0 6px 16px rgba(0,0,0,0.2);
+}
+
+.step-circle.completed{
+
+background:#00C48C;
+color:#ffffff;
+}
+
+/* ======================================================
+MAIN CARD
+====================================================== */
+
+.card{
+
+border-radius:18px !important;
+
+border:none !important;
+
+background:#ffffff;
+
+box-shadow:0 25px 45px rgba(0,0,0,0.10);
+
+overflow:hidden;
+}
+
+/* header */
+
+.card-header{
+
+background:linear-gradient(135deg,#1c1fbe,#33c9d3) !important;
+
+color:#ffffff !important;
+
+padding:22px 26px;
+
+border:none !important;
+}
+
+.card-header h3{
+font-weight:700;
+}
+
+.card-header p{
+opacity:.9;
+font-size:14px;
+}
+
+/* body */
+
+.card-body{
+padding:35px !important;
+}
+
+/* ======================================================
+FORM ELEMENTS
+====================================================== */
+
+.form-label{
+font-weight:600;
+font-size:14px;
+color:#374151;
+}
+
+.form-label.required::after{
+content:" *";
+color:#ef4444;
+}
+
+/* inputs */
+
+.form-control,
+.form-select{
+
+height:44px;
+
+border-radius:10px !important;
+
+border:1px solid #000000 !important;
+
+padding:10px 14px;
+
+font-size:14px;
+
+background:#ffffff;
+color:#374151;
+
+}
+
+/* focus */
+
+.form-control:focus,
+.form-select:focus{
+
+border-color:#1c1fbe !important;
+
+box-shadow:0 0 0 3px rgba(28,31,190,0.12) !important;
+
+outline:none;
+}
+
+/* disabled */
+
+.form-control:disabled{
+background:#f5f7fb !important;
+color:#374151 !important;
+opacity:1;
+}
+
+/* helper text */
+
+.info-text{
+font-size:12px;
+color:#6b7280;
+margin-top:4px;
+}
+
+/* ======================================================
+VALIDATION
+====================================================== */
+
+.validation-error{
+font-size:12px;
+color:#ef4444;
+display:none;
+margin-top:3px;
+}
+
+.validation-error.show{
+display:block;
+}
+
+/* ======================================================
+BUTTONS
+====================================================== */
+
+.btn{
+
+border-radius:30px !important;
+
+padding:10px 22px;
+
+font-weight:600;
+
+font-size:14px;
+}
+
+/* previous */
+
+.btn-outline-primary{
+
+border:2px solid #1c1fbe !important;
+
+color:#1c1fbe !important;
+
+background:transparent;
+}
+
+.btn-outline-primary:hover{
+
+background:#eef2ff;
+}
+
+/* next / submit */
+
+.btn-primary{
+
+background:linear-gradient(135deg,#1c1fbe,#33c9d3) !important;
+
+border:none !important;
+
+color:#ffffff !important;
+
+box-shadow:0 8px 20px rgba(0,0,0,0.25);
+
+transition:.25s;
+}
+
+.btn-primary:hover{
+
+transform:translateY(-2px);
+
+box-shadow:0 12px 26px rgba(0,0,0,0.30);
+}
+
+/* ======================================================
+CHECKBOX
+====================================================== */
+
+.form-check-input{
+
+border-radius:6px;
+
+border:1px solid #d1d5db;
+}
+
+.form-check-input:checked{
+
+background:#1c1fbe;
+
+border-color:#1c1fbe;
+}
+
+/* ======================================================
+SUCCESS SCREEN
+====================================================== */
+
+.success-screen{
+text-align:center;
+}
+
+.success-icon{
+
+width:80px;
+height:80px;
+
+border-radius:50%;
+
+background:linear-gradient(135deg,#00D9FF,#00C48C);
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+margin:auto;
+
+font-size:32px;
+
+color:#ffffff;
+
+margin-bottom:20px;
+}
+
+/* ======================================================
+FOOTER TEXT
+====================================================== */
+
+.privacy-text{
+
+font-size:13px;
+
+color:#6b7280;
+
+margin-top:30px;
+
+text-align:center;
+}
+
+/* ======================================================
+MOBILE NUMBER FIELD FIX
+====================================================== */
+
+#mobileNumber{
+
+font-weight:300;
+
+letter-spacing:1.5px;
+
+padding-left:60px;
+
+font-size:15px;
+
+}
+
+/* ensure flag + number align nicely */
+
+.input-group{
+
+display:flex;
+align-items:center;
+
+}
+
+.input-group .form-control{
+
+flex:1;
+
+min-width:0;
+
+}
+
+/* ======================================================
+RESPONSIVE
+====================================================== */
+
+@media(max-width:768px){
+
+.card-body{
+padding:25px !important;
+}
+
+.progress-container{
+padding:16px;
+}
+
+.step-circle{
+width:36px;
+height:36px;
+}
+
+}

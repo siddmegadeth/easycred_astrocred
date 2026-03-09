@@ -1,0 +1,949 @@
+<!-- Premium Dark Theme Dashboard - Matching Login Page -->
+<div class="astro-dashboard-page">
+    <!-- Animated Background Pattern (Same as Login) -->
+    <div class="astro-bg-pattern">
+        <div class="astro-orb astro-orb-1"></div>
+        <div class="astro-orb astro-orb-2"></div>
+        <div class="astro-orb astro-orb-3"></div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="astro-dashboard-wrapper">
+        <div class="container-fluid py-4" style="position: relative; z-index: 1;">
+    <!-- HEADER -->
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-8">
+            <h2 class="fw-bold mb-1">
+                <i class="fas fa-robot text-primary me-2"></i> ASTROCRED – AI Credit Intelligence Platform
+            </h2>
+            <p class="text-muted mb-0">
+                Simplified credit reports + AI-powered financial roadmap • Client: <span ng-bind="creditData.name || 'User'"></span> (PAN: <span ng-bind="creditData.pan || 'N/A'"></span>)
+            </p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <span class="badge badge-ai px-3 py-2">
+                <i class="fas fa-robot me-1"></i> <span ng-bind="creditData.credit_score ? 'Live Data Connected' : 'No Data Found'"></span>
+                • API v1.0
+            </span>
+        </div>
+    </div>
+    <!-- NAVIGATION TABS -->
+    <ul class="nav nav-tabs mb-4" id="mainTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#dashboard" type="button">
+                <i class="fas fa-dashboard me-2"></i>Dashboard
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reports" type="button">
+                <i class="fas fa-file-pdf me-2"></i>Credit Reports
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#analysis" type="button" ng-click="onAnalysisTabClick()">
+                <i class="fas fa-chart-bar me-2"></i>Detailed Analysis
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#accounts" type="button">
+                <i class="fas fa-credit-card me-2"></i>Accounts
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#finvu" type="button">
+                <i class="fas fa-plug me-2"></i>Finvu Connect
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#roadmap" type="button">
+                <i class="fas fa-map me-2"></i>Improvement Roadmap
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#offers" type="button">
+                <i class="fas fa-percent me-2"></i>Loan Offers
+            </button>
+        </li>
+    </ul>
+    <!-- TAB CONTENT -->
+    <div class="tab-content" id="mainTabContent">
+        <!-- DASHBOARD TAB -->
+        <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
+            <div class="row g-4">
+                <!-- LEFT: SCORE & GRADES -->
+                <div class="col-xl-3 col-lg-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <i class="fas fa-chart-line me-2"></i> Credit Score & Grade
+                        </div>
+                        <div class="card-body text-center">
+                            <!-- Score Ring with Dynamic Color -->
+                            <div class="score-ring mb-3"
+                                ng-style="{'background': getScoreRingGradient(creditData.credit_score)}">
+                                <span ng-bind="creditData.credit_score || '—'"></span>
+                            </div>
+                            <h4 class="mb-2" ng-bind="getScoreGrade(creditData.credit_score).grade"></h4>
+                            <p class="text-muted mb-4" ng-bind="getScoreGrade(creditData.credit_score).description"></p>
+                            <div class="text-start small mb-4">
+                                <div class="metric">
+                                    <i class="fas fa-calendar-check me-2"
+                                        ng-class="{'text-success': paymentOnTime >= 80, 'text-warning': paymentOnTime >= 60 && paymentOnTime < 80, 'text-danger': paymentOnTime < 60}"></i>
+                                    Payment History: <b>{{paymentOnTime || 65}}%</b>
+                                </div>
+                                <div class="metric">
+                                    <i class="fas fa-percentage me-2"
+                                        ng-class="{'text-success': creditUtilization <= 30, 'text-warning': creditUtilization > 30 && creditUtilization <= 50, 'text-danger': creditUtilization > 50}"></i>
+                                    Credit Utilization: <b>{{creditUtilization || 48}}%</b>
+                                </div>
+                                <div class="metric">
+                                    <i class="fas fa-search me-2"
+                                        ng-class="{'text-success': recentEnquiries <= 2, 'text-warning': recentEnquiries > 2 && recentEnquiries <= 5, 'text-danger': recentEnquiries > 5}"></i>
+                                    Recent Enquiries: <b>{{recentEnquiries || 7}}</b> (3M)
+                                </div>
+                                <div class="metric">
+                                    <i class="fas fa-clock me-2 text-primary"></i>
+                                    Credit Age: <b>{{creditAge || 4.2}} Years</b>
+                                </div>
+                                <div class="metric">
+                                    <i class="fas fa-exclamation-triangle me-2 text-danger"></i>
+                                    Default Accounts: <b>{{defaultAccounts || 4}}</b>
+                                </div>
+                            </div>
+                            <hr>
+                            <button class="btn btn-outline-success btn-sm w-100 mb-2"
+                                ng-click="generateComprehensiveReport()">
+                                <i class="fas fa-file-alt me-1"></i> Generate ASTROCRED Report
+                            </button>
+                            <button class="btn btn-astro btn-sm w-100" ng-click="connectFinvu()">
+                                <i class="fas fa-plug me-1"></i> Connect Finvu for Full Analysis
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- CENTER: AI CHAT + RISK ASSESSMENT -->
+                <div class="col-xl-6 col-lg-8">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-robot me-2"></i> AI Credit Assistant</span>
+                            <span class="badge" ng-class="getRiskBadgeClass(riskAssessment.level)">
+                                {{riskAssessment.level || 'Medium-High'}} Risk
+                            </span>
+                        </div>
+                        <div class="card-body chat-window" id="chatWindow">
+                            <!-- Welcome Message -->
+                            <div class="alert chat-ai mb-3">
+                                <i class="fas fa-robot me-2"></i>
+                                <b>Hello <span ng-bind="creditData.name || 'User'"></span>! I'm ASTRO, your AI credit advisor.</b>
+                                You have a <strong><span ng-bind="creditData.credit_score || '---'"></span> credit score</strong> with
+                                <strong>{{defaultAccounts || 0}} default accounts</strong>. Ask me anything about
+                                improving your credit!
+                            </div>
+
+                            <!-- Dynamic Chat History -->
+                            <div ng-repeat="msg in chatHistory" class="mb-3"
+                                ng-class="{'text-end': msg.role === 'user'}">
+                                <!-- User Message -->
+                                <span ng-if="msg.role === 'user'" class="badge chat-user px-3 py-2">
+                                    {{msg.content}}
+                                </span>
+                                <!-- AI Response -->
+                                <div ng-if="msg.role === 'ai'" class="alert chat-ai">
+                                    <i class="fas fa-robot me-2"></i>
+                                    <span ng-bind-html="msg.content"></span>
+                                </div>
+                            </div>
+
+                            <!-- Loading Indicator -->
+                            <div ng-if="chatLoading" class="text-center py-3">
+                                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <span class="ms-2 text-muted">ASTRO is thinking...</span>
+                            </div>
+
+                            <!-- Quick Suggestion Buttons -->
+                            <div class="d-flex flex-wrap gap-2 mt-3" ng-if="!chatHistory || chatHistory.length === 0">
+                                <button class="btn btn-outline-primary btn-sm"
+                                    ng-click="chatInput='How can I improve my score?'; sendChat()">
+                                    <i class="fas fa-chart-line me-1"></i> How to improve?
+                                </button>
+                                <button class="btn btn-outline-primary btn-sm"
+                                    ng-click="chatInput='Which default should I clear first?'; sendChat()">
+                                    <i class="fas fa-exclamation-circle me-1"></i> Clear defaults
+                                </button>
+                                <button class="btn btn-outline-primary btn-sm"
+                                    ng-click="chatInput='Am I eligible for a loan?'; sendChat()">
+                                    <i class="fas fa-money-bill me-1"></i> Loan eligibility
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="input-group">
+                                <input type="text" class="form-control"
+                                    placeholder="Ask about credit, loans, improvements..." ng-model="chatInput"
+                                    ng-keyup="$event.keyCode === 13 && sendChat()" ng-disabled="chatLoading">
+                                <button class="btn btn-astro" ng-click="sendChat()" ng-disabled="chatLoading">
+                                    <i class="fas fa-paper-plane" ng-if="!chatLoading"></i>
+                                    <i class="fas fa-spinner fa-spin" ng-if="chatLoading"></i>
+                                    Ask AI
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- RISK METRICS & CHARTS -->
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="card shadow-sm text-center p-3">
+                                <div class="text-muted small">Default Probability</div>
+                                <h3 class="mb-1" ng-class="getRiskColorClass(defaultProbability)">{{defaultProbability
+                                    || 38}}%</h3>
+                                <div class="small">Medium-High Risk</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card shadow-sm text-center p-3">
+                                <div class="text-muted small">Credit Worthiness</div>
+                                <h3 class="mb-1 text-success">{{creditWorthiness || 6.2}}/10</h3>
+                                <div class="small">Moderate Risk</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card shadow-sm text-center p-3">
+                                <div class="text-muted small">Total Exposure</div>
+                                <h3 class="mb-1 text-info">₹{{totalExposure | number}}</h3>
+                                <div class="small">₹4.85L / ₹10.1L</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- RIGHT: QUICK ACTIONS & DATA SOURCES -->
+                <div class="col-xl-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header">
+                            <i class="fas fa-database me-2"></i> Data Sources & Actions
+                        </div>
+                        <div class="card-body">
+                            <h6 class="mb-3">Available Reports</h6>
+                            <button class="btn btn-success btn-sm w-100 mb-2" ng-click="downloadCIBILReport()">
+                                <i class="fas fa-file-pdf me-1"></i> Download CIBIL Report
+                            </button>
+                            <button class="btn btn-outline-success btn-sm w-100 mb-2"
+                                ng-click="downloadASTROCREDReport()">
+                                <i class="fas fa-robot me-1"></i> ASTROCRED Analysis PDF
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm w-100 mb-2" ng-click="downloadMultiBureau()">
+                                <i class="fas fa-layer-group me-1"></i> Multi-Bureau Report
+                            </button>
+                            <hr>
+                            <h6 class="mb-3">Real-time Actions</h6>
+                            <button class="btn btn-outline-warning btn-sm w-100 mb-2"
+                                ng-click="simulateScoreImprovement()">
+                                <i class="fas fa-chart-line me-1"></i> Simulate Score Improvement
+                            </button>
+                            <button class="btn btn-outline-info btn-sm w-100 mb-2" ng-click="getImprovementPlan()">
+                                <i class="fas fa-map me-1"></i> Get Improvement Plan
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm w-100 mb-2" ng-click="checkLoanEligibility()">
+                                <i class="fas fa-percent me-1"></i> Check Loan Eligibility
+                            </button>
+                            <hr>
+                            <div class="assistant-tip p-3 rounded">
+                                <i class="fas fa-lightbulb me-1"></i>
+                                <b>Pro Tip:</b> Clearing the ₹27,760 ICICI overdue first will give you the biggest score
+                                boost.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- REPORTS TAB -->
+        <div class="tab-pane fade" id="reports" role="tabpanel">
+            <div class="row g-4">
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <i class="fas fa-file-pdf me-2"></i> Downloadable Reports
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <!-- CIBIL Report Card -->
+                                <div class="col-md-6 mb-4">
+                                    <div class="card border p-4 h-100">
+                                        <div class="text-center mb-3">
+                                            <i class="fas fa-file-invoice-dollar text-primary"
+                                                style="font-size: 3rem;"></i>
+                                        </div>
+                                        <h5 class="text-center mb-3">Official CIBIL Report</h5>
+                                        <p class="text-muted text-center small mb-4">
+                                            Original CIBIL TransUnion report in standard format
+                                        </p>
+                                        <div class="text-center">
+                                            <button class="btn btn-primary btn-lg px-4"
+                                                ng-click="downloadCIBILReport()">
+                                                <i class="fas fa-download me-2"></i> Download PDF
+                                            </button>
+                                        </div>
+                                        <div class="mt-3 text-center">
+                                            <small class="text-muted">Generated: {{reportDate | date:'dd MMM
+                                                yyyy'}}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- ASTROCRED Analysis Card -->
+                                <div class="col-md-6 mb-4">
+                                    <div class="card border p-4 h-100">
+                                        <div class="text-center mb-3">
+                                            <i class="fas fa-robot text-success" style="font-size: 3rem;"></i>
+                                        </div>
+                                        <h5 class="text-center mb-3">ASTROCRED Analysis Report</h5>
+                                        <p class="text-muted text-center small mb-4">
+                                            AI-powered simplified analysis with actionable insights
+                                        </p>
+                                        <div class="text-center">
+                                            <button class="btn btn-success btn-lg px-4"
+                                                ng-click="downloadASTROCREDReport()">
+                                                <i class="fas fa-robot me-2"></i> Generate & Download
+                                            </button>
+                                        </div>
+                                        <div class="mt-3 text-center">
+                                            <small class="text-muted">Includes: Risk assessment, Improvement plan, Bank
+                                                suggestions</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Multi-Bureau Card -->
+                                <div class="col-md-6 mb-4">
+                                    <div class="card border p-4 h-100">
+                                        <div class="text-center mb-3">
+                                            <i class="fas fa-layer-group text-warning" style="font-size: 3rem;"></i>
+                                        </div>
+                                        <h5 class="text-center mb-3">Multi-Bureau Comparison</h5>
+                                        <p class="text-muted text-center small mb-4">
+                                            CIBIL, Experian, Equifax, CRIF - All in one report
+                                        </p>
+                                        <div class="text-center">
+                                            <button class="btn btn-warning btn-lg px-4"
+                                                ng-click="downloadMultiBureau()">
+                                                <i class="fas fa-layer-group me-2"></i> Compare All
+                                            </button>
+                                        </div>
+                                        <div class="mt-3 text-center">
+                                            <small class="text-muted">Available with Premium Subscription</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 24-Month Roadmap Card -->
+                                <div class="col-md-6 mb-4">
+                                    <div class="card border p-4 h-100">
+                                        <div class="text-center mb-3">
+                                            <i class="fas fa-map-marked-alt text-info" style="font-size: 3rem;"></i>
+                                        </div>
+                                        <h5 class="text-center mb-3">24-Month Improvement Roadmap</h5>
+                                        <p class="text-muted text-center small mb-4">
+                                            Step-by-step guide to reach 750+ credit score
+                                        </p>
+                                        <div class="text-center">
+                                            <button class="btn btn-info btn-lg px-4" ng-click="downloadRoadmap()">
+                                                <i class="fas fa-download me-2"></i> Download Roadmap
+                                            </button>
+                                        </div>
+                                        <div class="mt-3 text-center">
+                                            <small class="text-muted">Personalized based on your profile</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header">
+                            <i class="fas fa-history me-2"></i> Report History & Status
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Report</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>CIBIL Report</td>
+                                            <td>26 Aug 2025</td>
+                                            <td><span class="badge bg-success">Available</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>ASTROCRED Analysis</td>
+                                            <td>Today</td>
+                                            <td><span class="badge bg-primary">Ready</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Multi-Bureau</td>
+                                            <td>-</td>
+                                            <td><span class="badge bg-warning">Premium</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Improvement Roadmap</td>
+                                            <td>Today</td>
+                                            <td><span class="badge bg-info">Generated</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <hr>
+                            <div class="text-center">
+                                <div class="mb-3">
+                                    <h6>API Integration Status</h6>
+                                    <span class="badge bg-success">CIBIL API: Connected</span>
+                                    <span class="badge bg-warning">Multi-Bureau: Premium</span>
+                                    <span class="badge" ng-class="{'bg-success': finvuConnected, 'bg-secondary': !finvuConnected}">
+                                        Finvu: {{finvuStatus}}
+                                    </span>
+                                </div>
+                                <button class="btn btn-astro btn-sm w-100" ng-click="connectFinvu()">
+                                    <i class="fas fa-plug me-1"></i> Connect Finvu for Complete Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ANALYSIS TAB -->
+        <div class="tab-pane fade" id="analysis" role="tabpanel">
+            <div class="row g-4">
+                <div class="col-md-8">
+                    <!-- Score Breakdown Chart -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-chart-pie me-2"></i> Credit Score Components
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="scoreBreakdownChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Risk Assessment -->
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <i class="fas fa-exclamation-triangle me-2"></i> Risk Assessment & Analysis
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Risk Factors</h6>
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2">
+                                            <span class="risk-indicator risk-high"></span>
+                                            {{defaultAccounts || 0}} Default Accounts
+                                        </li>
+                                        <li class="mb-2">
+                                            <span class="risk-indicator risk-high"></span>
+                                            High Credit Utilization ({{creditUtilization || 0}}%)
+                                        </li>
+                                        <li class="mb-2">
+                                            <span class="risk-indicator risk-medium"></span>
+                                            Multiple Recent Enquiries
+                                        </li>
+                                        <li class="mb-2">
+                                            <span class="risk-indicator risk-medium"></span>
+                                            Mixed Payment History
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Positive Factors</h6>
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2">
+                                            <span class="risk-indicator risk-low"></span>
+                                            Long Credit History (4+ years)
+                                        </li>
+                                        <li class="mb-2">
+                                            <span class="risk-indicator risk-low"></span>
+                                            Good Credit Mix
+                                        </li>
+                                        <li class="mb-2">
+                                            <span class="risk-indicator risk-low"></span>
+                                            Some Accounts in Good Standing
+                                        </li>
+                                        <li class="mb-2">
+                                            <span class="risk-indicator risk-low"></span>
+                                            Regular Income Source
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="text-center p-3">
+                                        <h3 class="{{getRiskColorClass(defaultProbability)}}">{{defaultProbability != null ? defaultProbability : 38}}%</h3>
+                                        <p class="text-muted small">Default Probability</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="text-center p-3">
+                                        <h3 class="text-success">{{creditWorthiness != null ? creditWorthiness : '—'}}/10</h3>
+                                        <p class="text-muted small">Credit Worthiness</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="text-center p-3">
+                                        <h3 class="text-info">{{loanEligibility || '—'}}</h3>
+                                        <p class="text-muted small">Loan Eligibility</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <!-- Payment History Chart -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-calendar-alt me-2"></i> Payment History (Last 6 Months)
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="paymentHistoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Quick Recommendations -->
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <i class="fas fa-bullseye me-2"></i> Immediate Actions
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-danger" ng-if="topPriorityAction">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                <strong>Priority 1:</strong> {{topPriorityAction}}
+                            </div>
+                            <div class="alert alert-danger" ng-if="!topPriorityAction && totalOverdue">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                <strong>Priority 1:</strong> Clear overdue amount (₹{{totalOverdue | number}})
+                            </div>
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <strong>Priority 2:</strong> Reduce credit utilization below 30%
+                            </div>
+                            <div class="alert alert-info">
+                                <i class="fas fa-ban me-2"></i>
+                                <strong>Priority 3:</strong> No new credit applications for 6 months
+                            </div>
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle me-2"></i>
+                                <strong>Ongoing:</strong> Maintain other payments on time
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ACCOUNTS TAB -->
+        <div class="tab-pane fade" id="accounts" role="tabpanel">
+            <div class="row g-4">
+                <div class="col-md-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-credit-card me-2"></i> All Credit Accounts (<span ng-bind="totalAccounts || accounts.length || 0"></span>)</span>
+                            <div>
+                                <span class="badge bg-success me-2">Active: <span ng-bind="activeAccounts || 0"></span></span>
+                                <span class="badge bg-danger">Default: <span ng-bind="defaultAccounts || 0"></span></span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- Account Type Filter -->
+                            <div class="mb-4">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-primary"
+                                        ng-click="filterAccounts('all')">All</button>
+                                    <button type="button" class="btn btn-outline-primary"
+                                        ng-click="filterAccounts('credit-card')">Credit Cards</button>
+                                    <button type="button" class="btn btn-outline-primary"
+                                        ng-click="filterAccounts('loan')">Loans</button>
+                                    <button type="button" class="btn btn-outline-primary"
+                                        ng-click="filterAccounts('default')">Defaults</button>
+                                </div>
+                            </div>
+                            <!-- Accounts Table -->
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr style="background-color: #f8f9fa; color: #212529;">
+                                            <th style="color: #212529 !important; font-weight: 600;">Account</th>
+                                            <th style="color: #212529 !important; font-weight: 600;">Bank</th>
+                                            <th style="color: #212529 !important; font-weight: 600;">Type</th>
+                                            <th style="color: #212529 !important; font-weight: 600;">Balance</th>
+                                            <th style="color: #212529 !important; font-weight: 600;">Overdue</th>
+                                            <th style="color: #212529 !important; font-weight: 600;">Status</th>
+                                            <th style="color: #212529 !important; font-weight: 600;">Last Payment</th>
+                                            <th style="color: #212529 !important; font-weight: 600;">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-if="filteredAccounts.length === 0">
+                                            <td colspan="8" class="text-center text-muted py-4">
+                                                <i class="fas fa-info-circle me-2"></i>No account data available. Please ensure CIBIL data is loaded.
+                                            </td>
+                                        </tr>
+                                        <tr ng-repeat="account in filteredAccounts"
+                                            ng-class="{'table-danger': account.amountOverdue > 0, 'table-warning': account.risk === 'high'}">
+                                            <td>
+                                                <span ng-bind="(account.accountNumber || account.masked_account_number || 'N/A') | limitTo:12"></span>
+                                                <span ng-if="(account.accountNumber || account.masked_account_number || '').length > 12">...</span>
+                                            </td>
+                                            <td ng-bind="account.bank || account.bankName || 'Unknown'"></td>
+                                            <td>
+                                                <span class="badge"
+                                                    ng-class="{'bg-primary': account.type === 'Credit Card', 'bg-success': account.type === 'Personal Loan', 'bg-warning': account.type === 'Consumer Loan', 'bg-info': !account.type || account.type === 'SAVINGS'}">
+                                                    <span ng-bind="account.type || 'SAVINGS'"></span>
+                                                </span>
+                                            </td>
+                                            <td>₹<span ng-bind="(account.currentBalance || account.balance || 0) | number"></span></td>
+                                            <td>
+                                                <span ng-if="(account.amountOverdue || 0) > 0" class="text-danger">
+                                                    ₹<span ng-bind="(account.amountOverdue || 0) | number"></span>
+                                                </span>
+                                                <span ng-if="(account.amountOverdue || 0) <= 0" class="text-success">-</span>
+                                            </td>
+                                            <td>
+                                                <span class="status-badge"
+                                                    ng-class="{'status-good': account.status === 'Good' || account.status === 'ACTIVE', 'status-warning': account.status === 'Warning', 'status-danger': account.status === 'Default'}">
+                                                    <span ng-bind="account.status || 'ACTIVE'"></span>
+                                                </span>
+                                            </td>
+                                            <td ng-bind="account.lastPaymentDate || 'N/A'"></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-info"
+                                                    ng-click="viewAccountDetails(account)">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- Account Summary -->
+                            <div class="row mt-4">
+                                <div class="col-md-3">
+                                    <div class="card border p-3 text-center">
+                                        <h5 class="text-info" style="color: #17a2b8 !important;">₹<span ng-bind="(totalBalance || 0) | number"></span></h5>
+                                        <p class="text-muted small" style="color: #6c757d !important;">Total Balance</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card border p-3 text-center">
+                                        <h5 class="text-danger" style="color: #dc3545 !important;">₹<span ng-bind="(totalOverdue || 0) | number"></span></h5>
+                                        <p class="text-muted small" style="color: #6c757d !important;">Total Overdue</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card border p-3 text-center">
+                                        <h5 class="text-success" style="color: #28a745 !important;">₹<span ng-bind="(totalCreditLimit || 0) | number"></span></h5>
+                                        <p class="text-muted small" style="color: #6c757d !important;">Credit Limit</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card border p-3 text-center">
+                                        <h5 class="text-warning" style="color: #ffc107 !important;"><span ng-bind="creditUtilization || 48"></span>%</h5>
+                                        <p class="text-muted small" style="color: #6c757d !important;">Utilization</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- FINVU TAB -->
+        <div class="tab-pane fade" id="finvu" role="tabpanel">
+            <div class="row g-4">
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <i class="fas fa-plug me-2"></i> Finvu Account Aggregator Integration
+                        </div>
+                        <div class="card-body">
+                            <div class="alert" ng-class="{'alert-success': finvuConnected, 'alert-info': !finvuConnected}">
+                                <i class="fas" ng-class="{'fa-check-circle': finvuConnected, 'fa-info-circle': !finvuConnected}" class="me-2"></i>
+                                <b ng-if="finvuConnected">Connected:</b>
+                                <b ng-if="!finvuConnected">Available Now:</b>
+                                Finvu integration provides complete financial picture by connecting all your bank accounts, investments, and financial data in one place.
+                            </div>
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <h6 class="mb-3">Coming Features</h6>
+                                    <div class="list-group">
+                                        <div class="list-group-item">
+                                            <i class="fas fa-clock text-warning me-2"></i>
+                                            <b>Bank Account Integration</b>
+                                            <p class="small mb-0">Connect all bank accounts for comprehensive analysis
+                                            </p>
+                                        </div>
+                                        <div class="list-group-item">
+                                            <i class="fas fa-clock text-warning me-2"></i>
+                                            <b>Investment Portfolio View</b>
+                                            <p class="small mb-0">Stocks, mutual funds, FDs in one dashboard</p>
+                                        </div>
+                                        <div class="list-group-item">
+                                            <i class="fas fa-clock text-warning me-2"></i>
+                                            <b>Spending Pattern Analysis</b>
+                                            <p class="small mb-0">AI-powered spending insights and optimization</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="mb-3">Benefits</h6>
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Complete
+                                            financial health score</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Debt-to-income
+                                            ratio tracking</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Savings rate
+                                            optimization</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Investment
+                                            recommendations</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Tax planning
+                                            insights</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button class="btn btn-astro btn-lg px-5" ng-click="connectFinvu()" ng-disabled="finvuConnected">
+                                    <i class="fas" ng-class="{'fa-link': !finvuConnected, 'fa-check': finvuConnected}" class="me-2"></i>
+                                    <span ng-if="!finvuConnected">Connect Bank Accounts</span>
+                                    <span ng-if="finvuConnected">Already Connected</span>
+                                </button>
+                                <p class="text-muted small mt-2">
+                                    RBI-regulated • Bank-level security • Consent-based access
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header">
+                            <i class="fas fa-lightbulb me-2"></i> Enhanced AI Insights
+                        </div>
+                        <div class="card-body">
+                            <p>With Finvu connected, AI will provide:</p>
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <strong>Current Limitation:</strong> Using only CIBIL data
+                            </div>
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Spending habit analysis
+                                </li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Investment optimization
+                                </li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Debt consolidation
+                                    advice</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Savings recommendations
+                                </li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Income-to-debt ratio
+                                    tracking</li>
+                            </ul>
+                            <hr>
+                            <div class="text-center">
+                                <button class="btn btn-outline-primary btn-sm w-100"
+                                    onclick="alert('This feature will be available soon with Finvu integration')">
+                                    <i class="fas fa-bell me-1"></i> Notify Me When Ready
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ROADMAP TAB -->
+        <div class="tab-pane fade" id="roadmap" role="tabpanel">
+            <div class="row g-4">
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <i class="fas fa-map me-2"></i> 24-Month Credit Improvement Roadmap
+                        </div>
+                        <div class="card-body">
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <h5>Months 1-3: Crisis Management</h5>
+                                    <p class="text-muted">
+                                        <strong>Actions:</strong> Clear all overdue amounts (₹{{totalOverdue | number}}), set up payment
+                                        reminders,
+                                        no new credit applications, reduce utilization to 40%
+                                    </p>
+                                    <p><strong>Target Score:</strong> {{creditData.credit_score || '—'}} → 690</p>
+                                    <span class="badge bg-danger">Current Phase</span>
+                                </div>
+                                <div class="timeline-item">
+                                    <h5>Months 4-6: Stability Building</h5>
+                                    <p class="text-muted">
+                                        <strong>Actions:</strong> Maintain perfect payment history, reduce utilization
+                                        to 30%,
+                                        consider secured credit card, monitor score monthly
+                                    </p>
+                                    <p><strong>Target Score:</strong> 690 → 710</p>
+                                    <span class="badge bg-warning">Next Phase</span>
+                                </div>
+                                <div class="timeline-item">
+                                    <h5>Months 7-12: Score Acceleration</h5>
+                                    <p class="text-muted">
+                                        <strong>Actions:</strong> Request credit limit increases, maintain 25%
+                                        utilization,
+                                        add small installment loan, continue perfect payments
+                                    </p>
+                                    <p><strong>Target Score:</strong> 710 → 730</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <h5>Months 13-18: Advanced Optimization</h5>
+                                    <p class="text-muted">
+                                        <strong>Actions:</strong> Become authorized user on good accounts, optimize
+                                        credit age,
+                                        maintain 20% utilization, review credit mix
+                                    </p>
+                                    <p><strong>Target Score:</strong> 730 → 750</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <h5>Months 19-24: Excellence Maintenance</h5>
+                                    <p class="text-muted">
+                                        <strong>Actions:</strong> Maintain utilization below 10%, annual credit reviews,
+                                        continuous monitoring, explore premium credit offers
+                                    </p>
+                                    <p><strong>Target Score:</strong> 750+</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header">
+                            <i class="fas fa-bullseye me-2"></i> Milestone Targets
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center mb-4">
+                                <h3 class="text-primary">690</h3>
+                                <p class="text-muted">3-Month Target Score</p>
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar bg-primary" style="width: 0%"></div>
+                                </div>
+                                <small>Current: {{creditData.credit_score || '—'}}/690</small>
+                            </div>
+                            <div class="text-center mb-4">
+                                <h3 class="text-warning">710</h3>
+                                <p class="text-muted">6-Month Target Score</p>
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar bg-warning" style="width: 0%"></div>
+                                </div>
+                                <small>Current: {{creditData.credit_score || '—'}}/710</small>
+                            </div>
+                            <div class="text-center mb-4">
+                                <h3 class="text-success">750+</h3>
+                                <p class="text-muted">24-Month Target Score</p>
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar bg-success" style="width: 0%"></div>
+                                </div>
+                                <small>Current: {{creditData.credit_score || '—'}}/750</small>
+                            </div>
+                            <button class="btn btn-astro w-100" ng-click="downloadRoadmap()">
+                                <i class="fas fa-download me-2"></i> Download Roadmap PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- OFFERS TAB -->
+        <div class="tab-pane fade" id="offers" role="tabpanel">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h5 class="mb-3">Personalized Loan Offers</h5>
+                    <p class="text-muted">Based on your current credit profile (Score: {{creditData.credit_score || '—'}}, Risk: {{riskAssessment.level || '—'}})</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card shadow-sm offer-card">
+                        <div class="card-header text-center">
+                            <span class="badge bg-warning">Available</span>
+                            <h5 class="mt-2">Personal Loan</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <h2>14.5%</h2>
+                            <p class="text-muted">Interest Rate</p>
+                            <p>Up to ₹5,00,000</p>
+                            <p>Processing: 2.5%</p>
+                            <p class="text-danger small">Higher rate due to defaults</p>
+                            <button class="btn btn-outline-primary w-100 mt-3"
+                                onclick="alert('Clearing defaults can reduce rate to 12%')">
+                                Check Eligibility
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm offer-card">
+                        <div class="card-header text-center">
+                            <span class="badge bg-secondary">Limited</span>
+                            <h5 class="mt-2">Credit Card</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <h2>18-24%</h2>
+                            <p class="text-muted">Interest Rate</p>
+                            <p>Limit: ₹50,000</p>
+                            <p>Annual Fee: ₹500</p>
+                            <p class="text-warning small">Secured card recommended</p>
+                            <button class="btn btn-outline-secondary w-100 mt-3"
+                                onclick="alert('Clear defaults for better offers')">
+                                View Options
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm offer-card">
+                        <div class="card-header text-center">
+                            <span class="badge bg-success">Recommended</span>
+                            <h5 class="mt-2">Debt Consolidation</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <h2>12.5%</h2>
+                            <p class="text-muted">Consolidation Rate</p>
+                            <p>Save ₹35,000/year</p>
+                            <p>Single EMI</p>
+                            <p class="text-success small">Best option for your situation</p>
+                            <button class="btn btn-astro w-100 mt-3" ng-click="getDebtConsolidationPlan()">
+                                Get Plan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Important:</strong> Clearing your ₹48,018 overdue will significantly improve your loan
+                        eligibility and reduce interest rates by 2-3%.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- FOOTER -->
+            <div class="text-center footer-note mt-4" style="color: rgba(255, 255, 255, 0.6);">
+        <p>ASTROCRED v1.0 • Real CIBIL Data Integration </p>
+        <p>Data Source: CIBIL TransUnion • Report Generated: {{reportDate | date:'fullDate'}}</p>
+            </div>
+        </div>
+    </div>
+</div>

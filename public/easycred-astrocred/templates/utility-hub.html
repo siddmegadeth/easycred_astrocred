@@ -1,0 +1,396 @@
+<!-- Government APIs Utility Hub -->
+<div class="utility-hub astro-login-page">
+    <!-- Background -->
+    <div class="astro-bg-pattern">
+        <div class="astro-orb astro-orb-1"></div>
+        <div class="astro-orb astro-orb-2"></div>
+    </div>
+
+    <div class="container py-4">
+        <!-- Header -->
+        <div class="utility-header mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="utility-title">
+                        <i class="fas fa-landmark"></i> Government Verification Hub
+                    </h1>
+                    <p class="utility-subtitle">Verify documents instantly using official government APIs</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <span class="utility-badge">
+                        <i class="fas fa-shield-alt"></i> API Setu Powered
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Verification Cards Grid -->
+        <div class="row g-4">
+            <!-- PAN Verification -->
+            <div class="col-lg-4 col-md-6">
+                <div class="verification-card" ng-class="{'verified': verifications.pan.status === 'verified'}">
+                    <div class="card-icon">
+                        <i class="fas fa-id-card"></i>
+                        <div class="status-indicator" ng-class="getStatusClass('pan')">
+                            <i ng-class="getStatusIcon('pan')"></i>
+                        </div>
+                    </div>
+                    <h3>PAN Verification</h3>
+                    <p>Verify Permanent Account Number with Income Tax Department</p>
+                    
+                    <div class="verification-form" ng-if="!verifications.pan.verified">
+                        <div class="astro-input-group">
+                            <input type="text" 
+                                   class="astro-input" 
+                                   ng-model="verifications.pan.number"
+                                   placeholder="Enter PAN (e.g., ABCDE1234F)"
+                                   maxlength="10"
+                                   style="text-transform: uppercase;">
+                        </div>
+                        <button class="verify-btn" 
+                                ng-click="verifyPAN()" 
+                                ng-disabled="isVerifying.pan || !verifications.pan.number">
+                            <span ng-if="!isVerifying.pan">
+                                <i class="fas fa-check-circle"></i> Verify PAN
+                            </span>
+                            <span ng-if="isVerifying.pan">
+                                <div class="astro-spinner"></div> Verifying...
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="verification-result" ng-if="verifications.pan.verified">
+                        <div class="result-row">
+                            <span class="label">Name</span>
+                            <span class="value">{{verifications.pan.data.name}}</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="label">PAN</span>
+                            <span class="value mono">{{verifications.pan.number}}</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="label">Status</span>
+                            <span class="value success">
+                                <i class="fas fa-check-circle"></i> Verified
+                            </span>
+                        </div>
+                        <button class="reset-btn" ng-click="resetVerification('pan')">
+                            <i class="fas fa-redo"></i> Verify Another
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Driving License -->
+            <div class="col-lg-4 col-md-6">
+                <div class="verification-card" ng-class="{'verified': verifications.dl.status === 'verified'}">
+                    <div class="card-icon dl-icon">
+                        <i class="fas fa-car"></i>
+                        <div class="status-indicator" ng-class="getStatusClass('dl')">
+                            <i ng-class="getStatusIcon('dl')"></i>
+                        </div>
+                    </div>
+                    <h3>Driving License</h3>
+                    <p>Verify DL with Transport Department records</p>
+                    
+                    <div class="verification-form" ng-if="!verifications.dl.verified">
+                        <div class="astro-input-group mb-2">
+                            <input type="text" 
+                                   class="astro-input" 
+                                   ng-model="verifications.dl.number"
+                                   placeholder="DL Number (e.g., MH0120190001234)">
+                        </div>
+                        <div class="astro-input-group">
+                            <input type="date" 
+                                   class="astro-input" 
+                                   ng-model="verifications.dl.dob"
+                                   placeholder="Date of Birth">
+                        </div>
+                        <button class="verify-btn" 
+                                ng-click="verifyDL()" 
+                                ng-disabled="isVerifying.dl || !verifications.dl.number || !verifications.dl.dob">
+                            <span ng-if="!isVerifying.dl">
+                                <i class="fas fa-check-circle"></i> Verify DL
+                            </span>
+                            <span ng-if="isVerifying.dl">
+                                <div class="astro-spinner"></div> Verifying...
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="verification-result" ng-if="verifications.dl.verified">
+                        <div class="result-row">
+                            <span class="label">Name</span>
+                            <span class="value">{{verifications.dl.data.name}}</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="label">Valid Till</span>
+                            <span class="value">{{verifications.dl.data.validity}}</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="label">Vehicle Class</span>
+                            <span class="value">{{verifications.dl.data.vehicleClass}}</span>
+                        </div>
+                        <button class="reset-btn" ng-click="resetVerification('dl')">
+                            <i class="fas fa-redo"></i> Verify Another
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vehicle RC -->
+            <div class="col-lg-4 col-md-6">
+                <div class="verification-card" ng-class="{'verified': verifications.rc.status === 'verified'}">
+                    <div class="card-icon rc-icon">
+                        <i class="fas fa-motorcycle"></i>
+                        <div class="status-indicator" ng-class="getStatusClass('rc')">
+                            <i ng-class="getStatusIcon('rc')"></i>
+                        </div>
+                    </div>
+                    <h3>Vehicle Registration</h3>
+                    <p>Verify vehicle RC with Transport Department</p>
+                    
+                    <div class="verification-form" ng-if="!verifications.rc.verified">
+                        <div class="astro-input-group mb-2">
+                            <input type="text" 
+                                   class="astro-input" 
+                                   ng-model="verifications.rc.number"
+                                   placeholder="Registration No (e.g., MH01AB1234)"
+                                   style="text-transform: uppercase;">
+                        </div>
+                        <div class="astro-input-group">
+                            <input type="text" 
+                                   class="astro-input" 
+                                   ng-model="verifications.rc.chassis"
+                                   placeholder="Last 5 digits of Chassis No">
+                        </div>
+                        <button class="verify-btn" 
+                                ng-click="verifyRC()" 
+                                ng-disabled="isVerifying.rc || !verifications.rc.number">
+                            <span ng-if="!isVerifying.rc">
+                                <i class="fas fa-check-circle"></i> Verify RC
+                            </span>
+                            <span ng-if="isVerifying.rc">
+                                <div class="astro-spinner"></div> Verifying...
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="verification-result" ng-if="verifications.rc.verified">
+                        <div class="result-row">
+                            <span class="label">Owner</span>
+                            <span class="value">{{verifications.rc.data.owner}}</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="label">Vehicle</span>
+                            <span class="value">{{verifications.rc.data.vehicle}}</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="label">Reg. Date</span>
+                            <span class="value">{{verifications.rc.data.regDate}}</span>
+                        </div>
+                        <button class="reset-btn" ng-click="resetVerification('rc')">
+                            <i class="fas fa-redo"></i> Verify Another
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aadhaar Verification -->
+            <div class="col-lg-4 col-md-6">
+                <div class="verification-card" ng-class="{'verified': verifications.aadhaar.status === 'verified'}">
+                    <div class="card-icon aadhaar-icon">
+                        <i class="fas fa-fingerprint"></i>
+                        <div class="status-indicator" ng-class="getStatusClass('aadhaar')">
+                            <i ng-class="getStatusIcon('aadhaar')"></i>
+                        </div>
+                    </div>
+                    <h3>Aadhaar Verification</h3>
+                    <p>Verify Aadhaar via OTP-based eKYC</p>
+                    
+                    <div class="verification-form" ng-if="!verifications.aadhaar.verified">
+                        <div class="astro-input-group">
+                            <input type="text" 
+                                   class="astro-input" 
+                                   ng-model="verifications.aadhaar.number"
+                                   placeholder="12-digit Aadhaar Number"
+                                   maxlength="12">
+                        </div>
+                        <button class="verify-btn" 
+                                ng-click="initiateAadhaarOTP()" 
+                                ng-disabled="isVerifying.aadhaar || !verifications.aadhaar.number">
+                            <span ng-if="!isVerifying.aadhaar">
+                                <i class="fas fa-paper-plane"></i> Send OTP
+                            </span>
+                            <span ng-if="isVerifying.aadhaar">
+                                <div class="astro-spinner"></div> Sending...
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="verification-result" ng-if="verifications.aadhaar.verified">
+                        <div class="result-row">
+                            <span class="label">Name</span>
+                            <span class="value">{{verifications.aadhaar.data.name}}</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="label">Aadhaar</span>
+                            <span class="value mono">XXXX-XXXX-{{verifications.aadhaar.number.slice(-4)}}</span>
+                        </div>
+                        <button class="reset-btn" ng-click="resetVerification('aadhaar')">
+                            <i class="fas fa-redo"></i> Verify Another
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bank Account -->
+            <div class="col-lg-4 col-md-6">
+                <div class="verification-card" ng-class="{'verified': verifications.bank.status === 'verified'}">
+                    <div class="card-icon bank-icon">
+                        <i class="fas fa-university"></i>
+                        <div class="status-indicator" ng-class="getStatusClass('bank')">
+                            <i ng-class="getStatusIcon('bank')"></i>
+                        </div>
+                    </div>
+                    <h3>Bank Account</h3>
+                    <p>Verify bank account via penny drop</p>
+                    
+                    <div class="verification-form" ng-if="!verifications.bank.verified">
+                        <div class="astro-input-group mb-2">
+                            <input type="text" 
+                                   class="astro-input" 
+                                   ng-model="verifications.bank.account"
+                                   placeholder="Account Number">
+                        </div>
+                        <div class="astro-input-group">
+                            <input type="text" 
+                                   class="astro-input" 
+                                   ng-model="verifications.bank.ifsc"
+                                   placeholder="IFSC Code"
+                                   maxlength="11"
+                                   style="text-transform: uppercase;">
+                        </div>
+                        <button class="verify-btn" 
+                                ng-click="verifyBank()" 
+                                ng-disabled="isVerifying.bank || !verifications.bank.account || !verifications.bank.ifsc">
+                            <span ng-if="!isVerifying.bank">
+                                <i class="fas fa-check-circle"></i> Verify Account
+                            </span>
+                            <span ng-if="isVerifying.bank">
+                                <div class="astro-spinner"></div> Verifying...
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="verification-result" ng-if="verifications.bank.verified">
+                        <div class="result-row">
+                            <span class="label">Account Holder</span>
+                            <span class="value">{{verifications.bank.data.name}}</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="label">Bank</span>
+                            <span class="value">{{verifications.bank.data.bank}}</span>
+                        </div>
+                        <button class="reset-btn" ng-click="resetVerification('bank')">
+                            <i class="fas fa-redo"></i> Verify Another
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GST Verification -->
+            <div class="col-lg-4 col-md-6">
+                <div class="verification-card" ng-class="{'verified': verifications.gst.status === 'verified'}">
+                    <div class="card-icon gst-icon">
+                        <i class="fas fa-receipt"></i>
+                        <div class="status-indicator" ng-class="getStatusClass('gst')">
+                            <i ng-class="getStatusIcon('gst')"></i>
+                        </div>
+                    </div>
+                    <h3>GST Verification</h3>
+                    <p>Verify GSTIN for business users</p>
+                    
+                    <div class="verification-form" ng-if="!verifications.gst.verified">
+                        <div class="astro-input-group">
+                            <input type="text" 
+                                   class="astro-input" 
+                                   ng-model="verifications.gst.number"
+                                   placeholder="15-digit GSTIN"
+                                   maxlength="15"
+                                   style="text-transform: uppercase;">
+                        </div>
+                        <button class="verify-btn" 
+                                ng-click="verifyGST()" 
+                                ng-disabled="isVerifying.gst || !verifications.gst.number">
+                            <span ng-if="!isVerifying.gst">
+                                <i class="fas fa-check-circle"></i> Verify GST
+                            </span>
+                            <span ng-if="isVerifying.gst">
+                                <div class="astro-spinner"></div> Verifying...
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="verification-result" ng-if="verifications.gst.verified">
+                        <div class="result-row">
+                            <span class="label">Business</span>
+                            <span class="value">{{verifications.gst.data.tradeName}}</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="label">Status</span>
+                            <span class="value" ng-class="verifications.gst.data.status === 'Active' ? 'success' : 'warning'">
+                                {{verifications.gst.data.status}}
+                            </span>
+                        </div>
+                        <button class="reset-btn" ng-click="resetVerification('gst')">
+                            <i class="fas fa-redo"></i> Verify Another
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Verification History -->
+        <div class="verification-history mt-5" ng-if="history.length > 0">
+            <h3><i class="fas fa-history"></i> Recent Verifications</h3>
+            <div class="history-list">
+                <div class="history-item" ng-repeat="item in history | limitTo:5">
+                    <div class="history-icon" ng-class="item.type">
+                        <i ng-class="getTypeIcon(item.type)"></i>
+                    </div>
+                    <div class="history-details">
+                        <span class="history-type">{{item.type | uppercase}}</span>
+                        <span class="history-id">{{item.id}}</span>
+                    </div>
+                    <div class="history-status" ng-class="item.status">
+                        <i ng-class="item.status === 'verified' ? 'fas fa-check' : 'fas fa-times'"></i>
+                        {{item.status}}
+                    </div>
+                    <div class="history-time">
+                        {{item.timestamp | date:'dd MMM, HH:mm'}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trust Footer -->
+        <div class="utility-footer mt-5">
+            <div class="trust-badges">
+                <div class="badge-item">
+                    <i class="fas fa-lock"></i>
+                    <span>256-bit Encryption</span>
+                </div>
+                <div class="badge-item">
+                    <i class="fas fa-check-double"></i>
+                    <span>Government Verified</span>
+                </div>
+                <div class="badge-item">
+                    <i class="fas fa-database"></i>
+                    <span>No Data Stored</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

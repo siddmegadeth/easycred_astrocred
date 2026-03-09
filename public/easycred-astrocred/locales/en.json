@@ -1,0 +1,26 @@
+{
+    "INVALID_REQUIRED": "",
+    "INVALID_URL": "Invalid URL",
+    "INVALID_KEY_CHAR": "",
+    "INVALID_DIGITS": "",
+    "INVALID_MIN_CHAR": "",
+    "INVALID_INTEGER": "",
+    "INVALID_EMAIL": "",
+    "INVALID_EXACT_LEN": "",
+    "INVALID_ALPHA_NUM": "",
+    "INVALID_MAX_CHAR": "",
+    "INVALID_ALPHA_DASH_SPACE": "",
+    "INVALID_ALPHA": "A-Z/a-z Only",
+    "INVALID_DATE_EURO": "Date In (dd/mm/yyyy)",
+    "OFFLINE":
+    {
+        "NO_NETWORK": "No Network Detected. Device is Offline",
+        "CHECK_NETWORK": "Check Network Connection",
+        "RETRY": "Retry"
+    },
+    "JUSPAY_ONBOARDING":
+    {
+        "MORE_INFO": "Some More Info",
+        "EDIT_INFO": "Edit Info"
+    }
+}

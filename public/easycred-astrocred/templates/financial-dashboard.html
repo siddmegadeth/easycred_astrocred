@@ -1,0 +1,390 @@
+<!-- Financial Hub – same theme as dashboard, profile, FinVu -->
+<div class="financial-dashboard astro-dashboard-page">
+    <div class="astro-bg-pattern">
+        <div class="astro-orb astro-orb-1"></div>
+        <div class="astro-orb astro-orb-2"></div>
+        <div class="astro-orb astro-orb-3"></div>
+    </div>
+
+    <div class="astro-dashboard-wrapper">
+    <div class="container-fluid py-4" style="position: relative; z-index: 1;">
+        <!-- Header Section -->
+        <div class="dashboard-header-section mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="dashboard-main-title">
+                        <i class="fas fa-brain"></i> Financial Intelligence
+                    </h1>
+                    <p class="dashboard-subtitle">AI-powered insights for smarter financial decisions</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="user-badge" ng-class="user.isPremium ? 'premium' : 'free'">
+                        <i ng-class="user.isPremium ? 'fas fa-crown' : 'fas fa-user'"></i>
+                        {{user.isPremium ? 'PREMIUM' : 'FREE PLAN'}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Health Score -->
+        <div class="row g-4 mb-4">
+            <div class="col-lg-4">
+                <div class="health-score-card">
+                    <div class="health-ring">
+                        <svg viewBox="0 0 120 120">
+                            <defs>
+                                <linearGradient id="healthGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#00D9FF" />
+                                    <stop offset="100%" style="stop-color:#00C48C" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="health-ring-bg" cx="60" cy="60" r="50"/>
+                            <circle class="health-ring-fill" cx="60" cy="60" r="50" 
+                                    ng-style="{'stroke-dasharray': getHealthRingDash(financialData.healthScore)}"/>
+                        </svg>
+                        <div class="health-score-value">
+                            <span class="score-number">{{financialData.healthScore || 72}}</span>
+                            <span class="score-max">/100</span>
+                        </div>
+                    </div>
+                    <h3 class="health-label">Financial Health Score</h3>
+                    <p class="health-status" ng-class="getHealthClass(financialData.healthScore)">
+                        {{getHealthStatus(financialData.healthScore)}}
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="row g-3">
+                    <!-- Credit Score -->
+                    <div class="col-md-4">
+                        <div class="metric-card credit">
+                            <div class="metric-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="metric-value" ng-class="getScoreColor(financialData.creditScore)">
+                                {{financialData.creditScore || '---'}}
+                            </div>
+                            <div class="metric-label">Credit Score</div>
+                            <div class="metric-grade">Grade: {{financialData.creditGrade || 'N/A'}}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bank Balance -->
+                    <div class="col-md-4">
+                        <div class="metric-card balance">
+                            <div class="metric-icon">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="metric-value">
+                                ₹{{financialData.bankBalance | number:0}}
+                            </div>
+                            <div class="metric-label">Total Balance</div>
+                            <div class="metric-sub">{{financialData.linkedAccounts.length}} accounts linked</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Debt-to-Income -->
+                    <div class="col-md-4">
+                        <div class="metric-card dti">
+                            <div class="metric-icon">
+                                <i class="fas fa-balance-scale"></i>
+                            </div>
+                            <div class="metric-value" ng-class="getDTIClass(financialData.dti)">
+                                {{financialData.dti || 28}}%
+                            </div>
+                            <div class="metric-label">Debt-to-Income</div>
+                            <div class="metric-sub">{{getDTIStatus(financialData.dti)}}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Savings Rate -->
+                    <div class="col-md-4">
+                        <div class="metric-card savings">
+                            <div class="metric-icon">
+                                <i class="fas fa-piggy-bank"></i>
+                            </div>
+                            <div class="metric-value success">{{financialData.savingsRate || 22}}%</div>
+                            <div class="metric-label">Savings Rate</div>
+                            <div class="metric-sub">Monthly average</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Monthly Income -->
+                    <div class="col-md-4">
+                        <div class="metric-card income">
+                            <div class="metric-icon">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                            <div class="metric-value">₹{{financialData.monthlyIncome | number:0}}</div>
+                            <div class="metric-label">Monthly Income</div>
+                            <div class="metric-sub">Avg. last 3 months</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Monthly Expenses -->
+                    <div class="col-md-4">
+                        <div class="metric-card expense">
+                            <div class="metric-icon">
+                                <i class="fas fa-arrow-up"></i>
+                            </div>
+                            <div class="metric-value warning">₹{{financialData.monthlyExpense | number:0}}</div>
+                            <div class="metric-label">Monthly Expenses</div>
+                            <div class="metric-sub">Avg. last 3 months</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Decision Making Tools -->
+        <div class="row g-4 mb-4">
+            <!-- Should I Take This Loan? -->
+            <div class="col-lg-6">
+                <div class="decision-card">
+                    <div class="decision-header">
+                        <div class="decision-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <h3>Should I Take This Loan?</h3>
+                    </div>
+                    <div class="loan-calculator">
+                        <div class="calc-row">
+                            <label>Loan Amount</label>
+                            <input type="number" ng-model="loanCalc.amount" placeholder="₹ 500000" class="calc-input">
+                        </div>
+                        <div class="calc-row">
+                            <label>Interest Rate (%)</label>
+                            <input type="number" ng-model="loanCalc.rate" placeholder="12" class="calc-input">
+                        </div>
+                        <div class="calc-row">
+                            <label>Tenure (months)</label>
+                            <input type="number" ng-model="loanCalc.tenure" placeholder="36" class="calc-input">
+                        </div>
+                        <button class="decision-btn" ng-click="analyzeLoan()">
+                            <i class="fas fa-brain"></i> Analyze Impact
+                        </button>
+                    </div>
+                    <div class="loan-result" ng-if="loanAnalysis">
+                        <div class="result-item">
+                            <span class="result-label">Monthly EMI</span>
+                            <span class="result-value">₹{{loanAnalysis.emi | number:0}}</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">New DTI Ratio</span>
+                            <span class="result-value" ng-class="getDTIClass(loanAnalysis.newDTI)">{{loanAnalysis.newDTI}}%</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Recommendation</span>
+                            <span class="result-value" ng-class="loanAnalysis.recommend ? 'success' : 'danger'">
+                                {{loanAnalysis.recommend ? 'Manageable' : 'Too Risky'}}
+                            </span>
+                        </div>
+                        <div class="ai-verdict" ng-class="loanAnalysis.recommend ? 'positive' : 'negative'">
+                            <i ng-class="loanAnalysis.recommend ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle'"></i>
+                            {{loanAnalysis.verdict}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Recommendations -->
+            <div class="col-lg-6">
+                <div class="decision-card ai-recommendations-card">
+                    <div class="decision-header">
+                        <div class="decision-icon ai">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>AI Financial Advisor</h3>
+                    </div>
+                    <div class="ai-advice-list">
+                        <div class="ai-advice-item" ng-repeat="rec in financialData.recommendations | limitTo:4" ng-class="rec.priority">
+                            <div class="advice-icon">
+                                <i ng-class="getRecommendationIcon(rec.area)"></i>
+                            </div>
+                            <div class="advice-content">
+                                <h4>{{rec.area}}</h4>
+                                <p>{{rec.message}}</p>
+                                <span class="advice-impact">Impact: {{rec.impact}}</span>
+                            </div>
+                        </div>
+                        <div class="ai-advice-item info" ng-if="!financialData.recommendations || financialData.recommendations.length === 0">
+                            <div class="advice-icon">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="advice-content">
+                                <h4>Link More Data</h4>
+                                <p>Connect your bank accounts to get personalized AI recommendations.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="ai-chat-btn" ng-click="openAIChat()">
+                        <i class="fas fa-comments"></i> Ask AI Advisor
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    <!-- Detailed Sections -->
+    <div class="row g-4">
+        <!-- Bank Accounts Table -->
+        <div class="col-md-8">
+            <div class="astrocred-card">
+                <div class="astrocred-card-header d-flex justify-content-between align-items-center">
+                    <h5 class="astrocred-card-title"><i class="fas fa-university"></i> Linked Bank Accounts</h5>
+                    <button class="btn btn-outline-primary btn-sm" ng-click="refreshAccounts()"><i
+                            class="fas fa-sync"></i></button>
+                </div>
+                <div class="table-responsive">
+                    <table class="astrocred-table">
+                        <thead>
+                            <tr>
+                                <th>Bank</th>
+                                <th>Account</th>
+                                <th>Type</th>
+                                <th>Balance</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="acc in financialData.linkedAccounts">
+                                <td><strong>{{acc.bankName || acc.bank}}</strong></td>
+                                <td>{{acc.accountNumber || acc.masked}}</td>
+                                <td>{{acc.accountType || acc.type}}</td>
+                                <td>₹{{(acc.currentBalance || acc.balance) | number:2}}</td>
+                                <td><span class="astrocred-badge astrocred-badge-success">Active</span></td>
+                            </tr>
+                            <tr ng-if="!financialData.linkedAccounts || financialData.linkedAccounts.length === 0">
+                                <td colspan="5" class="text-center py-5">
+                                    <p class="text-muted mb-2"><i class="fas fa-university fa-2x"></i></p>
+                                    <p class="text-muted mb-3">No bank accounts linked yet.</p>
+                                    <a href="#/finvu-connect" class="btn btn-primary"><i class="fas fa-link me-2"></i>Link your bank accounts</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions & Goals -->
+        <div class="row g-4 mb-4">
+            <!-- Quick Actions -->
+            <div class="col-lg-4">
+                <div class="quick-actions-card">
+                    <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                    <div class="action-grid">
+                        <a href="#/finvu-connect" class="action-item">
+                            <i class="fas fa-link"></i>
+                            <span>Link Bank</span>
+                        </a>
+                        <a href="#/utility-hub" class="action-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Verify Docs</span>
+                        </a>
+                        <a href="#/home" class="action-item">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>Credit Report</span>
+                        </a>
+                        <a href="#/pricing" class="action-item">
+                            <i class="fas fa-crown"></i>
+                            <span>Upgrade</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Goals -->
+            <div class="col-lg-8">
+                <div class="goals-card">
+                    <div class="goals-header">
+                        <h3><i class="fas fa-bullseye"></i> Financial Goals</h3>
+                        <button class="add-goal-btn" ng-click="addGoal()">
+                            <i class="fas fa-plus"></i> Add Goal
+                        </button>
+                    </div>
+                    <div class="goals-list">
+                        <div class="goal-item" ng-repeat="goal in financialData.goals">
+                            <div class="goal-icon" ng-class="goal.type">
+                                <i ng-class="getGoalIcon(goal.type)"></i>
+                            </div>
+                            <div class="goal-details">
+                                <h4>{{goal.name}}</h4>
+                                <div class="goal-progress-bar">
+                                    <div class="goal-progress-fill" ng-style="{width: goal.progress + '%'}"></div>
+                                </div>
+                                <div class="goal-stats">
+                                    <span>₹{{goal.current | number:0}} / ₹{{goal.target | number:0}}</span>
+                                    <span class="goal-eta">{{goal.eta}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="goal-item default" ng-if="!financialData.goals || financialData.goals.length === 0">
+                            <div class="goal-icon">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <div class="goal-details">
+                                <h4>Set Your First Goal</h4>
+                                <p>Create financial goals to track your progress</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Linked Accounts Table -->
+        <div class="row g-4">
+            <div class="col-12">
+                <div class="accounts-card">
+                    <div class="accounts-header">
+                        <h3><i class="fas fa-university"></i> Linked Bank Accounts</h3>
+                        <button class="refresh-btn" ng-click="refreshAccounts()" ng-disabled="isRefreshing">
+                            <i class="fas fa-sync" ng-class="{'fa-spin': isRefreshing}"></i>
+                            Refresh
+                        </button>
+                    </div>
+                    <div class="accounts-table-wrapper" ng-if="financialData.linkedAccounts.length > 0">
+                        <table class="accounts-table">
+                            <thead>
+                                <tr>
+                                    <th>Bank</th>
+                                    <th>Account</th>
+                                    <th>Type</th>
+                                    <th>Balance</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="acc in financialData.linkedAccounts">
+                                    <td>
+                                        <div class="bank-cell">
+                                            <div class="bank-icon"><i class="fas fa-university"></i></div>
+                                            <strong>{{acc.bankName || acc.bank}}</strong>
+                                        </div>
+                                    </td>
+                                    <td class="mono">{{acc.accountNumber || acc.masked}}</td>
+                                    <td><span class="type-badge">{{acc.accountType || acc.type}}</span></td>
+                                    <td class="balance-cell">₹{{(acc.currentBalance || acc.balance) | number:0}}</td>
+                                    <td><span class="status-badge active"><i class="fas fa-check"></i> Active</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="no-accounts" ng-if="financialData.linkedAccounts.length === 0">
+                        <div class="no-accounts-icon">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <h4>No Bank Accounts Linked</h4>
+                        <p>Connect your bank accounts via FinVu to see balances and transactions</p>
+                        <a href="#/finvu-connect" class="link-btn">
+                            <i class="fas fa-plus"></i> Link Bank Account
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+

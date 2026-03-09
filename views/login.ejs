@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - EasyCred AstroCred</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        }
+
+        body {
+            background: linear-gradient(135deg, #7188ec 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 440px;
+            width: 100%;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo h1 {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .logo p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            padding: 14px 18px;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .otp-inputs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .otp-inputs input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+        }
+
+        .otp-inputs input:focus {
+            border-color: #6366f1;
+            outline: none;
+        }
+
+        #demo-banner {
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-card">
+        <div class="logo">
+            <h1>🚀 AstroCred</h1>
+            <p>Financial Intelligence Platform</p>
+        </div>
+
+        <!-- Step 1: Mobile Number -->
+        <div id="mobile-step">
+            <h5 class="mb-3 fw-bold">Sign In</h5>
+            <p class="text-muted small mb-4">Enter your mobile number to get started</p>
+
+            <form id="mobile-form">
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold">Mobile Number</label>
+                    <input type="tel" class="form-control" id="mobile-input" placeholder="10-digit mobile number"
+                        maxlength="10" pattern="[0-9]{10}" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100" id="send-otp-btn">
+                    <span id="btn-text">Send OTP</span>
+                    <span id="btn-spinner" class="spinner-border spinner-border-sm ms-2 d-none"></span>
+                </button>
+            </form>
+
+        </div>
+
+        <!-- Step 2: OTP Verification -->
+        <div id="otp-step" class="d-none">
+            <h5 class="mb-3 fw-bold">Enter OTP</h5>
+            <p class="text-muted small mb-4">We've sent a 6-digit code to <strong id="mobile-display"></strong></p>
+
+            <form id="otp-form">
+                <div class="otp-inputs mb-4">
+                    <input type="text" maxlength="1" class="otp-digit" data-index="0">
+                    <input type="text" maxlength="1" class="otp-digit" data-index="1">
+                    <input type="text" maxlength="1" class="otp-digit" data-index="2">
+                    <input type="text" maxlength="1" class="otp-digit" data-index="3">
+                    <input type="text" maxlength="1" class="otp-digit" data-index="4">
+                    <input type="text" maxlength="1" class="otp-digit" data-index="5">
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mb-3" id="verify-otp-btn">
+                    <span>Verify & Continue</span>
+                </button>
+
+                <div class="text-center">
+                    <button class="btn btn-link text-decoration-none" onclick="goBack()">
+                        <i class="fas fa-arrow-left me-1"></i> Change Number
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script>
+        let currentMobile = '';
+
+        // Mobile form submission
+        document.getElementById('mobile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const mobile = document.getElementById('mobile-input').value.trim();
+
+            if (mobile.length !== 10) {
+                showToast('Please enter a valid 10-digit mobile number', 'error');
+                return;
+            }
+
+            currentMobile = mobile;
+            const btn = document.getElementById('send-otp-btn');
+            setButtonLoading(btn, true);
+
+            try {
+                // For demo, just switch to OTP screen
+                // In production, call: await fetch('/api/auth/send-otp', { method: 'POST', body: JSON.stringify({mobile}) })
+
+                setTimeout(() => {
+                    setButtonLoading(btn, false);
+                    showOTPStep();
+                    showToast('OTP sent successfully!', 'success');
+                }, 1500);
+            } catch (error) {
+                setButtonLoading(btn, false);
+                showToast('Failed to send OTP. Please try again.', 'error');
+            }
+        });
+
+        // OTP form submission
+        document.getElementById('otp-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const otpDigits = document.querySelectorAll('.otp-digit');
+            const otp = Array.from(otpDigits).map(input => input.value).join('');
+
+            if (otp.length !== 6) {
+                showToast('Please enter complete OTP', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('verify-otp-btn');
+            setButtonLoading(btn, true);
+
+            try {
+                // For demo mode or actual verification
+                setTimeout(() => {
+                    setButtonLoading(btn, false);
+                    showToast('OTP verified!', 'success');
+                    window.location.href = '/cibil-dashboard';
+                }, 1500);
+            } catch (error) {
+                setButtonLoading(btn, false);
+                showToast('Invalid OTP. Please try again.', 'error');
+            }
+        });
+
+        // OTP Input Auto-Tab
+        document.querySelectorAll('.otp-digit').forEach((input, index, inputs) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+
+        function showOTPStep() {
+            document.getElementById('mobile-step').classList.add('d-none');
+            document.getElementById('otp-step').classList.remove('d-none');
+            document.getElementById('mobile-display').textContent = currentMobile;
+            document.querySelectorAll('.otp-digit')[0].focus();
+        }
+
+        function goBack() {
+            document.getElementById('otp-step').classList.add('d-none');
+            document.getElementById('mobile-step').classList.remove('d-none');
+            document.querySelectorAll('.otp-digit').forEach(input => input.value = '');
+        }
+
+        function setButtonLoading(btn, loading) {
+            const text = btn.querySelector('#btn-text, span');
+            const spinner = btn.querySelector('#btn-spinner, .spinner-border') || document.createElement('span');
+
+            if (loading) {
+                btn.disabled = true;
+                if (text) text.textContent = 'Please wait...';
+                if (spinner) spinner.classList.remove('d-none');
+            } else {
+                btn.disabled = false;
+                if (spinner) spinner.classList.add('d-none');
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const bgColors = {
+                success: 'linear-gradient(to right, #00b09b, #96c93d)',
+                error: 'linear-gradient(to right, #ff5f6d, #ffc371)',
+                info: 'linear-gradient(to right, #4facfe, #00f2fe)'
+            };
+
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: bgColors[type] || bgColors.info,
+            }).showToast();
+        }
+
+        // Auto-fill demo number on page load
+        window.addEventListener('load', () => {
+            document.getElementById('mobile-input').value = DEMO_MOBILE;
+        });
+    </script>
+</body>
+
+</html>

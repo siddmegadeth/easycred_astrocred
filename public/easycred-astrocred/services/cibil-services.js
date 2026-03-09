@@ -1,0 +1,698 @@
+app.provider('cibilCore', [function () {
+    var cibilUrls;
+
+    return {
+        config: function (urls) {
+            cibilUrls = urls.cibil_core || urls;
+        },
+        $get: ['$http', function ($http) {
+            return {
+                // ✅ FULLY COMPATIBLE APIs
+
+                // 1. Data Upload & Processing
+                uploadData: function (cibilData) {
+                    // Backend expects raw CIBIL data object
+                    return $http({
+                        method: 'POST',
+                        url: cibilUrls.upload.data,
+                        data: cibilData,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                },
+
+                uploadSampleData: function () {
+                    // Backend: GET /get/api/cibil/upload (no params)
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.upload.sample
+                    });
+                },
+
+                // 2. Analysis & Reports
+                getAnalysis: function (identifier) {
+                    // Backend: GET /get/api/cibil/analysis?pan=...&mobile=...&email=...&client_id=...&force_refresh=...
+                    var params = {};
+
+                    // Handle undefined identifier
+                    if (!identifier) {
+                        console.warn('cibilCore.getAnalysis called without identifier');
+                        identifier = {};
+                    }
+
+                    if (identifier.pan) params.pan = identifier.pan;
+                    if (identifier.mobile) params.mobile = identifier.mobile;
+                    if (identifier.email) params.email = identifier.email;
+                    if (identifier.client_id) params.client_id = identifier.client_id;
+                    if (identifier.force_refresh === true || identifier.force_refresh === 'true') {
+                        params.force_refresh = 'true';
+                    }
+
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.analysis.basic,
+                        params: params
+                    });
+                },
+
+                refreshAnalysis: function (identifier) {
+                    // Backend: POST /post/api/cibil/analysis/refresh
+                    // Body: { pan, mobile, email, client_id }
+                    var data = {};
+
+                    if (identifier.pan) data.pan = identifier.pan;
+                    if (identifier.mobile) data.mobile = identifier.mobile;
+                    if (identifier.email) data.email = identifier.email;
+                    if (identifier.client_id) data.client_id = identifier.client_id;
+
+                    return $http({
+                        method: 'POST',
+                        url: cibilUrls.database.refreshAnalysis,
+                        data: data,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                },
+
+                getComprehensiveReport: function (identifier) {
+                    // Backend: GET /comprehensive-report?pan=...&mobile=...&email=...&client_id=...
+                    var params = {};
+
+                    if (identifier.pan) params.pan = identifier.pan;
+                    if (identifier.mobile) params.mobile = identifier.mobile;
+                    if (identifier.email) params.email = identifier.email;
+                    if (identifier.client_id) params.client_id = identifier.client_id;
+
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.analysis.comprehensive,
+                        params: params
+                    });
+                },
+
+                getAnalysisStatistics: function () {
+                    // Backend: GET /get/api/cibil/analysis/statistics (no params)
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.analysis.statistics
+                    });
+                },
+
+                // 3. Risk Assessment
+                getRiskAssessment: function (identifier) {
+                    // Backend: GET /risk-assessment?pan=...&mobile=...&email=...&client_id=...
+                    var params = {};
+
+                    if (identifier.pan) params.pan = identifier.pan;
+                    if (identifier.mobile) params.mobile = identifier.mobile;
+                    if (identifier.email) params.email = identifier.email;
+                    if (identifier.client_id) params.client_id = identifier.client_id;
+
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.risk.basic,
+                        params: params
+                    });
+                },
+
+                getEnhancedRiskAssessment: function (identifier) {
+                    // Backend: GET /enhanced-risk-assessment?pan=...&mobile=...&email=...&client_id=...
+                    var params = {};
+
+                    if (identifier.pan) params.pan = identifier.pan;
+                    if (identifier.mobile) params.mobile = identifier.mobile;
+                    if (identifier.email) params.email = identifier.email;
+                    if (identifier.client_id) params.client_id = identifier.client_id;
+
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.risk.enhanced,
+                        params: params
+                    });
+                },
+
+                getRiskComparison: function (identifier) {
+                    // Backend: GET /risk-comparison?pan=...&mobile=...&email=...&client_id=...
+                    var params = {};
+
+                    if (identifier.pan) params.pan = identifier.pan;
+                    if (identifier.mobile) params.mobile = identifier.mobile;
+                    if (identifier.email) params.email = identifier.email;
+                    if (identifier.client_id) params.client_id = identifier.client_id;
+
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.risk.comparison,
+                        params: params
+                    });
+                },
+
+                getDefaultProbability: function (identifier) {
+                    // Backend: GET /default-probability?pan=...&mobile=...&email=...&client_id=...
+                    var params = {};
+
+                    if (identifier.pan) params.pan = identifier.pan;
+                    if (identifier.mobile) params.mobile = identifier.mobile;
+                    if (identifier.email) params.email = identifier.email;
+                    if (identifier.client_id) params.client_id = identifier.client_id;
+
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.risk.defaultProbability,
+                        params: params
+                    });
+                },
+
+                getCreditWorthiness: function (identifier) {
+                    // Backend: GET /credit-worthiness?pan=...&mobile=...&email=...&client_id=...
+                    var params = {};
+
+                    if (identifier.pan) params.pan = identifier.pan;
+                    if (identifier.mobile) params.mobile = identifier.mobile;
+                    if (identifier.email) params.email = identifier.email;
+                    if (identifier.client_id) params.client_id = identifier.client_id;
+
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.risk.creditWorthiness,
+                        params: params
+                    });
+                },
+
+                getEligibleInstitutions: function (identifier) {
+                    // Backend: GET /eligible-institutions?pan=...&mobile=...&email=...&client_id=...
+                    var params = {};
+
+                    if (identifier.pan) params.pan = identifier.pan;
+                    if (identifier.mobile) params.mobile = identifier.mobile;
+                    if (identifier.email) params.email = identifier.email;
+                    if (identifier.client_id) params.client_id = identifier.client_id;
+
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.improvement.eligibleInstitutions,
+                        params: params
+                    });
+                },
+
+                // 4. Grades & Scores
+                getClientGrade: function (identifier) {
+                    // Backend: GET /get/api/cibil/client/grade?pan=...&mobile=...&email=...&client_id=...
+                    var params = {};
+
+                    if (identifier.pan) params.pan = identifier.pan;
+                    if (identifier.mobile) params.mobile = identifier.mobile;
+                    if (identifier.email) params.email = identifier.email;
+                    if (identifier.client_id) params.client_id = identifier.client_id;
+
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.grades.client,
+                        params: params
+                    });
+                },
+
+                getAllClientsGrades: function (filters) {
+                    // Backend: GET /get/api/cibil/clients/grades?min_score=...&max_score=...&grade=...&pan=...&mobile=...&email=...&name=...&page=...&limit=...&sort_by=...&sort_order=...
+                    var params = filters || {};
+
+                    // Add pagination defaults if not provided
+                    if (!params.page) params.page = 1;
+                    if (!params.limit) params.limit = 50;
+                    if (!params.sort_by) params.sort_by = 'credit_score';
+                    if (!params.sort_order) params.sort_order = 'desc';
+
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.grades.allClients,
+                        params: params
+                    });
+                },
+
+                getGradesStatistics: function () {
+                    // Backend: GET /get/api/cibil/grades/statistics (no params)
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.grades.statistics
+                    });
+                },
+
+                // 5. Score History
+                getScoreHistory: function (identifier) {
+                    // Backend: GET /get/api/cibil/score-history?pan=...&mobile=...&email=...&client_id=...
+                    var params = {};
+
+                    if (identifier.pan) params.pan = identifier.pan;
+                    if (identifier.mobile) params.mobile = identifier.mobile;
+                    if (identifier.email) params.email = identifier.email;
+                    if (identifier.client_id) params.client_id = identifier.client_id;
+
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.history.get,
+                        params: params
+                    });
+                },
+
+                addScoreToHistory: function (scoreData) {
+                    // Backend: POST /post/api/cibil/score-history/add
+                    // Body: { client_id, pan, mobile, email, name, score, grade, source }
+                    var data = {
+                        client_id: scoreData.client_id,
+                        score: scoreData.score,
+                        grade: scoreData.grade,
+                        source: scoreData.source || 'manual'
+                    };
+
+                    // Optional fields
+                    if (scoreData.pan) data.pan = scoreData.pan;
+                    if (scoreData.mobile) data.mobile = scoreData.mobile;
+                    if (scoreData.email) data.email = scoreData.email;
+                    if (scoreData.name) data.name = scoreData.name;
+
+                    return $http({
+                        method: 'POST',
+                        url: cibilUrls.history.add,
+                        data: data,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                },
+
+                searchScoreHistory: function (query) {
+                    // Backend: GET /get/api/cibil/score-history/search?query=...
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.history.search,
+                        params: { query: query }
+                    });
+                },
+
+                getScoreTrend: function (identifier) {
+                    // Backend: GET /get/api/cibil/score-trend?pan=...&mobile=...&email=...&client_id=...
+                    var params = {};
+
+                    if (identifier.pan) params.pan = identifier.pan;
+                    if (identifier.mobile) params.mobile = identifier.mobile;
+                    if (identifier.email) params.email = identifier.email;
+                    if (identifier.client_id) params.client_id = identifier.client_id;
+
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.history.trend,
+                        params: params
+                    });
+                },
+
+                // 6. Improvement & Suggestions
+                getImprovementPlan: function (identifier) {
+                    // Backend: GET /improvement-plan?pan=...&mobile=...&email=...&client_id=...
+                    var params = {};
+
+                    if (identifier.pan) params.pan = identifier.pan;
+                    if (identifier.mobile) params.mobile = identifier.mobile;
+                    if (identifier.email) params.email = identifier.email;
+                    if (identifier.client_id) params.client_id = identifier.client_id;
+
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.improvement.plan,
+                        params: params
+                    });
+                },
+
+                getBankSuggestions: function (identifier) {
+                    // Backend: GET /bank-suggestions?pan=...&mobile=...&email=...&client_id=...
+                    var params = {};
+
+                    if (identifier.pan) params.pan = identifier.pan;
+                    if (identifier.mobile) params.mobile = identifier.mobile;
+                    if (identifier.email) params.email = identifier.email;
+                    if (identifier.client_id) params.client_id = identifier.client_id;
+
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.improvement.bankSuggestions,
+                        params: params
+                    });
+                },
+
+                // 7. Visualization
+                getChartData: function (identifier) {
+                    // Backend: GET /chart-data?pan=...&mobile=...&email=...&client_id=...
+                    var params = {};
+
+                    if (identifier.pan) params.pan = identifier.pan;
+                    if (identifier.mobile) params.mobile = identifier.mobile;
+                    if (identifier.email) params.email = identifier.email;
+                    if (identifier.client_id) params.client_id = identifier.client_id;
+
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.charts.data,
+                        params: params
+                    });
+                },
+
+                getCreditSummary: function (identifier) {
+                    // Backend: GET /credit-summary?pan=...&mobile=...&email=...&client_id=...
+                    var params = {};
+
+                    if (identifier.pan) params.pan = identifier.pan;
+                    if (identifier.mobile) params.mobile = identifier.mobile;
+                    if (identifier.email) params.email = identifier.email;
+                    if (identifier.client_id) params.client_id = identifier.client_id;
+
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.charts.summary,
+                        params: params
+                    });
+                },
+
+                // 8. Economic Data
+                getEconomicData: function () {
+                    // Backend: GET /economic-data (no params)
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.economic.data
+                    });
+                },
+
+                getEconomicTrends: function (params) {
+                    // Backend: GET /economic-trends?period=...&indicators=...
+                    var queryParams = params || {};
+                    if (!queryParams.period) queryParams.period = '30d';
+
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.economic.trends,
+                        params: queryParams
+                    });
+                },
+
+                // 9. Health & Monitoring
+                checkHealth: function () {
+                    // Backend: GET /get/api/cibil/health (no params)
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.health.check
+                    });
+                },
+
+                quickHealthCheck: function () {
+                    // Backend: GET /get/api/cibil/health/quick (no params)
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.health.quick
+                    });
+                },
+
+                checkComponentHealth: function (component) {
+                    // Backend: GET /get/api/cibil/health/:component
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.health.component + component
+                    });
+                },
+
+                // 10. Database Maintenance
+                fixIndexes: function () {
+                    // Backend: GET /get/api/cibil/fix-indexes (no params)
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.database.fixIndexes
+                    });
+                },
+
+                // 11. Legacy/Compatibility
+                legacyCibil: function (profile) {
+                    // Backend: GET /get/api/cibil/upload?profile=...
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.legacy.cibil,
+                        params: {
+                            profile: profile
+                        }
+                    });
+                },
+
+                // 🔧 HELPER METHODS FOR DATA NORMALIZATION
+                normalizeData: function (cibilData) {
+                    var normalized = angular.copy(cibilData);
+
+                    // Normalize identifiers (as per backend requirements)
+                    if (!normalized.pan_number && normalized.pan) {
+                        normalized.pan_number = normalized.pan;
+                    }
+                    if (!normalized.mobile_number && normalized.mobile) {
+                        normalized.mobile_number = normalized.mobile;
+                    }
+                    if (!normalized.name && normalized.pan_comprehensive &&
+                        normalized.pan_comprehensive.data &&
+                        normalized.pan_comprehensive.data.pan_details) {
+                        normalized.name = normalized.pan_comprehensive.data.pan_details.full_name;
+                    }
+                    if (!normalized.email && normalized.user_email) {
+                        normalized.email = normalized.user_email;
+                    }
+
+                    // Ensure credit_score is a number
+                    if (normalized.credit_score && typeof normalized.credit_score === 'string') {
+                        normalized.credit_score = parseInt(normalized.credit_score);
+                    }
+
+                    return normalized;
+                },
+
+                interpretPaymentStatus: function (statusCode) {
+                    // Backend payment status interpretation
+                    var statusMap = {
+                        '0': { status: 'Paid/No Due', color: 'success', numeric: 0 },
+                        'XXX': { status: 'No Data', color: 'secondary', numeric: 0 },
+                        '1-30': { status: '1-30 Days Late', color: 'warning', numeric: 15 },
+                        '31-60': { status: '31-60 Days Late', color: 'warning', numeric: 45 },
+                        '61-90': { status: '61-90 Days Late', color: 'danger', numeric: 75 },
+                        '91+': { status: '91+ Days Late', color: 'danger', numeric: 120 },
+                        '107': { status: '107 Days Late', color: 'danger', numeric: 107 },
+                        '92': { status: '92 Days Late', color: 'danger', numeric: 92 },
+                        '61': { status: '61 Days Late', color: 'danger', numeric: 61 },
+                        '31': { status: '31 Days Late', color: 'warning', numeric: 31 },
+                        '28': { status: '28 Days Late', color: 'warning', numeric: 28 },
+                        '26': { status: '26 Days Late', color: 'warning', numeric: 26 },
+                        '25': { status: '25 Days Late', color: 'warning', numeric: 25 },
+                        '12': { status: '12 Days Late', color: 'warning', numeric: 12 },
+                        '11': { status: '11 Days Late', color: 'warning', numeric: 11 },
+                        '10': { status: '10 Days Late', color: 'warning', numeric: 10 },
+                        '9': { status: '9 Days Late', color: 'warning', numeric: 9 },
+                        '56': { status: '56 Days Late', color: 'danger', numeric: 56 },
+                        '72': { status: '72 Days Late', color: 'danger', numeric: 72 },
+                        '88': { status: '88 Days Late', color: 'danger', numeric: 88 }
+                    };
+
+                    return statusMap[statusCode] || { status: 'Unknown', color: 'secondary', numeric: 0 };
+                },
+
+                calculateCreditUtilization: function (accounts) {
+                    // Backend calculation method
+                    if (!accounts || !accounts.length) return 0;
+
+                    var totalBalance = 0;
+                    var totalLimit = 0;
+
+                    accounts.forEach(function (account) {
+                        var balance = parseFloat(account.current_balance) || 0;
+                        var limit = parseFloat(account.highCreditAmount) || 0;
+
+                        totalBalance += balance;
+                        totalLimit += limit;
+                    });
+
+                    return totalLimit > 0 ? Math.round((totalBalance / totalLimit) * 100) : 0;
+                },
+
+                // 🧪 TESTING CHECKLIST - Helper methods matching backend tests
+                testUploadWithSample: function (data) {
+                    if (!data) return Promise.reject(new Error('Upload requires real CIBIL data'));
+                    return this.uploadData(this.normalizeData(data));
+                },
+
+                testBasicAnalysis: function (params) {
+                    if (!params || (!params.pan && !params.mobile && !params.email)) return Promise.reject(new Error('pan, mobile, or email required'));
+                    return this.getAnalysis(params);
+                },
+
+                testRiskAssessment: function (params) {
+                    if (!params || (!params.pan && !params.mobile && !params.email)) return Promise.reject(new Error('pan, mobile, or email required'));
+                    return this.getRiskAssessment(params);
+                },
+
+                testGradeCheck: function (params) {
+                    if (!params || (!params.pan && !params.mobile && !params.email)) return Promise.reject(new Error('pan, mobile, or email required'));
+                    return this.getClientGrade(params);
+                },
+
+                runAllTests: function (params) {
+                    var tests = [];
+
+                    // 🚀 IMMEDIATE ACTION PLAN from backend
+                    tests.push(this.checkHealth()); // Health check
+
+                    if (params && (params.pan || params.mobile || params.email)) {
+                        tests.push(this.testBasicAnalysis(params));
+                        tests.push(this.testRiskAssessment(params));
+                        tests.push(this.testGradeCheck(params));
+                    }
+                    return Promise.all(tests);
+                },
+
+                // Utility method to get all URLs (for debugging)
+                getUrls: function () {
+                    return cibilUrls;
+                },
+
+                // Quick test commands from backend
+                quickTestCommands: function (params) {
+                    var q = params && (params.pan || params.mobile || params.email) ? '?pan=' + (params.pan || '') + '&mobile=' + (params.mobile || '') + '&email=' + (params.email || '') : '';
+                    return {
+                        upload: "curl -X POST " + cibilUrls.upload.data + " -H 'Content-Type: application/json' -d @your-cibil-data.json",
+                        analysis: "curl '" + cibilUrls.analysis.basic + q + "'",
+                        health: "curl '" + cibilUrls.health.check + "'"
+                    };
+                },
+                runScoreSimulation: function (cibilData) {
+
+                    // Backend expects raw CIBIL data object
+                    return $http({
+                        method: 'POST',
+                        url: cibilUrls.simulation.runScoreSimulation,
+                        data: cibilData,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                },
+                quickSimulation: function (cibilData) {
+                    // Backend expects raw CIBIL data object
+                    return $http({
+                        method: 'GET',
+                        url: cibilUrls.simulation.quickSimulation,
+                        data: cibilData,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                },
+
+                // =====================================================
+                // SUREPASS CIBIL FETCH - NEW SIGNUP FLOW
+                // =====================================================
+                
+                /**
+                 * Fetch CIBIL score directly from SurePass API
+                 * This is used during the signup flow after profile completion
+                 * @param {Object} params - { mobile, fullname, pan (optional) }
+                 * @returns Promise with CIBIL data
+                 */
+                fetchFromSurePass: function(params) {
+                    // Use POST endpoint for better security
+                    return $http({
+                        method: 'POST',
+                        url: '/post/api/cibil/fetch',
+                        data: {
+                            mobile: params.mobile,
+                            fullname: params.fullname || params.name,
+                            pan: params.pan,
+                            consent: 'Y'
+                        },
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                },
+
+                /**
+                 * Fetch CIBIL using GET method (legacy support)
+                 * @param {string} mobile - 10 digit mobile number
+                 * @param {string} fullname - Full name as per PAN
+                 */
+                fetchCIBILReport: function(mobile, fullname) {
+                    return $http({
+                        method: 'GET',
+                        url: '/get/check/credit/report/cibil',
+                        params: {
+                            mobile: mobile,
+                            fullname: fullname
+                        }
+                    });
+                },
+
+                /**
+                 * Complete signup flow: Profile → CIBIL Fetch → Store
+                 * @param {Object} profile - User profile from onboarding
+                 * @returns Promise with complete analysis data
+                 */
+                completeSignupWithCIBIL: function(profile) {
+                    var self = this;
+                    
+                    return this.fetchFromSurePass({
+                        mobile: profile.mobile || profile.profile_info?.mobile,
+                        fullname: profile.profile_info?.fullname || profile.name,
+                        pan: profile.kyc?.pan_number
+                    }).then(function(response) {
+                        if (response.data.status) {
+                            // CIBIL fetched successfully, now upload to analysis engine
+                            var cibilData = self.normalizeData({
+                                client_id: response.data.data?.client_id,
+                                mobile: profile.mobile || profile.profile_info?.mobile,
+                                pan: response.data.pan_comprehensive?.pan_number || profile.kyc?.pan_number,
+                                name: response.data.pan_comprehensive?.pan_details?.full_name || profile.profile_info?.fullname,
+                                email: profile.profile_info?.email,
+                                gender: profile.profile_info?.gender?.toLowerCase() || 'male',
+                                credit_score: response.data.data?.credit_score,
+                                credit_report: response.data.data?.report?.accounts || [],
+                                pan_comprehensive: response.data.pan_comprehensive
+                            });
+
+                            // Store in database and run analysis
+                            return self.uploadData(cibilData);
+                        } else {
+                            return Promise.reject({
+                                status: false,
+                                message: response.data.message || 'Failed to fetch CIBIL data'
+                            });
+                        }
+                    });
+                },
+
+                /**
+                 * Check if user has existing CIBIL data
+                 * @param {Object} identifier - { mobile, pan, email }
+                 */
+                checkExistingData: function(identifier) {
+                    return this.getAnalysis(identifier).then(function(response) {
+                        return {
+                            exists: response.data.status === true,
+                            data: response.data.data
+                        };
+                    }).catch(function() {
+                        return { exists: false, data: null };
+                    });
+                },
+
+                /**
+                 * Get sandbox mode status
+                 */
+                getSandboxStatus: function() {
+                    return $http({
+                        method: 'GET',
+                        url: '/get/api/surepass/status'
+                    });
+                }
+            };
+        }]
+    };
+}]);

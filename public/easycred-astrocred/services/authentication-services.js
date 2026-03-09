@@ -1,0 +1,72 @@
+app.provider('authentication', [function() {
+
+    var authURL;
+    return {
+        config: function(url) {
+
+            authURL = url.authentication || url;
+
+        },
+        $get: ['$http', function($http) {
+            return {
+                getMe: function() {
+                    return $http.get('/api/auth/me', {
+                        withCredentials: true
+                    })
+                },
+                getProfileMe: function() {
+                    return $http.get('/api/profile/me', {
+                        withCredentials: true
+                    });
+                },
+                logout: function() {
+                    return $http({
+                        method: 'POST',
+                        url: authURL.logout
+                    })
+                },
+                generateWABusinessOtp: function(mobile) {
+                    return $http({
+                        method: 'GET',
+                        url: authURL.generateWABusinessOtp,
+                        params: {
+                            mobile: mobile
+                        }
+                    })
+
+                },
+                authenticateWABusinessOtp: function(mobile, otp) {
+                    return $http({
+                        method: 'GET',
+                        url: authURL.authenticateWABusinessOtp,
+                        params: {
+                            mobile: mobile,
+                            otp: otp
+                        }
+                    })
+
+                },
+                generateOTP: function(mobile, telemetric) {
+                    return $http({
+                        method: 'GET',
+                        url: authURL.generateOTP,
+                        params: {
+                            mobile: mobile,
+                            telemetric: telemetric
+                        }
+                    })
+                },
+                validateOTP: function(mobile, otp) {
+                    return $http({
+                        method: 'GET',
+                        url: authURL.validateOTP,
+                        params: {
+                            mobile: mobile,
+                            otp: otp
+                        }
+                    })
+                }
+            }
+        }]
+    }
+}])

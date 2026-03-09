@@ -1,0 +1,12 @@
+# Node dependencies
+node_modules/
+./node_modules/
+
+# Environment variables
+.env
+
+# Ignore all markdown files
+*.md
+
+# But allow README.md
+!README.md

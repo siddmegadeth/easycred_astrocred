@@ -1,0 +1,20 @@
+<section class="section" style="padding-bottom: 50px;padding-top: 18px;margin-top: 20%;">
+    <div class="container">
+        <div class="row" style="text-align: center;margin: auto;">
+           <h1 class="header" style="text-align:center;letter-spacing:5px;font-weight: bold;">Desktop Not Supported</h1>
+           <p>Easycred is designed to run only on Android/iOS or similar device</p>
+           <button class="btn btn-primary btn-block" style="width: 100%;text-align: center;" onclick="openApp()">Reload</button>
+        </div>
+    </div>
+</section> 
+
+<script>
+
+function openApp(){
+	if(window.location.hostname=='localhost'){
+		window.location.href = "http://localhost:5001"
+	}else{
+		window.location.href = "https://retail.easycred.co.in"
+	}
+}
+</script>

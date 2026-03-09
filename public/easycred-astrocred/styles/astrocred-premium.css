@@ -1,0 +1,228 @@
+/* =====================================================
+   DARK THEME ONLY FOR APP PAGES
+   Prevents login page conflicts
+   ===================================================== */
+
+.section {
+    color: var(--astro-text-primary);
+}
+
+/* Headings inside dashboard pages only */
+.section h1,
+.section h2,
+.section h3,
+.section h4,
+.section h5,
+.section h6 {
+    color: var(--astro-text-primary);
+    font-weight: 600;
+}
+
+
+/* Paragraphs and text */
+.section p,
+.section span,
+.section label,
+.section li,
+.section td,
+.section th {
+    color: rgb(0 0 0 / 95%);
+}
+
+/* Muted text */
+.section .text-muted {
+    color: rgba(255,255,255,0.75) !important;
+}
+
+/* =====================================================
+   CARDS
+   ===================================================== */
+
+.section .card,
+.section .astrocred-card,
+.section .glassmorphism-card {
+    background: var(--astro-gradient-card);
+    border: 1px solid var(--astro-border);
+    backdrop-filter: blur(10px);
+    color: var(--astro-text-primary);
+    box-shadow: var(--astro-shadow-md);
+}
+
+/* Card content */
+.section .card p,
+.section .card span,
+.section .card div,
+.section .card label {
+    color: rgba(255,255,255,0.95);
+}
+
+/* =====================================================
+   NAVBAR
+   ===================================================== */
+
+.section .navbar {
+    background: var(--astro-primary-light);
+    border-bottom: 1px solid var(--astro-border);
+}
+
+.section .navbar-brand,
+.section .nav-link {
+    color: var(--astro-text-primary);
+}
+
+.section .nav-link:hover {
+    color: var(--astro-accent);
+}
+
+/* =====================================================
+   BUTTONS
+   ===================================================== */
+
+.section .btn-primary {
+    background: var(--astro-gradient-accent);
+    border: none;
+    color: #fff;
+    box-shadow: 0 4px 15px var(--astro-accent-glow);
+}
+
+.section .btn-primary:hover {
+    transform: translateY(-2px);
+}
+
+.section .btn-success {
+    background: var(--astro-success);
+}
+
+.section .btn-warning {
+    background: var(--astro-warning);
+    color: var(--astro-primary-dark);
+}
+
+.section .btn-danger {
+    background: var(--astro-danger);
+}
+
+/* =====================================================
+   FORMS
+   ===================================================== */
+
+.section .form-control {
+    background: var(--astro-surface);
+    border: 1px solid var(--astro-border);
+    color: var(--astro-text-primary);
+}
+
+.section .form-control:focus {
+    border-color: var(--astro-accent);
+    box-shadow: 0 0 0 0.2rem var(--astro-accent-soft);
+}
+
+.section .form-label {
+    color: rgba(255,255,255,0.9);
+}
+
+/* =====================================================
+   TABLES
+   ===================================================== */
+
+.section .table {
+    color: var(--astro-text-primary);
+}
+
+.section .table thead th {
+    border-bottom: 1px solid var(--astro-border);
+}
+
+.section .table tbody tr:hover {
+    background: var(--astro-surface-hover);
+}
+
+/* =====================================================
+   BADGES
+   ===================================================== */
+
+.section .badge-success {
+    background: var(--astro-success);
+}
+
+.section .badge-warning {
+    background: var(--astro-warning);
+}
+
+.section .badge-danger {
+    background: var(--astro-danger);
+}
+
+/* =====================================================
+   MODALS
+   ===================================================== */
+
+.section .modal-content {
+    background: var(--astro-gradient-card);
+    border: 1px solid var(--astro-border);
+}
+
+.section .modal-header {
+    border-bottom: 1px solid var(--astro-border);
+}
+
+.section .modal-footer {
+    border-top: 1px solid var(--astro-border);
+}
+
+/* =====================================================
+   DROPDOWN
+   ===================================================== */
+
+.section .dropdown-menu {
+    background: var(--astro-surface);
+    border: 1px solid var(--astro-border);
+}
+
+.section .dropdown-item {
+    color: rgba(255,255,255,0.9);
+}
+
+.section .dropdown-item:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+/* =====================================================
+   ALERTS
+   ===================================================== */
+
+.section .alert-success {
+    background: rgba(0,196,140,0.1);
+    color: var(--astro-success);
+}
+
+.section .alert-warning {
+    background: rgba(255,184,0,0.1);
+    color: var(--astro-warning);
+}
+
+.section .alert-danger {
+    background: rgba(255,71,87,0.1);
+    color: var(--astro-danger);
+}
+
+/* =====================================================
+   SCROLLBAR
+   ===================================================== */
+
+.section ::-webkit-scrollbar {
+    width: 8px;
+}
+
+.section ::-webkit-scrollbar-track {
+    background: var(--astro-primary-dark);
+}
+
+.section ::-webkit-scrollbar-thumb {
+    background: var(--astro-surface);
+    border-radius: 6px;
+}
+
+.section ::-webkit-scrollbar-thumb:hover {
+    background: var(--astro-accent);
+}

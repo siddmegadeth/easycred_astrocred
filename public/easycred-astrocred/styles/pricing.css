@@ -1,0 +1,371 @@
+/* =====================================================
+   PRICING PAGE – SAFE SCOPED STYLES
+   ===================================================== */
+
+.astro-pricing-page {
+padding:40px 20px;
+}
+
+/* =====================================================
+   PRICING CARDS
+   ===================================================== */
+
+.astro-pricing-page .pricing-card{
+background:#ffffff;
+color:#212529;
+border:1px solid rgba(0,0,0,0.08);
+border-radius:16px;
+transition:all .3s ease;
+position:relative;
+overflow:hidden;
+display:flex;
+flex-direction:column;
+}
+
+.astro-pricing-page .pricing-card:hover{
+transform:translateY(-10px);
+}
+
+.astro-pricing-page .pricing-card h1,
+.astro-pricing-page .pricing-card h2,
+.astro-pricing-page .pricing-card h3,
+.astro-pricing-page .pricing-card h4{
+color:#1c1fbe;
+}
+
+.astro-pricing-page .pricing-card p,
+.astro-pricing-page .pricing-card span,
+.astro-pricing-page .pricing-card li{
+color:#495057;
+}
+
+.astro-pricing-page .pricing-card .text-muted{
+color:#6c757d;
+}
+
+/* =====================================================
+   POPULAR PLAN
+   ===================================================== */
+
+.astro-pricing-page .pricing-popular{
+border:2px solid #1c1fbe;
+}
+
+.astro-pricing-page .popular-badge{
+position:absolute;
+top:20px;
+right:-48px;
+background:linear-gradient(135deg,#1c1fbe,#33c9d3);
+color:#fff;
+padding:4px 40px;
+font-size:.75rem;
+font-weight:600;
+transform:rotate(45deg);
+}
+
+/* =====================================================
+   PLAN ICON
+   ===================================================== */
+
+.astro-pricing-page .plan-icon{
+width:70px;
+height:70px;
+border-radius:50%;
+background:linear-gradient(135deg,#f8f9fa,#e9ecef);
+display:flex;
+align-items:center;
+justify-content:center;
+margin:0 auto;
+}
+
+/* =====================================================
+   PRICING AMOUNT
+   ===================================================== */
+
+.astro-pricing-page .pricing-amount{
+min-height:80px;
+}
+
+/* =====================================================
+   CTA BUTTONS
+   ===================================================== */
+
+.astro-pricing-page .pricing-cta{
+margin-top:auto;
+}
+
+.astro-pricing-page .pricing-cta-current{
+color:#28a745;
+border-color:#28a745;
+background:transparent;
+cursor:default;
+}
+
+.astro-pricing-page .pricing-cta-label{
+color:#6c757d;
+border-color:#dee2e6;
+cursor:default;
+}
+
+.astro-pricing-page .pricing-cta-enterprise{
+color:#0d6efd;
+border-color:#0d6efd;
+background:transparent;
+}
+
+.astro-pricing-page .pricing-cta-enterprise:hover{
+color:#fff;
+background:#0d6efd;
+border-color:#0d6efd;
+}
+
+/* =====================================================
+   COMPARE TABLE
+   ===================================================== */
+
+.astro-pricing-page .pricing-table-wrap{
+overflow-x:auto;
+-webkit-overflow-scrolling:touch;
+margin-bottom:1rem;
+}
+
+.astro-pricing-page .pricing-compare-table{
+min-width:100%;
+table-layout:fixed;
+}
+
+.astro-pricing-page .pricing-feature-col{
+min-width:160px;
+width:28%;
+}
+
+.astro-pricing-page .pricing-plan-col{
+min-width:90px;
+width:18%;
+}
+
+.astro-pricing-page .pricing-plan-col-last{
+min-width:100px;
+padding-right:1rem;
+}
+
+.astro-pricing-page .pricing-compare-table thead th{
+color:#fff;
+background:#1c1fbe;
+border-color:rgba(28,31,190,0.2);
+padding:.75rem;
+}
+
+.astro-pricing-page .pricing-compare-table tbody td{
+color:#212529;
+border-color:rgba(0,0,0,0.1);
+background:#fff;
+}
+
+/* =====================================================
+   FAQ ACCORDION
+   ===================================================== */
+
+.astro-pricing-page .accordion-item-pricing{
+background:#fff;
+border-color:rgba(0,0,0,0.1);
+}
+
+.astro-pricing-page .accordion-button-pricing{
+background:rgba(28,31,190,0.05);
+color:#212529;
+border-color:rgba(0,0,0,0.1);
+}
+
+.astro-pricing-page .accordion-button-pricing:not(.collapsed){
+background:rgba(28,31,190,0.1);
+color:#212529;
+box-shadow:none;
+}
+
+.astro-pricing-page .accordion-body-pricing{
+background:#fff;
+color:#212529;
+border-top:1px solid rgba(0,0,0,0.1);
+}
+
+/* =====================================================
+   BILLING TOGGLE
+   ===================================================== */
+
+.astro-pricing-page .billing-toggle{
+background:#f8f9fa;
+border-radius:999px;
+padding:4px;
+display:inline-flex;
+}
+
+.astro-pricing-page .billing-toggle .btn{
+color:#333;
+}
+
+.astro-pricing-page .billing-toggle .btn-primary{
+color:#fff;
+}
+/* =====================================================
+   ASTROCRED PRICING PAGE FIX
+   ===================================================== */
+
+   /* =========================================
+PRICING BILLING TOGGLE FIX
+========================================= */
+
+.astro-pricing-page .d-inline-flex.bg-light{
+background:#f3f4f8 !important;
+border-radius:999px !important;
+padding:6px !important;
+box-shadow:0 4px 12px rgba(0,0,0,0.06);
+}
+
+/* buttons inside toggle */
+
+.astro-pricing-page .d-inline-flex.bg-light .btn{
+border-radius:999px !important;
+padding:10px 24px !important;
+font-weight:600;
+border:none !important;
+transition:all .25s ease;
+}
+
+/* active button (monthly/yearly) */
+
+.astro-pricing-page .btn-primary{
+background:linear-gradient(135deg,#1c1fbe,#33c9d3) !important;
+color:white !important;
+box-shadow:0 4px 14px rgba(0,0,0,0.15);
+}
+
+/* inactive button */
+
+.astro-pricing-page .btn-light{
+background:transparent !important;
+color:#1a1a2e !important;
+}
+
+/* badge */
+
+.astro-pricing-page .badge{
+font-size:11px;
+padding:4px 8px;
+border-radius:999px;
+}
+.astro-pricing-page{
+background:transparent;
+position:relative;
+z-index:5;
+}
+
+/* Header */
+
+.astro-pricing-page h1{
+color:#111827;
+}
+
+.astro-pricing-page .lead{
+color:#6b7280;
+}
+
+/* Billing toggle */
+
+.astro-pricing-page .bg-light{
+background:#f3f4f6 !important;
+}
+
+/* Cards */
+
+.astro-pricing-page .pricing-card{
+background:#ffffff;
+border-radius:18px;
+box-shadow:0 15px 40px rgba(0,0,0,0.12);
+transition:all .25s ease;
+}
+
+.astro-pricing-page .pricing-card:hover{
+transform:translateY(-10px);
+}
+
+/* Card text */
+
+.astro-pricing-page .pricing-card h4{
+color:#111827;
+}
+
+.astro-pricing-page .pricing-card li{
+color:#374151;
+}
+
+/* Plan icon */
+
+.astro-pricing-page .plan-icon{
+width:70px;
+height:70px;
+border-radius:50%;
+background:#f8fafc;
+display:flex;
+align-items:center;
+justify-content:center;
+margin:auto;
+}
+
+/* Popular badge */
+
+.astro-pricing-page .popular-badge{
+position:absolute;
+top:20px;
+right:-48px;
+background:linear-gradient(135deg,#1c1fbe,#33c9d3);
+color:#fff;
+padding:4px 40px;
+font-size:.75rem;
+font-weight:600;
+transform:rotate(45deg);
+}
+
+/* Price */
+
+.astro-pricing-page .pricing-amount{
+color:#111827;
+}
+
+/* Table */
+
+.astro-pricing-page .pricing-compare-table{
+background:#ffffff;
+}
+
+.astro-pricing-page .pricing-compare-table th{
+background:#1c1fbe;
+color:#fff;
+}
+
+.astro-pricing-page .pricing-compare-table td{
+color:#374151;
+}
+
+/* FAQ */
+
+.astro-pricing-page .accordion-item-pricing{
+background:#ffffff;
+border:1px solid rgba(0,0,0,0.08);
+}
+
+.astro-pricing-page .accordion-button-pricing{
+background:#f8fafc;
+color:#111827;
+}
+
+.astro-pricing-page .accordion-body-pricing{
+background:#ffffff;
+color:#374151;
+}
+
+/* Trust badges */
+
+.astro-pricing-page .text-muted{
+color:#6b7280 !important;
+}
