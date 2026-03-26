@@ -235,6 +235,58 @@
         }
     };
 
+    PDFGenerator.prototype.generateHTMLPDF = async function (htmlContent, outputPath, callback) {
+        try {
+            var launchOptions = {
+                headless: 'new',
+                args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu']
+            };
+
+            var browser = await puppeteer.launch(launchOptions);
+            var page = await browser.newPage();
+
+            await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+
+            var pdfBuffer = await page.pdf({
+                format: 'A4',
+                printBackground: true,
+                margin: {
+                    top: '10mm',
+                    right: '10mm',
+                    bottom: '10mm',
+                    left: '10mm'
+                }
+            });
+
+            await browser.close();
+            fs.writeFileSync(outputPath, pdfBuffer);
+            callback(null, outputPath);
+        } catch (error) {
+            callback(error, null);
+        }
+    };
+
+    PDFGenerator.prototype.generateStructuredPuppeteerPDF = async function (cibilData, outputPath, reportType, callback) {
+        var self = this;
+        try {
+            var buildReportData = require('./pdf-report-data.js').buildReportData;
+            var reportData = buildReportData(cibilData, cibilData.analysis || {});
+            var templateFactory;
+
+            if (reportType === 'astrocred_expert') {
+                templateFactory = require('./pdf-template-astrocred-expert.js');
+            } else {
+                templateFactory = require('./pdf-template-cibil-detailed.js');
+            }
+
+            var htmlContent = templateFactory(reportData);
+            await this.generateHTMLPDF(htmlContent, outputPath, callback);
+        } catch (error) {
+            console.error('Structured PDF generation error:', error);
+            self.generatePuppeteerPDF(cibilData, outputPath, callback);
+        }
+    };
+
     // Add Header
     PDFGenerator.prototype.addHeader = function (doc, title, name) {
         doc.fillColor('#1c1fbe')
@@ -1641,8 +1693,9 @@
     app.get('/get/api/cibil/generate-pdf', async function (req, res) {
         try {
             var fs = require('fs');
-            var { pan, mobile, email } = req.query;
+            var { pan, mobile, email, force_refresh } = req.query;
             var getCibilForUser = require('./api/cibil-data-resolver.js').getCibilForUser;
+            var AnalysisCache = require('./api/analysis-cache.js');
 
             if (!pan && !mobile && !email) {
                 return res.status(400).json({
@@ -1659,6 +1712,12 @@
                 });
             }
 
+            var analysisResult = await AnalysisCache.getOrComputeAnalysis(
+                cibilData,
+                force_refresh === 'true' || force_refresh === '1'
+            );
+            cibilData.analysis = analysisResult.analysis;
+
             var outputDir = path.join(__dirname, '../../temp/pdf');
             if (!fs.existsSync(outputDir)) {
                 fs.mkdirSync(outputDir, { recursive: true });
@@ -1667,8 +1726,7 @@
             var fileName = 'CIBIL_Report_' + (pan || mobile || email || cibilData.pan || cibilData.pan_number || 'report') + '_' + Date.now() + '.pdf';
             var outputPath = path.join(outputDir, fileName);
 
-            // Use Puppeteer Generator for high quality
-            pdfGenerator.generatePuppeteerPDF(cibilData, outputPath, function (error, filePath) {
+            pdfGenerator.generateStructuredPuppeteerPDF(cibilData, outputPath, 'cibil_detailed', function (error, filePath) {
                 if (error) {
                     console.error('Error generating CIBIL PDF:', error);
                     return res.status(500).json({
@@ -1704,10 +1762,9 @@
     app.get('/get/api/cibil/astrocred-report-pdf', async function (req, res) {
         try {
             var fs = require('fs');
-            var { pan, mobile, email } = req.query;
+            var { pan, mobile, email, force_refresh } = req.query;
             var getCibilForUser = require('./api/cibil-data-resolver.js').getCibilForUser;
-            var AdvancedAnalytics = require('./api/analytics-engine-advance.js');
-            var GradingEngine = require('./api/grading-engine.js');
+            var AnalysisCache = require('./api/analysis-cache.js');
 
             if (!pan && !mobile && !email) {
                 return res.status(400).json({
@@ -1724,21 +1781,11 @@
                 });
             }
 
-            // Generate comprehensive analysis
-            var gradingEngine = new GradingEngine(cibilData);
-            var advancedAnalytics = new AdvancedAnalytics(cibilData, gradingEngine);
-            var comprehensiveReport = advancedAnalytics.generateComprehensiveReport();
-
-            // Add analysis to cibilData for PDF generation
-            cibilData.analysis = comprehensiveReport;
-            cibilData.analysis.overallGrade = gradingEngine.calculateOverallGrade();
-
-            // Generate Risk Report
-            try {
-                var RiskAssessment = require('./api/risk-assessment.js');
-                var risk = new RiskAssessment(cibilData, gradingEngine);
-                cibilData.analysis.riskReport = risk.generateRiskReport();
-            } catch (e) { console.log('Risk report gen error:', e); }
+            var analysisResult = await AnalysisCache.getOrComputeAnalysis(
+                cibilData,
+                force_refresh === 'true' || force_refresh === '1'
+            );
+            cibilData.analysis = analysisResult.analysis;
 
             var outputDir = path.join(__dirname, '../../temp/pdf');
             if (!fs.existsSync(outputDir)) {
@@ -1748,8 +1795,7 @@
             var fileName = 'ASTROCRED_Analysis_' + (pan || mobile || email || cibilData.pan || cibilData.pan_number || 'report') + '_' + Date.now() + '.pdf';
             var outputPath = path.join(outputDir, fileName);
 
-            // Use Puppeteer Generator
-            pdfGenerator.generatePuppeteerPDF(cibilData, outputPath, function (error, filePath) {
+            pdfGenerator.generateStructuredPuppeteerPDF(cibilData, outputPath, 'astrocred_expert', function (error, filePath) {
                 if (error) {
                     console.error('Error generating ASTROCRED PDF:', error);
                     return res.status(500).json({

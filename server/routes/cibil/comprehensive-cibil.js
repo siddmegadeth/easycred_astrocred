@@ -1,20 +1,20 @@
-(function() {
+(function () {
     var AdvancedAnalytics = require("./api/analytics-engine-advance.js");
     var GradingEngine = require("./api/grading-engine.js");
 
     // Get comprehensive credit health report
-    app.get('/comprehensive-report', function(req, res) {
+    app.get('/comprehensive-report', function (req, res) {
         try {
             var { pan, mobile, email, client_id } = req.query;
-            
+
             // Validate at least one identifier is provided
             if (!pan && !mobile && !email && !client_id) {
-                return res.status(400).json({ 
+                return res.status(400).json({
                     success: false,
-                    error: 'Please provide at least one identifier (pan, mobile, email, or client_id)' 
+                    error: 'Please provide at least one identifier (pan, mobile, email, or client_id)'
                 });
             }
-            
+
             // Build query based on provided identifiers
             var query = {};
             if (client_id) query.client_id = client_id;
@@ -22,18 +22,18 @@
             if (mobile) query.mobile_number = mobile;
             if (email) query.email = email;
 
-            CibilDataModel.findOne(query, function(err, cibilData) {
+            CibilDataModel.findOne(query, function (err, cibilData) {
                 if (err) {
                     console.error('Error finding CIBIL data:', err);
-                    return res.status(500).json({ 
+                    return res.status(500).json({
                         success: false,
                         error: 'Internal server error',
-                        details: err.message 
+                        details: err.message
                     });
                 }
 
                 if (!cibilData) {
-                    return res.status(404).json({ 
+                    return res.status(404).json({
                         success: false,
                         error: 'Client data not found for the provided identifiers',
                         identifiers: { pan, mobile, email, client_id }
@@ -44,7 +44,7 @@
                     var gradingEngine = new GradingEngine(cibilData);
                     var advancedAnalytics = new AdvancedAnalytics(cibilData, gradingEngine);
                     var report = advancedAnalytics.generateComprehensiveReport();
-                    
+
                     // Add client info to response
                     report.client_info = {
                         client_id: cibilData.client_id,
@@ -54,14 +54,14 @@
                         email: cibilData.email,
                         credit_score: cibilData.credit_score
                     };
-                    
+
                     res.json({
                         success: true,
                         ...report
                     });
                 } catch (analysisError) {
                     console.error('Error generating comprehensive report:', analysisError);
-                    res.status(500).json({ 
+                    res.status(500).json({
                         success: false,
                         error: 'Analysis error',
                         details: analysisError.message,
@@ -71,44 +71,44 @@
             });
         } catch (error) {
             console.error('Error generating comprehensive report:', error);
-            res.status(500).json({ 
+            res.status(500).json({
                 success: false,
                 error: 'Internal server error',
-                details: error.message 
+                details: error.message
             });
         }
     });
 
     // Get improvement plan
-    app.get('/improvement-plan', function(req, res) {
+    app.get('/improvement-plan', function (req, res) {
         try {
             var { pan, mobile, email, client_id } = req.query;
-            
+
             if (!pan && !mobile && !email && !client_id) {
-                return res.status(400).json({ 
+                return res.status(400).json({
                     success: false,
-                    error: 'Please provide at least one identifier (pan, mobile, email, or client_id)' 
+                    error: 'Please provide at least one identifier (pan, mobile, email, or client_id)'
                 });
             }
-            
+
             var query = {};
             if (client_id) query.client_id = client_id;
             if (pan) query.pan_number = pan;
             if (mobile) query.mobile_number = mobile;
             if (email) query.email = email;
 
-            CibilDataModel.findOne(query, function(err, cibilData) {
+            CibilDataModel.findOne(query, function (err, cibilData) {
                 if (err) {
                     console.error('Error finding CIBIL data:', err);
-                    return res.status(500).json({ 
+                    return res.status(500).json({
                         success: false,
                         error: 'Internal server error',
-                        details: err.message 
+                        details: err.message
                     });
                 }
 
                 if (!cibilData) {
-                    return res.status(404).json({ 
+                    return res.status(404).json({
                         success: false,
                         error: 'Client data not found for the provided identifiers',
                         identifiers: { pan, mobile, email, client_id }
@@ -119,7 +119,7 @@
                     var gradingEngine = new GradingEngine(cibilData);
                     var advancedAnalytics = new AdvancedAnalytics(cibilData, gradingEngine);
                     var plan = advancedAnalytics.generateImprovementPlan();
-                    
+
                     res.json({
                         success: true,
                         client_id: cibilData.client_id,
@@ -133,7 +133,7 @@
                     });
                 } catch (planError) {
                     console.error('Error generating improvement plan:', planError);
-                    res.status(500).json({ 
+                    res.status(500).json({
                         success: false,
                         error: 'Plan generation error',
                         details: planError.message,
@@ -143,44 +143,44 @@
             });
         } catch (error) {
             console.error('Error generating improvement plan:', error);
-            res.status(500).json({ 
+            res.status(500).json({
                 success: false,
                 error: 'Internal server error',
-                details: error.message 
+                details: error.message
             });
         }
     });
 
     // Get bank suggestions
-    app.get('/bank-suggestions', function(req, res) {
+    app.get('/bank-suggestions', function (req, res) {
         try {
             var { pan, mobile, email, client_id } = req.query;
-            
+
             if (!pan && !mobile && !email && !client_id) {
-                return res.status(400).json({ 
+                return res.status(400).json({
                     success: false,
-                    error: 'Please provide at least one identifier (pan, mobile, email, or client_id)' 
+                    error: 'Please provide at least one identifier (pan, mobile, email, or client_id)'
                 });
             }
-            
+
             var query = {};
             if (client_id) query.client_id = client_id;
             if (pan) query.pan_number = pan;
             if (mobile) query.mobile_number = mobile;
             if (email) query.email = email;
 
-            CibilDataModel.findOne(query, function(err, cibilData) {
+            CibilDataModel.findOne(query, function (err, cibilData) {
                 if (err) {
                     console.error('Error finding CIBIL data:', err);
-                    return res.status(500).json({ 
+                    return res.status(500).json({
                         success: false,
                         error: 'Internal server error',
-                        details: err.message 
+                        details: err.message
                     });
                 }
 
                 if (!cibilData) {
-                    return res.status(404).json({ 
+                    return res.status(404).json({
                         success: false,
                         error: 'Client data not found for the provided identifiers',
                         identifiers: { pan, mobile, email, client_id }
@@ -191,7 +191,7 @@
                     var gradingEngine = new GradingEngine(cibilData);
                     var advancedAnalytics = new AdvancedAnalytics(cibilData, gradingEngine);
                     var suggestions = advancedAnalytics.suggestBanks();
-                    
+
                     res.json({
                         success: true,
                         client_id: cibilData.client_id,
@@ -207,7 +207,7 @@
                     });
                 } catch (suggestionError) {
                     console.error('Error generating bank suggestions:', suggestionError);
-                    res.status(500).json({ 
+                    res.status(500).json({
                         success: false,
                         error: 'Bank suggestion error',
                         details: suggestionError.message,
@@ -217,44 +217,44 @@
             });
         } catch (error) {
             console.error('Error generating bank suggestions:', error);
-            res.status(500).json({ 
+            res.status(500).json({
                 success: false,
                 error: 'Internal server error',
-                details: error.message 
+                details: error.message
             });
         }
     });
 
     // Get chart data for visualization
-    app.get('/chart-data', function(req, res) {
+    app.get('/chart-data', function (req, res) {
         try {
             var { pan, mobile, email, client_id } = req.query;
-            
+
             if (!pan && !mobile && !email && !client_id) {
-                return res.status(400).json({ 
+                return res.status(400).json({
                     success: false,
-                    error: 'Please provide at least one identifier (pan, mobile, email, or client_id)' 
+                    error: 'Please provide at least one identifier (pan, mobile, email, or client_id)'
                 });
             }
-            
+
             var query = {};
             if (client_id) query.client_id = client_id;
             if (pan) query.pan_number = pan;
             if (mobile) query.mobile_number = mobile;
             if (email) query.email = email;
 
-            CibilDataModel.findOne(query, function(err, cibilData) {
+            CibilDataModel.findOne(query, function (err, cibilData) {
                 if (err) {
                     console.error('Error finding CIBIL data:', err);
-                    return res.status(500).json({ 
+                    return res.status(500).json({
                         success: false,
                         error: 'Internal server error',
-                        details: err.message 
+                        details: err.message
                     });
                 }
 
                 if (!cibilData) {
-                    return res.status(404).json({ 
+                    return res.status(404).json({
                         success: false,
                         error: 'Client data not found for the provided identifiers',
                         identifiers: { pan, mobile, email, client_id }
@@ -280,14 +280,14 @@
                         creditUtilization: advancedAnalytics.generateCreditUtilizationData(),
                         generated_at: new Date()
                     };
-                    
+
                     res.json({
                         success: true,
                         ...chartData
                     });
                 } catch (chartError) {
                     console.error('Error generating chart data:', chartError);
-                    res.status(500).json({ 
+                    res.status(500).json({
                         success: false,
                         error: 'Chart data generation error',
                         details: chartError.message,
@@ -297,44 +297,44 @@
             });
         } catch (error) {
             console.error('Error generating chart data:', error);
-            res.status(500).json({ 
+            res.status(500).json({
                 success: false,
                 error: 'Internal server error',
-                details: error.message 
+                details: error.message
             });
         }
     });
 
     // Get quick credit summary (new endpoint)
-    app.get('/credit-summary', function(req, res) {
+    app.get('/credit-summary', function (req, res) {
         try {
             var { pan, mobile, email, client_id } = req.query;
-            
+
             if (!pan && !mobile && !email && !client_id) {
-                return res.status(400).json({ 
+                return res.status(400).json({
                     success: false,
-                    error: 'Please provide at least one identifier (pan, mobile, email, or client_id)' 
+                    error: 'Please provide at least one identifier (pan, mobile, email, or client_id)'
                 });
             }
-            
+
             var query = {};
             if (client_id) query.client_id = client_id;
             if (pan) query.pan_number = pan;
             if (mobile) query.mobile_number = mobile;
             if (email) query.email = email;
 
-            CibilDataModel.findOne(query, function(err, cibilData) {
+            CibilDataModel.findOne(query, function (err, cibilData) {
                 if (err) {
                     console.error('Error finding CIBIL data:', err);
-                    return res.status(500).json({ 
+                    return res.status(500).json({
                         success: false,
                         error: 'Internal server error',
-                        details: err.message 
+                        details: err.message
                     });
                 }
 
                 if (!cibilData) {
-                    return res.status(404).json({ 
+                    return res.status(404).json({
                         success: false,
                         error: 'Client data not found for the provided identifiers',
                         identifiers: { pan, mobile, email, client_id }
@@ -345,7 +345,7 @@
                     var gradingEngine = new GradingEngine(cibilData);
                     var advancedAnalytics = new AdvancedAnalytics(cibilData, gradingEngine);
                     var riskAssessment = new RiskAssessment(cibilData, gradingEngine);
-                    
+
                     var summary = {
                         client_info: {
                             client_id: cibilData.client_id,
@@ -364,14 +364,14 @@
                         immediate_actions: advancedAnalytics.getImmediateActions(),
                         generated_at: new Date()
                     };
-                    
+
                     res.json({
                         success: true,
                         summary: summary
                     });
                 } catch (summaryError) {
                     console.error('Error generating credit summary:', summaryError);
-                    res.status(500).json({ 
+                    res.status(500).json({
                         success: false,
                         error: 'Summary generation error',
                         details: summaryError.message,
@@ -381,10 +381,10 @@
             });
         } catch (error) {
             console.error('Error generating credit summary:', error);
-            res.status(500).json({ 
+            res.status(500).json({
                 success: false,
                 error: 'Internal server error',
-                details: error.message 
+                details: error.message
             });
         }
     });
